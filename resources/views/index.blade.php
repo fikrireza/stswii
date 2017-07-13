@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-  <title></title>
+  <title>Beranda</title>
 @endsection
 
 @section('headscript')

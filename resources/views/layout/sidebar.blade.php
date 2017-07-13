@@ -26,7 +26,25 @@
             <a href=""><i class="fa fa-home"></i> Beranda </a></li>
           <li class="">
             <a>
-              <i class="fa fa-beer"></i> Menu <span class="fa fa-chevron-down"></span>
+              <i class="fa fa-beer"></i> Manage Provider <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="nav child_menu" style="">
+              <li class=""><a href="index.hmtl">Sub Menu 1</a></li>
+              <li class=""><a href="index.hmtl">Sub Menu 2</a></li>
+            </ul>
+          </li>
+          <li class="">
+            <a>
+              <i class="fa fa-beer"></i> Manage Product <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="nav child_menu" style="">
+              <li class=""><a href="index.hmtl">Sub Menu 1</a></li>
+              <li class=""><a href="index.hmtl">Sub Menu 2</a></li>
+            </ul>
+          </li>
+          <li class="">
+            <a>
+              <i class="fa fa-beer"></i> Manage Partner <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="">
               <li class=""><a href="index.hmtl">Sub Menu 1</a></li>
@@ -39,12 +57,12 @@
         <h3>Extra</h3>
         <ul class="nav side-menu">
           <li class="">
-            <a href="index.html"><i class="fa fa-inbox"></i> Menu 2</a>
-          </li>
-          <li class="">
-            <a><i class="fa fa-windows"></i> Menu 3 <span class="fa fa-chevron-down"></span></a>
-            <ul class="nav child_menu">
-              <li><a href="index.html">Sub Menu 3</a></li>
+            <a>
+              <i class="fa fa-users"></i> Manage User <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="nav child_menu" style="">
+              <li class=""><a href="index.hmtl">Sub Menu 1</a></li>
+              <li class=""><a href="index.hmtl">Sub Menu 2</a></li>
             </ul>
           </li>
         </ul>
