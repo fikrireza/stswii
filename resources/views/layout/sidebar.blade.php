@@ -29,7 +29,7 @@
               <i class="fa fa-beer"></i> Manage Provider <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="">
-              <li class=""><a href="index.hmtl">Sub Menu 1</a></li>
+              <li class=""><a href="{{ route('ProviderController.index') }}">Provider</a></li>
               <li class=""><a href="index.hmtl">Sub Menu 2</a></li>
             </ul>
           </li>
