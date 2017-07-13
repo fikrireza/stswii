@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePartnerProdukPurchPricesTable extends Migration
+class CreatePartnerProductPurchPricesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePartnerProdukPurchPricesTable extends Migration
      */
     public function up()
     {
-        Schema::create('amd_partner_produk_purch_prices', function (Blueprint $table) {
+        Schema::create('amd_partner_product_purch_prices', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('parner_product_id')->unsigned();
             $table->decimal('gross_purch_price', 9,0);
@@ -38,6 +38,6 @@ class CreatePartnerProdukPurchPricesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('amd_partner_produk_purch_prices');
+        Schema::dropIfExists('amd_partner_product_purch_prices');
     }
 }

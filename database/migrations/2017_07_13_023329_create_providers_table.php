@@ -16,7 +16,7 @@ class CreateProvidersTable extends Migration
         Schema::create('amd_providers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('provider_code');
-            $table->string('provier_name');
+            $table->string('provider_name');
             $table->bigInteger('version')->unsigned();
             $table->integer('create_user_id')->unsigned();
             $table->integer('update_user_id')->unsigned();
