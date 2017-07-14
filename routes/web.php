@@ -25,16 +25,13 @@ Route::post('/provider/update', 'ProviderController@update')
 Route::get('/provider/delete/{id}', 'ProviderController@delete')
 	->name('provider.delete');
 
-Route::get('/partner-pulsa', 'PartnerPulsaController@index')
-	->name('partner-pulsa.index');
-Route::get('/partner-pulsa/add', 'PartnerPulsaController@add')
-	->name('partner-pulsa.add');
-Route::post('/partner-pulsa/store', 'PartnerPulsaController@store')
-	->name('partner-pulsa.store');
-Route::post('/partner-pulsa/update', 'PartnerPulsaController@update')
-	->name('partner-pulsa.update');
-Route::get('/partner-pulsa/delete/{id}', 'PartnerPulsaController@delete')
-	->name('partner-pulsa.delete');
+Route::get('/partner-pulsa', 'PartnerPulsaController@index')->name('partner-pulsa.index');
+Route::get('/partner-pulsa/create', 'PartnerPulsaController@create')->name('partner-pulsa.create');
+Route::post('/partner-pulsa/store', 'PartnerPulsaController@store')->name('partner-pulsa.store');
+Route::get('/partner-pulsa/edit/{id}', 'PartnerPulsaController@edit')->name('partner-pulsa.edit');
+Route::post('/partner-pulsa/update/{id}', 'PartnerPulsaController@update')->name('partner-pulsa.update');
+Route::get('/partner-pulsa/delete/{id}', 'PartnerPulsaController@delete')->name('partner-pulsa.delete');
+Route::get('/partner-pulsa/active/{id}', 'PartnerPulsaController@active')->name('partner-pulsa.active');
 
 
 Route::get('/provider-prefix', 'ProviderPrefixController@index')

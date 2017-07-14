@@ -28,68 +28,6 @@
 </div>
 @endif
 
-<div class="modal fade modal-form-add" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <form action="{{ route('partner-pulsa.store') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
-          </button>
-          <h4 class="modal-title" id="myModalLabel2">Add Partner Pulsa</h4>
-        </div>
-        <div class="modal-body">
-            {{ csrf_field() }}
-            <div class="item form-group {{ $errors->has('provider_name') ? 'has-error' : ''}}">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Partner Pulsa Name<span class="required">*</span>
-              </label>
-              <div class="col-md-6 col-sm-6 col-xs-12">
-                <input id="name" class="form-control col-md-7 col-xs-12" name="provider_name" placeholder="Contoh: Nama Partner Pulsa" required="required" type="text" value="{{ old('provider_name') }}">
-                @if($errors->has('provider_name'))
-                  <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_name')}}</span></code>
-                @endif
-              </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button id="send" type="submit" class="btn btn-success">Submit</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade modal-form-update" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <form action="{{ route('partner-pulsa.update') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
-          </button>
-          <h4 class="modal-title" id="myModalLabel2">Update Partner Pulsa</h4>
-        </div>
-        <div class="modal-body">
-            {{ csrf_field() }}
-            <div class="item form-group {{ $errors->has('provider_name') ? 'has-error' : ''}}">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nama Partner Pulsa <span class="required">*</span>
-              </label>
-              <div class="col-md-6 col-sm-6 col-xs-12">
-                <input id="id_provider_update" name="id_provider" type="hidden" value="">
-                <input id="name_provider_update" class="form-control col-md-7 col-xs-12" name="provider_name" placeholder="Contoh: Nama Partner Pulsa" required="required" type="text" value="{{ old('provider_name') }}">
-                @if($errors->has('provider_name'))
-                  <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_name')}}</span></code>
-                @endif
-              </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button id="send" type="submit" class="btn btn-success">Submit</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 <div class="modal fade modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
@@ -98,7 +36,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Hapus Produk</h4>
+        <h4 class="modal-title" id="myModalLabel2">Hapus Partner Pulsa</h4>
       </div>
       <div class="modal-body">
         <h4>Yakin ?</h4>
@@ -107,6 +45,44 @@
         <a class="btn btn-primary" id="setDelete">Ya</a>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<div class="modal fade modal-nonactive" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content alert-danger">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel2">Nonactive Partner Pulsa</h4>
+      </div>
+      <div class="modal-body">
+        <h4>Sure ?</h4>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary" id="setUnpublish">Ya</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade modal-active" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel2">Activated Partner Pulsa</h4>
+      </div>
+      <div class="modal-body">
+        <h4>Sure ?</h4>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary" id="setPublish">Ya</a>
+      </div>
     </div>
   </div>
 </div>
@@ -123,7 +99,7 @@
       <div class="x_title">
         <h2>Partner Pulsa </h2>
         <ul class="nav panel_toolbox">
-          <a class="btn btn-success btn-sm publish" data-toggle="modal" data-target=".modal-form-add" ><i class="fa fa-plus"></i> Add</a>
+          <a class="btn btn-success btn-sm publish" href="{{ route('partner-pulsa.create') }}"><i class="fa fa-plus"></i> Add</a>
         </ul>
         <div class="clearfix"></div>
       </div>
@@ -132,8 +108,10 @@
           <thead>
             <tr role="row">
               <th>No</th>
-              <th>Partner Pulsa Code</th>
-              <th>Partner Pulsa Name</th>
+              <th>Kode Partner Pulsa</th>
+              <th>Nama Partner Pulsa</th>
+              <th>Deskripsi</th>
+              <th>Status</th>
               <th>Version</th>
               <th>Created By</th>
               <th>Created Date</th>
@@ -149,15 +127,27 @@
             @foreach ($getPartnerPulsa as $key)
             <tr>
               <td>{{ $no }}</td>
-              <td>{{ $key->provider_code }}</td>
-              <td>{{ $key->provider_name }}</td>
-              <td>{!! $key->version !!}</td>
-              <td>{!! $key->createdBy->name !!}</td>
-              <td>{!! $key->created_at !!}</td>
-              <td>{!! $key->updatedBy->name !!}</td>
-              <td>{!! $key->updated_at !!}</td>
+              <td>{{ $key->partner_pulsa_code or '-' }}</td>
+              <td>{{ $key->partner_pulsa_name or '-' }}</td>
+              <td>{{ $key->description or '-' }}</td>
+              <td class="text-center">@if ($key->active == 1)
+                    <a href="" class="unpublish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span></a>
+                    <br>
+                    <span class="label label-primary">{{ $key->active_datetime or '-' }}</span>
+                  @else
+                    <a href="" class="publish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive"><i class="fa fa-thumbs-o-down"></i></span></a>
+                    <br>
+                    <span class="label label-primary">{{ $key->non_active_datetime or '-' }}</span>
+                  @endif
+              </td>
+              <td>{!! $key->version or '-' !!}</td>
+              <td>{!! $key->create_user_id->name or '-' !!}</td>
+              <td>{!! $key->created_at or '-' !!}</td>
+              <td>{!! $key->update_user_id->name or '-' !!}</td>
+              <td>{!! $key->updated_at or '-' !!}</td>
               <td>
-                <a class="update" data-id="{{ $key->id }}" data-name="{{ $key->provider_name }}" data-toggle="modal" data-target=".modal-form-update"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span></a>
+                <a class="update" href="{{ route('partner-pulsa.edit', ['id' => $key->id ]) }}"><span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span></a>
+
                 <a href="" class="delete" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
               </td>
             </tr>
@@ -182,31 +172,25 @@
 $('#dataTables').DataTable();
 
 $(function(){
-    $('.update').click(function() {
-        var idProvider    = $(this).data('id');
-        var nameProvider  = $(this).data('name');
-        $("#id_provider_update").val(idProvider);
-        $("#name_provider_update").val(nameProvider);
-    });
-});
-
-$(function(){
   $('#dataTables').on('click', 'a.delete', function(){
     var a = $(this).data('value');
     $('#setDelete').attr('href', "{{ url('/') }}/partner-pulsa/delete/"+a);
   });
 });
-</script>
 
-@if(Session::has('add-false'))
-<script>
-  $('.modal-form-add').modal('show');
-</script>
-@endif
-@if(Session::has('update-false'))
-<script>
-  $('.modal-form-update').modal('show');
-</script>
-@endif
+$(function(){
+  $('#dataTables').on('click','a.unpublish', function(){
+    var a = $(this).data('value');
+    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-pulsa/active/"+a);
+  });
+});
 
+$(function(){
+  $('#dataTables').on('click', 'a.publish', function(){
+    var a = $(this).data('value');
+    $('#setPublish').attr('href', "{{ url('/') }}/partner-pulsa/active/"+a);
+  });
+});
+
+</script>
 @endsection

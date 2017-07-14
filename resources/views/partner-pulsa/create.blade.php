@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-  <title>STS | Add Product</title>
+  <title>STS | Add Partner Pulsa</title>
 @endsection
 
 @section('headscript')
@@ -35,53 +35,45 @@
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Add Product<small></small></h2>
+        <h2>Add Partner Pulsa<small></small></h2>
         <ul class="nav panel_toolbox">
-          <a href="{{ route('product.index') }}" class="btn btn-primary btn-sm">Kembali</a>
+          <a href="{{ route('partner-pulsa.index') }}" class="btn btn-primary btn-sm">Kembali</a>
         </ul>
         <div class="clearfix"></div>
       </div>
       <div class="x_content">
-        <form action="{{ route('product.store') }}" method="POST" class="form-horizontal form-label-left" novalidate>
+        <form action="{{ route('partner-pulsa.store') }}" method="POST" class="form-horizontal form-label-left" novalidate>
           {{ csrf_field() }}
-          <div class="item form-group {{ $errors->has('product_code') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product Code</label>
+
+          <div class="item form-group {{ $errors->has('partner_pulsa_code') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Kode Partner Pulsa</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="name" class="form-control col-md-7 col-xs-12" name="product_code" type="text" value="{{ $product_code }}" readonly>
+              <input id="name" class="form-control col-md-7 col-xs-12" name="partner_pulsa_code" type="text" value="{{ $partner_pulsa_code }}" readonly>
             </div>
           </div>
-          <div class="item form-group {{ $errors->has('product_name') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product Name <span class="required">*</span></label>
+
+          <div class="item form-group {{ $errors->has('partner_pulsa_name') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_pulsa_name">Nama Partner Pulsa<span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="name" class="form-control" name="product_name" placeholder="E.g: " required="required" type="text" value="{{ old('product_name') }}">
-              @if($errors->has('product_name'))
-                <code><span style="color:red; font-size:12px;">{{ $errors->first('product_name')}}</span></code>
+              <input id="partner_pulsa_name" class="form-control" name="partner_pulsa_name" required="required" type="text" value="{{ old('partner_pulsa_name') }}">
+              @if($errors->has('partner_pulsa_name'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('partner_pulsa_name')}}</span></code>
               @endif
             </div>
           </div>
-          <div class="item form-group {{ $errors->has('provider_id') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Provider <span class="required">*</span></label>
+
+          <div class="item form-group {{ $errors->has('description') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="description">Deskripsi<span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <select id="provider_id" name="provider_id" class="form-control select2_single" required="required">
-                <option value="">Pilih</option>
-                @foreach ($getProvider as $key)
-                  <option value="{{ $key->id }}" {{ old('provider_id') == $key->id ? 'selected' : '' }}>{{ $key->provider_name}}</option>
-                @endforeach
-              </select>
-              @if($errors->has('provider_id'))
-                <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_id')}}</span></code>
+              <textarea id="description" class="form-control" name="description" required="required">{{ old('description') }}</textarea>
+              @if($errors->has('description'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('description')}}</span></code>
               @endif
             </div>
           </div>
-          <div class="item form-group {{ $errors->has('nominal') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nominal <span class="required">*</span></label>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="name" class="form-control" name="nominal" placeholder="E.g: 50000" required="required" type="text" value="{{ old('nominal') }}" onkeypress="return isNumber(event)" maxlength="9">
-              @if($errors->has('nominal'))
-                <code><span style="color:red; font-size:12px;">{{ $errors->first('nominal')}}</span></code>
-              @endif
-            </div>
-          </div>
+          
+
+
           <div class="ln_solid"></div>
           <div class="item form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
@@ -94,7 +86,7 @@
           <div class="ln_solid"></div>
           <div class="form-group">
             <div class="col-md-6 col-md-offset-3">
-              <a href="{{ route('product.index') }}" class="btn btn-primary">Cancel</a>
+              <a href="{{ route('partner-pulsa.index') }}" class="btn btn-primary">Cancel</a>
               <button id="send" type="submit" class="btn btn-success">Submit</button>
             </div>
           </div>
