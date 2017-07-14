@@ -40,3 +40,5 @@ Route::get('product/add', 'ProductController@tambah')->name('product.tambah');
 Route::post('product', 'ProductController@store')->name('product.store');
 Route::get('product/edit/{product_code}', 'ProductController@ubah')->name('product.ubah');
 Route::post('product/edit', 'ProductController@update')->name('product.update');
+Route::get('product/active/{id}', 'ProductController@active')->name('product.active');
+Route::get('product/delete/{id}', 'ProductController@delete')->name('product.delete');

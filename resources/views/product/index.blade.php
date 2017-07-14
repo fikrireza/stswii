@@ -32,14 +32,14 @@
 </div>
 @endif
 
-<div class="modal fade modal-unpublish" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade modal-active" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
 
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Non Active Product</h4>
+        <h4 class="modal-title" id="myModalLabel2">Nonactive Product</h4>
       </div>
       <div class="modal-body">
         <h4>Sure ?</h4>
@@ -51,7 +51,7 @@
   </div>
 </div>
 
-<div class="modal fade modal-publish" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade modal-nonactive" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
 
@@ -118,6 +118,10 @@
               <th>Provider</th>
               <th>Nominal</th>
               <th>Status</th>
+              <th>Created By</th>
+              <th>Created Date</th>
+              <th>Updated By</th>
+              <th>Updated Date</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -127,25 +131,29 @@
             @endphp
             @foreach ($getProduct as $key)
             <tr>
-              <td>{{ ++$no }}</td>
+              <td>{{ $no++ }}</td>
               <td>{{ $key->product_code }}</td>
               <td>{{ $key->product_name }}</td>
               <td>{{ $key->provider->provider_name }}</td>
               <td>{{ number_format($key->nominal, 0, ',', '.') }}</td>
-              <td class="text-center">@if ($key->active == 1)
-                    <a href="" class="unpublish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-unpublish"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Publish"><i class="fa fa-thumbs-o-up"></i></span></a>
+              <td class="text-center">
+                  @if ($key->active == 1)
+                    <a href="" class="unpublish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-active"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span></a>
                     <br>
                     <span class="label label-primary">{{ $key->active_datetime }}</span>
                   @else
-                    <a href="" class="publish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-publish"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="Unpublish"><i class="fa fa-thumbs-o-down"></i></span></a>
+                    <a href="" class="publish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="Nonactive"><i class="fa fa-thumbs-o-down"></i></span></a>
                     <br>
                     <span class="label label-primary">{{ $key->non_active_datetime }}</span>
                   @endif
               </td>
+              <td>{{ $key->createdBy->name or '-' }}</td>
+              <td>{{ $key->created_at or '-' }}</td>
+              <td>{{ $key->updatedBy->name or '-' }}</td>
+              <td>{{ $key->updated_at or '-' }}</td>
               <td>
                 <a href="{{ route('product.ubah', $key->product_code) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
-                {{-- <a href="{{ route('product.lihat', $key->id) }}" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Lihat"><i class="fa fa-folder"></i></a> --}}
-                <a href="" class="delete" data-value="{{ $key->product_code }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
+                <a href="" class="delete" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
               </td>
             </tr>
             @endforeach
@@ -172,21 +180,21 @@
   $(function(){
     $('#producttabel').on('click','a.unpublish', function(){
       var a = $(this).data('value');
-      $('#setUnpublish').attr('href', "{{ url('/') }}/admin/Product/publish/"+a);
+      $('#setUnpublish').attr('href', "{{ url('/') }}/product/active/"+a);
     });
   });
 
   $(function(){
     $('#producttabel').on('click', 'a.publish', function(){
       var a = $(this).data('value');
-      $('#setPublish').attr('href', "{{ url('/') }}/admin/Product/publish/"+a);
+      $('#setPublish').attr('href', "{{ url('/') }}/product/active/"+a);
     });
   });
 
   $(function(){
     $('#producttabel').on('click', 'a.delete', function(){
       var a = $(this).data('value');
-      $('#setDelete').attr('href', "{{ url('/') }}/admin/Product/delete/"+a);
+      $('#setDelete').attr('href', "{{ url('/') }}/product/delete/"+a);
     });
   });
 </script>
