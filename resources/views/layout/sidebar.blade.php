@@ -29,8 +29,8 @@
               <i class="fa fa-beer"></i> Manage Provider <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="">
-              <li class=""><a href="{{ route('ProviderController.index') }}">Provider</a></li>
-              <li class=""><a href="index.hmtl">Sub Menu 2</a></li>
+              <li class=""><a href="{{ route('provider.index') }}">Provider</a></li>
+              <li class=""><a href="{{ route('provider-prefix.index') }}">Provider Prefix</a></li>
             </ul>
           </li>
           <li class="{{ Route::is('product*') ? 'active' : '' }}">
