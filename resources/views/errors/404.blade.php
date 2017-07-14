@@ -1,4 +1,4 @@
-@extends('backend.layout.master')
+@extends('layout.master')
 
 @section('title')
   <title>| Not Found</title>

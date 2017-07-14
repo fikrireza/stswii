@@ -36,6 +36,7 @@ Route::post('/partner-pulsa/update', 'PartnerPulsaController@update')
 Route::get('/partner-pulsa/delete/{id}', 'PartnerPulsaController@delete')
 	->name('partner-pulsa.delete');
 
+
 Route::get('/provider-prefix', 'ProviderPrefixController@index')
 	->name('provider-prefix.index');
 Route::post('/provider-prefix/store', 'ProviderPrefixController@store')
@@ -51,3 +52,5 @@ Route::get('product/add', 'ProductController@tambah')->name('product.tambah');
 Route::post('product', 'ProductController@store')->name('product.store');
 Route::get('product/edit/{product_code}', 'ProductController@ubah')->name('product.ubah');
 Route::post('product/edit', 'ProductController@update')->name('product.update');
+Route::get('product/active/{id}', 'ProductController@active')->name('product.active');
+Route::get('product/delete/{id}', 'ProductController@delete')->name('product.delete');
