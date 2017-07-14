@@ -27,3 +27,9 @@ Route::post('/provider/update', 'ProviderController@update')
 Route::get('/provider/delete/{id}', 'ProviderController@delete')
 	->name('ProviderController.delete');
 
+
+Route::get('product', 'ProductController@index')->name('product.index');
+Route::get('product/add', 'ProductController@tambah')->name('product.tambah');
+Route::post('product', 'ProductController@store')->name('product.store');
+Route::get('product/edit/{product_code}', 'ProductController@ubah')->name('product.ubah');
+Route::post('product/edit', 'ProductController@update')->name('product.update');

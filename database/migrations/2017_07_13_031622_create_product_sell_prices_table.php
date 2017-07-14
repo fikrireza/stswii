@@ -22,11 +22,11 @@ class CreateProductSellPricesTable extends Migration
             $table->dateTime('datetime_start');
             $table->dateTime('datetime_end');
             $table->boolean('active')->default(false);
-            $table->dateTime('active_datetime');
-            $table->dateTime('non_active_datetime');
-            $table->bigInteger('version')->unsigned();
-            $table->bigInteger('create_user_id')->unsigned();
-            $table->bigInteger('update_user_id')->unsigned();
+            $table->dateTime('active_datetime')->nullable();
+            $table->dateTime('non_active_datetime')->nullable();
+            $table->bigInteger('version')->unsigned()->nullable();
+            $table->bigInteger('create_user_id')->unsigned()->nullable();
+            $table->bigInteger('update_user_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }

@@ -17,9 +17,9 @@ class CreatePartnerDepositBalancesTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('partner_id')->unsigned();
             $table->string('balance_amount');
-            $table->bigInteger('version')->unsigned();
-            $table->bigInteger('create_user_id')->unsigned();
-            $table->bigInteger('update_user_id')->unsigned();
+            $table->bigInteger('version')->unsigned()->nullable();
+            $table->bigInteger('create_user_id')->unsigned()->nullable();
+            $table->bigInteger('update_user_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }
