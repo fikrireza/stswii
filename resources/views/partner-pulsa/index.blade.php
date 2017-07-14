@@ -146,7 +146,7 @@
             @php
               $no = 1;
             @endphp
-            @foreach ($getProvider as $key)
+            @foreach ($getPartnerPulsa as $key)
             <tr>
               <td>{{ $no }}</td>
               <td>{{ $key->provider_code }}</td>
