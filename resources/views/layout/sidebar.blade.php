@@ -23,23 +23,23 @@
         <h3>General</h3>
         <ul class="nav side-menu">
           <li class="">
-            <a href=""><i class="fa fa-home"></i> Beranda </a></li>
+            <a href="index.html"><i class="fa fa-home"></i> Beranda </a></li>
           <li class="">
             <a>
               <i class="fa fa-beer"></i> Manage Provider <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="">
-              <li class=""><a href="{{ route('ProviderController.index') }}">Provider</a></li>
-              <li class=""><a href="index.hmtl">Sub Menu 2</a></li>
+              <li class=""><a href="{{ route('provider.index') }}">Provider</a></li>
+              <li class=""><a href="{{ route('provider-prefix.index') }}">Provider Prefix</a></li>
             </ul>
           </li>
-          <li class="">
+          <li class="{{ Route::is('product*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-beer"></i> Manage Product <span class="fa fa-chevron-down"></span>
             </a>
-            <ul class="nav child_menu" style="">
-              <li class=""><a href="index.hmtl">Sub Menu 1</a></li>
-              <li class=""><a href="index.hmtl">Sub Menu 2</a></li>
+            <ul class="nav child_menu" style="{{ Route::is('product*') ? 'display: block;' : '' }}">
+              <li class="{{ Route::is('product*') ? 'current-page' : '' }}"><a href="{{ route('product.index') }}">Product</a></li>
+              <li class=""><a href="index.hmtl">Product Sell Price</a></li>
             </ul>
           </li>
           <li class="">

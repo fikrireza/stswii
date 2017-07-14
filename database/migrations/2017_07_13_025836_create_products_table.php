@@ -20,11 +20,11 @@ class CreateProductsTable extends Migration
             $table->bigInteger('provider_id')->unsigned();
             $table->decimal('nominal', 9,0);
             $table->boolean('active')->default(false);
-            $table->dateTime('active_datetime');
-            $table->dateTime('non_active_datetime');
-            $table->bigInteger('version')->unsigned();
-            $table->bigInteger('create_user_id')->unsigned();
-            $table->bigInteger('update_user_id')->unsigned();
+            $table->dateTime('active_datetime')->nullable();
+            $table->dateTime('non_active_datetime')->nullable();
+            $table->bigInteger('version')->unsigned()->nullable();
+            $table->bigInteger('create_user_id')->unsigned()->nullable();
+            $table->bigInteger('update_user_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }

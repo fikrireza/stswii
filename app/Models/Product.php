@@ -8,7 +8,7 @@ class Product extends Model
 {
     protected $table = 'amd_products';
 
-    protected $fillbale ['product_code','product_name','provider_id','nominal','active','active_datetime',
+    protected $fillbale = ['product_code','product_name','provider_id','nominal','active','active_datetime',
                           'non_active_datetime','version','create_user_id','update_user_id'];
 
     public function provider()
@@ -18,7 +18,7 @@ class Product extends Model
 
     public function createdBy()
     {
-      return $this->belongsTo('App\Models\User', 'created_user_id');
+      return $this->belongsTo('App\Models\User', 'create_user_id');
     }
 
     public function updatedBy()

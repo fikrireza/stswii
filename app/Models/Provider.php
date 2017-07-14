@@ -20,5 +20,5 @@ class Provider extends Model
       return $this->belongsTo('App\Models\User', 'update_user_id');
     }
 
-    
+
 }

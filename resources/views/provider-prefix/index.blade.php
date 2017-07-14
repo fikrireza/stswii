@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-  <title> | Provider</title>
+  <title> | Provider Prefix</title>
 @endsection
 
 @section('headscript')
@@ -32,21 +32,56 @@
   <div class="modal-dialog">
     <div class="modal-content">
 
-      <form action="{{ route('provider.store') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+      <form action="{{ route('provider-prefix.store') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
           </button>
-          <h4 class="modal-title" id="myModalLabel2">Add Provider</h4>
+          <h4 class="modal-title" id="myModalLabel2">Add Provider Prefix</h4>
         </div>
         <div class="modal-body">
             {{ csrf_field() }}
-            <div class="item form-group {{ $errors->has('provider_name') ? 'has-error' : ''}}">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Provider Name<span class="required">*</span>
+            <div class="item form-group {{ $errors->has('provider_id') ? 'has-error' : ''}}">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                Provider <span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input id="name" class="form-control col-md-7 col-xs-12" name="provider_name" placeholder="Contoh: Nama Provider" required="required" type="text" value="{{ old('provider_name') }}">
-                @if($errors->has('provider_name'))
-                  <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_name')}}</span></code>
+                <select 
+                  id="provider_id" 
+                  name="provider_id" 
+                  class="form-control select2_single" 
+                  required="required"
+                >
+                  <option value="">Pilih</option>
+                  @foreach ($getProvider as $key)
+                  <option 
+                    value="{{ $key->id }}" 
+                    {{ old('provider_id') == $key->id ? 'selected' : '' }}
+                  >
+                    {{ $key->provider_name}}
+                  </option>
+                  @endforeach
+                </select>
+                @if($errors->has('provider_id'))
+                  <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_id')}}</span></code>
+                @endif
+              </div>
+            </div>
+            <div class="item form-group {{ $errors->has('prefix') ? 'has-error' : ''}}">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                Provider Prefix<span class="required">*</span>
+              </label>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <input 
+                  id="prefix" 
+                  class="form-control col-md-7 col-xs-12" 
+                  name="prefix" 
+                  placeholder="Contoh: Provider Prefix" 
+                  required="required" 
+                  type="text" 
+                  value="{{ old('prefix') }}"
+                >
+                @if($errors->has('prefix'))
+                  <code><span style="color:red; font-size:12px;">{{ $errors->first('prefix')}}</span></code>
                 @endif
               </div>
             </div>
@@ -63,7 +98,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
 
-      <form action="{{ route('provider.update') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+      <form action="{{ route('provider-prefix.update') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
           </button>
@@ -71,14 +106,48 @@
         </div>
         <div class="modal-body">
             {{ csrf_field() }}
-            <div class="item form-group {{ $errors->has('provider_name') ? 'has-error' : ''}}">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nama Provider <span class="required">*</span>
+            <div class="item form-group {{ $errors->has('provider_id') ? 'has-error' : ''}}">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                Provider <span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input id="id_provider_update" name="id_provider" type="hidden" value="">
-                <input id="name_provider_update" class="form-control col-md-7 col-xs-12" name="provider_name" placeholder="Contoh: Nama Provider" required="required" type="text" value="{{ old('provider_name') }}">
-                @if($errors->has('provider_name'))
-                  <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_name')}}</span></code>
+                <select 
+                  id="provider_id_update" 
+                  name="provider_id" 
+                  class="form-control select2_single" 
+                  required="required"
+                >
+                  <option value="">Pilih</option>
+                  @foreach ($getProvider as $key)
+                  <option 
+                    value="{{ $key->id }}" 
+                    {{ old('provider_id') == $key->id ? 'selected' : '' }}
+                  >
+                    {{ $key->provider_name}}
+                  </option>
+                  @endforeach
+                </select>
+                @if($errors->has('provider_id'))
+                  <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_id')}}</span></code>
+                @endif
+              </div>
+            </div>
+            <div class="item form-group {{ $errors->has('prefix') ? 'has-error' : ''}}">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                Provider Prefix<span class="required">*</span>
+              </label>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <input 
+                  id="prefix_update" 
+                  class="form-control col-md-7 col-xs-12" 
+                  name="prefix" 
+                  placeholder="Contoh: Provider Prefix" 
+                  required="required" 
+                  type="text" 
+                  value="{{ old('prefix') }}"
+                >
+                @if($errors->has('prefix'))
+                  <code><span style="color:red; font-size:12px;">{{ $errors->first('prefix')}}</span></code>
                 @endif
               </div>
             </div>
@@ -113,7 +182,7 @@
 
 <div class="page-title">
   <div class="title_left">
-    <h3>All Provider <small></small></h3>
+    <h3>All Provider Prefix<small></small></h3>
   </div>
 </div>
 <div class="clearfix"></div>
@@ -121,7 +190,7 @@
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Provider </h2>
+        <h2>Provider Prefix</h2>
         <ul class="nav panel_toolbox">
           <a class="btn btn-success btn-sm publish" data-toggle="modal" data-target=".modal-form-add" ><i class="fa fa-plus"></i> Add</a>
         </ul>
@@ -134,6 +203,7 @@
               <th>No</th>
               <th>Provider Code</th>
               <th>Provider Name</th>
+              <th>Prefix</th>
               <th>Version</th>
               <th>Created By</th>
               <th>Created Date</th>
@@ -146,18 +216,19 @@
             @php
               $no = 1;
             @endphp
-            @foreach ($getProvider as $key)
+            @foreach ($getProviderPrefix as $key)
             <tr>
               <td>{{ $no }}</td>
-              <td>{{ $key->provider_code }}</td>
-              <td>{{ $key->provider_name }}</td>
+              <td>{{ $key->provider->provider_code }}</td>
+              <td>{{ $key->provider->provider_name }}</td>
+              <td>{{ $key->prefix }}</td>
               <td>{!! $key->version !!}</td>
               <td>{!! $key->createdBy->name !!}</td>
               <td>{!! $key->created_at !!}</td>
               <td>{!! $key->updatedBy->name !!}</td>
               <td>{!! $key->updated_at !!}</td>
               <td>
-                <a class="update" data-id="{{ $key->id }}" data-name="{{ $key->provider_name }}" data-toggle="modal" data-target=".modal-form-update"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span></a>
+                <a class="update" data-provider_id="{{ $key->provider_id }}" data-prefix="{{ $key->prefix }}" data-toggle="modal" data-target=".modal-form-update"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span></a>
                 <a href="" class="delete" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
               </td>
             </tr>
@@ -183,17 +254,17 @@ $('#dataTables').DataTable();
 
 $(function(){
     $('.update').click(function() {
-        var idProvider    = $(this).data('id');
-        var nameProvider  = $(this).data('name');
-        $("#id_provider_update").val(idProvider);
-        $("#name_provider_update").val(nameProvider);
+        var provider_id    = $(this).data('provider_id');
+        var prefix  = $(this).data('prefix');
+        $("#provider_id_update").val(provider_id);
+        $("#prefix_update").val(prefix);
     });
 });
 
 $(function(){
   $('#dataTables').on('click', 'a.delete', function(){
     var a = $(this).data('value');
-    $('#setDelete').attr('href', "{{ url('/') }}/provider/delete/"+a);
+    $('#setDelete').attr('href', "{{ url('/') }}/provider-prefix/delete/"+a);
   });
 });
 </script>

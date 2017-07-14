@@ -18,9 +18,9 @@ class CreatePartnerPulsaServerPropsTable extends Migration
             $table->string('server_url');
             $table->string('api_key');
             $table->string('api_secret');
-            $table->bigInteger('version')->unsigned();
-            $table->bigInteger('create_user_id')->unsigned();
-            $table->bigInteger('update_user_id')->unsigned();
+            $table->bigInteger('version')->unsigned()->nullable();
+            $table->bigInteger('create_user_id')->unsigned()->nullable();
+            $table->bigInteger('update_user_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }

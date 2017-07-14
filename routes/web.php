@@ -17,16 +17,15 @@ Route::get('/', function () {
 
 
 Route::get('/provider', 'ProviderController@index')
-	->name('ProviderController.index');
-Route::get('/provider/add', 'ProviderController@add')
-	->name('ProviderController.add');
-Route::post('/provider/add', 'ProviderController@store')
-	->name('ProviderController.store');
+	->name('provider.index');
+Route::post('/provider/store', 'ProviderController@store')
+	->name('provider.store');
 Route::post('/provider/update', 'ProviderController@update')
-	->name('ProviderController.update');
+	->name('provider.update');
 Route::get('/provider/delete/{id}', 'ProviderController@delete')
-	->name('ProviderController.delete');
+	->name('provider.delete');
 
+<<<<<<< HEAD
 Route::get('/partner-pulsa', 'PartnerPulsaController@index')
 	->name('PartnerPulsaController.index');
 Route::get('/partner-pulsa/add', 'PartnerPulsaController@add')
@@ -37,3 +36,20 @@ Route::post('/partner-pulsa/update', 'PartnerPulsaController@update')
 	->name('PartnerPulsaController.update');
 Route::get('/partner-pulsa/delete/{id}', 'PartnerPulsaController@delete')
 	->name('PartnerPulsaController.delete');
+=======
+Route::get('/provider-prefix', 'ProviderPrefixController@index')
+	->name('provider-prefix.index');
+Route::post('/provider-prefix/store', 'ProviderPrefixController@store')
+	->name('provider-prefix.store');
+Route::post('/provider-prefix/update', 'ProviderPrefixController@update')
+	->name('provider-prefix.update');
+Route::get('/provider-prefix/delete/{id}', 'ProviderPrefixController@delete')
+	->name('provider-prefix.delete');
+
+
+Route::get('product', 'ProductController@index')->name('product.index');
+Route::get('product/add', 'ProductController@tambah')->name('product.tambah');
+Route::post('product', 'ProductController@store')->name('product.store');
+Route::get('product/edit/{product_code}', 'ProductController@ubah')->name('product.ubah');
+Route::post('product/edit', 'ProductController@update')->name('product.update');
+>>>>>>> 487b11a1333f62b59802d637be48b8ac048eac32

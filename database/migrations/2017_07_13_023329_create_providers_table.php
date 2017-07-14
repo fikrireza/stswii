@@ -17,9 +17,9 @@ class CreateProvidersTable extends Migration
             $table->bigIncrements('id');
             $table->string('provider_code');
             $table->string('provider_name');
-            $table->bigInteger('version')->unsigned();
-            $table->integer('create_user_id')->unsigned();
-            $table->integer('update_user_id')->unsigned();
+            $table->bigInteger('version')->unsigned()->nullable();
+            $table->integer('create_user_id')->unsigned()->nullable();
+            $table->integer('update_user_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }
