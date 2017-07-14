@@ -32,7 +32,7 @@
 </div>
 @endif
 
-<div class="modal fade modal-active" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade modal-nonactive" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
 
@@ -51,7 +51,7 @@
   </div>
 </div>
 
-<div class="modal fade modal-nonactive" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade modal-active" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
 
@@ -136,15 +136,14 @@
               <td>{{ $key->product_name }}</td>
               <td>{{ $key->provider->provider_name }}</td>
               <td>{{ number_format($key->nominal, 0, ',', '.') }}</td>
-              <td class="text-center">
-                  @if ($key->active == 1)
-                    <a href="" class="unpublish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-active"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span></a>
+              <td class="text-center">@if ($key->active == 1)
+                    <a href="" class="unpublish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span></a>
                     <br>
-                    <span class="label label-primary">{{ $key->active_datetime }}</span>
+                    <span class="label label-primary">{{ $key->active_datetime or '-' }}</span>
                   @else
-                    <a href="" class="publish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="Nonactive"><i class="fa fa-thumbs-o-down"></i></span></a>
+                    <a href="" class="publish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive"><i class="fa fa-thumbs-o-down"></i></span></a>
                     <br>
-                    <span class="label label-primary">{{ $key->non_active_datetime }}</span>
+                    <span class="label label-primary">{{ $key->non_active_datetime or '-' }}</span>
                   @endif
               </td>
               <td>{{ $key->createdBy->name or '-' }}</td>
@@ -176,21 +175,18 @@
 
 <script type="text/javascript">
   $('#producttabel').DataTable();
-
   $(function(){
     $('#producttabel').on('click','a.unpublish', function(){
       var a = $(this).data('value');
       $('#setUnpublish').attr('href', "{{ url('/') }}/product/active/"+a);
     });
   });
-
   $(function(){
     $('#producttabel').on('click', 'a.publish', function(){
       var a = $(this).data('value');
       $('#setPublish').attr('href', "{{ url('/') }}/product/active/"+a);
     });
   });
-
   $(function(){
     $('#producttabel').on('click', 'a.delete', function(){
       var a = $(this).data('value');
