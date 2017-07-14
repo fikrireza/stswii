@@ -32,7 +32,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
 
-      <form action="{{ route('ProviderController.store') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+      <form action="{{ route('partner-pulsa.store') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
           </button>
@@ -63,7 +63,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
 
-      <form action="{{ route('ProviderController.update') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+      <form action="{{ route('partner-pulsa.update') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
           </button>
@@ -157,7 +157,6 @@
               <td>{!! $key->updatedBy->name !!}</td>
               <td>{!! $key->updated_at !!}</td>
               <td>
-                <!-- <a href="{{ route('ProviderController.update', $key->id) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a> -->
                 <a class="update" data-id="{{ $key->id }}" data-name="{{ $key->provider_name }}" data-toggle="modal" data-target=".modal-form-update"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span></a>
                 <a href="" class="delete" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
               </td>
@@ -194,7 +193,7 @@ $(function(){
 $(function(){
   $('#dataTables').on('click', 'a.delete', function(){
     var a = $(this).data('value');
-    $('#setDelete').attr('href', "{{ url('/') }}/provider/delete/"+a);
+    $('#setDelete').attr('href', "{{ url('/') }}/partner-pulsa/delete/"+a);
   });
 });
 </script>

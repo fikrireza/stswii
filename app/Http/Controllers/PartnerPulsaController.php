@@ -16,6 +16,13 @@ class PartnerPulsaController extends Controller
 		));
     }
 
+    public function create()
+    {
+    	return view('partner-pulsa.create', compact(
+			''
+		));
+    }
+
     public function store(Request $request)
     {
     	$message = [
@@ -23,11 +30,13 @@ class PartnerPulsaController extends Controller
 			'partner_pulsa_code.max' => 'Terlalu Panjang, Maks 25 Karakter',
 			'partner_pulsa_code.unique' => 'Produk ini sudah ada',
 			'partner_pulsa_name.required' => 'mohon isi',
+			'description.required' => 'mohon isi',
 		];
 
 		$validator = Validator::make($request->all(), [
 			'partner_pulsa_code' => 'required|unique:amd_providers',
 			'partner_pulsa_name' => 'required',
+			'description' => 'required',
 		], $message);
 
 		if($validator->fails()){
@@ -121,9 +130,9 @@ class PartnerPulsaController extends Controller
 			->with('berhasil', 'Berhasil Mengubah Provider '.$request->partner_pulsa_name);
     }
 
-    public function active($id)
+    public function active($id, $action)
     {
-    	DB::transaction(function () use($request, $id) {
+    	DB::transaction(function () use($request, $id, $action) {
 			$save = PartnerPulsa::find($id);
 
 			$save->partner_pulsa_code  = $request->partner_pulsa_code;

@@ -25,18 +25,17 @@ Route::post('/provider/update', 'ProviderController@update')
 Route::get('/provider/delete/{id}', 'ProviderController@delete')
 	->name('provider.delete');
 
-<<<<<<< HEAD
 Route::get('/partner-pulsa', 'PartnerPulsaController@index')
-	->name('PartnerPulsaController.index');
+	->name('partner-pulsa.index');
 Route::get('/partner-pulsa/add', 'PartnerPulsaController@add')
-	->name('PartnerPulsaController.add');
-Route::post('/partner-pulsa/add', 'PartnerPulsaController@store')
-	->name('PartnerPulsaController.store');
+	->name('partner-pulsa.add');
+Route::post('/partner-pulsa/store', 'PartnerPulsaController@store')
+	->name('partner-pulsa.store');
 Route::post('/partner-pulsa/update', 'PartnerPulsaController@update')
-	->name('PartnerPulsaController.update');
+	->name('partner-pulsa.update');
 Route::get('/partner-pulsa/delete/{id}', 'PartnerPulsaController@delete')
-	->name('PartnerPulsaController.delete');
-=======
+	->name('partner-pulsa.delete');
+
 Route::get('/provider-prefix', 'ProviderPrefixController@index')
 	->name('provider-prefix.index');
 Route::post('/provider-prefix/store', 'ProviderPrefixController@store')
@@ -52,4 +51,3 @@ Route::get('product/add', 'ProductController@tambah')->name('product.tambah');
 Route::post('product', 'ProductController@store')->name('product.store');
 Route::get('product/edit/{product_code}', 'ProductController@ubah')->name('product.ubah');
 Route::post('product/edit', 'ProductController@update')->name('product.update');
->>>>>>> 487b11a1333f62b59802d637be48b8ac048eac32
