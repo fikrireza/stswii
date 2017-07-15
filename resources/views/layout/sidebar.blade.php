@@ -42,6 +42,24 @@
               <li class=""><a href="index.hmtl">Product Sell Price</a></li>
             </ul>
           </li>
+          <li class="{{ Route::is('partner-pulsa*') ? 'active' : '' }}">
+            <a>
+              <i class="fa fa-beer"></i> Manage Partner Pulsa <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="nav child_menu" style="{{ Route::is('partner-pulsa*') ? 'display: block;' : '' }}">
+              <li class="{{ Route::is('partner-pulsa*') ? 'current-page' : '' }}"><a href="{{ route('partner-pulsa.index') }}">Partner Pulsa</a></li>
+              <li class=""><a href="index.html">Sub 2</a></li>
+            </ul>
+          </li>
+          <li class="{{ Route::is('partner-product*') ? 'active' : '' }}">
+            <a>
+              <i class="fa fa-beer"></i> Manage Partner Product <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="nav child_menu" style="{{ Route::is('partner-product*') ? 'display: block;' : '' }}">
+              <li class="{{ Route::is('partner-product*') ? 'current-page' : '' }}"><a href="{{ route('partner-product.index') }}">Partner Product</a></li>
+              <li class=""><a href="index.html">Sub 2</a></li>
+            </ul>
+          </li>
           <li class="">
             <a>
               <i class="fa fa-beer"></i> Manage Partner <span class="fa fa-chevron-down"></span>
