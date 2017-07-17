@@ -17,7 +17,6 @@ class ProductController extends Controller
     public function index()
     {
         $getProduct = Product::get();
-        // dd($getProduct);
         return view('product.index', compact('getProduct'));
     }
 

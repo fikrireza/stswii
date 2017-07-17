@@ -47,6 +47,16 @@ Route::get('/partner-product/delete/{id}', 'PartnerProductController@delete')
 Route::get('/partner-product/active/{id}', 'PartnerProductController@active')
 	->name('partner-product.active');
 
+Route::get('/partner-product-purch-price', 'PartnerProductPurchPriceController@index')
+	->name('partner-product-purch-price.index');
+Route::get('/partner-product-purch-price/active/{id}', 'PartnerProductPurchPriceController@active')
+	->name('partner-product-purch-price.active');
+Route::get('/partner-product-purch-price/delete/{id}', 'PartnerProductPurchPriceController@delete')
+	->name('partner-product-purch-price.delete');
+Route::get('partner-product-purch-price/add', 'PartnerProductPurchPriceController@tambah')
+	->name('partner-product-purch-price.tambah');
+Route::post('partner-product-purch-price', 'PartnerProductPurchPriceController@store')
+	->name('partner-product-purch-price.store');
 
 Route::get('/provider-prefix', 'ProviderPrefixController@index')
 	->name('provider-prefix.index');
