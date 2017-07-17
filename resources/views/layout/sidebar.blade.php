@@ -67,8 +67,8 @@
               <li class="{{ Route::is('partner-product*') ? 'current-page' : '' }}">
                 <a href="{{ route('partner-product.index') }}">Partner Product</a>
               </li>
-              <li class="">
-                <a href="index.html">Sub 2</a>
+              <li class="{{ Route::is('partner-product-purch-price*') ? 'current-page' : '' }}">
+                <a href="{{ route('partner-product-purch-price.index') }}">Partner Product Purch Price</a>
               </li>
             </ul>
           </li>

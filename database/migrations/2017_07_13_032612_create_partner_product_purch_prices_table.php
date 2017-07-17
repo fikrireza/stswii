@@ -18,7 +18,7 @@ class CreatePartnerProductPurchPricesTable extends Migration
             $table->bigInteger('parner_product_id')->unsigned();
             $table->decimal('gross_purch_price', 9,0);
             $table->boolean('flg_tax')->default(false);
-            $table->string('tax_percentage');
+            $table->string('tax_percentage')->nullable();
             $table->dateTime('datetime_start');
             $table->dateTime('datetime_end');
             $table->boolean('active')->default(false);
