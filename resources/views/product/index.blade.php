@@ -131,7 +131,7 @@
             @endphp
             @foreach ($getProduct as $key)
             <tr>
-              <td>{{ $no++ }}</td>
+              <td>{{ $no }}</td>
               <td>{{ $key->product_code }}</td>
               <td>{{ $key->product_name }}</td>
               <td>{{ $key->provider->provider_name }}</td>
