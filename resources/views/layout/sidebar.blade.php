@@ -33,13 +33,13 @@
               <li class=""><a href="{{ route('provider-prefix.index') }}">Provider Prefix</a></li>
             </ul>
           </li>
-          <li class="{{ Route::is('product*') ? 'active' : '' }}">
+          <li class="{{ Route::is('product.*') ? 'active' : '' }}{{ Route::is('product-*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-beer"></i> Manage Product <span class="fa fa-chevron-down"></span>
             </a>
-            <ul class="nav child_menu" style="{{ Route::is('product*') ? 'display: block;' : '' }}">
-              <li class="{{ Route::is('product*') ? 'current-page' : '' }}"><a href="{{ route('product.index') }}">Product</a></li>
-              <li class=""><a href="index.hmtl">Product Sell Price</a></li>
+            <ul class="nav child_menu" style="{{ Route::is('product.*') ? 'display: block;' : '' }}{{ Route::is('product-*') ? 'display: block;' : '' }}">
+              <li class="{{ Route::is('product.*') ? 'current-page' : '' }}"><a href="{{ route('product.index') }}">Product</a></li>
+              <li class="{{ Route::is('product-*') ? 'current-page' : '' }}"><a href="{{ route('product-sell-price.index') }}">Product Sell Price</a></li>
             </ul>
           </li>
           <li class="">

@@ -18,7 +18,7 @@ class ProductSellPrice extends Model
 
       public function createdBy()
       {
-        return $this->belongsTo('App\Models\User', 'created_user_id');
+        return $this->belongsTo('App\Models\User', 'create_user_id');
       }
 
       public function updatedBy()

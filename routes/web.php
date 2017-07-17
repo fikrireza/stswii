@@ -46,7 +46,7 @@ Route::post('/provider-prefix/update', 'ProviderPrefixController@update')
 Route::get('/provider-prefix/delete/{id}', 'ProviderPrefixController@delete')
 	->name('provider-prefix.delete');
 
-
+//----- PRODUCT -----//
 Route::get('product', 'ProductController@index')->name('product.index');
 Route::get('product/add', 'ProductController@tambah')->name('product.tambah');
 Route::post('product', 'ProductController@store')->name('product.store');
@@ -54,3 +54,17 @@ Route::get('product/edit/{product_code}', 'ProductController@ubah')->name('produ
 Route::post('product/edit', 'ProductController@update')->name('product.update');
 Route::get('product/active/{id}', 'ProductController@active')->name('product.active');
 Route::get('product/delete/{id}', 'ProductController@delete')->name('product.delete');
+//----- PRODUCT -----//
+
+//----- PRODUCT SELL PRICE -----//
+Route::get('product-sell-price', 'ProductSellPriceController@index')->name('product-sell-price.index');
+Route::get('product-sell-price/add', 'ProductSellPriceController@tambah')->name('product-sell-price.tambah');
+Route::get('product-sell-price/product/{id}', 'ProductSellPriceController@bindProduct')->name('product-sell-price.bindProduct');
+Route::post('product-sell-price', 'ProductSellPriceController@store')->name('product-sell-price.store');
+Route::get('product-sell-price/edit/{id}', 'ProductSellPriceController@ubah')->name('product-sell-price.ubah');
+Route::post('product-sell-price/edit', 'ProductSellPriceController@update')->name('product-sell-price.edit');
+Route::get('product-sell-price/active/{id}', 'ProductSellPriceController@active')->name('product-sell-price.active');
+Route::get('product-sell-price/delete/{id}', 'ProductSellPriceController@delete')->name('product-sell-price.delete');
+
+Route::get('product-sell-price/mass', 'ProductSellPriceController@masal')->name('product-sell-price.masal');
+//----- PRODUCT SELL PRICE -----//

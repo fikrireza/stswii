@@ -18,7 +18,7 @@ class CreateProductSellPricesTable extends Migration
             $table->bigInteger('product_id')->unsigned();
             $table->decimal('gross_sell_price', 9,0);
             $table->boolean('flg_tax')->default(false);
-            $table->string('tax_percentage');
+            $table->string('tax_percentage')->nullable();
             $table->dateTime('datetime_start');
             $table->dateTime('datetime_end');
             $table->boolean('active')->default(false);
