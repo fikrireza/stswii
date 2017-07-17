@@ -22,8 +22,9 @@
       <div class="menu_section">
         <h3>General</h3>
         <ul class="nav side-menu">
-          <li class="">
-            <a href="index.html"><i class="fa fa-home"></i> Beranda </a></li>
+          <li class="{{ Route::is('home*') ? 'active' : '' }}">
+            <a href="{{ route('home.index') }}"><i class="fa fa-home"></i> Home </a>
+          </li>
           <li class="{{ Route::is('provider*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-beer"></i> Manage Provider <span class="fa fa-chevron-down"></span>
@@ -70,8 +71,12 @@
               <i class="fa fa-beer"></i> Manage Partner Product <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="{{ Route::is('partner-product*') ? 'display: block;' : '' }}">
-              <li class="{{ Route::is('partner-product*') ? 'current-page' : '' }}"><a href="{{ route('partner-product.index') }}">Partner Product</a></li>
-              <li class=""><a href="index.html">Sub 2</a></li>
+              <li class="{{ Route::is('partner-product*') ? 'current-page' : '' }}">
+                <a href="{{ route('partner-product.index') }}">Partner Product</a>
+              </li>
+              <li class="">
+                <a href="index.html">Sub 2</a>
+              </li>
             </ul>
           </li>
           <li class="{{ Route::is('partner-server*') ? 'active' : '' }}">
