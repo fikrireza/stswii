@@ -176,7 +176,7 @@ class PartnerPulsaController extends Controller
     public function delete($id)
     {
     	$getPartnerPulsa = PartnerPulsa::find($id);
-    	
+
     	if(!$getPartnerPulsa){
           return view('errors.404');
         }

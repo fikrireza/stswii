@@ -64,7 +64,7 @@
         <form action="{{ route('product-sell-price.store') }}" method="POST" class="form-horizontal form-label-left" novalidate>
           {{ csrf_field() }}
           <div class="item form-group {{ $errors->has('product_id') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Provider <span class="required">*</span></label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <select id="product_id" name="product_id" class="form-control select2_single" required="required">
                 <option value="">Pilih</option>

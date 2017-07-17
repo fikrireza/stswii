@@ -15,7 +15,7 @@ class CreatePartnerProductPurchPricesTable extends Migration
     {
         Schema::create('amd_partner_product_purch_prices', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('parner_product_id')->unsigned();
+            $table->bigInteger('partner_product_id')->unsigned();
             $table->decimal('gross_purch_price', 9,0);
             $table->boolean('flg_tax')->default(false);
             $table->string('tax_percentage')->nullable();
