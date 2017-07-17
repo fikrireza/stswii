@@ -145,5 +145,42 @@ class ProductController extends Controller
         return redirect()->route('product.index')->with('berhasil', 'Your data has been successfully updated.');
     }
 
+    public function active($id)
+    {
+        $getProduct = Product::find($id);
+
+        if(!$getProduct){
+          return view('errors.404');
+        }
+
+        if ($getProduct->active == 1) {
+          $getProduct->active = 0;
+          $getProduct->non_active_datetime = date('Y-m-d H:i:s');
+          $getProduct->update_user_id = 1; //Auth::user()->id;
+          $getProduct->update();
+
+          return redirect()->route('product.index')->with('berhasil', 'Successfully Nonactive'.$getProduct->product_name);
+        }else{
+          $getProduct->active = 1;
+          $getProduct->active_datetime = date('Y-m-d H:i:s');
+          $getProduct->update_user_id = 1; //Auth::user()->id;
+          $getProduct->update();
+
+          return redirect()->route('product.index')->with('berhasil', 'Successfully Activated '.$getProduct->product_name);
+        }
+    }
+
+    public function delete($id)
+    {
+        $getProduct = Product::find($id);
+
+        if(!$getProduct){
+          return view('errors.404');
+        }
+
+        $getProduct->delete();
+
+        return redirect()->route('product.index')->with('berhasil', 'Successfully Deleted '.$getProduct->product_name);
+    }
 
 }

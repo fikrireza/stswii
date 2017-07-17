@@ -1,18 +1,14 @@
 @extends('layout.master')
 
 @section('title')
-  <title>STS | Product</title>
+  <title> | Partner Product</title>
 @endsection
 
 @section('headscript')
 <link href="{{ asset('amadeo/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
-<link href="{{ asset('amadeo/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
-<link href="{{ asset('amadeo/vendors/pnotify/dist/pnotify.css') }}" rel="stylesheet">
-<link href="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
-
 @if(Session::has('berhasil'))
 <script>
   window.setTimeout(function() {
@@ -32,6 +28,27 @@
 </div>
 @endif
 
+
+<div class="modal fade modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content alert-danger">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel2">Hapus Partner Product</h4>
+      </div>
+      <div class="modal-body">
+        <h4>Yakin ?</h4>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary" id="setDelete">Ya</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <div class="modal fade modal-nonactive" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
@@ -39,7 +56,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Nonactive Product</h4>
+        <h4 class="modal-title" id="myModalLabel2">Nonactive Partner Product</h4>
       </div>
       <div class="modal-body">
         <h4>Sure ?</h4>
@@ -58,7 +75,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Activated Product</h4>
+        <h4 class="modal-title" id="myModalLabel2">Activated Partner Product</h4>
       </div>
       <div class="modal-body">
         <h4>Sure ?</h4>
@@ -70,72 +87,53 @@
   </div>
 </div>
 
-<div class="modal fade modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content alert-danger">
-
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
-        </button>
-        <h4 class="modal-title" id="myModalLabel2">Delete Product</h4>
-      </div>
-      <div class="modal-body">
-        <h4>Sure ?</h4>
-      </div>
-      <div class="modal-footer">
-        <a class="btn btn-primary" id="setDelete">Ya</a>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-
 <div class="page-title">
   <div class="title_left">
-    <h3>All Product <small></small></h3>
+    <h3>All Partner Product <small></small></h3>
   </div>
 </div>
-
 <div class="clearfix"></div>
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Product </h2>
+        <h2>Partner Product </h2>
         <ul class="nav panel_toolbox">
-          <a href="{{ route('product.tambah') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add</a>
+          <a class="btn btn-success btn-sm publish" href="{{ route('partner-product.create') }}"><i class="fa fa-plus"></i> Add</a>
         </ul>
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
-        <table id="producttabel" class="table table-striped table-bordered no-footer" width="100%">
+        <table id="dataTables" class="table table-striped table-bordered no-footer" width="100%">
           <thead>
             <tr role="row">
               <th>No</th>
-              <th>Product Code</th>
-              <th>Product Name</th>
+              <th>Kode Partner Product</th>
+              <th>Nama Partner Product</th>
+              <th>Partner Pulsa</th>
               <th>Provider</th>
-              <th>Nominal</th>
+              <th>Product</th>
               <th>Status</th>
+              <th>Version</th>
               <th>Created By</th>
               <th>Created Date</th>
               <th>Updated By</th>
               <th>Updated Date</th>
-              <th>Action</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
             @php
               $no = 1;
             @endphp
-            @foreach ($getProduct as $key)
+            @foreach ($getPartnerProduct as $key)
             <tr>
-              <td>{{ $no++ }}</td>
-              <td>{{ $key->product_code }}</td>
-              <td>{{ $key->product_name }}</td>
-              <td>{{ $key->provider->provider_name }}</td>
-              <td>{{ number_format($key->nominal, 0, ',', '.') }}</td>
+              <td>{{ $no }}</td>
+              <td>{{ $key->partner_product_code or '-' }}</td>
+              <td>{{ $key->partner_product_name or '-' }}</td>
+              <td>{{ $key->partnerpulsa->partner_pulsa_name or '-' }}</td>
+              <td>{{ $key->provider->provider_name or '-' }}</td>
+              <td>{{ $key->product->product_name or '-' }}</td>
               <td class="text-center">@if ($key->active == 1)
                     <a href="" class="unpublish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span></a>
                     <br>
@@ -146,15 +144,20 @@
                     <span class="label label-primary">{{ $key->non_active_datetime or '-' }}</span>
                   @endif
               </td>
-              <td>{{ $key->createdBy->name or '-' }}</td>
-              <td>{{ $key->created_at or '-' }}</td>
-              <td>{{ $key->updatedBy->name or '-' }}</td>
-              <td>{{ $key->updated_at or '-' }}</td>
+              <td>{!! $key->version or '-' !!}</td>
+              <td>{!! $key->create_user_id->name or '-' !!}</td>
+              <td>{!! $key->created_at or '-' !!}</td>
+              <td>{!! $key->update_user_id->name or '-' !!}</td>
+              <td>{!! $key->updated_at or '-' !!}</td>
               <td>
-                <a href="{{ route('product.ubah', $key->product_code) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
+                <a class="update" href="{{ route('partner-product.edit', ['id' => $key->id ]) }}"><span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span></a>
+
                 <a href="" class="delete" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
               </td>
             </tr>
+            @php
+              $no++;
+            @endphp
             @endforeach
           </tbody>
         </table>
@@ -162,7 +165,6 @@
     </div>
   </div>
 </div>
-
 @endsection
 
 @section('script')
@@ -170,28 +172,29 @@
 <script src="{{ asset('amadeo/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
-<script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.js') }}"></script>
-<script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
-
 <script type="text/javascript">
-  $('#producttabel').DataTable();
-  $(function(){
-    $('#producttabel').on('click','a.unpublish', function(){
-      var a = $(this).data('value');
-      $('#setUnpublish').attr('href', "{{ url('/') }}/product/active/"+a);
-    });
+$('#dataTables').DataTable();
+
+$(function(){
+  $('#dataTables').on('click', 'a.delete', function(){
+    var a = $(this).data('value');
+    $('#setDelete').attr('href', "{{ url('/') }}/partner-product/delete/"+a);
   });
-  $(function(){
-    $('#producttabel').on('click', 'a.publish', function(){
-      var a = $(this).data('value');
-      $('#setPublish').attr('href', "{{ url('/') }}/product/active/"+a);
-    });
+});
+
+$(function(){
+  $('#dataTables').on('click','a.unpublish', function(){
+    var a = $(this).data('value');
+    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-product/active/"+a);
   });
-  $(function(){
-    $('#producttabel').on('click', 'a.delete', function(){
-      var a = $(this).data('value');
-      $('#setDelete').attr('href', "{{ url('/') }}/product/delete/"+a);
-    });
+});
+
+$(function(){
+  $('#dataTables').on('click', 'a.publish', function(){
+    var a = $(this).data('value');
+    $('#setPublish').attr('href', "{{ url('/') }}/partner-product/active/"+a);
   });
+});
+
 </script>
 @endsection
