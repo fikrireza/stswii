@@ -11,6 +11,7 @@ use DB;
 use Auth;
 use Validator;
 use Excel;
+use Input;
 
 class ProductSellPriceController extends Controller
 {
@@ -216,7 +217,7 @@ class ProductSellPriceController extends Controller
           $excel->sheet('Data-Import', function($sheet){
             $sheet->row(1, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end', 'active', 'version'));
             $sheet->setColumnFormat(array(
-              'A' => '0',
+              'A' => '@',
               'B' => '0.00',
               'C' => '0.00',
               'D' => 'yyyy-mm-dd',
@@ -254,6 +255,37 @@ class ProductSellPriceController extends Controller
 
     public function prosesTemplate(Request $request)
     {
-        
+      if($request->hasFile('file')){
+        $path = Input::file('file')->getRealPath();
+        $data = Excel::selectSheets('Data-Import')->load($path, function($reader) {
+        })->get();
+
+        if(!empty($data) && $data->count()){
+          foreach ($data as $key) {
+            $collect[] = ['product_id'         => $key->product_id,
+                         'gross_sell_price'    => $key->gross_sell_price,
+                         'tax_percentage'      => $key->tax_percentage,
+                         'datetime_start'       => $key->datetime_start,
+                         'datetime_end'     => $key->datetime_end,
+                         'active'        => $key->active,
+                         'version'=> $key->version
+                       ];
+          }
+
+          if(!empty($collect)){
+
+            $collect = collect($collect);
+
+            $getProduct = Product::where('active', '=', 1)->get();
+
+            return view('product-sell-price.masal', compact('collect', 'getProduct'));
+          }
+        }
+      }
+    }
+
+    public function storeTemplate(Request $request)
+    {
+      dd($request);
     }
 }

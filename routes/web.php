@@ -77,16 +77,30 @@ Route::get('product/delete/{id}', 'ProductController@delete')->name('product.del
 //----- PRODUCT -----//
 
 //----- PRODUCT SELL PRICE -----//
-Route::get('product-sell-price', 'ProductSellPriceController@index')->name('product-sell-price.index');
-Route::get('product-sell-price/add', 'ProductSellPriceController@tambah')->name('product-sell-price.tambah');
-Route::get('product-sell-price/product/{id}', 'ProductSellPriceController@bindProduct')->name('product-sell-price.bindProduct');
-Route::post('product-sell-price', 'ProductSellPriceController@store')->name('product-sell-price.store');
-Route::get('product-sell-price/edit/{id}', 'ProductSellPriceController@ubah')->name('product-sell-price.ubah');
-Route::post('product-sell-price/edit', 'ProductSellPriceController@update')->name('product-sell-price.edit');
-Route::get('product-sell-price/active/{id}', 'ProductSellPriceController@active')->name('product-sell-price.active');
-Route::get('product-sell-price/delete/{id}', 'ProductSellPriceController@delete')->name('product-sell-price.delete');
+Route::get('product-sell-price', 'ProductSellPriceController@index')
+  ->name('product-sell-price.index');
+Route::get('product-sell-price/add', 'ProductSellPriceController@tambah')
+  ->name('product-sell-price.tambah');
+Route::get('product-sell-price/product/{id}', 'ProductSellPriceController@bindProduct')
+  ->name('product-sell-price.bindProduct');
+Route::post('product-sell-price', 'ProductSellPriceController@store')
+  ->name('product-sell-price.store');
+Route::get('product-sell-price/edit/{id}', 'ProductSellPriceController@ubah')
+  ->name('product-sell-price.ubah');
+Route::post('product-sell-price/edit', 'ProductSellPriceController@update')
+  ->name('product-sell-price.edit');
+Route::get('product-sell-price/active/{id}', 'ProductSellPriceController@active')
+  ->name('product-sell-price.active');
+Route::get('product-sell-price/delete/{id}', 'ProductSellPriceController@delete')
+  ->name('product-sell-price.delete');
 
-Route::get('product-sell-price/mass', 'ProductSellPriceController@masal')->name('product-sell-price.masal');
-Route::get('product-sell-price/mass/template', 'ProductSellPriceController@template')->name('product-sell-price.template');
-Route::post('product-sell-price/mass/template', 'ProductSellPriceController@prosesTemplate')->name('product-sell-price.prosesTemplate');
+  //----- Upload Excel
+Route::get('product-sell-price/mass', 'ProductSellPriceController@masal')
+  ->name('product-sell-price.masal');
+Route::get('product-sell-price/mass/template', 'ProductSellPriceController@template')
+  ->name('product-sell-price.template');
+Route::post('product-sell-price/mass/template', 'ProductSellPriceController@prosesTemplate')
+  ->name('product-sell-price.prosesTemplate');
+Route::post('product-sell-price/mass', 'ProductSellPriceController@storeTemplate')
+  ->name('product-sell-price.storeTemplate');
 //----- PRODUCT SELL PRICE -----//
