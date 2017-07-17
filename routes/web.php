@@ -87,4 +87,6 @@ Route::get('product-sell-price/active/{id}', 'ProductSellPriceController@active'
 Route::get('product-sell-price/delete/{id}', 'ProductSellPriceController@delete')->name('product-sell-price.delete');
 
 Route::get('product-sell-price/mass', 'ProductSellPriceController@masal')->name('product-sell-price.masal');
+Route::get('product-sell-price/mass/template', 'ProductSellPriceController@template')->name('product-sell-price.template');
+Route::post('product-sell-price/mass/template', 'ProductSellPriceController@prosesTemplate')->name('product-sell-price.prosesTemplate');
 //----- PRODUCT SELL PRICE -----//

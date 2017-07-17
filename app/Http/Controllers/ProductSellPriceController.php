@@ -10,6 +10,7 @@ use App\Models\Product;
 use DB;
 use Auth;
 use Validator;
+use Excel;
 
 class ProductSellPriceController extends Controller
 {
@@ -199,6 +200,60 @@ class ProductSellPriceController extends Controller
 
     public function masal()
     {
-      dd('baaah');
+
+        return view('product-sell-price.masal');
+    }
+
+    public function template()
+    {
+        $getProduct = Product::where('active', '=', 1)
+                              ->select('id', 'product_name', 'nominal')
+                              ->get()
+                              ->toArray();
+
+        return Excel::create('Template Import', function($excel) use($getProduct)
+        {
+          $excel->sheet('Data-Import', function($sheet){
+            $sheet->row(1, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end', 'active', 'version'));
+            $sheet->setColumnFormat(array(
+              'A' => '0',
+              'B' => '0.00',
+              'C' => '0.00',
+              'D' => 'yyyy-mm-dd',
+              'E' => 'yyyy-mm-dd',
+            ));
+          });
+
+          $excel->sheet('product_id', function($sheet) use($getProduct){
+            $sheet->fromArray($getProduct, null, 'A6', true);
+            $sheet->row(1, array('Example'));
+            $sheet->mergeCells('A1:G1');
+            $sheet->row(2, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end', 'active', 'version'));
+            $sheet->row(3, array('1', '45000', '10', '2017-07-01 12:00:00', '2017-07-31 12:00:00', '1', '1'));
+            $sheet->row(5, array('Data Product'));
+            $sheet->mergeCells('A5:C5');
+            $sheet->row(6, array('id','product_name','nominal'));
+            $sheet->setAllBorders('thin');
+            $sheet->setFreeze('A7');
+
+            $sheet->cells('A2:G3', function($cells){
+              $cells->setBackground('#5c92e8');
+              $cells->setFontColor('#000000');
+              $cells->setFontWeight('bold');
+            });
+
+            $sheet->cells('A6:C6', function($cells){
+              $cells->setBackground('#000000');
+              $cells->setFontColor('#ffffff');
+              $cells->setFontWeight('bold');
+            });
+
+          });
+        })->download('xls');
+    }
+
+    public function prosesTemplate(Request $request)
+    {
+        
     }
 }
