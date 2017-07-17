@@ -14,7 +14,7 @@ class CreatePartnerPulsaServerPropsTable extends Migration
     public function up()
     {
         Schema::create('amd_partner_pulsa_server_props', function (Blueprint $table) {
-            $table->bigInteger('id');
+            $table->bigIncrements('id');
             $table->string('server_url');
             $table->string('api_key');
             $table->string('api_secret');

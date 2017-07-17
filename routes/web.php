@@ -34,6 +34,14 @@ Route::post('/provider-prefix/update', 'ProviderPrefixController@update')
 Route::get('/provider-prefix/delete/{id}', 'ProviderPrefixController@delete')
 	->name('provider-prefix.delete');
 
+Route::get('/partner-server', 'PartnerPulsaServerPropController@index')
+	->name('partner-server.index');
+Route::post('/partner-server/store', 'PartnerPulsaServerPropController@store')
+	->name('partner-server.store');
+Route::post('/partner-server/update', 'PartnerPulsaServerPropController@update')
+	->name('partner-server.update');
+Route::get('/partner-server/delete/{id}', 'PartnerPulsaServerPropController@delete')
+	->name('partner-server.delete');
 
 Route::get('product', 'ProductController@index')->name('product.index');
 Route::get('product/add', 'ProductController@tambah')->name('product.tambah');
