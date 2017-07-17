@@ -98,7 +98,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Hapus Produk</h4>
+        <h4 class="modal-title" id="myModalLabel2">Hapus Provider</h4>
       </div>
       <div class="modal-body">
         <h4>Yakin ?</h4>
@@ -149,15 +149,15 @@
             @foreach ($getProvider as $key)
             <tr>
               <td>{{ $no }}</td>
-              <td>{{ $key->provider_code }}</td>
-              <td>{{ $key->provider_name }}</td>
-              <td>{!! $key->version !!}</td>
-              <td>{!! $key->createdBy->name !!}</td>
-              <td>{!! $key->created_at !!}</td>
-              <td>{!! $key->updatedBy->name !!}</td>
-              <td>{!! $key->updated_at !!}</td>
+              <td>{{ $key->provider_code or '-' }}</td>
+              <td>{{ $key->provider_name or '-' }}</td>
+              <td>{!! $key->version or '-' !!}</td>
+              <td>{!! $key->createdBy->name or '-' !!}</td>
+              <td>{!! $key->created_at or '-' !!}</td>
+              <td>{!! $key->updatedBy->name or '-' !!}</td>
+              <td>{!! $key->updated_at or '-' !!}</td>
               <td>
-                <a class="update" data-id="{{ $key->id }}" data-name="{{ $key->provider_name }}" data-toggle="modal" data-target=".modal-form-update"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span></a>
+                <a class="update" data-id="{{ $key->id }}" data-name="{{ $key->provider_name }}" data-toggle="modal" data-target=".modal-form-update"><span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span></a>
                 <a href="" class="delete" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
               </td>
             </tr>

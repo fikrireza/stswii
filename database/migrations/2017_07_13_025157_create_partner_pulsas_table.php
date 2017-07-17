@@ -15,7 +15,7 @@ class CreatePartnerPulsasTable extends Migration
     {
         Schema::create('amd_partner_pulsas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('parner_pulsa_code');
+            $table->string('partner_pulsa_code');
             $table->text('description');
             $table->string('partner_pulsa_name');
             $table->boolean('flg_need_deposit')->default(false);

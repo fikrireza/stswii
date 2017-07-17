@@ -24,13 +24,20 @@
         <ul class="nav side-menu">
           <li class="">
             <a href="index.html"><i class="fa fa-home"></i> Beranda </a></li>
-          <li class="">
+          <li class="{{ Route::is('provider*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-beer"></i> Manage Provider <span class="fa fa-chevron-down"></span>
             </a>
-            <ul class="nav child_menu" style="">
-              <li class=""><a href="{{ route('provider.index') }}">Provider</a></li>
-              <li class=""><a href="{{ route('provider-prefix.index') }}">Provider Prefix</a></li>
+            <ul
+              class="nav child_menu"
+              style="{{ Route::is('provider*') ? 'display: block;' : '' }}"
+            >
+              <li class="{{ Route::is('provider.index') ? 'current-page' : '' }}">
+                <a href="{{ route('provider.index') }}">Provider</a>
+              </li>
+              <li class="{{ Route::is('provider-prefix.index') ? 'current-page' : '' }}">
+                <a href="{{ route('provider-prefix.index') }}">Provider Prefix</a>
+              </li>
             </ul>
           </li>
           <li class="{{ Route::is('product.*') ? 'active' : '' }}{{ Route::is('product-*') ? 'active' : '' }}">
@@ -42,13 +49,33 @@
               <li class="{{ Route::is('product-*') ? 'current-page' : '' }}"><a href="{{ route('product-sell-price.index') }}">Product Sell Price</a></li>
             </ul>
           </li>
-          <li class="">
+          <li class="{{ Route::is('partner-pulsa*') ? 'active' : '' }}">
+            <a>
+              <i class="fa fa-beer"></i> Manage Partner Pulsa <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="nav child_menu" style="{{ Route::is('partner-pulsa*') ? 'display: block;' : '' }}">
+              <li class="{{ Route::is('partner-pulsa*') ? 'current-page' : '' }}"><a href="{{ route('partner-pulsa.index') }}">Partner Pulsa</a></li>
+              <li class=""><a href="index.html">Sub 2</a></li>
+            </ul>
+          </li>
+          <li class="{{ Route::is('partner-product*') ? 'active' : '' }}">
+            <a>
+              <i class="fa fa-beer"></i> Manage Partner Product <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="nav child_menu" style="{{ Route::is('partner-product*') ? 'display: block;' : '' }}">
+              <li class="{{ Route::is('partner-product*') ? 'current-page' : '' }}"><a href="{{ route('partner-product.index') }}">Partner Product</a></li>
+              <li class=""><a href="index.html">Sub 2</a></li>
+            </ul>
+          </li>
+          <li class="{{ Route::is('partner-server*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-beer"></i> Manage Partner <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="">
               <li class=""><a href="index.hmtl">Sub Menu 1</a></li>
-              <li class=""><a href="index.hmtl">Sub Menu 2</a></li>
+              <li class="{{ Route::is('partner-server*') ? 'current-page' : '' }}">
+                <a href="{{ route('partner-server.index') }}">Partner Server</a>
+              </li>
             </ul>
           </li>
         </ul>

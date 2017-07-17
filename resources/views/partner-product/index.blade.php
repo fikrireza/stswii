@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-  <title> | Partner Pulsa</title>
+  <title> | Partner Product</title>
 @endsection
 
 @section('headscript')
@@ -36,7 +36,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Hapus Partner Pulsa</h4>
+        <h4 class="modal-title" id="myModalLabel2">Hapus Partner Product</h4>
       </div>
       <div class="modal-body">
         <h4>Yakin ?</h4>
@@ -56,7 +56,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Nonactive Partner Pulsa</h4>
+        <h4 class="modal-title" id="myModalLabel2">Nonactive Partner Product</h4>
       </div>
       <div class="modal-body">
         <h4>Sure ?</h4>
@@ -75,7 +75,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Activated Partner Pulsa</h4>
+        <h4 class="modal-title" id="myModalLabel2">Activated Partner Product</h4>
       </div>
       <div class="modal-body">
         <h4>Sure ?</h4>
@@ -89,7 +89,7 @@
 
 <div class="page-title">
   <div class="title_left">
-    <h3>All Partner Pulsa <small></small></h3>
+    <h3>All Partner Product <small></small></h3>
   </div>
 </div>
 <div class="clearfix"></div>
@@ -97,9 +97,9 @@
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Partner Pulsa </h2>
+        <h2>Partner Product </h2>
         <ul class="nav panel_toolbox">
-          <a class="btn btn-success btn-sm publish" href="{{ route('partner-pulsa.create') }}"><i class="fa fa-plus"></i> Add</a>
+          <a class="btn btn-success btn-sm publish" href="{{ route('partner-product.create') }}"><i class="fa fa-plus"></i> Add</a>
         </ul>
         <div class="clearfix"></div>
       </div>
@@ -108,9 +108,11 @@
           <thead>
             <tr role="row">
               <th>No</th>
-              <th>Kode Partner Pulsa</th>
-              <th>Nama Partner Pulsa</th>
-              <th>Deskripsi</th>
+              <th>Kode Partner Product</th>
+              <th>Nama Partner Product</th>
+              <th>Partner Pulsa</th>
+              <th>Provider</th>
+              <th>Product</th>
               <th>Status</th>
               <th>Version</th>
               <th>Created By</th>
@@ -124,12 +126,14 @@
             @php
               $no = 1;
             @endphp
-            @foreach ($getPartnerPulsa as $key)
+            @foreach ($getPartnerProduct as $key)
             <tr>
               <td>{{ $no }}</td>
-              <td>{{ $key->partner_pulsa_code or '-' }}</td>
-              <td>{{ $key->partner_pulsa_name or '-' }}</td>
-              <td>{{ $key->description or '-' }}</td>
+              <td>{{ $key->partner_product_code or '-' }}</td>
+              <td>{{ $key->partner_product_name or '-' }}</td>
+              <td>{{ $key->partnerpulsa->partner_pulsa_name or '-' }}</td>
+              <td>{{ $key->provider->provider_name or '-' }}</td>
+              <td>{{ $key->product->product_name or '-' }}</td>
               <td class="text-center">@if ($key->active == 1)
                     <a href="" class="unpublish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span></a>
                     <br>
@@ -146,7 +150,7 @@
               <td>{!! $key->update_user_id->name or '-' !!}</td>
               <td>{!! $key->updated_at or '-' !!}</td>
               <td>
-                <a class="update" href="{{ route('partner-pulsa.edit', ['id' => $key->id ]) }}"><span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span></a>
+                <a class="update" href="{{ route('partner-product.edit', ['id' => $key->id ]) }}"><span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span></a>
 
                 <a href="" class="delete" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
               </td>
@@ -174,21 +178,21 @@ $('#dataTables').DataTable();
 $(function(){
   $('#dataTables').on('click', 'a.delete', function(){
     var a = $(this).data('value');
-    $('#setDelete').attr('href', "{{ url('/') }}/partner-pulsa/delete/"+a);
+    $('#setDelete').attr('href', "{{ url('/') }}/partner-product/delete/"+a);
   });
 });
 
 $(function(){
   $('#dataTables').on('click','a.unpublish', function(){
     var a = $(this).data('value');
-    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-pulsa/active/"+a);
+    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-product/active/"+a);
   });
 });
 
 $(function(){
   $('#dataTables').on('click', 'a.publish', function(){
     var a = $(this).data('value');
-    $('#setPublish').attr('href', "{{ url('/') }}/partner-pulsa/active/"+a);
+    $('#setPublish').attr('href', "{{ url('/') }}/partner-product/active/"+a);
   });
 });
 
