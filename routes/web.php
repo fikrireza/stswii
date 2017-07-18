@@ -46,6 +46,8 @@ Route::get('/partner-product/delete/{id}', 'PartnerProductController@delete')
 	->name('partner-product.delete');
 Route::get('/partner-product/active/{id}', 'PartnerProductController@active')
 	->name('partner-product.active');
+Route::get('/partner-product/ajaxGetProductList/{id?}', 'PartnerProductController@ajaxGetProductList')
+	->name('partner-product.ajaxGetProductList');
 
 Route::get('/partner-product-purch-price', 'PartnerProductPurchPriceController@index')
 	->name('partner-product-purch-price.index');
