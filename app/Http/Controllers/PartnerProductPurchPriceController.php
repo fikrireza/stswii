@@ -126,4 +126,59 @@ class PartnerProductPurchPriceController extends Controller
 
       return redirect()->route('partner-product-purch-price.tambah')->with('berhasil', 'Your data has been successfully saved.');
     }
+    public function edit($id)
+    {
+        $getPartnerProductPurchPrice = PartnerProductPurchPrice::find($id);
+		$getPartnerProduct = PartnerProduct::get();
+
+        return view('partner-product-purch-price.ubah', compact(
+        	'getPartnerProductPurchPrice',
+        	'getPartnerProduct'
+        ));
+    }
+    public function update(Request $request)
+    {
+        $message = [
+			'partner_product_id.required' => 'This field is required.',
+			'gross_purch_price.required' => 'This field is required.',
+			'gross_purch_price.numeric' => 'Numeric Only.',
+			'datetime_start.required' => 'This field is required.',
+			'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
+			'datetime_end.required' => 'This field is required.',
+        ];
+        $validator = Validator::make($request->all(), [
+			'partner_product_id' => 'required',
+			'gross_purch_price' => 'required|numeric',
+			'datetime_start' => 'required|before_or_equal:datetime_end',
+			'datetime_end' => 'required',
+        ], $message);
+
+        if($validator->fails()){
+			return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_purch_price_id])->withErrors($validator)->withInput();
+        }
+
+        DB::transaction(function() use($request){
+          $update = PartnerProductPurchPrice::find($request->product_purch_price_id);
+          $update->partner_product_id 	= $request->partner_product_id;
+          $update->gross_purch_price	= $request->gross_purch_price;
+          $update->datetime_start 		= $request->datetime_start;
+          $update->datetime_end 		= $request->datetime_end;
+          if($request->flg_tax == 1){
+            $update->flg_tax = 1;
+            $update->tax_percentage = $request->tax_percentage;
+          }
+          if($request->active == 1){
+            $update->active = 1;
+            $update->active_datetime = date('Y-m-d H:i:s');
+          }else{
+            $update->active = 0;
+            $update->non_active_datetime = date('Y-m-d H:i:s');
+          }
+          $update->version = 1;
+          $update->create_user_id = 1; //Auth::user()->id;
+          $update->update();
+        });
+
+        return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Your data has been successfully updated.');
+    }
 }

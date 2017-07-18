@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-	<title>STS | Add Partner Pulsa</title>
+	<title>STS | Add Partner Product</title>
 @endsection
 
 @section('headscript')
@@ -35,7 +35,7 @@
 	<div class="col-md-12 col-sm-12 col-xs-12">
 		<div class="x_panel">
 			<div class="x_title">
-				<h2>Add Partner Pulsa<small></small></h2>
+				<h2>Add Partner Product<small></small></h2>
 				<ul class="nav panel_toolbox">
 					<a href="{{ route('partner-product.index') }}" class="btn btn-primary btn-sm">Kembali</a>
 				</ul>
@@ -140,6 +140,19 @@
 <script src="{{ asset('amadeo/vendors/switchery/dist/switchery.min.js')}}"></script>
 
 <script>
+	$("#provider_id").change(function(event) {
+		$.getJSON({url: "{{ route('partner-product.ajaxGetProductList') }}/" + $(this).val(), success: function(result){
+	        $("#product_id").select2("val", "");
+	        $('#product_id').empty();
+			$('#product_id').append("<option value=''>Select Product</option>");
+			console.log(result)
+			$.each(result, function(i, field){
+				$('#product_id').append("<option value='"+ field.id +"'>"+ field.product_name +"</option>");
+			});
+	    }});
+	});
+
+
 	$(".select2_single").select2({
 		placeholder: "Choose",
 		allowClear: true

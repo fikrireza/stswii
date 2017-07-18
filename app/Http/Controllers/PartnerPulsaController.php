@@ -70,7 +70,7 @@ class PartnerPulsaController extends Controller
 			$save->partner_pulsa_name  = $request->partner_pulsa_name;
 
 			$save->flg_need_deposit    = isset($request->flg_need_deposit) ? 1 : 0;;
-			$save->payment_termin      = '1'/* $save->payment_termin */;
+			$save->payment_termin      = isset($request->flg_need_deposit) ? $request->payment_termin : 0;
 
 			$save->active              = isset($request->active) ? 1 : 0;
 			$save->active_datetime     = date('Y-m-d H:i:s');
@@ -126,7 +126,7 @@ class PartnerPulsaController extends Controller
 			$save->partner_pulsa_name  = $request->partner_pulsa_name;
 
 			$save->flg_need_deposit    = isset($request->flg_need_deposit) ? 1 : 0;;
-			$save->payment_termin      = '1'/* $save->payment_termin */;
+			$save->payment_termin      = isset($request->flg_need_deposit) ? $request->payment_termin : 0;
 
 			$save->active              = isset($request->active) ? 1 : 0;
 			if(isset($request->active))
@@ -185,4 +185,5 @@ class PartnerPulsaController extends Controller
 		return redirect()->route('partner-pulsa.index')
 			->with('berhasil', 'Berhasil menghapus Partner Pulsa ');
     }
+
 }

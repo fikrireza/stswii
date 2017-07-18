@@ -105,7 +105,7 @@ class PartnerProductController extends Controller
 
     	$getPartnerPulsa = PartnerPulsa::all();
     	$getProvider     = Provider::all();
-    	$getProduct      = Product::all();
+    	$getProduct      = Product::where('provider_id', $getPartnerProduct->provider_id )->get();
 
     	if(!$getPartnerProduct){
           return view('errors.404');
@@ -204,5 +204,12 @@ class PartnerProductController extends Controller
 		$getPartnerProduct->delete();
 		return redirect()->route('partner-product.index')
 			->with('berhasil', 'Berhasil menghapus Partner Pulsa ');
+    }
+
+    public function ajaxGetProductList($id=0)
+    {
+    	$getProduct = Product::where('provider_id', $id)->get();
+
+    	return $getProduct;
     }
 }
