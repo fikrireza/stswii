@@ -11,7 +11,10 @@
 |
 */
 
-Route::get('/', 'HomeController@index')
+Route::get('/', 'HomeController@login')
+	->name('login');
+
+Route::get('/home', 'HomeController@index')
 	->name('home.index');
 
 
@@ -63,7 +66,7 @@ Route::get('/partner-product-purch-price/edit/{id}', 'PartnerProductPurchPriceCo
 	->name('partner-product-purch-price.edit');
 Route::post('/partner-product-purch-price/edit', 'PartnerProductPurchPriceController@update')
 	->name('partner-product-purch-price.edit');
-	
+
 Route::get('/provider-prefix', 'ProviderPrefixController@index')
 	->name('provider-prefix.index');
 Route::post('/provider-prefix/store', 'ProviderPrefixController@store')
@@ -120,3 +123,9 @@ Route::post('product-sell-price/upload/template', 'ProductSellPriceController@pr
 Route::post('product-sell-price/upload', 'ProductSellPriceController@storeTemplate')
   ->name('product-sell-price.storeTemplate');
 //----- PRODUCT SELL PRICE -----//
+
+//----- Management Account -----//
+Route::get('account', 'AccountController@index')->name('account.index');
+Route::get('account/add', 'AccountController@tambah')->name('account.tambah');
+Route::get('account/edit/{id}', 'AccountController@ubah')->name('account.ubah');
+Route::get('account/role', 'AccountController@role')->name('account.role');
