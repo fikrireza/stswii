@@ -105,12 +105,12 @@ Route::get('product-sell-price/delete/{id}', 'ProductSellPriceController@delete'
   ->name('product-sell-price.delete');
 
   //----- Upload Excel
-Route::get('product-sell-price/mass', 'ProductSellPriceController@masal')
-  ->name('product-sell-price.masal');
-Route::get('product-sell-price/mass/template', 'ProductSellPriceController@template')
+Route::get('product-sell-price/upload', 'ProductSellPriceController@upload')
+  ->name('product-sell-price.upload');
+Route::get('product-sell-price/upload/template', 'ProductSellPriceController@template')
   ->name('product-sell-price.template');
-Route::post('product-sell-price/mass/template', 'ProductSellPriceController@prosesTemplate')
+Route::post('product-sell-price/upload/template', 'ProductSellPriceController@prosesTemplate')
   ->name('product-sell-price.prosesTemplate');
-Route::post('product-sell-price/mass', 'ProductSellPriceController@storeTemplate')
+Route::post('product-sell-price/upload', 'ProductSellPriceController@storeTemplate')
   ->name('product-sell-price.storeTemplate');
 //----- PRODUCT SELL PRICE -----//

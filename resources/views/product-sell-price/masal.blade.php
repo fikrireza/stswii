@@ -85,14 +85,14 @@
       <div class="x_content table-responsive">
         <table class="table table-striped table-bordered no-footer" width="100%">
           <thead>
-            <th>Select All <br><input type="checkbox" onchange="checkAll(this)" name="chk[]" /></th>
+            <th>Selection</th>
             <th>Provider</th>
             <th>Gross Sell Price</th>
             <th>Tax Percentage</th>
             <th>Datetime Start</th>
             <th>Datetime End</th>
-            <th>Active</th>
-            <th>Version</th>
+            {{-- <th>Active</th>
+            <th>Version</th> --}}
           </thead>
           <form class="form-horizontal form-label-left" action="{{ route('product-sell-price.storeTemplate') }}" method="post">
           {{ csrf_field() }}
@@ -102,19 +102,19 @@
             @endphp
             @foreach ($collect as $key)
             <tr>
-              <td><input type="checkbox" name="test[check][{{$urut}}]" value="1"/></td>
-              <td><select id="product_id" name="test[product_id][{{$urut}}]" class="form-control select2_single" required="required">
+              <td><input type="button" name="delete" value="x" class="btn btn-danger btn-sm" onclick="DeleteRowFunction(this);"></td>
+              <td><select id="product_id" name="product_id[{{$urut}}]" class="form-control select2_single" required="required">
                     <option value="">Pilih</option>
                     @foreach ($getProduct as $product)
                       <option value="{{ $product->id }}" {{ old('product_id', $key['product_id']) == $product->id ? 'selected' : '' }}>{{ $product->product_name}}</option>
                     @endforeach
                   </select></td>
-              <td><input type="text" name="test[gross_sell_price][{{$urut}}]" class="form-control" value="{{ $key['gross_sell_price'] }}"></td>
-              <td><input type="text" name="test[tax_percentage][{{$urut}}]" class="form-control" value="{{ $key['tax_percentage'] }}" /></td>
-              <td><input type="text" name="test[datetime_start][{{$urut}}]" id="datetime_start" class="date-picker form-control" value="{{ $key['datetime_start'] }}" /></td>
-              <td><input type="text" name"test[datetime_end]" id="datetime_end" class="date-picker form-control" value="{{ $key['datetime_end'] }}" /></td>
-              <td><input type="checkbox" class="flat form-control" name="test[active][{{$urut}}]" value="1" {{ old('active', $key['active']) == 1 ? 'checked=""' : '' }}/></td>
-              <td><input type="number" class="form-control" name="test[version][{{$urut}}]" value="{{ $key['version'] }}" /></td>
+              <td><input type="text" name="gross_sell_price[{{$urut}}]" class="form-control" value="{{ $key['gross_sell_price'] }}"></td>
+              <td><input type="text" name="tax_percentage[{{$urut}}]" class="form-control" value="{{ $key['tax_percentage'] }}" /></td>
+              <td><input type="text" name="datetime_start[{{$urut}}]" class="datetime_start form-control" value="{{ $key['datetime_start'] }}" /></td>
+              <td><input type="text" name="datetime_end[{{$urut}}]" class="datetime_end form-control" value="{{ $key['datetime_end'] }}" /></td>
+              {{-- <td><input type="checkbox" class="form-control" name="active[{{$urut}}]" value="1" {{ old('active', $key['active']) == 1 ? 'checked=""' : '' }}/></td>
+              <td><input type="number" class="form-control" name="version[{{$urut}}]" value="{{ $key['version'] }}" /></td> --}}
             </tr>
             @php
               $urut++
@@ -144,35 +144,27 @@
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
 
 <script type="text/javascript">
-  function checkAll(ele) {
-   var checkboxes = document.getElementsByTagName('input');
-   if (ele.checked) {
-       for (var i = 0; i < checkboxes.length; i++) {
-           if (checkboxes[i].type == 'checkbox') {
-               checkboxes[i].checked = true;
-           }
-       }
-   } else {
-       for (var i = 0; i < checkboxes.length; i++) {
-           console.log(i)
-           if (checkboxes[i].type == 'checkbox') {
-               checkboxes[i].checked = false;
-           }
-       }
-   }
- }
+  function DeleteRowFunction(btndel) {
+    if (typeof(btndel) == "object") {
+      $(btndel).closest("tr").remove();
+    } else {
+      return false;
+    }
+  }
 
-  $('#datetime_start').daterangepicker({
+  $('.datetime_start').daterangepicker({
     singleDatePicker: true,
-    calender_style: "picker_3",
-    format: 'YYYY-MM-DD H:m:s',
-    minDate: new Date(),
+    calender_style: "picker_2",
+    format: 'YYYY-MM-DD hh:mm:ss',
+    timePicker: true,
+    // minDate: new Date(),
   });
-  $('#datetime_end').daterangepicker({
+  $('.datetime_end').daterangepicker({
     singleDatePicker: true,
-    calender_style: "picker_3",
-    format: 'YYYY-MM-DD H:m:s',
-    minDate: new Date(),
+    calender_style: "picker_2",
+    format: 'YYYY-MM-DD hh:mm:ss',
+    timePicker: true,
+    // minDate: new Date(),
   });
 </script>
 @endsection

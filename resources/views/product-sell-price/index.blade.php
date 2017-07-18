@@ -104,7 +104,7 @@
       <div class="x_title">
         <h2>Product Sell Price </h2>
         <ul class="nav panel_toolbox">
-          <a href="{{ route('product-sell-price.masal') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Upload</a>
+          <a href="{{ route('product-sell-price.upload') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Upload</a>
           <a href="{{ route('product-sell-price.tambah') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add</a>
         </ul>
         <div class="clearfix"></div>
@@ -142,11 +142,11 @@
               <td>{{ $key->datetime_end }}</td>
               <td>{{ $key->version }}</td>
               <td class="text-center">@if ($key->active == 1)
-                    <a 
-                      href="" 
-                      class="unpublish" 
-                      data-value="{{ $key->id }}" 
-                      data-toggle="modal" 
+                    <a
+                      href=""
+                      class="unpublish"
+                      data-value="{{ $key->id }}"
+                      data-toggle="modal"
                       data-target=".modal-nonactive"
                     >
                       <span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span>
