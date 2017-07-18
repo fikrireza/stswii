@@ -167,10 +167,7 @@
               <td>{{ $key->updated_at or '-' }}</td>
               <td>
                 <a 
-                  class="update" 
-                  data-id="{{ $key->id }}" 
-                  data-toggle="modal" 
-                  data-target=".modal-form-update"
+                  href="{{ route('partner-product-purch-price.edit', ['id'=>$key->id]) }}" 
                 >
                   <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>
                 </a>
