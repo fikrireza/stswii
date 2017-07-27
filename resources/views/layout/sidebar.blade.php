@@ -25,14 +25,12 @@
           <li class="{{ Route::is('home*') ? 'active' : '' }}">
             <a href="{{ route('home.index') }}"><i class="fa fa-home"></i> Home </a>
           </li>
+          @can('view-provider')
           <li class="{{ Route::is('provider*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-beer"></i> Manage Provider <span class="fa fa-chevron-down"></span>
             </a>
-            <ul
-              class="nav child_menu"
-              style="{{ Route::is('provider*') ? 'display: block;' : '' }}"
-            >
+            <ul class="nav child_menu" style="{{ Route::is('provider*') ? 'display: block;' : '' }}">
               <li class="{{ Route::is('provider.index') ? 'current-page' : '' }}">
                 <a href="{{ route('provider.index') }}">Provider</a>
               </li>
@@ -41,6 +39,7 @@
               </li>
             </ul>
           </li>
+          @endcan
           <li class="{{ Route::is('product.*') ? 'active' : '' }}{{ Route::is('product-*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-beer"></i> Manage Product <span class="fa fa-chevron-down"></span>

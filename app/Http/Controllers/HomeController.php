@@ -25,7 +25,6 @@ class HomeController extends Controller
 
 		public function index()
 		{
-
 			$ProductSellPrice = ProductSellPrice::get();
 
     	return view('home.index', compact('ProductSellPrice'));
