@@ -11,8 +11,11 @@
 |
 */
 
-Route::get('/', 'HomeController@login')
-	->name('login');
+Auth::routes();
+
+Route::get('/', 'Auth\LoginController@showLoginForm');
+// Route::get('/', 'HomeController@login')
+// 	->name('login');
 
 Route::get('/home', 'HomeController@index')
 	->name('home.index');

@@ -15,12 +15,23 @@ use Validator;
 
 class PartnerProductController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
     	$getPartnerProduct = PartnerProduct::get();
     	return view('partner-product.index', compact(
-			'getPartnerProduct'
-		));
+  			'getPartnerProduct'
+  		));
     }
 
     public function create()
@@ -44,11 +55,11 @@ class PartnerProductController extends Controller
         }
 
     	return view('partner-product.create', compact(
-			'partner_product_code',
-			'getPartnerPulsa',
-			'getProvider',
-			'getProduct'
-		));
+  			'partner_product_code',
+  			'getPartnerPulsa',
+  			'getProvider',
+  			'getProduct'
+  		));
     }
 
     public function store(Request $request)
@@ -196,7 +207,7 @@ class PartnerProductController extends Controller
     public function delete($id)
     {
     	$getPartnerProduct = PartnerProduct::find($id);
-    	
+
     	if(!$getPartnerProduct){
           return view('errors.404');
         }

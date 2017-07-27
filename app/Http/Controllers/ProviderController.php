@@ -12,6 +12,18 @@ use Auth;
 use Validator;
 
 class ProviderController extends Controller{
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
+
     public function index(){
 		$getProvider = Provider::orderBy('provider_name', 'asc')
             ->get();

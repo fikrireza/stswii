@@ -45,7 +45,7 @@
       <div class="login_wrapper">
         <div class="animate form login_form">
           <section class="login_content">
-            <form action="" method="POST">
+            <form action="{{ route('login') }}" method="POST">
               <h1>Login Form</h1>
               {{ csrf_field() }}
               <div class="form-group has-feedback {{ $errors->has('email') ? 'has-error' : '' }}">
@@ -62,7 +62,7 @@
               </div>
               <div class="row">
                 <div class="col-xs-12">
-                  <button type="submit" class="btn btn-primary btn-block btn-flat">Log In</button>
+                  <button class="btn btn-primary btn-block btn-flat">Log In</button>
                 </div>
               </div>
 

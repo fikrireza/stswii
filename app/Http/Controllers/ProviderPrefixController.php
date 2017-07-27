@@ -13,7 +13,20 @@ use Auth;
 use Validator;
 
 class ProviderPrefixController extends Controller{
-    public function index(){
+
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
+
+    ublic function index(){
 		$getProvider = Provider::select(
 				'id',
 				'provider_name'
