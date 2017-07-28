@@ -115,13 +115,9 @@
               <th>No</th>
               <th>Product Code</th>
               <th>Product Name</th>
-              <th>Provider</th>
               <th>Nominal</th>
+              <th>Type Product</th>
               <th>Status</th>
-              <th>Created By</th>
-              <th>Created Date</th>
-              <th>Updated By</th>
-              <th>Updated Date</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -131,31 +127,56 @@
             @endphp
             @foreach ($getProduct as $key)
             <tr>
-              <td>{{ $no }}</td>
+              <td>{{ $no++ }}</td>
               <td>{{ $key->product_code }}</td>
               <td>{{ $key->product_name }}</td>
-              <td>{{ $key->provider->provider_name }}</td>
               <td>{{ number_format($key->nominal, 0, ',', '.') }}</td>
+              <td>{{ $key->type_product }}</td>
               <td class="text-center">@if ($key->active == 1)
                     <a href="" class="unpublish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span></a>
                     <br>
-                    <span class="label label-primary">{{ $key->active_datetime or '-' }}</span>
                   @else
                     <a href="" class="publish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive"><i class="fa fa-thumbs-o-down"></i></span></a>
                     <br>
-                    <span class="label label-primary">{{ $key->non_active_datetime or '-' }}</span>
                   @endif
               </td>
-              <td>{{ $key->createdBy->name or '-' }}</td>
-              <td>{{ $key->created_at or '-' }}</td>
-              <td>{{ $key->updatedBy->name or '-' }}</td>
-              <td>{{ $key->updated_at or '-' }}</td>
               <td>
                 <a href="{{ route('product.ubah', $key->product_code) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
                 <a href="" class="delete" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
               </td>
             </tr>
             @endforeach
+
+            <tr>
+              <td>1</td>
+              <td>Code</td>
+              <td>Name</td>
+              <td>100,000</td>
+              <td>PULSA</td>
+              <td class="text-center">
+                    <a href="" class="unpublish" data-value="1" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span></a>
+              </td>
+              <td>
+                <a href="{{ route('product.ubah', 1) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
+                <a href="" class="delete" data-value="1" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
+              </td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Code</td>
+              <td>Name</td>
+              <td>100,000</td>
+              <td>PULSA</td>
+              <td class="text-center">
+                    <a href="" class="publish" data-value="1" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive"><i class="fa fa-thumbs-o-down"></i></span></a>
+                    <br>
+              </td>
+              <td>
+                <a href="{{ route('product.ubah', 1) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
+                <a href="" class="delete" data-value="1" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
+              </td>
+            </tr>
+
           </tbody>
         </table>
       </div>

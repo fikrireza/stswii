@@ -40,7 +40,7 @@
           <a href="{{ route('product.index') }}" class="btn btn-primary btn-sm">Kembali</a>
         </ul>
         <div class="clearfix"></div>
-      </div>
+      </div>zzz
       <div class="x_content">
         <form action="{{ route('product.store') }}" method="POST" class="form-horizontal form-label-left" novalidate>
           {{ csrf_field() }}

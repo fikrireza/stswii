@@ -8,6 +8,8 @@ class Product extends Model
 {
     protected $table = 'sw_product';
 
+    protected $primaryKey = 'product_id';
+
     protected $fillbale = ['product_code','product_name','provider_id','nominal','active','active_datetime',
                           'non_active_datetime','version','create_user_id','update_user_id'];
 
