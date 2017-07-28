@@ -25,7 +25,6 @@
           <li class="{{ Route::is('home*') ? 'active' : '' }}">
             <a href="{{ route('home.index') }}"><i class="fa fa-home"></i> Home </a>
           </li>
-          @can('view-provider')
           <li class="{{ Route::is('provider*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-beer"></i> Manage Provider <span class="fa fa-chevron-down"></span>
@@ -39,7 +38,6 @@
               </li>
             </ul>
           </li>
-          @endcan
           <li class="{{ Route::is('product.*') ? 'active' : '' }}{{ Route::is('product-*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-beer"></i> Manage Product <span class="fa fa-chevron-down"></span>
@@ -65,6 +63,19 @@
               </li>
               <li class="{{ Route::is('partner-server*') ? 'current-page' : '' }}">
                 <a href="{{ route('partner-server.index') }}">Partner Server</a>
+              </li>
+            </ul>
+          </li>
+          <li class="">
+            <a>
+              <i class="fa fa-beer"></i> Paloma Deposit <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="nav child_menu" style="">
+              <li class="">
+                <a href="">Transaction</a>
+              </li>
+              <li class="">
+                <a href="">Balance</a>
               </li>
             </ul>
           </li>

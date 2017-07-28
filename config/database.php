@@ -91,7 +91,7 @@ return [
     |
     */
 
-    'migrations' => 'amd_migrations',
+    'migrations' => 'sw_migrations',
 
     /*
     |--------------------------------------------------------------------------

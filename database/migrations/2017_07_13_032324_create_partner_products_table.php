@@ -13,20 +13,26 @@ class CreatePartnerProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('amd_partner_products', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('partner_pulsa_id')->unsigned();
-            $table->bigInteger('provider_id')->unsigned();
-            $table->bigInteger('product_id')->unsigned();
+        Schema::create('sw_partner_product', function (Blueprint $table) {
+            $table->bigIncrements('partner_product_id');
+            $table->bigInteger('partner_pulsa_id');
+            $table->bigInteger('provider_id');
+            $table->bigInteger('product_id');
             $table->string('partner_product_code');
             $table->string('partner_product_name');
-            $table->boolean('active')->default(false);
-            $table->dateTime('active_datetime')->nullable();
-            $table->dateTime('non_active_datetime')->nullable();
-            $table->bigInteger('version')->unsigned()->nullable();
-            $table->bigInteger('create_user_id')->unsigned()->nullable();
-            $table->bigInteger('update_user_id')->unsigned()->nullable();
+            $table->string('active', 1)->default('Y');
+            $table->string('active_datetime');
+            $table->string('non_active_datetime');
+            $table->bigInteger('version')->unsigned();
+            $table->string('create_datetime');
+            $table->bigInteger('create_user_id')->unsigned();
+            $table->string('update_datetime');
+            $table->bigInteger('update_user_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('partner_pulsa_id')->references('partner_pulsa_id')->on('sw_partner_pulsa')->onDelete('cascade');
+            $table->foreign('provider_id')->references('provider_id')->on('sw_provider')->onDelete('cascade');
+            $table->foreign('product_id')->references('product_id')->on('sw_product')->onDelete('cascade');
         });
     }
 

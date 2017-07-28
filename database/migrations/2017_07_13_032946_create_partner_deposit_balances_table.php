@@ -13,13 +13,15 @@ class CreatePartnerDepositBalancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sw_partner_deposit_balances', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('partner_id')->unsigned();
-            $table->string('balance_amount');
-            $table->bigInteger('version')->unsigned()->nullable();
-            $table->bigInteger('create_user_id')->unsigned()->nullable();
-            $table->bigInteger('update_user_id')->unsigned()->nullable();
+        Schema::create('sw_paloma_deposit_balance', function (Blueprint $table) {
+            $table->bigIncrements('paloma_deposit_balance_id');
+            $table->bigInteger('partner_id')->unique();
+            $table->decimal('balance_amount');
+            $table->bigInteger('version')->unsigned();
+            $table->string('create_datetime');
+            $table->bigInteger('create_user_id')->unsigned();
+            $table->string('update_datetime');
+            $table->bigInteger('update_user_id')->unsigned();
             $table->timestamps();
         });
     }

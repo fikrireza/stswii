@@ -13,12 +13,12 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('amd_roles', function(Blueprint $table){
+        Schema::create('sw_roles', function(Blueprint $table){
           $table->increments('id');
           $table->string('name');
           $table->string('slug')->unique();
-          $table->text('permissions');
-          // $table->jsonb('permission');
+          // $table->text('permissions');
+          $table->jsonb('permission');
           $table->timestamps();
         });
     }

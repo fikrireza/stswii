@@ -13,14 +13,19 @@ class CreateProviderPrefixesTable extends Migration
      */
     public function up()
     {
-        Schema::create('amd_provider_prefixes', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('provider_id')->unsigned();
+        Schema::create('sw_provider_prefix', function (Blueprint $table) {
+            $table->bigIncrements('provider_prefix_id');
+            $table->bigInteger('provider_id');
             $table->string('prefix');
-            $table->bigInteger('version')->unsigned()->nullable();
-            $table->bigInteger('create_user_id')->unsigned()->nullable();
-            $table->bigInteger('update_user_id')->unsigned()->nullable();
+            $table->bigInteger('version')->unsigned();
+            $table->string('create_datetime');
+            $table->bigInteger('create_user_id')->unsigned();
+            $table->string('update_datetime');
+            $table->bigInteger('update_user_id')->unsigned();
             $table->timestamps();
+
+            $table->unique(['provider_id', 'prefix']);
+            $table->foreign('provider_id')->references('provider_id')->on('sw_provider')->onDelete('cascade');
         });
     }
 
