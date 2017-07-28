@@ -13,13 +13,15 @@ class CreateProvidersTable extends Migration
      */
     public function up()
     {
-        Schema::create('amd_providers', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('sw_provider', function (Blueprint $table) {
+            $table->bigIncrements('provider_id');
             $table->string('provider_code');
             $table->string('provider_name');
-            $table->bigInteger('version')->unsigned()->nullable();
-            $table->integer('create_user_id')->unsigned()->nullable();
-            $table->integer('update_user_id')->unsigned()->nullable();
+            $table->bigInteger('version')->unsigned();
+            $table->string('create_datetime');
+            $table->integer('create_user_id')->unsigned();
+            $table->string('update_datetime');
+            $table->integer('update_user_id')->unsigned();
             $table->timestamps();
         });
     }

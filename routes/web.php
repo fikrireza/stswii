@@ -11,7 +11,13 @@
 |
 */
 
-Route::get('/', 'HomeController@index')
+Auth::routes();
+
+Route::get('/', 'Auth\LoginController@showLoginForm');
+// Route::get('/', 'HomeController@login')
+// 	->name('login');
+
+Route::get('/home', 'HomeController@index')
 	->name('home.index');
 
 
@@ -46,6 +52,8 @@ Route::get('/partner-product/delete/{id}', 'PartnerProductController@delete')
 	->name('partner-product.delete');
 Route::get('/partner-product/active/{id}', 'PartnerProductController@active')
 	->name('partner-product.active');
+Route::get('/partner-product/ajaxGetProductList/{id?}', 'PartnerProductController@ajaxGetProductList')
+	->name('partner-product.ajaxGetProductList');
 
 Route::get('/partner-product-purch-price', 'PartnerProductPurchPriceController@index')
 	->name('partner-product-purch-price.index');
@@ -61,7 +69,7 @@ Route::get('/partner-product-purch-price/edit/{id}', 'PartnerProductPurchPriceCo
 	->name('partner-product-purch-price.edit');
 Route::post('/partner-product-purch-price/edit', 'PartnerProductPurchPriceController@update')
 	->name('partner-product-purch-price.edit');
-	
+
 Route::get('/provider-prefix', 'ProviderPrefixController@index')
 	->name('provider-prefix.index');
 Route::post('/provider-prefix/store', 'ProviderPrefixController@store')
@@ -109,12 +117,18 @@ Route::get('product-sell-price/delete/{id}', 'ProductSellPriceController@delete'
   ->name('product-sell-price.delete');
 
   //----- Upload Excel
-Route::get('product-sell-price/mass', 'ProductSellPriceController@masal')
-  ->name('product-sell-price.masal');
-Route::get('product-sell-price/mass/template', 'ProductSellPriceController@template')
+Route::get('product-sell-price/upload', 'ProductSellPriceController@upload')
+  ->name('product-sell-price.upload');
+Route::get('product-sell-price/upload/template', 'ProductSellPriceController@template')
   ->name('product-sell-price.template');
-Route::post('product-sell-price/mass/template', 'ProductSellPriceController@prosesTemplate')
+Route::post('product-sell-price/upload/template', 'ProductSellPriceController@prosesTemplate')
   ->name('product-sell-price.prosesTemplate');
-Route::post('product-sell-price/mass', 'ProductSellPriceController@storeTemplate')
+Route::post('product-sell-price/upload', 'ProductSellPriceController@storeTemplate')
   ->name('product-sell-price.storeTemplate');
 //----- PRODUCT SELL PRICE -----//
+
+//----- Management Account -----//
+Route::get('account', 'AccountController@index')->name('account.index');
+Route::get('account/add', 'AccountController@tambah')->name('account.tambah');
+Route::get('account/edit/{id}', 'AccountController@ubah')->name('account.ubah');
+Route::get('account/role', 'AccountController@role')->name('account.role');

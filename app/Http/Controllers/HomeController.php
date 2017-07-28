@@ -10,12 +10,24 @@ use Auth;
 use DB;
 use Validator;
 
-class HomeController extends Controller{
-	public function index(){
-    	$ProductSellPrice = ProductSellPrice::get();
-    	
-    	return view('home.index', compact(
-			'ProductSellPrice'
-		));
-    }
+class HomeController extends Controller
+{
+
+		/**
+		 * Create a new controller instance.
+		 *
+		 * @return void
+		 */
+		public function __construct()
+		{
+				$this->middleware('auth');
+		}
+
+		public function index()
+		{
+			$ProductSellPrice = ProductSellPrice::get();
+
+    	return view('home.index', compact('ProductSellPrice'));
+
+	  }
 }

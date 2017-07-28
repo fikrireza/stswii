@@ -15,12 +15,23 @@ use Validator;
 
 class PartnerProductController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
     	$getPartnerProduct = PartnerProduct::get();
     	return view('partner-product.index', compact(
-			'getPartnerProduct'
-		));
+  			'getPartnerProduct'
+  		));
     }
 
     public function create()
@@ -44,11 +55,11 @@ class PartnerProductController extends Controller
         }
 
     	return view('partner-product.create', compact(
-			'partner_product_code',
-			'getPartnerPulsa',
-			'getProvider',
-			'getProduct'
-		));
+  			'partner_product_code',
+  			'getPartnerPulsa',
+  			'getProvider',
+  			'getProduct'
+  		));
     }
 
     public function store(Request $request)
@@ -105,7 +116,7 @@ class PartnerProductController extends Controller
 
     	$getPartnerPulsa = PartnerPulsa::all();
     	$getProvider     = Provider::all();
-    	$getProduct      = Product::all();
+    	$getProduct      = Product::where('provider_id', $getPartnerProduct->provider_id )->get();
 
     	if(!$getPartnerProduct){
           return view('errors.404');
@@ -196,7 +207,7 @@ class PartnerProductController extends Controller
     public function delete($id)
     {
     	$getPartnerProduct = PartnerProduct::find($id);
-    	
+
     	if(!$getPartnerProduct){
           return view('errors.404');
         }
@@ -204,5 +215,12 @@ class PartnerProductController extends Controller
 		$getPartnerProduct->delete();
 		return redirect()->route('partner-product.index')
 			->with('berhasil', 'Berhasil menghapus Partner Pulsa ');
+    }
+
+    public function ajaxGetProductList($id=0)
+    {
+    	$getProduct = Product::where('provider_id', $id)->get();
+
+    	return $getProduct;
     }
 }

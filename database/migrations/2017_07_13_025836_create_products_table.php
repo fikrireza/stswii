@@ -13,19 +13,25 @@ class CreateProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('amd_products', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('product_code');
+        Schema::create('sw_product', function (Blueprint $table) {
+            $table->bigIncrements('product_id');
+            $table->string('product_code')->unique();
             $table->string('product_name');
-            $table->bigInteger('provider_id')->unsigned();
+            $table->bigInteger('provider_id');
             $table->decimal('nominal', 9,0);
-            $table->boolean('active')->default(false);
-            $table->dateTime('active_datetime')->nullable();
-            $table->dateTime('non_active_datetime')->nullable();
-            $table->bigInteger('version')->unsigned()->nullable();
+            // PULSA/DATA
+            $table->string('type_product');
+            $table->string('active', 1)->default('Y');
+            $table->string('active_datetime');
+            $table->string('non_active_datetime');
+            $table->bigInteger('version')->unsigned();
+            $table->string('create_datetime');
             $table->bigInteger('create_user_id')->unsigned()->nullable();
+            $table->string('update_datetime');
             $table->bigInteger('update_user_id')->unsigned()->nullable();
             $table->timestamps();
+
+            $table->foreign('provider_id')->references('provider_id')->on('sw_provider')->onDelete('cascade');
         });
     }
 

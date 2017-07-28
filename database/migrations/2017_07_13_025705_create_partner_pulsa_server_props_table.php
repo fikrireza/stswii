@@ -13,14 +13,16 @@ class CreatePartnerPulsaServerPropsTable extends Migration
      */
     public function up()
     {
-        Schema::create('amd_partner_pulsa_server_props', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('server_url');
+        Schema::create('sw_partner_pulsa_server_properties', function (Blueprint $table) {
+            $table->bigIncrements('partner_pulsa_properties_id');
+            $table->string('server_url')->unique();
             $table->string('api_key');
             $table->string('api_secret');
-            $table->bigInteger('version')->unsigned()->nullable();
-            $table->bigInteger('create_user_id')->unsigned()->nullable();
-            $table->bigInteger('update_user_id')->unsigned()->nullable();
+            $table->bigInteger('version')->unsigned();
+            $table->string('create_datetime');
+            $table->bigInteger('create_user_id')->unsigned();
+            $table->string('update_datetime');
+            $table->bigInteger('update_user_id')->unsigned();
             $table->timestamps();
         });
     }

@@ -13,19 +13,23 @@ class CreatePartnerPulsasTable extends Migration
      */
     public function up()
     {
-        Schema::create('amd_partner_pulsas', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('sw_partner_pulsa', function (Blueprint $table) {
+            $table->bigIncrements('partner_pulsa_id');
             $table->string('partner_pulsa_code');
             $table->text('description');
             $table->string('partner_pulsa_name');
-            $table->boolean('flg_need_deposit')->default(false);
-            $table->integer('payment_termin')->unsigned();
-            $table->boolean('active')->default(false);
-            $table->dateTime('active_datetime')->nullable();
-            $table->dateTime('non_active_datetime')->nullable();
-            $table->bigInteger('version')->unsigned()->nullable();
-            $table->bigInteger('create_user_id')->unsigned()->nullable();
-            $table->bigInteger('update_user_id')->unsigned()->nullable();
+            // DEPOSIT/DENOM/TERMIN
+            $table->string('type_top');
+            $table->integer('payment_termin')->unsigned()->default(0);
+
+            $table->string('active', 1)->default('Y');
+            $table->string('active_datetime');
+            $table->string('non_active_datetime');
+            $table->bigInteger('version')->unsigned();
+            $table->string('create_datetime');
+            $table->bigInteger('create_user_id')->unsigned();
+            $table->string('update_datetime');
+            $table->bigInteger('update_user_id')->unsigned();
             $table->timestamps();
         });
     }

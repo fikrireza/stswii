@@ -15,6 +15,17 @@ use Input;
 
 class ProductSellPriceController extends Controller
 {
+  
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
 
     public function index()
     {
@@ -199,7 +210,7 @@ class ProductSellPriceController extends Controller
         return redirect()->route('product-sell-price.index')->with('berhasil', 'Successfully Deleted '.$getProductSellPrice->gross_sell_price);
     }
 
-    public function masal()
+    public function upload()
     {
 
         return view('product-sell-price.masal');
@@ -215,29 +226,30 @@ class ProductSellPriceController extends Controller
         return Excel::create('Template Import', function($excel) use($getProduct)
         {
           $excel->sheet('Data-Import', function($sheet){
-            $sheet->row(1, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end', 'active', 'version'));
+            $sheet->row(1, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end'));
             $sheet->setColumnFormat(array(
               'A' => '@',
               'B' => '0.00',
               'C' => '0.00',
-              'D' => 'yyyy-mm-dd',
-              'E' => 'yyyy-mm-dd',
+              'D' => 'yyyy-mm-dd hh:mm:ss',
+              'E' => 'yyyy-mm-dd hh:mm:ss',
             ));
           });
 
           $excel->sheet('product_id', function($sheet) use($getProduct){
             $sheet->fromArray($getProduct, null, 'A6', true);
             $sheet->row(1, array('Example'));
-            $sheet->mergeCells('A1:G1');
-            $sheet->row(2, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end', 'active', 'version'));
-            $sheet->row(3, array('1', '45000', '10', '2017-07-01 12:00:00', '2017-07-31 12:00:00', '1', '1'));
+            $sheet->mergeCells('A1:E1');
+            $sheet->row(2, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end'));
+            // $sheet->row(2, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end', 'active', 'version'));
+            $sheet->row(3, array('1', '45000', '10', '2017-07-01 12:00:00', '2017-07-31 12:00:00'));
             $sheet->row(5, array('Data Product'));
             $sheet->mergeCells('A5:C5');
             $sheet->row(6, array('id','product_name','nominal'));
             $sheet->setAllBorders('thin');
             $sheet->setFreeze('A7');
 
-            $sheet->cells('A2:G3', function($cells){
+            $sheet->cells('A2:E3', function($cells){
               $cells->setBackground('#5c92e8');
               $cells->setFontColor('#000000');
               $cells->setFontWeight('bold');
@@ -267,8 +279,8 @@ class ProductSellPriceController extends Controller
                          'tax_percentage'      => $key->tax_percentage,
                          'datetime_start'       => $key->datetime_start,
                          'datetime_end'     => $key->datetime_end,
-                         'active'        => $key->active,
-                         'version'=> $key->version
+                        //  'active'        => $key->active,
+                        //  'version'=> $key->version
                        ];
           }
 
@@ -280,12 +292,44 @@ class ProductSellPriceController extends Controller
 
             return view('product-sell-price.masal', compact('collect', 'getProduct'));
           }
+        }else{
+          return view('product-sell-price.masal')->with('gagal', 'Please Download Template');
         }
+      }else{
+        return view('product-sell-price.masal')->with('gagal', 'Please Select Template');
       }
     }
 
     public function storeTemplate(Request $request)
     {
-      dd($request);
+        // dd($request);
+        $product_id = Input::get('product_id');
+        $gross_sell_price = Input::get('gross_sell_price');
+        $tax_percentage = Input::get('tax_percentage');
+        $datetime_start = Input::get('datetime_start');
+        $datetime_end = Input::get('datetime_end');
+        // $active = Input::get('active');
+        // $version = Input::get('version');
+        // dd($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end, $active, $version);
+        DB::transaction(function() use($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end){
+          foreach ($product_id as $key => $n ) {
+            /*Load array */
+            $arrData = ProductSellPrice::create(array("product_id"  =>  $product_id[$key],
+                              "gross_sell_price"  =>  $gross_sell_price[$key],
+                              "tax_percentage"  => $tax_percentage[$key],
+                              "datetime_start"  => $datetime_start[$key],
+                              "datetime_end"  => $datetime_end[$key],
+                              "create_user_id"  => 1,
+                              // "active"  => $active[$key],
+                              "version"  => 1,
+                            ));
+          }
+
+        // dd($arrData);
+          // $save = ProductSellPrice::create($arrData);
+        });
+
+        return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully uploaded.');
+
     }
 }

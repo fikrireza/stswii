@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-	<title>STS | Add Partner Pulsa</title>
+	<title>STS | Edit Partner Product</title>
 @endsection
 
 @section('headscript')
@@ -35,23 +35,22 @@
 	<div class="col-md-12 col-sm-12 col-xs-12">
 		<div class="x_panel">
 			<div class="x_title">
-				<h2>Add Partner Pulsa<small></small></h2>
+				<h2>Edit Partner Product<small></small></h2>
 				<ul class="nav panel_toolbox">
 					<a href="{{ route('partner-product.index') }}" class="btn btn-primary btn-sm">Kembali</a>
 				</ul>
 				<div class="clearfix"></div>
 			</div>
 			<div class="x_content">
-				<form action="{{ route('partner-product.store') }}" method="POST" class="form-horizontal form-label-left" novalidate>
+				<form action="{{ route('partner-product.update', ['id' => $getPartnerProduct->id ]) }}" method="POST" class="form-horizontal form-label-left" novalidate>
 					{{ csrf_field() }}
-
 					<div class="item form-group {{ $errors->has('partner_pulsa_id') ? 'has-error' : ''}}">
-						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_pulsa_id">Partner Pulsa <span class="required">*</span></label>
+						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Partner Pulsa <span class="required">*</span></label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 							<select id="partner_pulsa_id" name="partner_pulsa_id" class="form-control select2_single" required="required">
 								<option value="">Pilih</option>
 								@foreach ($getPartnerPulsa as $key)
-									<option value="{{ $key->id }}" {{ old('partner_pulsa_id') == $key->id ? 'selected' : '' }}>{{ $key->partner_pulsa_name}}</option>
+									<option value="{{ $key->id }}" {{ old('partner_pulsa_id', $getPartnerProduct->partner_pulsa_id) == $key->id ? 'selected' : '' }}>{{ $key->partner_pulsa_name}}</option>
 								@endforeach
 							</select>
 							@if($errors->has('partner_pulsa_id'))
@@ -66,7 +65,7 @@
 							<select id="provider_id" name="provider_id" class="form-control select2_single" required="required">
 								<option value="">Pilih</option>
 								@foreach ($getProvider as $key)
-									<option value="{{ $key->id }}" {{ old('provider_id') == $key->id ? 'selected' : '' }}>{{ $key->provider_name}}</option>
+									<option value="{{ $key->id }}" {{ old('provider_id', $getPartnerProduct->provider_id) == $key->id ? 'selected' : '' }}>{{ $key->provider_name}}</option>
 								@endforeach
 							</select>
 							@if($errors->has('provider_id'))
@@ -76,12 +75,12 @@
 					</div>
 
 					<div class="item form-group {{ $errors->has('product_id') ? 'has-error' : ''}}">
-						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_id">Product <span class="required">*</span></label>
+						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product <span class="required">*</span></label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 							<select id="product_id" name="product_id" class="form-control select2_single" required="required">
 								<option value="">Pilih</option>
 								@foreach ($getProduct as $key)
-									<option value="{{ $key->id }}" {{ old('product_id') == $key->id ? 'selected' : '' }}>{{ $key->product_name}}</option>
+									<option value="{{ $key->id }}" {{ old('product_id', $getPartnerProduct->product_id) == $key->id ? 'selected' : '' }}>{{ $key->product_name}}</option>
 								@endforeach
 							</select>
 							@if($errors->has('product_id'))
@@ -93,14 +92,14 @@
 					<div class="item form-group {{ $errors->has('partner_product_code') ? 'has-error' : ''}}">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Kode Partner Pulsa</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
-							<input id="name" class="form-control col-md-7 col-xs-12" name="partner_product_code" type="text" value="{{ $partner_product_code }}" readonly>
+							<input id="name" class="form-control col-md-7 col-xs-12" name="partner_product_code" type="text" value="{{ $getPartnerProduct->partner_product_code }}" readonly>
 						</div>
 					</div>
 
 					<div class="item form-group {{ $errors->has('partner_product_name') ? 'has-error' : ''}}">
-						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_product_name">Nama Partner Pulsa<span class="required">*</span></label>
+						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_product_name">Nama Partner Pulsa <span class="required">*</span></label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
-							<input id="partner_product_name" class="form-control" name="partner_product_name" required="required" type="text" value="{{ old('partner_product_name') }}">
+							<input id="partner_product_name" class="form-control" name="partner_product_name" required="required" type="text" value="{{ old('partner_product_name', $getPartnerProduct->partner_product_name) }}">
 							@if($errors->has('partner_product_name'))
 								<code><span style="color:red; font-size:12px;">{{ $errors->first('partner_product_name')}}</span></code>
 							@endif
@@ -112,7 +111,7 @@
 						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 							<label>
-								<input type="checkbox" class="flat" name="active" />
+								<input type="checkbox" class="flat" name="active" {{ $getPartnerProduct->active == 1 ? 'checked="checked"' : '' }}/>
 							</label>
 						</div>
 					</div>
@@ -140,6 +139,18 @@
 <script src="{{ asset('amadeo/vendors/switchery/dist/switchery.min.js')}}"></script>
 
 <script>
+	$("#provider_id").change(function(event) {
+		$.getJSON({url: "{{ route('partner-product.ajaxGetProductList') }}/" + $(this).val(), success: function(result){
+	        $("#product_id").select2("val", "");
+	        $('#product_id').empty();
+			$('#product_id').append("<option value=''>Select Product</option>");
+			console.log(result)
+			$.each(result, function(i, field){
+				$('#product_id').append("<option value='"+ field.id +"'>"+ field.product_name +"</option>");
+			});
+	    }});
+	});
+
 	$(".select2_single").select2({
 		placeholder: "Choose",
 		allowClear: true

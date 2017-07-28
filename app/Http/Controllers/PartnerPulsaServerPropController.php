@@ -12,6 +12,18 @@ use Auth;
 use Validator;
 
 class PartnerPulsaServerPropController extends Controller{
+
+		/**
+		 * Create a new controller instance.
+		 *
+		 * @return void
+		 */
+		public function __construct()
+		{
+				$this->middleware('auth');
+		}
+
+		
 	public function index(){
 		$getPartnerServer = PartnerPulsaServerProp::get();
 		return view('partner-server.index', compact(

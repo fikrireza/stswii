@@ -13,21 +13,25 @@ class CreateProductSellPricesTable extends Migration
      */
     public function up()
     {
-        Schema::create('amd_product_sell_prices', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('product_id')->unsigned();
+        Schema::create('sw_product_sell_price', function (Blueprint $table) {
+            $table->bigIncrements('product_sell_price_id');
+            $table->bigInteger('product_id');
             $table->decimal('gross_sell_price', 9,0);
-            $table->boolean('flg_tax')->default(false);
-            $table->string('tax_percentage')->nullable();
-            $table->dateTime('datetime_start');
-            $table->dateTime('datetime_end');
-            $table->boolean('active')->default(false);
-            $table->dateTime('active_datetime')->nullable();
-            $table->dateTime('non_active_datetime')->nullable();
-            $table->bigInteger('version')->unsigned()->nullable();
-            $table->bigInteger('create_user_id')->unsigned()->nullable();
-            $table->bigInteger('update_user_id')->unsigned()->nullable();
+            $table->string('flg_tax', 1)->default('N');
+            $table->decimal('tax_percentage');
+            $table->string('datetime_start');
+            $table->string('datetime_end');
+            $table->string('active', 1)->default('Y');
+            $table->string('active_datetime');
+            $table->string('non_active_datetime');
+            $table->bigInteger('version')->unsigned();
+            $table->string('create_datetime');
+            $table->bigInteger('create_user_id')->unsigned();
+            $table->string('update_datetime');
+            $table->bigInteger('update_user_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('product_id')->references('product_id')->on('sw_product')->onDelete('cascade');
         });
     }
 
