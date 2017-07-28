@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PartnerPulsa extends Model
 {
-    protected $table = 'amd_partner_pulsas';
+    protected $table = 'sw_partner_pulsa';
 
     protected $fillable = ['parner_pulsa_code','description','partner_pulsa_name','flg_need_deposit','payment_termin',
                           'active','active_datetime','non_active_datetime','version','create_user_id','update_user_id'];

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PartnerDepositBalance extends Model
 {
-    protected $table = 'sw_partner_deposit_balances';
+    protected $table = 'sw_partner_deposit_balance';
 
     protected $fillable = ['partner_id','balance_amount','version','create_user_id','update_user_id'];
 

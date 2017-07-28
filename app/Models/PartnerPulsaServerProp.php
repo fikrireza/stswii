@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PartnerPulsaServerProp extends Model
 {
-    protected $table = 'amd_partner_pulsa_server_props';
+    protected $table = 'sw_partner_pulsa_server_properties';
 
     protected $fillable = ['server_url','api_key','api_secret','version','create_user_id','update_user_id'];
 

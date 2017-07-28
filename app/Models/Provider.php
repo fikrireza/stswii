@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Provider extends Model
 {
-    protected $table = 'amd_providers';
+    protected $table = 'sw_provider';
 
     protected $fillable = ['provider_code','provider_name','version','create_user_id','update_user_id'];
 
