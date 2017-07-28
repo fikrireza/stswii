@@ -8,8 +8,7 @@ class PartnerProduct extends Model
 {
     protected $table = 'sw_partner_product';
 
-    protected $fillable = ['partner_pulsa_id','product_id','provider_id','partner_product_code','partner_product_name','active',
-                          'active_datetime','non_active_datetime','version','create_user_id','update_user_id'];
+    protected $fillable = ['partner_product_id','partner_pulsa_id','provider_id','product_id','partner_product_code','partner_product_name','active','active_datetime','non_active_datetime','version','create_datetime','create_user_id','update_datetime','update_user_id'];
 
     public function partnerpulsa()
     {
