@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProviderPrefix extends Model
 {
-    protected $table = 'amd_provider_prefixes';
+    protected $table = 'sw_provider_prefix';
 
     protected $fillable = ['provider_id','prefix','version','create_user_id','update_user_id'];
 

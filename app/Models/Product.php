@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $table = 'amd_products';
+    protected $table = 'sw_product';
 
     protected $fillbale = ['product_code','product_name','provider_id','nominal','active','active_datetime',
                           'non_active_datetime','version','create_user_id','update_user_id'];

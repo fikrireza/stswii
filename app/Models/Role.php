@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-    protected $table = 'amd_roles';
+    protected $table = 'sw_roles';
 
     protected $fillable = [
         'name', 'slug', 'permissions',
@@ -17,7 +17,7 @@ class Role extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'amd_role_users');
+        return $this->belongsToMany(User::class, 'sw_role_users');
     }
 
     public function hasAccess(array $permissions) : bool
