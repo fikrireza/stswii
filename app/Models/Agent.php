@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Provider extends Model
+class Agent extends Model
 {
-    protected $table = 'sw_provider';
+    protected $table = 'sw_agent';
 
-    protected $fillable = ['provider_id','provider_code','provider_name','version','create_datetime',
-                          'create_user_id','update_datetime','update_user_id'];
+    protected $fillable = ['agent_id','agent_name','phone_number','address','city','channel_user_id','channel_chat_id','paloma_member_code
+client_id','version','create_datetime','create_user_id','update_datetime','update_user_id'];
 
     public function createdBy()
     {
@@ -20,6 +20,4 @@ class Provider extends Model
     {
       return $this->belongsTo('App\Models\User', 'update_user_id');
     }
-
-
 }

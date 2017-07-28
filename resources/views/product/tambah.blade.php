@@ -40,7 +40,8 @@
           <a href="{{ route('product.index') }}" class="btn btn-primary btn-sm">Kembali</a>
         </ul>
         <div class="clearfix"></div>
-      </div>zzz
+      </div>
+
       <div class="x_content">
         <form action="{{ route('product.store') }}" method="POST" class="form-horizontal form-label-left" novalidate>
           {{ csrf_field() }}
@@ -50,6 +51,7 @@
               <input id="name" class="form-control col-md-7 col-xs-12" name="product_code" type="text" value="{{ $product_code }}" readonly>
             </div>
           </div>
+
           <div class="item form-group {{ $errors->has('product_name') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product Name <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -59,20 +61,7 @@
               @endif
             </div>
           </div>
-          <div class="item form-group {{ $errors->has('provider_id') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Provider <span class="required">*</span></label>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <select id="provider_id" name="provider_id" class="form-control select2_single" required="required">
-                <option value="">Pilih</option>
-                @foreach ($getProvider as $key)
-                  <option value="{{ $key->id }}" {{ old('provider_id') == $key->id ? 'selected' : '' }}>{{ $key->provider_name}}</option>
-                @endforeach
-              </select>
-              @if($errors->has('provider_id'))
-                <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_id')}}</span></code>
-              @endif
-            </div>
-          </div>
+
           <div class="item form-group {{ $errors->has('nominal') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nominal <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -82,7 +71,20 @@
               @endif
             </div>
           </div>
+
+          <div class="item form-group {{ $errors->has('type_product') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Type Product <span class="required">*</span></label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <label class="radio-inline"><input type="radio" name="type_product" {{ old('type_product') == 'PULSA' ? 'checked' : '' }} value="PULSA">PULSA</label>
+              <label class="radio-inline"><input type="radio" name="type_product" {{ old('type_product') == 'DATA' ? 'checked' : '' }} value="DATA">DATA</label>
+              @if($errors->has('type_product'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('type_product')}}</span></code>
+              @endif
+            </div>
+          </div>
+
           <div class="ln_solid"></div>
+
           <div class="item form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -91,7 +93,9 @@
               </label>
             </div>
           </div>
+
           <div class="ln_solid"></div>
+
           <div class="form-group">
             <div class="col-md-6 col-md-offset-3">
               <a href="{{ route('product.index') }}" class="btn btn-primary">Cancel</a>
