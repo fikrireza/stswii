@@ -8,8 +8,7 @@ class PartnerProductPurchPrice extends Model
 {
     protected $table = 'sw_partner_product_purch_price';
 
-    protected $fillbale = ['parner_product_id','gross_purch_price','flg_tax','tax_percentage','datetime_start','datetime_end','active',
-                          'active_datetime','non_active_datetime','version','create_user_id','update_user_id'];
+    protected $fillbale = ['partner_product_purch_price_id','partner_product_id','gross_purch_price','flg_tax','tax_percentage','datetime_start','datetime_end','active','active_datetime','non_active_datetime','version','create_datetime','create_user_id','update_datetime','update_user_id'];
 
     public function partnerpulsa()
     {

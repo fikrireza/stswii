@@ -8,7 +8,7 @@ class PartnerPulsaServerProp extends Model
 {
     protected $table = 'sw_partner_pulsa_server_properties';
 
-    protected $fillable = ['server_url','api_key','api_secret','version','create_user_id','update_user_id'];
+    protected $fillable = ['partner_pulsa_properties_id','server_url','api_key','api_secret','version','create_datetime','create_user_id','update_datetime','update_user_id'];
 
     public function createdBy()
     {
