@@ -30,6 +30,15 @@ Route::post('/provider/update', 'ProviderController@update')
 Route::get('/provider/delete/{id}', 'ProviderController@delete')
 	->name('provider.delete');
 
+Route::get('/provider-prefix', 'ProviderPrefixController@index')
+	->name('provider-prefix.index');
+Route::post('/provider-prefix/store', 'ProviderPrefixController@store')
+	->name('provider-prefix.store');
+Route::post('/provider-prefix/update', 'ProviderPrefixController@update')
+	->name('provider-prefix.update');
+Route::get('/provider-prefix/delete/{id}', 'ProviderPrefixController@delete')
+	->name('provider-prefix.delete');
+
 Route::get('/partner-pulsa', 'PartnerPulsaController@index')->name('partner-pulsa.index');
 Route::get('/partner-pulsa/create', 'PartnerPulsaController@create')->name('partner-pulsa.create');
 Route::post('/partner-pulsa/store', 'PartnerPulsaController@store')->name('partner-pulsa.store');
@@ -69,15 +78,6 @@ Route::get('/partner-product-purch-price/edit/{id}', 'PartnerProductPurchPriceCo
 	->name('partner-product-purch-price.edit');
 Route::post('/partner-product-purch-price/edit', 'PartnerProductPurchPriceController@update')
 	->name('partner-product-purch-price.edit');
-
-Route::get('/provider-prefix', 'ProviderPrefixController@index')
-	->name('provider-prefix.index');
-Route::post('/provider-prefix/store', 'ProviderPrefixController@store')
-	->name('provider-prefix.store');
-Route::post('/provider-prefix/update', 'ProviderPrefixController@update')
-	->name('provider-prefix.update');
-Route::get('/provider-prefix/delete/{id}', 'ProviderPrefixController@delete')
-	->name('provider-prefix.delete');
 
 Route::get('/partner-server', 'PartnerPulsaServerPropController@index')
 	->name('partner-server.index');
