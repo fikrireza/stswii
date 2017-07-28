@@ -74,7 +74,7 @@
   </div>
 </div>
 
-@if (isset($collect))
+
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
@@ -100,26 +100,27 @@
             @php
               $urut = 0;
             @endphp
-            @foreach ($collect as $key)
+            @for ($i=0; $i < 20 ; $i++)
             <tr>
               <td><input type="button" name="delete" value="x" class="btn btn-danger btn-sm" onclick="DeleteRowFunction(this);"></td>
               <td><select id="product_id" name="product_id[{{$urut}}]" class="form-control select2_single" required="required">
                     <option value="">Pilih</option>
-                    @foreach ($getProduct as $product)
-                      <option value="{{ $product->id }}" {{ old('product_id', $key['product_id']) == $product->id ? 'selected' : '' }}>{{ $product->product_name}}</option>
-                    @endforeach
+                    <option value="1">Telkomsel</option>
+                    <option value="1" selected>XL</option>
+                    <option value="1">Indosat</option>
+                    
                   </select></td>
-              <td><input type="text" name="gross_sell_price[{{$urut}}]" class="form-control" value="{{ $key['gross_sell_price'] }}"></td>
-              <td><input type="text" name="tax_percentage[{{$urut}}]" class="form-control" value="{{ $key['tax_percentage'] }}" /></td>
-              <td><input type="text" name="datetime_start[{{$urut}}]" class="datetime_start form-control" value="{{ $key['datetime_start'] }}" /></td>
-              <td><input type="text" name="datetime_end[{{$urut}}]" class="datetime_end form-control" value="{{ $key['datetime_end'] }}" /></td>
+              <td><input type="text" name="gross_sell_price[{{$urut}}]" class="form-control" value="100000"></td>
+              <td><input type="text" name="tax_percentage[{{$urut}}]" class="form-control" value="10" /></td>
+              <td><input type="text" name="datetime_start[{{$urut}}]" class="datetime_start form-control" value="01/01/2017 00:00:00" /></td>
+              <td><input type="text" name="datetime_end[{{$urut}}]" class="datetime_end form-control" value="31/12/2017 23:59:59" /></td>
               {{-- <td><input type="checkbox" class="form-control" name="active[{{$urut}}]" value="1" {{ old('active', $key['active']) == 1 ? 'checked=""' : '' }}/></td>
               <td><input type="number" class="form-control" name="version[{{$urut}}]" value="{{ $key['version'] }}" /></td> --}}
             </tr>
             @php
               $urut++
             @endphp
-            @endforeach
+            @endfor
             <tr>
               <td colspan="8"><button type="submit" name="button" class="btn btn-success btn-bg">Upload</button></td>
             </tr>
@@ -130,7 +131,7 @@
     </div>
   </div>
 </div>
-@endif
+
 
 @endsection
 

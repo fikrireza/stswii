@@ -125,58 +125,27 @@
             @php
               $no = 1;
             @endphp
-            @foreach ($getProduct as $key)
+            @for ($i=0; $i < 50 ; $i++)
             <tr>
               <td>{{ $no++ }}</td>
-              <td>{{ $key->product_code }}</td>
-              <td>{{ $key->product_name }}</td>
-              <td>{{ number_format($key->nominal, 0, ',', '.') }}</td>
-              <td>{{ $key->type_product }}</td>
-              <td class="text-center">@if ($key->active == 1)
-                    <a href="" class="unpublish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span></a>
+              <td>{{ 'P'. $i }}</td>
+              <td>{{ 'Tri' }}</td>
+              <td>{{ $i . '00,000' }}</td>
+              <td>{{ "PULSA" }}</td>
+              <td class="text-center">@if (Rand(0,1))
+                    <a href="" class="unpublish" data-value="1" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span></a>
                     <br>
                   @else
-                    <a href="" class="publish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive"><i class="fa fa-thumbs-o-down"></i></span></a>
+                    <a href="" class="publish" data-value="1" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive"><i class="fa fa-thumbs-o-down"></i></span></a>
                     <br>
                   @endif
               </td>
               <td>
-                <a href="{{ route('product.ubah', $key->product_code) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
-                <a href="" class="delete" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
-              </td>
-            </tr>
-            @endforeach
-
-            <tr>
-              <td>1</td>
-              <td>Code</td>
-              <td>Name</td>
-              <td>100,000</td>
-              <td>PULSA</td>
-              <td class="text-center">
-                    <a href="" class="unpublish" data-value="1" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span></a>
-              </td>
-              <td>
                 <a href="{{ route('product.ubah', 1) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
                 <a href="" class="delete" data-value="1" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
               </td>
             </tr>
-            <tr>
-              <td>1</td>
-              <td>Code</td>
-              <td>Name</td>
-              <td>100,000</td>
-              <td>PULSA</td>
-              <td class="text-center">
-                    <a href="" class="publish" data-value="1" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive"><i class="fa fa-thumbs-o-down"></i></span></a>
-                    <br>
-              </td>
-              <td>
-                <a href="{{ route('product.ubah', 1) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
-                <a href="" class="delete" data-value="1" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
-              </td>
-            </tr>
-
+            @endfor
           </tbody>
         </table>
       </div>

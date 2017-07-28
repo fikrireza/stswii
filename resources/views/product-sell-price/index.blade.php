@@ -128,39 +128,35 @@
             @php
               $no = 1;
             @endphp
-            @foreach ($getProductSellPrice as $key)
+            @for ($i=0; $i < 100 ; $i++)
             <tr>
               <td>{{ $no++ }}</td>
-              <td>{{ '-' }}</td>
-              <td>{{ number_format($key->gross_sell_price, 0, ',', '.') }}</td>
-              <td>{{ $key->flg_tax or '-' }}</td>
-              <td>{{ $key->tax_percentage or '-' }}</td>
-              <td>{{ $key->datetime_start }}</td>
-              <td>{{ $key->datetime_end }}</td>
-              <td class="text-center">@if ($key->active == 1)
+              <td>{{ 'Telkomsel' . $i }}</td>
+              <td>{{ $i . '00,000' }}</td>
+              <td>{{ 'Y' }}</td>
+              <td>{{ 10 }}</td>
+              <td>{{ '01/01/2017 00:00:00' }}</td>
+              <td>{{ '31/12/2017 23:59:59' }}</td>
+              <td class="text-center">@if (rand ( 0 , 1 ))
                     <a
                       href=""
                       class="unpublish"
-                      data-value="{{ $key->id }}"
+                      data-value="{{ 1 }}"
                       data-toggle="modal"
                       data-target=".modal-nonactive"
                     >
                       <span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span>
                     </a>
-                    <br>
-                    <span class="label label-primary">{{ $key->active_datetime or '-' }}</span>
                   @else
-                    <a href="" class="publish" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive"><i class="fa fa-thumbs-o-down"></i></span></a>
-                    <br>
-                    <span class="label label-primary">{{ $key->non_active_datetime or '-' }}</span>
+                    <a href="" class="publish" data-value="{{ 1 }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive"><i class="fa fa-thumbs-o-down"></i></span></a>
                   @endif
               </td>
               <td>
-                <a href="{{ route('product-sell-price.ubah', $key->id) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
-                <a href="" class="delete" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
+                <a href="{{ route('product-sell-price.ubah', 1) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
+                <a href="" class="delete" data-value="{{ 1 }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
               </td>
             </tr>
-            @endforeach
+            @endfor
           </tbody>
         </table>
       </div>
