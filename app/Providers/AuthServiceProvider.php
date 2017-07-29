@@ -25,7 +25,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         $this->registerProviderPolicies();
-        //
+        $this->registerUsersPolicies();
     }
 
     public function registerProviderPolicies()
@@ -45,7 +45,35 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-provider', function($user){
           return $user->hasAccess(['delete-provider']);
         });
-        Gate::define('see-all-provider', function($user){
+        Gate::define('user-read', function($user){
+          return $user->inRole('administrator');
+        });
+    }
+
+    public function registerUSersPolicies()
+    {
+        Gate::define('user-read', function($user){
+          return $user->hasAccess(['user-read']);
+        });
+        Gate::define('user-create', function($user){
+          return $user->hasAccess(['user-create']);
+        });
+        Gate::define('user-update', function($user){
+          return $user->hasAccess(['user-update']);
+        });
+        Gate::define('user-delete', function($user){
+          return $user->hasAccess(['user-delete']);
+        });
+        Gate::define('role-read', function($user){
+          return $user->hasAccess(['role-read']);
+        });
+        Gate::define('role-update', function($user){
+          return $user->hasAccess(['role-update']);
+        });
+        Gate::define('user-management', function($user){
+          return $user->inRole('administrator');
+        });
+        Gate::define('role-management', function($user){
           return $user->inRole('administrator');
         });
     }

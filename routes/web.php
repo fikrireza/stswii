@@ -131,9 +131,9 @@ Route::post('product-sell-price/upload', 'ProductSellPriceController@storeTempla
 //----- PRODUCT SELL PRICE -----//
 
 //----- Management Account -----//
-Route::get('account', 'AccountController@index')->name('account.index');
-Route::get('account/add', 'AccountController@tambah')->name('account.tambah');
-Route::get('account/edit/{id}', 'AccountController@ubah')->name('account.ubah');
-Route::get('account/role', 'AccountController@role')->name('account.role');
-Route::get('account/role/{id}', 'AccountController@roleUbah')->name('account.roleUbah');
-Route::post('account/role', 'AccountController@roleEdit')->name('account.roleEdit');
+Route::get('account', 'AccountController@index')->name('account.index')->middleware('can:user-read');
+Route::get('account/add', 'AccountController@tambah')->name('account.tambah')->middleware('can:user-create');
+Route::get('account/edit/{id}', 'AccountController@ubah')->name('account.ubah')->middleware('can:user-update');
+Route::get('account/role', 'AccountController@role')->name('account.role')->middleware('can:role-read');
+Route::get('account/role/{id}', 'AccountController@roleUbah')->name('account.roleUbah')->middleware('can:role-update');
+Route::post('account/role', 'AccountController@roleEdit')->name('account.roleEdit')->middleware('can:role-update');
