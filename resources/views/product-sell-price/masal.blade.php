@@ -10,6 +10,31 @@
 <link href="{{ asset('amadeo/vendors/switchery/dist/switchery.min.css') }}" rel="stylesheet">
 <link href="{{ asset('amadeo/vendors/pnotify/dist/pnotify.css') }}" rel="stylesheet">
 <link href="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.css') }}" rel="stylesheet">
+<style type="text/css">
+  td .label-hide
+  {
+    display: inline-block !important;
+    visibility: visible;
+    opacity: 1;
+  }
+  td:hover .label-hide{
+    display:  none !important;
+    visibility: hidden;
+    opacity: 0;
+  } 
+
+  td .input-hide
+  {
+    display: none !important;
+    visibility: hidden;
+    opacity: 0;
+  }
+  td:hover .input-hide{
+    display:  inline-block !important;
+    visibility: visible;
+    opacity: 1;
+  } 
+</style>
 @endsection
 
 @section('content')
@@ -83,7 +108,9 @@
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
-        <table class="table table-striped table-bordered no-footer" width="100%">
+        <form class="form-horizontal form-label-left" action="{{ route('product-sell-price.storeTemplate') }}" method="post">
+        {{ csrf_field() }}
+        <table class="table table-striped table-bordered no-footer tablecheck" width="100%" id="">
           <thead>
             <th>Selection</th>
             <th>Provider</th>
@@ -91,42 +118,54 @@
             <th>Tax Percentage</th>
             <th>Datetime Start</th>
             <th>Datetime End</th>
-            {{-- <th>Active</th>
-            <th>Version</th> --}}
           </thead>
-          <form class="form-horizontal form-label-left" action="{{ route('product-sell-price.storeTemplate') }}" method="post">
-          {{ csrf_field() }}
+          
+          
           <tbody>
             @php
               $urut = 0;
             @endphp
             @for ($i=0; $i < 20 ; $i++)
             <tr>
-              <td><input type="button" name="delete" value="x" class="btn btn-danger btn-sm" onclick="DeleteRowFunction(this);"></td>
-              <td><select id="product_id" name="product_id[{{$urut}}]" class="form-control select2_single" required="required">
-                    <option value="">Pilih</option>
-                    <option value="1">Telkomsel</option>
-                    <option value="1" selected>XL</option>
-                    <option value="1">Indosat</option>
-                    
-                  </select></td>
-              <td><input type="text" name="gross_sell_price[{{$urut}}]" class="form-control" value="100000"></td>
-              <td><input type="text" name="tax_percentage[{{$urut}}]" class="form-control" value="10" /></td>
-              <td><input type="text" name="datetime_start[{{$urut}}]" class="datetime_start form-control" value="01/01/2017 00:00:00" /></td>
-              <td><input type="text" name="datetime_end[{{$urut}}]" class="datetime_end form-control" value="31/12/2017 23:59:59" /></td>
-              {{-- <td><input type="checkbox" class="form-control" name="active[{{$urut}}]" value="1" {{ old('active', $key['active']) == 1 ? 'checked=""' : '' }}/></td>
-              <td><input type="number" class="form-control" name="version[{{$urut}}]" value="{{ $key['version'] }}" /></td> --}}
+              <td>
+                <input type="button" name="delete" value="x" class="btn btn-danger btn-sm" onclick="DeleteRowFunction(this);">
+              </td>
+              <td>
+                <span class="label-hide">{{$i}}</span>
+                <select id="product_id" name="product_id[{{$urut}}]" class="form-control select2_single input-hide" required="required">
+                  <option value="">Pilih</option>
+                  <option value="1">Telkomsel</option>
+                  <option value="1" selected>XL</option>
+                  <option value="1">Indosat</option>
+                </select>
+              </td>
+              <td>
+                <span class="label-hide">{{$i}}</span>
+                <input type="text" name="gross_sell_price[{{$urut}}]" class="form-control input-hide" value="100000">
+              </td>
+              <td>
+                <span class="label-hide">{{$i}}</span>
+                <input type="text" name="tax_percentage[{{$urut}}]" class="form-control input-hide" value="10" />
+              </td>
+              <td>
+                <span class="label-hide">{{$i}}</span>
+                <input type="text" name="datetime_start[{{$urut}}]" class="datetime_start form-control input-hide" value="01/01/2017 00:00:00" />
+              </td>
+              <td>
+                <span class="label-hide">{{$i}}</span>
+                <input type="text" name="datetime_end[{{$urut}}]" class="datetime_end form-control input-hide" value="31/12/2017 23:59:59" />
+              </td>
+
             </tr>
             @php
               $urut++
             @endphp
             @endfor
-            <tr>
-              <td colspan="8"><button type="submit" name="button" class="btn btn-success btn-bg">Upload</button></td>
-            </tr>
           </tbody>
-          </form>
+          
         </table>
+        <button type="submit" name="button" class="btn btn-success btn-bg">Upload</button>
+        </form>
       </div>
     </div>
   </div>
@@ -136,6 +175,10 @@
 @endsection
 
 @section('script')
+<script src="{{ asset('amadeo/vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('amadeo/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+<script src="{{ asset('amadeo/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/select2/dist/js/select2.full.min.js')}}"></script>
 <script src="{{ asset('amadeo/vendors/iCheck/icheck.min.js')}}"></script>
 <script src="{{ asset('amadeo/vendors/switchery/dist/switchery.min.js')}}"></script>
@@ -167,5 +210,14 @@
     timePicker: true,
     // minDate: new Date(),
   });
+  $('.tablecheck').DataTable();
+
+  $(function() {
+    $('input.input-hide').change(function(event) {
+      console.log($(this).val());
+    });
+  });
 </script>
+
+
 @endsection
