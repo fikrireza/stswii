@@ -168,7 +168,7 @@
                 <input type="button" name="delete" value="x" class="btn btn-danger btn-sm" onclick="DeleteRowFunction(this);">
               </td>
               <td>
-                <span class="label-hide">{{ $arrProvName[$i] }}</span>
+                
                 <select id="product_id" name="product_id[{{$urut}}]" class="form-control select2_single input-hide input-text" required="required">
                   <option value="">Pilih</option>
                   @for($p=1; $p<=4; $p++)
@@ -182,19 +182,20 @@
                 </select>
               </td>
               <td>
-                <span class="label-hide">Rp. {{ number_format($arrPriceSell[$i],0) }}</span>
+                <!-- <span class="label-hide">{{ $arrProvName[$i] }}</span> -->
+                <!-- <span class="label-hide">Rp. {{ number_format($arrPriceSell[$i],0) }}</span> -->
                 <input type="text" name="gross_sell_price[{{$urut}}]" class="form-control input-hide input-text currency" value="{{ $arrPriceSell[$i] }}" onkeypress="return isNumber(event)">
               </td>
               <td>
-                <span class="label-hide">{{ $arrTaxPerc[$i] }}%</span>
+                <!-- <span class="label-hide">{{ $arrTaxPerc[$i] }}%</span> -->
                 <input type="text" name="tax_percentage[{{$urut}}]" class="form-control input-hide input-text percentage" value="{{ $arrTaxPerc[$i] }}" onkeypress="return isNumber(event) "/>
               </td>
               <td>
-                <span class="label-hide">{{ $arrStartDate[$i] }}</span>
+                <!-- <span class="label-hide">{{ $arrStartDate[$i] }}</span> -->
                 <input type="text" name="datetime_start[{{$urut}}]" class="datetime_start form-control input-hide input-text" value="{{ $arrStartDate[$i] }}" />
               </td>
               <td>
-                <span class="label-hide">{{ $arrEndDate[$i] }}</span>
+                <!-- <span class="label-hide">{{ $arrEndDate[$i] }}</span> -->
                 <input type="text" name="datetime_end[{{$urut}}]" class="datetime_end form-control input-hide input-text" value="{{ $arrEndDate[$i] }}" />
               </td>
 
@@ -281,7 +282,11 @@
     // minDate: new Date(),
   });
 
-  $('.tablecheck').DataTable();
+  $('.tablecheck').DataTable({
+    "aoColumnDefs": [
+      { "bSearchable": false, "aTargets": [ 0, 1 ] }
+    ]
+  });
 
   // $(function() {
   //   $('input.input-hide').change(function(event) {
