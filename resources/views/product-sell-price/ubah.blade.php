@@ -65,7 +65,7 @@
           {{ csrf_field() }}
           <input type="hidden" name="product_sell_price_id" value="{{ 1 }}">
           <div class="item form-group {{ $errors->has('product_id') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Provider <span class="required">*</span></label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <select id="product_id" name="product_id" class="form-control select2_single" required="required">
                 <option value="">Pilih</option>
@@ -78,15 +78,7 @@
               @endif
             </div>
           </div>
-          <div class="item form-group {{ $errors->has('nominal') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nominal <span class="required">*</span></label>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="nominal" class="form-control" name="nominal" type="text" value="Rp. {{ number_format(100000,2,',','.') }}" readonly>
-              @if($errors->has('nominal'))
-                <code><span style="color:red; font-size:12px;">{{ $errors->first('nominal')}}</span></code>
-              @endif
-            </div>
-          </div>
+          
           <div class="item form-group {{ $errors->has('gross_sell_price') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Gross Sell Price <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
