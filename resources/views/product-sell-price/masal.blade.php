@@ -11,29 +11,31 @@
 <link href="{{ asset('amadeo/vendors/pnotify/dist/pnotify.css') }}" rel="stylesheet">
 <link href="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.css') }}" rel="stylesheet">
 <style type="text/css">
-  td .label-hide
-  {
-    display: inline-block !important;
-    visibility: visible;
-    opacity: 1;
-  }
-  td:hover .label-hide{
-    display:  none !important;
-    visibility: hidden;
-    opacity: 0;
-  } 
-
-  td .input-hide
-  {
-    display: none !important;
-    visibility: hidden;
-    opacity: 0;
-  }
-  td:hover .input-hide{
+  /*td .label-hide{
     display:  inline-block !important;
     visibility: visible;
     opacity: 1;
-  } 
+    transition: all .51s;
+  }*/
+  td .label-hide{
+    display:  block !important;
+    /*display:  none !important;*/
+    visibility: visible;
+    /*visibility: hidden;*/
+    opacity: 1;
+    /*opacity: 0;*/
+  }
+  /*td .input-hide{
+    display:  none !important;
+    visibility: hidden;
+    opacity: 0;
+    transition: all .51s;
+  }*/
+  td .input-hide{
+    display:  inline-block !important;
+    visibility: visible;
+    opacity: 1;
+  }
 </style>
 @endsection
 
@@ -119,41 +121,81 @@
             <th>Datetime Start</th>
             <th>Datetime End</th>
           </thead>
-          
-          
+
           <tbody>
             @php
               $urut = 0;
+              $arrProvNameSelect = array('', 'Telkomsel', 'Indosat', 'Ooredo', '3');
+              $arrProvName = array(
+                '', 
+                'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 
+                'Indosat', 'Indosat', 'Indosat', 'Indosat', 'Indosat', 
+                'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 
+                '3', '3', '3', '3', '3'
+              );
+              $arrPriceSell = array(
+                '', 
+                '5000', '10000', '20000', '50000', '100000', 
+                '5000', '10000', '20000', '50000', '100000', 
+                '5000', '10000', '20000', '50000', '100000', 
+                '5000', '10000', '20000', '50000', '100000'
+              );
+              $arrTaxPerc = array(
+                '', 
+                '0', '0', '0', '0', '0', 
+                '0', '0', '0', '0', '0', 
+                '0', '0', '0', '0', '0', 
+                '0', '0', '0', '0', '0'
+              );
+              $arrStartDate = array(
+                '', 
+                '01/01/2017 00:00:00', '01/01/2017 00:00:00', '01/01/2017 00:00:00', '01/01/2017 00:00:00', '01/01/2017 00:00:00', 
+                '01/01/2017 00:00:00', '01/01/2017 00:00:00', '01/01/2017 00:00:00', '01/01/2017 00:00:00', '01/01/2017 00:00:00', 
+                '01/01/2017 00:00:00', '01/01/2017 00:00:00', '01/01/2017 00:00:00', '01/01/2017 00:00:00', '01/01/2017 00:00:00', 
+                '01/01/2017 00:00:00', '01/01/2017 00:00:00', '01/01/2017 00:00:00', '01/01/2017 00:00:00', '01/01/2017 00:00:00'
+              );
+              $arrEndDate = array(
+                '', 
+                '31/12/2017 00:00:00', '31/12/2017 00:00:00', '31/12/2017 00:00:00', '31/12/2017 00:00:00', '31/12/2017 00:00:00', 
+                '31/12/2017 00:00:00', '31/12/2017 00:00:00', '31/12/2017 00:00:00', '31/12/2017 00:00:00', '31/12/2017 00:00:00', 
+                '31/12/2017 00:00:00', '31/12/2017 00:00:00', '31/12/2017 00:00:00', '31/12/2017 00:00:00', '31/12/2017 00:00:00', 
+                '31/12/2017 00:00:00', '31/12/2017 00:00:00', '31/12/2017 00:00:00', '31/12/2017 00:00:00', '31/12/2017 00:00:00', 
+              );
             @endphp
-            @for ($i=0; $i < 20 ; $i++)
+            @for ($i=1; $i < 20 ; $i++)
             <tr>
               <td>
                 <input type="button" name="delete" value="x" class="btn btn-danger btn-sm" onclick="DeleteRowFunction(this);">
               </td>
               <td>
-                <span class="label-hide">{{$i}}</span>
-                <select id="product_id" name="product_id[{{$urut}}]" class="form-control select2_single input-hide" required="required">
+                <span class="label-hide">{{ $arrProvName[$i] }}</span>
+                <select id="product_id" name="product_id[{{$urut}}]" class="form-control select2_single input-hide input-text" required="required">
                   <option value="">Pilih</option>
-                  <option value="1">Telkomsel</option>
-                  <option value="1" selected>XL</option>
-                  <option value="1">Indosat</option>
+                  @for($p=1; $p<=4; $p++)
+                  <option 
+                    value="{{ $arrProvNameSelect[$p] }}" 
+                    {{ $arrProvName[$i] == $arrProvNameSelect[$p] ? 'selected' : '' }}
+                  >
+                    {{ $arrProvNameSelect[$p] }}
+                  </option>
+                  @endfor
                 </select>
               </td>
               <td>
-                <span class="label-hide">{{$i}}</span>
-                <input type="text" name="gross_sell_price[{{$urut}}]" class="form-control input-hide" value="100000">
+                <span class="label-hide">{{ $arrPriceSell[$i] }}</span>
+                <input type="text" name="gross_sell_price[{{$urut}}]" class="form-control input-hide input-text currency" value="{{ $arrPriceSell[$i] }}" onkeypress="return isNumber(event)">
               </td>
               <td>
-                <span class="label-hide">{{$i}}</span>
-                <input type="text" name="tax_percentage[{{$urut}}]" class="form-control input-hide" value="10" />
+                <span class="label-hide">{{ $arrTaxPerc[$i] }}</span>
+                <input type="text" name="tax_percentage[{{$urut}}]" class="form-control input-hide input-text percentage" value="{{ $arrTaxPerc[$i] }}" onkeypress="return isNumber(event) "/>
               </td>
               <td>
-                <span class="label-hide">{{$i}}</span>
-                <input type="text" name="datetime_start[{{$urut}}]" class="datetime_start form-control input-hide" value="01/01/2017 00:00:00" />
+                <span class="label-hide">{{ $arrStartDate[$i] }}</span>
+                <input type="text" name="datetime_start[{{$urut}}]" class="datetime_start form-control input-hide input-text" value="{{ $arrStartDate[$i] }}" />
               </td>
               <td>
-                <span class="label-hide">{{$i}}</span>
-                <input type="text" name="datetime_end[{{$urut}}]" class="datetime_end form-control input-hide" value="31/12/2017 23:59:59" />
+                <span class="label-hide">{{ $arrEndDate[$i] }}</span>
+                <input type="text" name="datetime_end[{{$urut}}]" class="datetime_end form-control input-hide input-text" value="{{ $arrEndDate[$i] }}" />
               </td>
 
             </tr>
@@ -188,6 +230,26 @@
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
 
 <script type="text/javascript">
+  $(document).on('change', '.input-text', function(e) {
+    var lebel = $(this).val();
+    if($(this).hasClass("currency")){
+      var lebel = $(this).val();
+    }
+    if($(this).hasClass("percentage")){
+      lebel = lebel + '%';
+    }
+    $(this).prev().html(lebel);
+  });
+
+  function isNumber(evt) {
+      evt = (evt) ? evt : window.event;
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+          return false;
+      }
+      return true;
+  }
+
   function DeleteRowFunction(btndel) {
     if (typeof(btndel) == "object") {
       $(btndel).closest("tr").remove();
@@ -210,13 +272,14 @@
     timePicker: true,
     // minDate: new Date(),
   });
+
   $('.tablecheck').DataTable();
 
-  $(function() {
-    $('input.input-hide').change(function(event) {
-      console.log($(this).val());
-    });
-  });
+  // $(function() {
+  //   $('input.input-hide').change(function(event) {
+  //     console.log($(this).val());
+  //   });
+  // });
 </script>
 
 
