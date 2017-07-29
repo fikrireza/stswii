@@ -77,7 +77,10 @@ Route::post('/partner-product-purch-price/store', 'PartnerProductPurchPriceContr
 Route::get('/partner-product-purch-price/edit/{id}', 'PartnerProductPurchPriceController@edit')
 	->name('partner-product-purch-price.edit');
 Route::post('/partner-product-purch-price/edit', 'PartnerProductPurchPriceController@update')
-	->name('partner-product-purch-price.edit');
+	->name('partner-product-purch-price.update');
+Route::get('partner-product-purch-price/upload', 'PartnerProductPurchPriceController@upload')
+  ->name('partner-product-purch-price.upload');
+
 
 Route::get('/partner-server', 'PartnerPulsaServerPropController@index')
 	->name('partner-server.index');

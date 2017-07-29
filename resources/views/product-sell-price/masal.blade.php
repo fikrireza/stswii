@@ -186,7 +186,7 @@
                 <input type="text" name="gross_sell_price[{{$urut}}]" class="form-control input-hide input-text currency" value="{{ $arrPriceSell[$i] }}" onkeypress="return isNumber(event)">
               </td>
               <td>
-                <span class="label-hide">{{ $arrTaxPerc[$i] }}</span>
+                <span class="label-hide">{{ $arrTaxPerc[$i] }}%</span>
                 <input type="text" name="tax_percentage[{{$urut}}]" class="form-control input-hide input-text percentage" value="{{ $arrTaxPerc[$i] }}" onkeypress="return isNumber(event) "/>
               </td>
               <td>
@@ -230,17 +230,6 @@
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
 
 <script type="text/javascript">
-  // $(document).on('load', '.input-text', function(e) {
-  //   var lebel = $(this).val();
-  //   if($(this).hasClass("currency")){
-  //     var lebel = $(this).val();
-  //   }
-  //   if($(this).hasClass("percentage")){
-  //     lebel = lebel + '%';
-  //   }
-  //   $(this).prev().html(lebel);
-  // });
-
   $(document).on('change', '.input-text', function(e) {
     var lebel = $(this).val();
     if($(this).hasClass("currency")){
