@@ -182,7 +182,7 @@
                 </select>
               </td>
               <td>
-                <span class="label-hide">{{ $arrPriceSell[$i] }}</span>
+                <span class="label-hide">Rp. {{ number_format($arrPriceSell[$i],0) }}</span>
                 <input type="text" name="gross_sell_price[{{$urut}}]" class="form-control input-hide input-text currency" value="{{ $arrPriceSell[$i] }}" onkeypress="return isNumber(event)">
               </td>
               <td>
@@ -244,7 +244,7 @@
   $(document).on('change', '.input-text', function(e) {
     var lebel = $(this).val();
     if($(this).hasClass("currency")){
-      var lebel = $(this).val();
+      var lebel = 'Rp. ' + currency($(this).val());
     }
     if($(this).hasClass("percentage")){
       lebel = lebel + '%';
@@ -267,6 +267,14 @@
     } else {
       return false;
     }
+  }
+
+  function currency(number)
+  {
+    var format = '';    
+    var angkarev = number.toString().split('').reverse().join('');
+    for(var i = 0; i < angkarev.length; i++) if(i%3 == 0) format += angkarev.substr(i,3)+',';
+    return format.split('',format.length-1).reverse().join('');
   }
 
   $('.datetime_start').daterangepicker({
