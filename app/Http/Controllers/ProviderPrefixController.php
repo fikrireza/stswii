@@ -26,19 +26,19 @@ class ProviderPrefixController extends Controller{
     }
     
 
-    ublic function index(){
-		$getProvider = Provider::select(
-				'id',
-				'provider_name'
-			)
-			->orderBy('provider_name', 'asc')
-		    ->get();
-		$getProviderPrefix = ProviderPrefix::orderBy('provider_id', 'asc')
-            ->get();
-		return view('provider-prefix.index', compact(
+    public function index(){
+		// $getProvider = Provider::select(
+		// 		'id',
+		// 		'provider_name'
+		// 	)
+		// 	->orderBy('provider_name', 'asc')
+		//     ->get();
+		// $getProviderPrefix = ProviderPrefix::orderBy('provider_id', 'asc')
+  //           ->get();
+		return view('provider-prefix.index'/*, compact(
 			'getProvider',
 			'getProviderPrefix'
-		));
+		)*/);
     }
     public function delete($id){
 		$delete = ProviderPrefix::find($id);
