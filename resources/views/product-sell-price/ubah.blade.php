@@ -63,15 +63,15 @@
       <div class="x_content">
         <form action="{{ route('product-sell-price.edit') }}" method="POST" class="form-horizontal form-label-left" novalidate>
           {{ csrf_field() }}
-          <input type="hidden" name="product_sell_price_id" value="{{ $getProductSellPrice->id }}">
+          <input type="hidden" name="product_sell_price_id" value="{{ 1 }}">
           <div class="item form-group {{ $errors->has('product_id') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Provider <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <select id="product_id" name="product_id" class="form-control select2_single" required="required">
                 <option value="">Pilih</option>
-                @foreach ($getProduct as $key)
-                  <option value="{{ $key->id }}" {{ old('product_id', $getProductSellPrice->product_id) == $key->id ? 'selected' : '' }}>{{ $key->product_name}}</option>
-                @endforeach
+                <option value="1" selected >Telkomsel</option>
+                <option value="2" >XL</option>
+                <option value="3" >Indosat</option>
               </select>
               @if($errors->has('product_id'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('product_id')}}</span></code>
@@ -81,7 +81,7 @@
           <div class="item form-group {{ $errors->has('nominal') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nominal <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="nominal" class="form-control" name="nominal" type="text" value="Rp. {{ number_format($getProductSellPrice->product->nominal,2,',','.') }}" readonly>
+              <input id="nominal" class="form-control" name="nominal" type="text" value="Rp. {{ number_format(100000,2,',','.') }}" readonly>
               @if($errors->has('nominal'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('nominal')}}</span></code>
               @endif
@@ -90,7 +90,7 @@
           <div class="item form-group {{ $errors->has('gross_sell_price') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Gross Sell Price <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="gross_sell_price" class="form-control" name="gross_sell_price" placeholder="E.g: 50000" required="required" type="text" value="{{ old('gross_sell_price', $getProductSellPrice->gross_sell_price) }}" onkeypress="return isNumber(event)" maxlength="9">
+              <input id="gross_sell_price" class="form-control" name="gross_sell_price" placeholder="E.g: 50000" required="required" type="text" value="{{ old('gross_sell_price', 50000) }}" onkeypress="return isNumber(event)" maxlength="9">
               @if($errors->has('gross_sell_price'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('gross_sell_price')}}</span></code>
               @endif
@@ -107,7 +107,7 @@
           <div class="item form-group {{ $errors->has('tax_percentage') ? 'has-error' : ''}}" id="tax_percentage" style="display:none">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Tax Percentage <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="tax_percentage" class="form-control" name="tax_percentage" placeholder="E.g: 50000" required="required" type="text" value="{{ old('tax_percentage', $getProductSellPrice->tax_percentage) }}" onkeypress="return isNumber(event)" maxlength="9">
+              <input id="tax_percentage" class="form-control" name="tax_percentage" placeholder="E.g: 50000" required="required" type="text" value="{{ old('tax_percentage', 15) }}" onkeypress="return isNumber(event)" maxlength="9">
               @if($errors->has('tax_percentage'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('tax_percentage')}}</span></code>
               @endif
@@ -116,7 +116,7 @@
           <div class="item form-group {{ $errors->has('datetime_start') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Date Start <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="datetime_start" name="datetime_start" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_start', $getProductSellPrice->datetime_start) }}">
+              <input id="datetime_start" name="datetime_start" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_start', '01-01-2017 00:00:00') }}">
               @if($errors->has('datetime_start'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('datetime_start')}}</span></code>
               @endif
@@ -125,7 +125,7 @@
           <div class="item form-group {{ $errors->has('datetime_end') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Date End <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="datetime_end" name="datetime_end" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_end', $getProductSellPrice->datetime_end) }}">
+              <input id="datetime_end" name="datetime_end" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_end', '31-12-2017 23:59:59') }}">
               @if($errors->has('datetime_end'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('datetime_end')}}</span></code>
               @endif
@@ -136,7 +136,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input type="checkbox" class="flat" name="active" value="1" {{ old('active', $getProductSellPrice->active) == 1 ? 'checked=""' : '' }}/>
+                <input type="checkbox" class="flat" name="active" value="1" {{ old('active', 1) == 1 ? 'checked=""' : '' }}/>
               </label>
             </div>
           </div>
