@@ -40,85 +40,7 @@
 
 <div class="clearfix"></div>
 <div class="row">
-  <div class="col-md-5 col-sm-5 col-xs-12">
-    <div class="x_panel">
-      <div class="x_title">
-        <h2>Access Role</h2>
-        <div class="clearfix"></div>
-      </div>
-      <div class="x_content">
-        <form action="" method="POST" class="form-horizontal form-label-left" novalidate>
-        <div class="item form-group {{ $errors->has('role') ? 'has-error' : ''}}">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Role <span class="required">*</span></label>
-          <div class="col-md-9 col-sm-9 col-xs-12">
-            <select id="role" name="role" class="form-control" required="required">
-              <option value="">Pilih</option>
-              <option value="1">Administrator</option>
-              <option value="2">Admin</option>
-              <option value="3">Partner</option>
-              <option value="4">Finance</option>
-            </select>
-            @if($errors->has('role'))
-            <code><span style="color:red; font-size:12px;">{{ $errors->first('role')}}</span></code>
-            @endif
-          </div>
-        </div>
-        <div class="item form-group">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product</label>
-          <div class="col-md-6 col-sm-6 col-xs-12">
-            <label>
-              <input type="checkbox" class="flat" name="active" /> Product - Read
-            </label>
-            <label>
-              <input type="checkbox" class="flat" name="active" /> Product - Create
-            </label>
-            <label>
-              <input type="checkbox" class="flat" name="active" /> Product - Update
-            </label>
-            <label>
-              <input type="checkbox" class="flat" name="active" /> Product - Delete
-            </label>
-          </div>
-        </div>
-        <div class="item form-group">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Provider</label>
-          <div class="col-md-6 col-sm-6 col-xs-12">
-            <label>
-              <input type="checkbox" class="flat" name="active" /> Provider - Read
-            </label>
-            <label>
-              <input type="checkbox" class="flat" name="active" /> Provider - Create
-            </label>
-            <label>
-              <input type="checkbox" class="flat" name="active" /> Provider - Update
-            </label>
-            <label>
-              <input type="checkbox" class="flat" name="active" /> Provider - Delete
-            </label>
-          </div>
-        </div>
-        <div class="item form-group">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Partner</label>
-          <div class="col-md-6 col-sm-6 col-xs-12">
-            <label>
-              <input type="checkbox" class="flat" name="active" /> Partner - Read
-            </label>
-            <label>
-              <input type="checkbox" class="flat" name="active" /> Partner - Create
-            </label>
-            <label>
-              <input type="checkbox" class="flat" name="active" /> Partner - Update
-            </label>
-            <label>
-              <input type="checkbox" class="flat" name="active" /> Partner - Delete
-            </label>
-          </div>
-        </div>
-        </form>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-7 col-sm-7 col-xs-12">
+  <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
         <h2>Access Role</h2>
@@ -135,22 +57,21 @@
             </tr>
           </thead>
           <tbody>
+            @php
+              $no = 1 ;
+            @endphp
+            @foreach ($getRole as $key)
             <tr>
-              <td>1</td>
-              <td>Administrator</td>
-              <td>Product [Create, Read, Update, Delete] <br> Provider [Create, Read, Update, Delete]</td>
+              <td>{{ $no++ }}</td>
+              <td>{{ strtoupper($key->name) }}</td>
+              <td>@foreach ($key->permissions as $task => $value)
+                {{ strtoupper($task) }}<br>
+              @endforeach</td>
               <td>
-                <a href="{{ route('account.ubah', 1) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
+                <a href="{{ route('account.roleUbah', ['id' => $key->id ]) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
               </td>
             </tr>
-            <tr>
-              <td>2</td>
-              <td>Finance</td>
-              <td>Product [Read]</td>
-              <td>
-                <a href="{{ route('account.ubah', 2) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
-              </td>
-            </tr>
+            @endforeach
           </tbody>
         </table>
       </div>

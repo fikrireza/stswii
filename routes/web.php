@@ -135,3 +135,5 @@ Route::get('account', 'AccountController@index')->name('account.index');
 Route::get('account/add', 'AccountController@tambah')->name('account.tambah');
 Route::get('account/edit/{id}', 'AccountController@ubah')->name('account.ubah');
 Route::get('account/role', 'AccountController@role')->name('account.role');
+Route::get('account/role/{id}', 'AccountController@roleUbah')->name('account.roleUbah');
+Route::post('account/role', 'AccountController@roleEdit')->name('account.roleEdit');
