@@ -71,7 +71,7 @@ class ProductSellPriceController extends Controller
 
     public function ubah($id)
     {
-        $getProductSellPrice = ProductSellPrice::find($id);
+        $getProductSellPrice = ProductSellPrice::first();
 
         $getProduct = Product::get();
 
