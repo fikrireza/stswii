@@ -230,6 +230,17 @@
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
 
 <script type="text/javascript">
+  // $(document).on('load', '.input-text', function(e) {
+  //   var lebel = $(this).val();
+  //   if($(this).hasClass("currency")){
+  //     var lebel = $(this).val();
+  //   }
+  //   if($(this).hasClass("percentage")){
+  //     lebel = lebel + '%';
+  //   }
+  //   $(this).prev().html(lebel);
+  // });
+
   $(document).on('change', '.input-text', function(e) {
     var lebel = $(this).val();
     if($(this).hasClass("currency")){
