@@ -23,18 +23,20 @@ class PartnerPulsaServerPropController extends Controller{
 				$this->middleware('auth');
 		}
 
-		
-	public function index(){
-		$getPartnerServer = PartnerPulsaServerProp::get();
-		return view('partner-server.index', compact(
-			'getPartnerServer'
-		));
+
+		public function index()
+		{
+
+			return view('partner-server.index');
     }
-    public function delete($id){
-		$delete = PartnerPulsaServerProp::find($id);
-		$delete->delete();
-		return redirect()->route('partner-server.index')
-			->with('berhasil', 'Berhasil menghapus Prartner Server ');
+
+
+    public function delete($id)
+		{
+			$delete = PartnerPulsaServerProp::find($id);
+			$delete->delete();
+
+			return redirect()->route('partner-server.index')->with('berhasil', 'Berhasil menghapus Prartner Server ');
     }
     public function store(Request $request){
 		$message = [
