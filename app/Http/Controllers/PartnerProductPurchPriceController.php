@@ -24,11 +24,11 @@ class PartnerProductPurchPriceController extends Controller
         $this->middleware('auth');
     }
 
-    
+
     public function index()
     {
-        $callDatas = PartnerProductPurchPrice::get();
-        return view('partner-product-purch-price.index', compact('callDatas'));
+
+        return view('partner-product-purchase-price.index');
     }
 
     public function active($id)
@@ -56,6 +56,7 @@ class PartnerProductPurchPriceController extends Controller
           return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Successfully Activated '.$findData->gross_purch_price);
         }
     }
+
     public function delete($id)
     {
         $findData = PartnerProductPurchPrice::find($id);
@@ -68,12 +69,13 @@ class PartnerProductPurchPriceController extends Controller
 
         return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Successfully Deleted '.$findData->gross_purch_price);
     }
+
     public function tambah()
     {
-        $getPartnerProduct = PartnerProduct::get();
 
-        return view('partner-product-purch-price.tambah', compact('getPartnerProduct'));
+        return view('partner-product-purchase-price.tambah');
     }
+
     public function store(Request $request)
     {
       $message = [
@@ -138,16 +140,13 @@ class PartnerProductPurchPriceController extends Controller
 
       return redirect()->route('partner-product-purch-price.tambah')->with('berhasil', 'Your data has been successfully saved.');
     }
+
     public function edit($id)
     {
-        $getPartnerProductPurchPrice = PartnerProductPurchPrice::find($id);
-		$getPartnerProduct = PartnerProduct::get();
 
-        return view('partner-product-purch-price.ubah', compact(
-        	'getPartnerProductPurchPrice',
-        	'getPartnerProduct'
-        ));
+        return view('partner-product-purchase-price.ubah', compact('getPartnerProductPurchPrice','getPartnerProduct'));
     }
+
     public function update(Request $request)
     {
         $message = [
@@ -192,5 +191,10 @@ class PartnerProductPurchPriceController extends Controller
         });
 
         return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Your data has been successfully updated.');
+    }
+
+    public function upload()
+    {
+      return view('partner-product-purchase-price.masal');
     }
 }
