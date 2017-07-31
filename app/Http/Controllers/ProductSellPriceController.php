@@ -225,23 +225,23 @@ class ProductSellPriceController extends Controller
         // $active = Input::get('active');
         // $version = Input::get('version');
         // dd($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end, $active, $version);
-        DB::transaction(function() use($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end){
-          foreach ($product_id as $key => $n ) {
-            /*Load array */
-            $arrData = ProductSellPrice::create(array("product_id"  =>  $product_id[$key],
-                              "gross_sell_price"  =>  $gross_sell_price[$key],
-                              "tax_percentage"  => $tax_percentage[$key],
-                              "datetime_start"  => $datetime_start[$key],
-                              "datetime_end"  => $datetime_end[$key],
-                              "create_user_id"  => 1,
-                              // "active"  => $active[$key],
-                              "version"  => 1,
-                            ));
-          }
+        // DB::transaction(function() use($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end){
+        //   foreach ($product_id as $key => $n ) {
+        //     /*Load array */
+        //     $arrData = ProductSellPrice::create(array("product_id"  =>  $product_id[$key],
+        //                       "gross_sell_price"  =>  $gross_sell_price[$key],
+        //                       "tax_percentage"  => $tax_percentage[$key],
+        //                       "datetime_start"  => $datetime_start[$key],
+        //                       "datetime_end"  => $datetime_end[$key],
+        //                       "create_user_id"  => 1,
+        //                       // "active"  => $active[$key],
+        //                       "version"  => 1,
+        //                     ));
+        //   }
 
         // dd($arrData);
           // $save = ProductSellPrice::create($arrData);
-        });
+        // });
 
         return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully uploaded.');
 

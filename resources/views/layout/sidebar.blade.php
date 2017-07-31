@@ -86,8 +86,8 @@
               <li class="{{ Route::is('paloma.transaction*') ? 'current-page' : '' }}">
                 <a href="{{ route('paloma.transaction.index') }}">Transaction</a>
               </li>
-              <li class=""  >
-                <a href="">Balance</a>
+              <li class="{{ Route::is('paloma.balance*') ? 'current-page' : '' }}">
+                <a href="#">Balance</a>
               </li>
             </ul>
           </li>
