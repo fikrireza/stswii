@@ -20,24 +20,33 @@ Route::get('/', 'Auth\LoginController@showLoginForm');
 Route::get('/home', 'HomeController@index')
 	->name('home.index');
 
+// provider
+	Route::get('/provider', 'ProviderController@index')
+		->name('provider.index');
+	Route::post('/provider/store', 'ProviderController@store')
+		->name('provider.store');
+	Route::post('/provider/update', 'ProviderController@update')
+		->name('provider.update');
+	Route::get('/provider/delete/{id}', 'ProviderController@delete')
+		->name('provider.delete');
+// provider
 
-Route::get('/provider', 'ProviderController@index')
-	->name('provider.index');
-Route::post('/provider/store', 'ProviderController@store')
-	->name('provider.store');
-Route::post('/provider/update', 'ProviderController@update')
-	->name('provider.update');
-Route::get('/provider/delete/{id}', 'ProviderController@delete')
-	->name('provider.delete');
+// provider prefix
+	Route::get('/provider-prefix', 'ProviderPrefixController@index')
+		->name('provider-prefix.index');
+	Route::post('/provider-prefix/store', 'ProviderPrefixController@store')
+		->name('provider-prefix.store');
+	Route::post('/provider-prefix/update', 'ProviderPrefixController@update')
+		->name('provider-prefix.update');
+	Route::get('/provider-prefix/delete/{id}', 'ProviderPrefixController@delete')
+		->name('provider-prefix.delete');
+// provider prefix
 
-Route::get('/provider-prefix', 'ProviderPrefixController@index')
-	->name('provider-prefix.index');
-Route::post('/provider-prefix/store', 'ProviderPrefixController@store')
-	->name('provider-prefix.store');
-Route::post('/provider-prefix/update', 'ProviderPrefixController@update')
-	->name('provider-prefix.update');
-Route::get('/provider-prefix/delete/{id}', 'ProviderPrefixController@delete')
-	->name('provider-prefix.delete');
+// paloma deposit transaction
+	Route::get('/paloma-deposit/transaction', function(){
+		return view('paloma-transaction.index');
+	})->name('paloma.transaction.index');
+// paloma deposit transaction
 
 Route::get('/partner-pulsa', 'PartnerPulsaController@index')->name('partner-pulsa.index');
 Route::get('/partner-pulsa/create', 'PartnerPulsaController@create')->name('partner-pulsa.create');
