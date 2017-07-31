@@ -45,7 +45,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setUnpublish">Ya</a>
+        <a class="btn btn-primary disabled" id="setUnpublish">Ya</a>
       </div>
     </div>
   </div>
@@ -64,7 +64,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setPublish">Ya</a>
+        <a class="btn btn-primary disabled" id="setPublish">Ya</a>
       </div>
     </div>
   </div>
@@ -83,7 +83,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setDelete">Ya</a>
+        <a class="btn btn-primary disabled" id="setDelete">Ya</a>
       </div>
 
     </div>
@@ -145,10 +145,10 @@
                       data-toggle="modal"
                       data-target=".modal-nonactive"
                     >
-                      <span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span>
+                      <span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span>
                     </a>
                   @else
-                    <a href="" class="publish" data-value="{{ 1 }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive"><i class="fa fa-thumbs-o-down"></i></span></a>
+                    <a href="" class="publish" data-value="{{ 1 }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Inactive</span></a>
                   @endif
               </td>
               <td>

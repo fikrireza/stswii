@@ -42,7 +42,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setDelete">Yes</a>
+        <a class="btn btn-primary disabled" id="setDelete">Yes</a>
       </div>
 
     </div>
@@ -62,7 +62,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setUnpublish">Yes</a>
+        <a class="btn btn-primary disabled" id="setUnpublish">Yes</a>
       </div>
     </div>
   </div>
@@ -81,7 +81,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setPublish">Yes</a>
+        <a class="btn btn-primary disabled" id="setPublish">Yes</a>
       </div>
     </div>
   </div>
@@ -127,10 +127,10 @@
               <td>{{ $key->provider->provider_name or '-' }}</td>
               <td>{{ $key->product->product_name or '-' }}</td> --}}
               <td class="text-center">@if ($i%2 == 1)
-                    <a href="" class="unpublish" data-value="{{ $i }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-thumbs-o-up"></i></span></a>
+                    <a href="" class="unpublish" data-value="{{ $i }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a>
                     <br>
                   @else
-                    <a href="" class="publish" data-value="{{ $i }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive"><i class="fa fa-thumbs-o-down"></i></span></a>
+                    <a href="" class="publish" data-value="{{ $i }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Inactive</span></a>
                     <br>
                   @endif
               </td>

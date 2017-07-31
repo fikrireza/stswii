@@ -129,7 +129,7 @@
 					<div class="form-group">
 						<div class="col-md-6 col-md-offset-3">
 							<a href="{{ route('partner-product.index') }}" class="btn btn-primary">Cancel</a>
-							<button id="send" type="submit" class="btn btn-success">Submit</button>
+							<button id="send" type="submit" class="btn btn-success" disabled="true">Submit</button>
 						</div>
 					</div>
 				</form>

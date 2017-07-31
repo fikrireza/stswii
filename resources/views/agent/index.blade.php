@@ -45,7 +45,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setDelete">Ya</a>
+        <a class="btn btn-primary disabled" id="setDelete">Ya</a>
       </div>
 
     </div>
@@ -91,6 +91,7 @@
               <td>City Of Agent</td>
               <td>
                 <a 
+                  href="{{ route('agent.edit', ['id' => '1']) }}" 
                   class="update" 
                 >
                   <span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>

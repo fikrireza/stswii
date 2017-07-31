@@ -50,7 +50,7 @@ Route::get('/home', 'HomeController@index')
 		->name('agent.index');
 	Route::get('/agent/create', /*'AgentController@create'*/
 		function(){
-
+			return view('agent.tambah');
 		})
 		->name('agent.create');
 	Route::post('/agent/store', /*'AgentController@store'*/
@@ -60,7 +60,7 @@ Route::get('/home', 'HomeController@index')
 		->name('agent.store');
 	Route::get('/agent/edit/{id}', /*'AgentController@edit'*/
 		function(){
-
+			return view('agent.ubah');
 		})
 		->name('agent.edit');
 	Route::post('/agent/update', /*'AgentController@update'*/
