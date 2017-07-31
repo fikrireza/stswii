@@ -42,6 +42,39 @@ Route::get('/home', 'HomeController@index')
 		->name('provider-prefix.delete');
 // provider prefix
 
+// agent
+	Route::get('/agent', /*'AgentController@index'*/
+		function(){
+			return view('agent.index');
+		})
+		->name('agent.index');
+	Route::get('/agent/create', /*'AgentController@create'*/
+		function(){
+
+		})
+		->name('agent.create');
+	Route::post('/agent/store', /*'AgentController@store'*/
+		function(){
+
+		})
+		->name('agent.store');
+	Route::get('/agent/edit/{id}', /*'AgentController@edit'*/
+		function(){
+
+		})
+		->name('agent.edit');
+	Route::post('/agent/update', /*'AgentController@update'*/
+		function(){
+
+		})
+		->name('agent.update');
+	Route::get('/agent/delete/{id}', /*'AgentController@delete'*/
+		function(){
+
+		})
+		->name('agent.delete');
+// agent
+
 // paloma deposit transaction
 	Route::get('/paloma-deposit/transaction', function(){
 		return view('paloma-transaction.index');

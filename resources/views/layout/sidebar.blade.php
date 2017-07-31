@@ -66,18 +66,16 @@
               </li>
             </ul>
           </li>
-          <?php
-          // {{-- <li class="{{ Route::is('agent*') ? 'active' : '' }}">
-          //   <a>
-          //     <i class="fa fa-beer"></i> Manage Agent <span class="fa fa-chevron-down"></span>
-          //   </a>
-          //   <ul class="nav child_menu" style="{{ Route::is('agent*') ? 'display: block;' : '' }}">
-          //     <li class="{{ Route::is('Agent*') ? 'current-page' : '' }}">
-          //       <a href="{{ route('agent.index') }}">Agent</a>
-          //     </li>
-          //   </ul>
-          // </li> --}}
-          ?>
+          <li class="{{ Route::is('agent*') ? 'active' : '' }}">
+            <a>
+              <i class="fa fa-beer"></i> Manage Agent <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="nav child_menu" style="{{ Route::is('agent*') ? 'display: block;' : '' }}">
+              <li class="{{ Route::is('Agent*') ? 'current-page' : '' }}">
+                <a href="{{ route('agent.index') }}">Agent</a>
+              </li>
+            </ul>
+          </li>
           <li class="{{ Route::is('paloma*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-beer"></i> Paloma Deposit <span class="fa fa-chevron-down"></span>
