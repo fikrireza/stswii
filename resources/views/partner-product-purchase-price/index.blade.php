@@ -108,6 +108,7 @@
           <thead>
             <tr role="row">
               <th>No</th>
+              <th>Partner Product Code</th>
               <th>Partner Product Name</th>
               <th>Gross Purches Price</th>
               <th>Use Tax</th>
@@ -121,12 +122,34 @@
           <tbody>
             @php
               $no = 1;
+              $arrProvName = array(
+                '', 
+                'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 
+                'Indosat', 'Indosat', 'Indosat', 'Indosat', 'Indosat', 
+                'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 
+                '3', '3', '3', '3', '3'
+              );
+              $arrPriceSellCOFP = array(
+                '', 
+                '5', '10', '20', '50', '100', 
+                '5', '10', '20', '50', '100', 
+                '5', '10', '20', '50', '100', 
+                '5', '10', '20', '50', '100'
+              );
+              $arrPriceSell = array(
+                '', 
+                '5000', '10000', '20000', '50000', '100000', 
+                '5000', '10000', '20000', '50000', '100000', 
+                '5000', '10000', '20000', '50000', '100000', 
+                '5000', '10000', '20000', '50000', '100000'
+              );
             @endphp
             @for ($i=1; $i < 20; $i++)
             <tr>
               <td>{{ $no++ }}</td>
-              <td>{{ 'Name of Product' }}</td>
-              <td>{{ number_format(99800, 0, ',', '.') }}</td>
+              <td>PP.Cd.{{ rand(10,99) }}</td>
+              <td>{{ $arrPriceSellCOFP[$i].'-'.$arrProvName[$i] }}</td>
+              <td>{{ $arrPriceSell[$i] }}</td>
               <td>{{ $i%2 ? 'Y' : 'N' }}</td>
               <td>{{ $i%2 ? '10' : '5' }}</td>
               <td>{{ $i%2 ? '2017/01/01 00:00:01' : '2017/12/31 23:59:59' }}</td>

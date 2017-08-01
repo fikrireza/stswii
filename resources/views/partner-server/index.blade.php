@@ -174,6 +174,7 @@
           <thead>
             <tr role="row">
               <th>No</th>
+              <th>Partner Pulsa Code</th>
               <th>Server Url</th>
               <th>Api Key</th>
               <th>Api Secret</th>
@@ -187,6 +188,7 @@
             @for ($i=1; $i < 4; $i++)
             <tr>
               <td>{{ $no }}</td>
+              <td>Partner.{{ rand(10,99) }}</td>
               <td>http://example.com/api/v2/bla-bla-boom</td>
               <td>{{ base64_encode(openssl_random_pseudo_bytes(12)) }}</td>
               <td>{{ base64_encode(openssl_random_pseudo_bytes(32)) }}</td>

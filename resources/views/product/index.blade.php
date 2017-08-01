@@ -113,6 +113,7 @@
           <thead>
             <tr role="row">
               <th>No</th>
+              <th>Provider Code</th>
               <th>Product Code</th>
               <th>Product Name</th>
               <th>Nominal</th>
@@ -123,14 +124,35 @@
           </thead>
           <tbody>
             @php
-              $no = 1;
+              $arrProvCode = array(
+                '', 
+                'Prov-01', 'Prov-01', 'Prov-01', 'Prov-01', 'Prov-01', 
+                'Prov-02', 'Prov-02', 'Prov-02', 'Prov-02', 'Prov-02', 
+                'Prov-03', 'Prov-03', 'Prov-03', 'Prov-03', 'Prov-03', 
+                'Prov-04', 'Prov-04', 'Prov-04', 'Prov-04', 'Prov-04'
+              );
+              $arrProvName = array(
+                '', 
+                'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 
+                'Indosat', 'Indosat', 'Indosat', 'Indosat', 'Indosat', 
+                'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 
+                '3', '3', '3', '3', '3'
+              );
+              $arrPriceSell = array(
+                '', 
+                '5000', '10000', '20000', '50000', '100000', 
+                '5000', '10000', '20000', '50000', '100000', 
+                '5000', '10000', '20000', '50000', '100000', 
+                '5000', '10000', '20000', '50000', '100000'
+              );
             @endphp
-            @for ($i=0; $i < 50 ; $i++)
+            @for ($i=1; $i < 20 ; $i++)
             <tr>
-              <td>{{ $no++ }}</td>
-              <td>{{ 'P'. $i }}</td>
-              <td>{{ 'Tri' }}</td>
-              <td>{{ $i . '00,000' }}</td>
+              <td>{{ $i }}</td>
+              <td>{{ $arrProvCode[$i] }}</td>
+              <td>Produc.{{ rand(10,99) }}</td>
+              <td>{{ $arrPriceSell[$i].'-'.$arrProvName[$i] }}</td>
+              <td>{{ $arrPriceSell[$i] }}</td>
               <td>{{ "PULSA" }}</td>
               <td class="text-center">@if (Rand(0,1))
                     <a href="" class="unpublish" data-value="1" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a>

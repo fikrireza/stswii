@@ -206,14 +206,14 @@
             <tr role="row">
               <th>No</th>
               <th>Prefix</th>
-              <th>Provider Name</th>
+              <th>Provider Code</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
             @php
               $arrProvPrefix = array('', '0812', '0813', '0814', '0815', '0856', '0857', '0859', '0822', '0825', '0828', '0896', '0897');
-              $arrProvName = array('', 'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 'Indosat', 'Indosat', 'Indosat', 'Ooredo', 'Ooredo', 'Ooredo', '3', '3');
+              $arrProvName = array('', 'Prov-01', 'Prov-01', 'Prov-01', 'Prov-01', 'Prov-02', 'Prov-02', 'Prov-02', 'Prov-03', 'Prov-03', 'Prov-03', 'Prov-04', 'Prov-04');
               $arrProvId = array('', '1', '1', '1', '1', '2', '2', '2', '3', '3', '3', '4', '4');
             @endphp
             @for($p=1; $p<=12; $p++)

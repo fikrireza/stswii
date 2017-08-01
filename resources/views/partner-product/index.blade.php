@@ -108,6 +108,9 @@
           <thead>
             <tr role="row">
               <th>No</th>
+              <th>Partner Pulsa Code</th>
+              <th>Provider Code</th>
+              <th>Product Code</th>
               <th>Partner Product Code</th>
               <th>Partner Product Name</th>
               <th>Status</th>
@@ -116,16 +119,37 @@
           </thead>
           <tbody>
             @php
-              $no = 1;
+              $arrProvCode = array(
+                '', 
+                'Prov-01', 'Prov-01', 'Prov-01', 'Prov-01', 'Prov-01', 
+                'Prov-02', 'Prov-02', 'Prov-02', 'Prov-02', 'Prov-02', 
+                'Prov-03', 'Prov-03', 'Prov-03', 'Prov-03', 'Prov-03', 
+                'Prov-04', 'Prov-04', 'Prov-04', 'Prov-04', 'Prov-04'
+              );
+              $arrProvName = array(
+                '', 
+                'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 
+                'Indosat', 'Indosat', 'Indosat', 'Indosat', 'Indosat', 
+                'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 
+                '3', '3', '3', '3', '3'
+              );
+              $arrPriceSellCOFP = array(
+                '', 
+                '5', '10', '20', '50', '100', 
+                '5', '10', '20', '50', '100', 
+                '5', '10', '20', '50', '100', 
+                '5', '10', '20', '50', '100'
+              );
+              $faker    = Faker\Factory::create();
             @endphp
-            @for ($i=1; $i < 15; $i++)
+            @for ($i=1; $i < 21; $i++)
             <tr>
-              <td>{{ $no }}</td>
-              <td>Code of Product</td>
-              <td>Name of Product</td>
-              {{-- <td>{{ $key->partnerpulsa->partner_pulsa_name or '-' }}</td>
-              <td>{{ $key->provider->provider_name or '-' }}</td>
-              <td>{{ $key->product->product_name or '-' }}</td> --}}
+              <td>{{ $i }}</td>
+              <td>Partner.{{ rand(10,99) }}</td>
+              <td>{{ $arrProvCode[$i] }}</td>
+              <td>Produc.{{ rand(10,99) }}</td>
+              <td>PP.Cd.{{ rand(10,99) }}</td>
+              <td>{{ $arrPriceSellCOFP[$i].'-'.$arrProvName[$i] }}</td>
               <td class="text-center">@if ($i%2 == 1)
                     <a href="" class="unpublish" data-value="{{ $i }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a>
                     <br>
@@ -140,9 +164,6 @@
                 <a href="" class="delete" data-value="{{ $i }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
               </td>
             </tr>
-            @php
-              $no++;
-            @endphp
             @endfor
           </tbody>
         </table>
