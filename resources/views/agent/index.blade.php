@@ -64,9 +64,6 @@
     <div class="x_panel">
       <div class="x_title">
         <h2>Agent </h2>
-        <ul class="nav panel_toolbox">
-          <a href="{{ route('agent.create') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add</a>
-        </ul>
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
@@ -82,11 +79,12 @@
             </tr>
           </thead>
           <tbody>
-            @for($p=1; $p<=4; $p++)
+          @php ($faker = Faker\Factory::create())
+            @for($p=1; $p<=18274; $p++)
             <tr>
               <td>{{$p}}</td>
-              <td>Agent Name</td>
-              <td>08XXXXXXXXX</td>
+              <td>{{$faker->name}}</td>
+              <td>{{ $faker->phoneNumber }}</td>
               <td>Addres in here....</td>
               <td>City Of Agent</td>
               <td>
