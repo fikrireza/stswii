@@ -30,6 +30,25 @@
 </div>
 @endif
 
+@if(Session::has('gagal'))
+<script>
+  window.setTimeout(function() {
+    $(".alert-failed").fadeTo(700, 0).slideUp(700, function(){
+        $(this).remove();
+    });
+  }, 5000);
+</script>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="alert alert-failed alert-dismissible fade in" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+      </button>
+      <strong>{{ Session::get('gagal') }}</strong>
+    </div>
+  </div>
+</div>
+@endif
+
 
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
@@ -46,19 +65,35 @@
         <form action="{{ route('product.update') }}" method="POST" class="form-horizontal form-label-left" novalidate>
           {{ csrf_field() }}
 
-          <input type="hidden" name="product_id" value="">
+          <input type="hidden" name="product_id" value="{{$index->product_id}}">
+          <input type="hidden" name="version" value="{{$index->version}}">
+
+          <div class="item form-group {{ $errors->has('provider_id') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="provider_id">Provider</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <select class="form-control col-md-7 col-xs-12 select2_single" name="provider_id" id="provider_id">
+                <option value="">Select Provider</option>
+                @foreach($provider as $list)
+                <option value="{{$list->provider_id}}" @if(old('provider_id', $index->provider_id) == $list->provider_id) selected @endif>{{$list->provider_name}}</option>
+                @endforeach
+              </select>
+              @if($errors->has('provider_id'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_id')}}</span></code>
+              @endif
+            </div>
+          </div>
 
           <div class="item form-group {{ $errors->has('product_code') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product Code</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="name" class="form-control col-md-7 col-xs-12" name="product_code" type="text" value="1" readonly>
+              <input id="name" class="form-control col-md-7 col-xs-12" name="product_code" type="text" value="{{$index->product_code}}" readonly>
             </div>
           </div>
 
           <div class="item form-group {{ $errors->has('product_name') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product Name <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="name" class="form-control" name="product_name" placeholder="E.g: " required="required" type="text" value="{{ old('product_name') }}">
+              <input id="name" class="form-control" name="product_name" placeholder="E.g: " required="required" type="text" value="{{ old('product_name', $index->product_name) }}">
               @if($errors->has('product_name'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('product_name')}}</span></code>
               @endif
@@ -68,7 +103,7 @@
           <div class="item form-group {{ $errors->has('nominal') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nominal <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="name" class="form-control" name="nominal" placeholder="E.g: 50000" required="required" type="text" value="{{ old('nominal') }}" onkeypress="return isNumber(event)" maxlength="9">
+              <input id="name" class="form-control" name="nominal" placeholder="E.g: 50000" required="required" type="text" value="{{ old('nominal', $index->nominal) }}" onkeypress="return isNumber(event)" maxlength="9">
               @if($errors->has('nominal'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('nominal')}}</span></code>
               @endif
@@ -78,8 +113,8 @@
           <div class="item form-group {{ $errors->has('type_product') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Type Product <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <label class="radio-inline"><input type="radio" name="type_product" {{ old('type_product') == 'PULSA' ? 'checked' : '' }} value="PULSA">PULSA</label>
-              <label class="radio-inline"><input type="radio" name="type_product" {{ old('type_product') == 'DATA' ? 'checked' : '' }} value="DATA">DATA</label>
+              <label class="radio-inline"><input type="radio" name="type_product" {{ old('type_product', $index->type_product) == 'PULSA' ? 'checked' : '' }} value="PULSA">PULSA</label>
+              <label class="radio-inline"><input type="radio" name="type_product" {{ old('type_product', $index->type_product) == 'DATA' ? 'checked' : '' }} value="DATA">DATA</label>
               @if($errors->has('type_product'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('type_product')}}</span></code>
               @endif
@@ -92,7 +127,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input type="checkbox" class="flat" name="active" />
+                <input type="checkbox" class="flat" name="active" @if($index->active) checked @endif/>
               </label>
             </div>
           </div>

@@ -45,17 +45,32 @@
       <div class="x_content">
         <form action="{{ route('product.store') }}" method="POST" class="form-horizontal form-label-left" novalidate>
           {{ csrf_field() }}
-          <div class="item form-group {{ $errors->has('product_code') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product Code</label>
+          <div class="item form-group {{ $errors->has('provider_id') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="provider_id">Provider</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="name" class="form-control col-md-7 col-xs-12" name="product_code" type="text" value="{{ $product_code }}" readonly>
+              <select class="form-control col-md-7 col-xs-12 select2_single" name="provider_id" id="provider_id">
+                <option value="">Select Provider</option>
+                @foreach($provider as $list)
+                <option value="{{$list->provider_id}}" @if(old('provider_id') == $list->provider_id) selected @endif>{{$list->provider_name}}</option>
+                @endforeach
+              </select>
+              @if($errors->has('provider_id'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_id')}}</span></code>
+              @endif
+            </div>
+          </div>
+
+          <div class="item form-group {{ $errors->has('product_code') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_code">Product Code</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <input id="product_code" class="form-control col-md-7 col-xs-12" name="product_code" type="text" value="{{ $product_code }}">
             </div>
           </div>
 
           <div class="item form-group {{ $errors->has('product_name') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product Name <span class="required">*</span></label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_name">Product Name <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="name" class="form-control" name="product_name" placeholder="E.g: " required="required" type="text" value="{{ old('product_name') }}">
+              <input id="product_name" class="form-control" name="product_name" placeholder="E.g: " required="required" type="text" value="{{ old('product_name') }}">
               @if($errors->has('product_name'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('product_name')}}</span></code>
               @endif
@@ -63,9 +78,9 @@
           </div>
 
           <div class="item form-group {{ $errors->has('nominal') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nominal <span class="required">*</span></label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nominal">Nominal <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="name" class="form-control" name="nominal" placeholder="E.g: 50000" required="required" type="text" value="{{ old('nominal') }}" onkeypress="return isNumber(event)" maxlength="9">
+              <input id="nominal" class="form-control" name="nominal" placeholder="E.g: 50000" required="required" type="text" value="{{ old('nominal') }}" onkeypress="return isNumber(event)" maxlength="9">
               @if($errors->has('nominal'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('nominal')}}</span></code>
               @endif
@@ -86,10 +101,10 @@
           <div class="ln_solid"></div>
 
           <div class="item form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="active">Active</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input type="checkbox" class="flat" name="active" />
+                <input type="checkbox" class="flat" name="active" id="active" />
               </label>
             </div>
           </div>
@@ -102,6 +117,7 @@
               <button id="send" type="submit" class="btn btn-success">Submit</button>
             </div>
           </div>
+
         </form>
       </div>
     </div>

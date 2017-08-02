@@ -170,7 +170,7 @@
                       <span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span>
                     </a>
                   @else
-                    <a href="" class="publish" data-value="{{ 1 }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Inactive</span></a>
+                    <a href="" class="publish" data-value="{{ 1 }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
                   @endif
               </td>
               <td>
