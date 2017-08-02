@@ -76,13 +76,13 @@ Route::get('/home', 'HomeController@index')
 		->name('partner-pulsa.create');
 	Route::post('/partner-pulsa/store', 'PartnerPulsaController@store')
 		->name('partner-pulsa.store');
-	Route::get('/partner-pulsa/edit/{id}', 'PartnerPulsaController@edit')
+	Route::get('/partner-pulsa/edit/{id}/{version}', 'PartnerPulsaController@edit')
 		->name('partner-pulsa.edit');
-	Route::post('/partner-pulsa/update/{id}', 'PartnerPulsaController@update')
+	Route::post('/partner-pulsa/update/{id}/{version}', 'PartnerPulsaController@update')
 		->name('partner-pulsa.update');
 	Route::get('/partner-pulsa/delete/{id}', 'PartnerPulsaController@delete')
 		->name('partner-pulsa.delete');
-	Route::get('/partner-pulsa/active/{id}', 'PartnerPulsaController@active')
+	Route::get('/partner-pulsa/actived/{id}/{version}/{status}', 'PartnerPulsaController@active')
 		->name('partner-pulsa.active');
 // partner pulsa
 

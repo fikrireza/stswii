@@ -12,14 +12,14 @@
 @if(Session::has('berhasil'))
 <script>
   window.setTimeout(function() {
-    $(".alert-success").fadeTo(700, 0).slideUp(700, function(){
+    $(".alert.alert-dismissible").fadeTo(700, 0).slideUp(700, function(){
         $(this).remove();
     });
   }, 5000);
 </script>
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
-    <div class="alert alert-success alert-dismissible fade in" role="alert">
+    <div class="alert {{ Session::get('alret') }} alert-dismissible fade in" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
       </button>
       <strong>{{ Session::get('berhasil') }}</strong>
@@ -108,8 +108,8 @@
           <thead>
             <tr role="row">
               <th>No</th>
-              <th>Partner Pulsa Code</th>
-              <th>Partner Pulsa Name</th>
+              <th>Partner Code</th>
+              <th>Partner Name</th>
               <th>Description</th>
               <th>Type TOP</th>
               <th>Payment Termin</th>
@@ -118,36 +118,67 @@
             </tr>
           </thead>
           <tbody>
-            @php
-              $no = 1;
-              $faker    = Faker\Factory::create();
-            @endphp
-            @for ($i=0; $i < 15; $i++)
+            @php ($no = 1)
+            @foreach ($getPartner as $list)
             <tr>
-              <td>{{ $no }}</td>
-              <td>Partner.{{ rand(10,99) }}</td>
-              <td>{{$faker->name}}</td>
-              <td>Description Partner Pulsa</td>
-              <td>@if($i%3 == 0) {{'DEPOSIT'}} @elseif($i%2 == 1) {{'DENOM'}} @else {{'TERMIN'}}@endif</td>
-              <td>{{ $i%2 ? '0' : '1' }}</td>
-              <td class="text-center">@if($i%2)
-                    <a href="" class="unpublish" data-value="" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a>
-                    <br>
-                  @else
-                    <a href="" class="publish" data-value="" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
-                    <br>
+              <td>{{ $no++ }}</td>
+              <td>{{ $list->partner_pulsa_code or '-' }}</td>
+              <td>{{ $list->partner_pulsa_name or '-' }}</td>
+              <td>{{ $list->description or '-' }}</td>
+              <td>{{ $list->type_top or '-' }}</td>
+              <td>{{ $list->payment_termin or '-' }}</td>
+              <td class="text-center">
+                <a 
+                  href="" 
+                  data-value="{{ $list->partner_pulsa_id }}" 
+                  data-version="{{ $list->version }}" 
+                  data-toggle="modal" 
+                  @if($list->active == 1)
+                  class="unpublish"
+                  data-target=".modal-nonactive"
+                  @elseif($list->active == 0)
+                  class="publish" 
+                  data-target=".modal-active"
                   @endif
+                >
+                  <span 
+                    data-toggle="tooltip" 
+                    data-placement="top" 
+                    @if($list->active == 1)
+                    class="label label-success" 
+                    title="Active"
+                    @elseif($list->active == 0)
+                    class="label label-danger" 
+                    title="Non Active"
+                    @endif
+                  >
+                    @if($list->active == 1)
+                    Active
+                    @elseif($list->active == 0)
+                    Non Active
+                    @endif
+                  </span>
+                </a>
               </td>
               <td>
-                <a class="update" href="{{ route('partner-pulsa.edit', ['id' => $i])}}"><span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span></a>
-
-                <a href="" class="delete" data-value="" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
+                <a 
+                  class="update" 
+                  href="{{ route('partner-pulsa.edit', ['id' => $list->partner_pulsa_id, 'version' => $list->version])}}"
+                >
+                  <span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>
+                </a>
+                <a 
+                  href="" 
+                  class="delete" 
+                  data-value="" 
+                  data-toggle="modal" 
+                  data-target=".modal-delete"
+                >
+                  <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span>
+                </a>
               </td>
             </tr>
-            @php
-              $no++;
-            @endphp
-            @endfor
+            @endforeach
           </tbody>
         </table>
       </div>
@@ -172,16 +203,18 @@ $(function(){
 });
 
 $(function(){
-  $('#dataTables').on('click','a.unpublish', function(){
+  $(document).on('click','a.unpublish', function(){
     var a = $(this).data('value');
-    // $('#setUnpublish').attr('href', "{{ url('/') }}/partner-pulsa/active/"+a);
+    var b = $(this).data('version');
+    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-pulsa/actived/"+a+"/"+b+"/0");
   });
 });
 
 $(function(){
-  $('#dataTables').on('click', 'a.publish', function(){
+  $(document).on('click', 'a.publish', function(){
     var a = $(this).data('value');
-    $('#setPublish').attr('href', "{{ url('/') }}/partner-pulsa/active/"+a);
+    var b = $(this).data('version');
+    $('#setPublish').attr('href', "{{ url('/') }}/partner-pulsa/actived/"+a+"/"+b+"/1");
   });
 });
 
