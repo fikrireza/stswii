@@ -123,51 +123,29 @@
             </tr>
           </thead>
           <tbody>
-            @php
-              $arrProvCode = array(
-                '', 
-                'Prov-01', 'Prov-01', 'Prov-01', 'Prov-01', 'Prov-01', 
-                'Prov-02', 'Prov-02', 'Prov-02', 'Prov-02', 'Prov-02', 
-                'Prov-03', 'Prov-03', 'Prov-03', 'Prov-03', 'Prov-03', 
-                'Prov-04', 'Prov-04', 'Prov-04', 'Prov-04', 'Prov-04'
-              );
-              $arrProvName = array(
-                '', 
-                'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 
-                'Indosat', 'Indosat', 'Indosat', 'Indosat', 'Indosat', 
-                'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 
-                '3', '3', '3', '3', '3'
-              );
-              $arrPriceSell = array(
-                '', 
-                '5000', '10000', '20000', '50000', '100000', 
-                '5000', '10000', '20000', '50000', '100000', 
-                '5000', '10000', '20000', '50000', '100000', 
-                '5000', '10000', '20000', '50000', '100000'
-              );
-            @endphp
-            @for ($i=1; $i < 20 ; $i++)
+            @php $count=1; @endphp
+            @foreach ($index as $list)
             <tr>
-              <td>{{ $i }}</td>
-              <td>{{ $arrProvCode[$i] }}</td>
-              <td>Produc.{{ rand(10,99) }}</td>
-              <td>{{ $arrPriceSell[$i].'-'.$arrProvName[$i] }}</td>
-              <td>{{ $arrPriceSell[$i] }}</td>
-              <td>{{ "PULSA" }}</td>
-              <td class="text-center">@if (Rand(0,1))
-                    <a href="" class="unpublish" data-value="1" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a>
+              <td>{{ $count++ }}</td>
+              <td>{{ $list->provider->provider_code }}</td>
+              <td>{{ $list->product_code }}</td>
+              <td>{{ $list->product_name }}</td>
+              <td>Rp. {{ number_format($list->nominal, 2) }}</td>
+              <td>{{ $list->type_product }}</td>
+              <td class="text-center">@if ($list->active)
+                    <a href="" class="unpublish" data-value="{{ $list->product_id }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a>
                     <br>
                   @else
-                    <a href="" class="publish" data-value="1" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
+                    <a href="" class="publish" data-value="{{ $list->product_id }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
                     <br>
                   @endif
               </td>
               <td>
-                <a href="{{ route('product.ubah', 1) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
-                <a href="" class="delete" data-value="1" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
+                <a href="{{ route('product.ubah',$list->product_code) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
+                <a href="" class="delete" data-value="{{ $list->product_id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
               </td>
             </tr>
-            @endfor
+            @endforeach
           </tbody>
         </table>
       </div>
