@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Models\PartnerPulsaServerProp;
+use App\Models\PartnerPulsa;
 
 use DB;
 use Auth;
@@ -13,32 +14,42 @@ use Validator;
 
 class PartnerPulsaServerPropController extends Controller{
 
-		/**
-		 * Create a new controller instance.
-		 *
-		 * @return void
-		 */
-		public function __construct()
-		{
-				$this->middleware('auth');
-		}
+	/**
+	 * Create a new controller instance.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+			$this->middleware('auth');
+	}
 
 
-		public function index()
-		{
+	public function index()
+	{
+		$index = PartnerPulsaServerProp::all();
 
-			return view('partner-server.index');
+		return view('partner-server.index', compact('index'));
+    }
+
+    public function create()
+	{
+		$partnerPulsa = PartnerPulsa::all();
+
+		return view('partner-server.create', compact('partnerPulsa'));
     }
 
 
     public function delete($id)
-		{
-			$delete = PartnerPulsaServerProp::find($id);
-			$delete->delete();
+	{
+		$delete = PartnerPulsaServerProp::find($id);
+		$delete->delete();
 
-			return redirect()->route('partner-server.index')->with('berhasil', 'Berhasil menghapus Prartner Server ');
+		return redirect()->route('partner-server.index')->with('berhasil', 'Berhasil menghapus Prartner Server ');
     }
-    public function store(Request $request){
+
+    public function store(Request $request)
+    {
 		$message = [
 			'server_url.required' => 'mohon isi',
 			'server_url.unique' => 'Server Url ini sudah ada',
@@ -49,31 +60,37 @@ class PartnerPulsaServerPropController extends Controller{
 		];
 
 		$validator = Validator::make($request->all(), [
-			'server_url' 	=> 'required|unique:amd_partner_pulsa_server_props',
-			'api_key' 		=> 'required|unique:amd_partner_pulsa_server_props',
-			'api_secret' 	=> 'required|unique:amd_partner_pulsa_server_props',
+			'server_url' 	   => 'required|unique:sw_partner_pulsa_server_properties',
+			'api_key' 		   => 'required|unique:sw_partner_pulsa_server_properties',
+			'api_secret' 	   => 'required|unique:sw_partner_pulsa_server_properties',
 		], $message);
 
 		if($validator->fails()){
-			return redirect()->route('partner-server.index')
+			return redirect()->route('partner-server.create')
 				->withErrors($validator)->withInput()->with('add-false', 'Something Errors');;
 		}
 
 		DB::transaction(function () use($request) {
-			$save = new PartnerPulsaServerProp;
-			$save->server_url		= $request->server_url;
-			$save->api_key			= $request->api_key;
-			$save->api_secret		= $request->api_secret;
-			$save->version 			= '1';
-			$save->create_user_id	= '1'/*Auth::user()->id*/;
-			$save->update_user_id	= '1'/*Auth::user()->id*/;
-			$save->save();
+			$index = new PartnerPulsaServerProp;
+
+			$index->server_url       = $request->server_url;
+			$index->api_key          = $request->api_key;
+			$index->api_secret       = $request->api_secret;
+
+			$index->version          = 0;
+			$index->create_datetime  = date('YmdHis');
+			$index->create_user_id   = Auth::id();
+			$index->update_datetime  = 00000000000000;
+			$index->update_user_id   = -99;
+
+			$index->save();
 		});
 
 		return redirect()->route('partner-server.index')
 			->with('berhasil', 'Berhasil Menambahkan Prartner Server '.$request->server_url);
     }
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 		$message = [
 			'server_url.required' => 'mohon isi',
 			'server_url.unique' => 'Server Url ini sudah ada',
@@ -84,9 +101,9 @@ class PartnerPulsaServerPropController extends Controller{
 		];
 
 		$validator = Validator::make($request->all(), [
-			'server_url' 	=> 'required|unique:amd_partner_pulsa_server_props',
-			'api_key' 		=> 'required|unique:amd_partner_pulsa_server_props',
-			'api_secret' 	=> 'required|unique:amd_partner_pulsa_server_props',
+			'server_url' 	   => 'required|unique:sw_partner_pulsa_server_properties,server_url,'.$request->id_data.',partner_pulsa_properties_id',
+			'api_key' 	   	   => 'required|unique:sw_partner_pulsa_server_properties,api_key,'.$request->id_data.',partner_pulsa_properties_id',
+			'api_secret' 	   => 'required|unique:sw_partner_pulsa_server_properties,api_secret,'.$request->id_data.',partner_pulsa_properties_id',
 		], $message);
 
 		if($validator->fails()){
@@ -95,13 +112,17 @@ class PartnerPulsaServerPropController extends Controller{
 		}
 
 		DB::transaction(function () use($request) {
-			$update = PartnerPulsaServerProp::find($request->id_data);
-			$update->server_url		= $request->server_url;
-			$update->api_key		= $request->api_key;
-			$update->api_secret		= $request->api_secret;
-			$update->version 		= '1';
-			$update->update_user_id	= '1'/*Auth::user()->id*/;
-			$update->update();
+			$index = PartnerPulsaServerProp::find($request->id_data);
+
+			$index->server_url       = $request->server_url;
+			$index->api_key          = $request->api_key;
+			$index->api_secret       = $request->api_secret;
+
+			$index->version          += 1;
+			$index->update_datetime  = date('YmdHis');
+			$index->update_user_id   = Auth::id();
+
+			$index->update();
 		});
 
 		return redirect()->route('partner-server.index')
