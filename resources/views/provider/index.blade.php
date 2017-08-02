@@ -176,27 +176,8 @@
         </button>
         <h4 class="modal-title" id="myModalLabel2">View Provider</h4>
       </div>
-      <div class="modal-body">
-          <div class="item form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="code">
-              Provider Code :
-            </label>
-            <label id="provider-prefix-code" class="col-md-3 col-sm-3 col-xs-12">
-
-            </label>
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-              Provider Name :
-            </label>
-            <label id="provider-prefix-name" class="col-md-3 col-sm-3 col-xs-12">
-
-            </label>
-          </div>
-          <div id="provider-prefix-number" class="item form-group col-md-12 col-sm-12 col-xs-12" style="border-top: solid 1px rgb(229,229,229);">
-            <label for="prefix">
-              Provider Prefix 
-            </label>
-          </div>
-          <div class="clearfix"></div>
+      <div id="modal-form-read-html" class="modal-body">
+          
       </div>
       <div class="modal-footer">
 
@@ -209,22 +190,69 @@
   <div class="modal-dialog">
     <div class="modal-content">
 
-      <form action="{{ route('provider.update') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
+      <form action="{{ route('provider-prefix.update') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
           </button>
-          <h4 class="modal-title" id="myModalLabel2">Update Provider Prefix</h4>
+          <h4 class="modal-title" id="myModalLabel2">Update Provider</h4>
         </div>
         <div class="modal-body">
             {{ csrf_field() }}
-            <div class="item form-group {{ $errors->has('provider_name') ? 'has-error' : ''}}">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Provider Prefix <span class="required">*</span>
+            <div class="item form-group {{ $errors->has('provider_id') ? 'has-error' : ''}}">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                Provider <span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input id="id_provider_prefix_update" name="id_provider_prefix" type="hidden" value="">
-                <input id="provider_prefix_update" class="form-control col-md-7 col-xs-12" name="provider_prefix" placeholder="Contoh: Provider Prefix" required="required" type="text" value="{{ old('provider_name') }}" onkeypress="return isNumber(event)">
-                @if($errors->has('provider_name'))
-                  <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_name')}}</span></code>
+                <input 
+                  id="prefix_id_update" 
+                  name="provider_prefix_id" 
+                  type="hidden" 
+                  value="{{ old('provider_prefix_id') }}" 
+                >
+                <input 
+                  id="version_update" 
+                  name="version" 
+                  type="hidden" 
+                  value="{{ old('version') }}" 
+                >
+                <select 
+                  id="provider_id_update" 
+                  name="provider_id" 
+                  class="form-control select2_single" 
+                  required="required"
+                >
+                  <option value="">Pilih</option>
+                  @foreach($getProvider as $list)
+                  <option 
+                    value="{{ $list->provider_id }}" 
+                    {{ old('provider_id') == $list->provider_id ? 'selected' : '' }}
+                  >
+                    {{ $list->provider_code.' ('.$list->provider_name.')' }}
+                  </option>
+                  @endforeach
+                </select>
+                @if($errors->has('provider_id'))
+                  <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_id')}}</span></code>
+                @endif
+              </div>
+            </div>
+            <div class="item form-group {{ $errors->has('prefix') ? 'has-error' : ''}}">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                Provider Prefix<span class="required">*</span>
+              </label>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <input 
+                  id="prefix_update" 
+                  class="form-control col-md-7 col-xs-12" 
+                  name="prefix" 
+                  placeholder="Contoh: Provider Prefix" 
+                  required="required" 
+                  type="text" 
+                  onkeypress="return isNumber(event)"
+                  value="{{ old('prefix') }}"
+                >
+                @if($errors->has('prefix'))
+                  <code><span style="color:red; font-size:12px;">{{ $errors->first('prefix')}}</span></code>
                 @endif
               </div>
             </div>
@@ -316,6 +344,7 @@
                   href="" 
                   class="delete" 
                   data-value="{{ $list->provider_id }}" 
+                  data-version="{{ $list->version }}" 
                   data-toggle="modal" 
                   data-target=".modal-delete"
                 >
@@ -342,61 +371,30 @@ $('#dataTables').DataTable();
 
 $(function(){
     $(document).on('click', '.read', function(e) {
-        var provId    = $(this).data('id');
-        var provCode  = $(this).data('code');
-        var provName  = $(this).data('name');
-
-        var proviPrefix1  = ['0','0812','0813','0814','0815'];
-        var proviPrefix2  = ['0','0856','0857','0859'];
-        var proviPrefix3  = ['0','0822','0825','0828'];
-        var proviPrefix4  = ['0','0896','0897'];
-
-        $('#provider-prefix-code').html(provCode);
-        $('#provider-prefix-name').html(provName);
-
-        if(provId == 1){
-          // alert(proviPrefix1.length);
-          $(".prefix-number-append").remove();
-          var forLenght = (proviPrefix1.length-1);
-          for(i=1; i<=forLenght; i++){
-            $("#provider-prefix-number").append(
-              "<div class='prefix-number-append item form-group col-md-12 col-sm-12 col-xs-12'><label class='col-md-3 col-sm-3 col-xs-6'>" + proviPrefix1[i] + "</label><label class='col-md-3 col-sm-3 col-xs-6'><a class='update-prefix' data-id='" + i + "' data-prefix='" + proviPrefix1[i] + "' data-toggle='modal' data-target='.modal-form-update-prefix'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Update'><i class='fa fa-pencil'></i></span></a></label><label class='col-md-3 col-sm-3 col-xs-6'><a href='' class='delete-prefix' data-value='" + i + "' data-toggle='modal' data-target='.modal-delete-prefix'><span class='btn btn-xs btn-danger btn-sm' data-toggle='tooltip' data-placement='top' title='Hapus'><i class='fa fa-remove'></i></span></a></label>"
-            );
-          }
-        }
-
-        if(provId == 2){
-          // alert(proviPrefix1.length);
-          $(".prefix-number-append").remove();
-          var forLenght = (proviPrefix2.length-1);
-          for(i=1; i<=forLenght; i++){
-            $("#provider-prefix-number").append(
-              "<div class='prefix-number-append item form-group col-md-12 col-sm-12 col-xs-12'><label class='col-md-3 col-sm-3 col-xs-6'>" + proviPrefix2[i] + "</label><label class='col-md-3 col-sm-3 col-xs-6'><a class='update-prefix' data-id='" + i + "' data-prefix='" + proviPrefix2[i] + "' data-toggle='modal' data-target='.modal-form-update-prefix'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Update'><i class='fa fa-pencil'></i></span></a></label><label class='col-md-3 col-sm-3 col-xs-6'><a href='' class='delete-prefix' data-value='" + i + "' data-toggle='modal' data-target='.modal-delete-prefix'><span class='btn btn-xs btn-danger btn-sm' data-toggle='tooltip' data-placement='top' title='Hapus'><i class='fa fa-remove'></i></span></a></label>"
-            );
-          }
-        }
-
-        if(provId == 3){
-          // alert(proviPrefix1.length);
-          $(".prefix-number-append").remove();
-          var forLenght = (proviPrefix3.length-1);
-          for(i=1; i<=forLenght; i++){
-            $("#provider-prefix-number").append(
-              "<div class='prefix-number-append item form-group col-md-12 col-sm-12 col-xs-12'><label class='col-md-3 col-sm-3 col-xs-6'>" + proviPrefix3[i] + "</label><label class='col-md-3 col-sm-3 col-xs-6'><a class='update-prefix' data-id='" + i + "' data-prefix='" + proviPrefix3[i] + "' data-toggle='modal' data-target='.modal-form-update-prefix'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Update'><i class='fa fa-pencil'></i></span></a></label><label class='col-md-3 col-sm-3 col-xs-6'><a href='' class='delete-prefix' data-value='" + i + "' data-toggle='modal' data-target='.modal-delete-prefix'><span class='btn btn-xs btn-danger btn-sm' data-toggle='tooltip' data-placement='top' title='Hapus'><i class='fa fa-remove'></i></span></a></label>"
-            );
-          }
-        }
-
-        if(provId == 4){
-          // alert(proviPrefix1.length);
-          $(".prefix-number-append").remove();
-          var forLenght = (proviPrefix4.length-1);
-          for(i=1; i<=forLenght; i++){
-            $("#provider-prefix-number").append(
-              "<div class='prefix-number-append item form-group col-md-12 col-sm-12 col-xs-12'><label class='col-md-3 col-sm-3 col-xs-6'>" + proviPrefix4[i] + "</label><label class='col-md-3 col-sm-3 col-xs-6'><a class='update-prefix' data-id='" + i + "' data-prefix='" + proviPrefix4[i] + "' data-toggle='modal' data-target='.modal-form-update-prefix'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Update'><i class='fa fa-pencil'></i></span></a></label><label class='col-md-3 col-sm-3 col-xs-6'><a href='' class='delete-prefix' data-value='" + i + "' data-toggle='modal' data-target='.modal-delete-prefix'><span class='btn btn-xs btn-danger btn-sm' data-toggle='tooltip' data-placement='top' title='Hapus'><i class='fa fa-remove'></i></span></a></label>"
-            );
-          }
-        }
+        var idProvider    = $(this).data('id');
+        $.ajax(
+          {
+              url: "{{ url('/') }}/provider/ajax-view/" + idProvider,
+              type: "get"/*,
+              beforeSend: function()
+              {
+                  $('.ajax-load').show();
+              }*/
+          })
+          .done(function(data)
+          {
+              if(!data.html){
+                // $('.ajax-load').hide();
+                // $('#callNext').hide();
+                return;
+              }
+              // $('.ajax-load').hide();
+              $("#modal-form-read-html.modal-body").html(data.html);
+          })
+          .fail(function(jqXHR, ajaxOptions, thrownError)
+          {
+                alert('server not responding...');
+          });
     });
 
     $(document).on('click', '.update', function(e) {
@@ -411,17 +409,28 @@ $(function(){
     });
     
     $(document).on('click', '.update-prefix', function(e) {
-        var idProvider    = $(this).data('id');
-        var prefixProvider  = $(this).data('prefix');
-        $("#id_provider_prefix_update").val(idProvider);
-        $("#provider_prefix_update").val(prefixProvider);
-    });    
+        var provider_id = $(this).data('provider_id');
+        var prefix_id   = $(this).data('prefix_id');
+        var prefix      = $(this).data('prefix');
+        var version      = $(this).data('version');
+        $("#provider_id_update").val(provider_id);
+        $("#prefix_id_update").val(prefix_id);
+        $("#prefix_update").val(prefix);
+        $("#version_update").val(version);
+    });
+
+    $(document).on('click', '.delete-prefix', function(e) {
+      var a = $(this).data('value');
+      var b = $(this).data('version');
+      $('#setDeletePrefix').attr('href', "{{ url('/') }}/provider-prefix/delete/"+a+"/"+b);
+    });
 });
 
 $(function(){
   $('#dataTables').on('click', 'a.delete', function(){
     var a = $(this).data('value');
-    $('#setDelete').attr('href', "{{ url('/') }}/provider/delete/"+a);
+    var b = $(this).data('version');
+    $('#setDelete').attr('href', "{{ url('/') }}/provider/delete/"+a+"/"+b);
   });
 });
 

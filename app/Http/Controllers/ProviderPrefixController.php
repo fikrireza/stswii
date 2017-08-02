@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use App\Models\User;
 use App\Models\Provider;
 use App\Models\ProviderPrefix;
 
@@ -48,11 +49,28 @@ class ProviderPrefixController extends Controller{
 			'getProviderPrefix'
 		));
     }
-    public function delete($id){
+    public function delete($id, $version){
+    	
 		$delete = ProviderPrefix::find($id);
-		$delete->delete();
+		if($delete == null){
+			$info = 'Prefix gagal dihapus! Tidak dapat menemukan Prefix!';
+			$alret = 'alert-danger';
+		}
+		else{
+			if($delete->version != $version){
+				$User = User::find($delete->update_user_id);
+				$info = 'Prefix gagal dihapus! Prefix telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
+				$alret = 'alert-danger';
+			}
+			else{
+				$info = 'Berhasil menghapus Prefix '.$delete->prefix;
+				$alret = 'alert-success';
+				$delete->delete();
+			}
+		}
 		return redirect()->route('provider-prefix.index')
-			->with('berhasil', 'Berhasil menghapus Provider Prefix ');
+			->with('alret', $alret)
+			->with('berhasil', $info);
     }
     public function store(Request $request){
 		$message = [
@@ -100,7 +118,7 @@ class ProviderPrefixController extends Controller{
 
 		$validator = Validator::make($request->all(), [
 			'provider_id' => 'required',
-			'prefix' => 'required|unique:amd_provider_prefixes|numeric|digits_between:3,5',
+			'prefix' => 'required|unique:sw_provider_prefix|numeric|digits_between:3,5',
 		], $message);
 
 		if($validator->fails()){
@@ -108,16 +126,27 @@ class ProviderPrefixController extends Controller{
 				->withErrors($validator)->withInput()->with('update-false', 'Something Errors');;
 		}
 
-		DB::transaction(function () use($request) {
-			$update = ProviderPrefix::find($request->provider_id);
-			$update->provider_id	= $request->provider_id;
-			$update->prefix			= $request->prefix;
-			$update->version 		= '1';
-			$update->update_user_id	= '1'/*Auth::user()->id*/;
-			$update->update();
-		});
+		$update = ProviderPrefix::find($request->provider_prefix_id);
+		if($update->version != $request->version){
+			$User = User::find($update->update_user_id);
+			$info = 'Prefix gagal diupdate! Prefix telah diupdate Oleh '.$User->name;
+			$alret = 'alert-danger';
+		}
+		else{
+			$info = 'Berhasil Memperbarui Prefix '.$request->prefix;
+			$alret = 'alert-success';
+			DB::transaction(function () use($request, $update) {
+				$update->increment('version');
+				$update->provider_id	= $request->provider_id;
+				$update->prefix			= $request->prefix;
+				$update->update_user_id	= Auth::user()->id;
+				$update->update_datetime= Carbon::now()->format('YmdHis');
+				$update->update();
+			});
+		}
 
 		return redirect()->route('provider-prefix.index')
-			->with('berhasil', 'Berhasil Memperbarui Provider Prefix'.$request->prefix);
+			->with('alret', $alret)
+			->with('berhasil', $info);
     }
 }
