@@ -166,7 +166,7 @@ class PartnerPulsaController extends Controller
     }
 
     public function update($id, $version, Request $request){
-        $message = [
+      $message = [
         'partner_pulsa_name.required' => 'mohon isi',
         'description.required' => 'mohon isi',
         'type_top.required' => 'mohon isi',
@@ -180,39 +180,39 @@ class PartnerPulsaController extends Controller
         // 'payment_termin' => 'required',
       ], $message);
 
-    		if($validator->fails()){
-    			return redirect()->route('partner-pulsa.edit', ['id' => $id, 'version' => $version])
-    				->withErrors($validator)->withInput();
-    		}
+  		if($validator->fails()){
+  			return redirect()->route('partner-pulsa.edit', ['id' => $id, 'version' => $version])
+  				->withErrors($validator)->withInput();
+  		}
 
-    		// DB::transaction(function () use($request, $id) {
-    		// 	$save = PartnerPulsa::find($id);
+      $update = PartnerPulsa::find($request->partner_pulsa_id);
 
-    		// 	$save->partner_pulsa_code  = $request->partner_pulsa_code;
-    		// 	$save->description         = $request->description;
-    		// 	$save->partner_pulsa_name  = $request->partner_pulsa_name;
-
-    		// 	$save->flg_need_deposit    = isset($request->flg_need_deposit) ? 1 : 0;;
-    		// 	$save->payment_termin      = isset($request->flg_need_deposit) ? $request->payment_termin : 0;
-
-    		// 	$save->active              = isset($request->active) ? 1 : 0;
-    		// 	if(isset($request->active))
-    		// 	{
-    		// 		$save->active_datetime     = date('Y-m-d H:i:s');
-    		// 	}
-    		// 	else
-    		// 	{
-    		// 		$save->non_active_datetime = date('Y-m-d H:i:s');
-    		// 	}
-
-    		// 	$save->version 		       = '1';
-    		// 	$save->create_user_id	   = '1'/*Auth::user()->id*/;
-    		// 	$save->update_user_id	   = '1'/*Auth::user()->id*/;
-    		// 	$save->save();
-    		// });
-
-    		// return redirect()->route('partner-pulsa.index')
-    		// 	->with('berhasil', 'Berhasil Mengubah Provider '.$request->partner_pulsa_name);
+      if($update == null){
+        $info = 'Data Partner gagal diubah! Tidak dapat menemukan Partner!';
+        $alret = 'alert-danger';
+      }
+      else if($update->version != $request->version){
+        $User = User::find($update->update_user_id);
+        $info = 'Data Partner gagal diubah! Data Partner telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
+        $alret = 'alert-danger';
+      }
+      else{
+        $info = 'Berhasil Memperbarui Data Partner '.$update->partner_pulsa_name;
+        $alret = 'alert-success';
+        DB::transaction(function () use($update, $request) {
+          $update->increment('version');
+          $update->partner_pulsa_name = $request->partner_pulsa_name;
+          $update->description        = $request->description;
+          $update->type_top           = $request->type_top;
+          $update->payment_termin     = $request->type_top == 'TERMIN' ? 1 : 0;
+          $update->update_user_id     = Auth::user()->id;
+          $update->update_datetime    = Carbon::now()->format('YmdHis');
+          $update->update();
+        });
+      }
+  		return redirect()->route('partner-pulsa.index')
+        ->with('alret', $alret)
+        ->with('berhasil', $info);
     }
 
     public function delete($id){

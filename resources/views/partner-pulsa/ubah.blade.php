@@ -51,6 +51,22 @@
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input 
+                id="partner_pulsa_id" 
+                class="form-control col-md-7 col-xs-12" 
+                name="partner_pulsa_id" 
+                type="hidden" 
+                value="{{ $getPartnerPulsa->partner_pulsa_id }}" 
+                readonly
+              >
+              <input 
+                id="version" 
+                class="form-control col-md-7 col-xs-12" 
+                name="version" 
+                type="hidden" 
+                value="{{ $getPartnerPulsa->version }}" 
+                readonly
+              >
+              <input 
                 id="name" 
                 class="form-control col-md-7 col-xs-12" 
                 name="partner_pulsa_code" 
@@ -72,7 +88,7 @@
                 name="partner_pulsa_name" 
                 required="required" 
                 type="text" 
-                value="{{ $getPartnerPulsa->partner_pulsa_name,old('partner_pulsa_name') }}"
+                value="{{ $getPartnerPulsa->partner_pulsa_name }}"
               >
               @if($errors->has('partner_pulsa_name'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('partner_pulsa_name')}}</span></code>
@@ -90,7 +106,7 @@
                 class="form-control" 
                 name="description" 
                 required="required"
-              >{{ $getPartnerPulsa->description,old('description') }}</textarea>
+              >{{ $getPartnerPulsa->description }}</textarea>
               @if($errors->has('description'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('description')}}</span></code>
               @endif
@@ -113,7 +129,7 @@
                 @for($i=0; $i<=2; $i++)
                 <option 
                   value="{{ $arrTT[$i] }}"
-                  {{ $getPartnerPulsa->type_top,old('type_top') == $arrTT[$i] ? 'selected' : '' }}
+                  {{ $getPartnerPulsa->type_top == $arrTT[$i] ? 'selected' : '' }}
                 >
                   {{ $arrTT[$i] }}
                 </option>
