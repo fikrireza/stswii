@@ -12,14 +12,14 @@
 @if(Session::has('berhasil'))
 <script>
   window.setTimeout(function() {
-    $(".alert-success").fadeTo(700, 0).slideUp(700, function(){
+    $(".alert.alert-dismissible").fadeTo(700, 0).slideUp(700, function(){
         $(this).remove();
     });
   }, 5000);
 </script>
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
-    <div class="alert alert-success alert-dismissible fade in" role="alert">
+    <div class="alert {{ Session::get('alret') }} alert-dismissible fade in" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
       </button>
       <strong>{{ Session::get('berhasil') }}</strong>
@@ -31,7 +31,6 @@
 <div class="modal fade modal-form-add" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-
       <form action="{{ route('provider.store') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
@@ -40,11 +39,35 @@
         </div>
         <div class="modal-body">
             {{ csrf_field() }}
-            <div class="item form-group {{ $errors->has('provider_name') ? 'has-error' : ''}}">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Provider Name<span class="required">*</span>
+            <div class="item form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                Provider Code<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input id="name" class="form-control col-md-7 col-xs-12" name="provider_name" placeholder="Contoh: Nama Provider" required="required" type="text" value="{{ old('provider_name') }}">
+                <input 
+                  id="code" 
+                  class="form-control col-md-7 col-xs-12" 
+                  name="provider_code" 
+                  type="text" 
+                  value="{{ $newProvCode }}"
+                  readonly
+                >
+              </div>
+            </div>
+            <div class="item form-group {{ $errors->has('provider_name') ? 'has-error' : ''}}">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                Provider Name<span class="required">*</span>
+              </label>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <input 
+                  id="name" 
+                  class="form-control col-md-7 col-xs-12" 
+                  name="provider_name" 
+                  placeholder="Contoh: Nama Provider" 
+                  required="required" 
+                  type="text" 
+                  value="{{ old('provider_name') }}"
+                >
                 @if($errors->has('provider_name'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_name')}}</span></code>
                 @endif
@@ -52,7 +75,7 @@
             </div>
         </div>
         <div class="modal-footer">
-          <button id="send" type="submit" class="btn btn-success" disabled="true">Submit</button>
+          <button id="send" type="submit" class="btn btn-success">Submit</button>
         </div>
       </form>
     </div>
@@ -62,7 +85,6 @@
 <div class="modal fade modal-form-update" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-
       <form action="{{ route('provider.update') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
@@ -71,12 +93,47 @@
         </div>
         <div class="modal-body">
             {{ csrf_field() }}
-            <div class="item form-group {{ $errors->has('provider_name') ? 'has-error' : ''}}">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nama Provider <span class="required">*</span>
+            <div class="item form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                Provider Code<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input id="id_provider_update" name="id_provider" type="hidden" value="">
-                <input id="name_provider_update" class="form-control col-md-7 col-xs-12" name="provider_name" placeholder="Contoh: Nama Provider" required="required" type="text" value="{{ old('provider_name') }}">
+                <input 
+                  id="id_provider_update" 
+                  name="provider_id" 
+                  type="hidden" 
+                  value="{{ old('provider_id') }}" 
+                >
+                <input 
+                  id="version_provider_update" 
+                  name="version" 
+                  type="hidden" 
+                  value="{{ old('version') }}" 
+                >
+                <input 
+                  id="code_provider_update" 
+                  class="form-control col-md-7 col-xs-12" 
+                  name="provider_code"
+                  type="text" 
+                  value="{{ old('provider_code') }}"
+                  readonly
+                >
+              </div>
+            </div>
+            <div class="item form-group {{ $errors->has('provider_name') ? 'has-error' : ''}}">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+                Nama Provider <span class="required">*</span>
+              </label>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <input 
+                  id="name_provider_update" 
+                  class="form-control col-md-7 col-xs-12" 
+                  name="provider_name" 
+                  placeholder="Contoh: Nama Provider" 
+                  required="required" 
+                  type="text" 
+                  value="{{ old('provider_name') }}"
+                >
                 @if($errors->has('provider_name'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_name')}}</span></code>
                 @endif
@@ -84,7 +141,7 @@
             </div>
         </div>
         <div class="modal-footer">
-          <button id="send" type="submit" class="btn btn-success" disabled="true">Submit</button>
+          <button id="send" type="submit" class="btn btn-success">Submit</button>
         </div>
       </form>
     </div>
@@ -104,7 +161,7 @@
         <h4>Yakin ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary disabled" id="setDelete">Ya</a>
+        <a class="btn btn-primary" id="setDelete">Ya</a>
       </div>
 
     </div>
@@ -173,7 +230,7 @@
             </div>
         </div>
         <div class="modal-footer">
-          <button id="send" type="submit" class="btn btn-success" disabled="true">Submit</button>
+          <button id="send" type="submit" class="btn btn-success">Submit</button>
         </div>
       </form>
     </div>
@@ -193,7 +250,7 @@
         <h4>Yakin ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary disabled" id="setDeletePrefix">Ya</a>
+        <a class="btn btn-primary" id="setDeletePrefix">Ya</a>
       </div>
 
     </div>
@@ -227,30 +284,29 @@
             </tr>
           </thead>
           <tbody>
-            @php
-              $arrProvCode = array('', 'Prov-01', 'Prov-02', 'Prov-03', 'Prov-04');
-              $arrProvName = array('', 'Telkomsel', 'Indosat', 'Ooredo', '3');
-            @endphp
-            @for($p=1; $p<=4; $p++)
+            @php ($no = 1)
+            @foreach($getProvider as $list)
             <tr>
-              <td>{{ $p }}</td>
-              <td>{{ $arrProvCode[$p] or '-' }}</td>
-              <td>{{ $arrProvName[$p] or '-' }}</td>
+              <td>{{ $no++ }}</td>
+              <td>{{ $list->provider_code or '-' }}</td>
+              <td>{{ $list->provider_name or '-' }}</td>
               <td>
                 <a 
                   class="read" 
-                  data-id="{{ $p }}" 
-                  data-code="{{ $arrProvCode[$p] }}" 
-                  data-name="{{ $arrProvName[$p] }}" 
+                  data-id="{{ $list->provider_id }}"
+                  @if($list->count_provider_prefix != 0)
                   data-toggle="modal" 
                   data-target=".modal-form-read"
+                  @endif
                 >
-                  <span class="btn btn-xs btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="View"><i class="fa fa-archive"></i></span>
+                  <span class="btn btn-xs btn-info btn-sm {{ $list->count_provider_prefix == 0 ? 'disabled' : '' }}" data-toggle="tooltip" data-placement="top" title="View"><i class="fa fa-archive"></i></span>
                 </a>
                 <a 
                   class="update" 
-                  data-id="{{ $p }}" 
-                  data-name="{{ $arrProvName[$p] }}" 
+                  data-id="{{ $list->provider_id }}" 
+                  data-code="{{ $list->provider_code or '-' }}" 
+                  data-name="{{ $list->provider_name or '-' }}" 
+                  data-version="{{ $list->version or '-' }}" 
                   data-toggle="modal" 
                   data-target=".modal-form-update"
                 >
@@ -259,7 +315,7 @@
                 <a 
                   href="" 
                   class="delete" 
-                  data-value="{{ $p }}" 
+                  data-value="{{ $list->provider_id }}" 
                   data-toggle="modal" 
                   data-target=".modal-delete"
                 >
@@ -267,7 +323,7 @@
                 </a>
               </td>
             </tr>
-            @endfor
+            @endforeach
           </tbody>
         </table>
       </div>
@@ -345,8 +401,12 @@ $(function(){
 
     $(document).on('click', '.update', function(e) {
         var idProvider    = $(this).data('id');
+        var codeProvider  = $(this).data('code');
+        var versionProvider  = $(this).data('version');
         var nameProvider  = $(this).data('name');
         $("#id_provider_update").val(idProvider);
+        $("#code_provider_update").val(codeProvider);
+        $("#version_provider_update").val(versionProvider);
         $("#name_provider_update").val(nameProvider);
     });
     

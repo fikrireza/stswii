@@ -73,7 +73,7 @@
 
         </div>
         <div class="modal-footer">
-          <button id="send" type="submit" class="btn btn-success" disabled="true">Submit</button>
+          <button id="send" type="submit" class="btn btn-success">Submit</button>
         </div>
       </form>
     </div>
@@ -126,7 +126,7 @@
 
         </div>
         <div class="modal-footer">
-          <button id="send" type="submit" class="btn btn-success" disabled="true">Submit</button>
+          <button id="send" type="submit" class="btn btn-success">Submit</button>
         </div>
       </form>
     </div>
@@ -146,7 +146,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary disabled" id="setDelete">Yes</a>
+        <a class="btn btn-primary" id="setDelete">Yes</a>
       </div>
 
     </div>

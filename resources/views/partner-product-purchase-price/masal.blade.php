@@ -88,7 +88,7 @@
         <table class="table table-striped table-bordered no-footer tablecheck" width="100%">
           <thead>
             <th>Selection</th>
-            <th>Provider</th>
+            <th>Product</th>
             <th>Gross Sell Price</th>
             <th>Tax Percentage</th>
             <th>Datetime Start</th>
@@ -98,7 +98,6 @@
           <tbody>
             @php
               $urut = 0;
-              $arrProvNameSelect = array('', 'Telkomsel', 'Indosat', 'Ooredo', '3');
               $arrProvName = array(
                 '', 
                 'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 
@@ -113,29 +112,45 @@
                 '5000', '10000', '20000', '50000', '100000', 
                 '5000', '10000', '20000', '50000', '100000'
               );
+              $arrPriceSellCOFP = array(
+                '', 
+                '5', '10', '20', '50', '100', 
+                '5', '10', '20', '50', '100', 
+                '5', '10', '20', '50', '100', 
+                '5', '10', '20', '50', '100'
+              );
+              $arrProduct = array('');
+              for ($i=1; $i < 20 ; $i++){
+                $pro = 'PP.Cd.'.rand(10,99).'('.$arrPriceSellCOFP[$i].'-'.$arrProvName[$i].')';
+                array_push($arrProduct,$pro);
+              }
             @endphp
             @for ($i=1; $i < 20; $i++)
             <tr>
-              <td><input type="button" name="delete" value="x" class="btn btn-danger btn-sm" onclick="DeleteRowFunction(this);"></td>
+              <td>
+                <!-- <span class="label-hide">{{ $arrProduct[$i] }}</span> -->
+                <input type="button" name="delete" value="x" class="btn btn-danger btn-sm" onclick="DeleteRowFunction(this);">
+              </td>
               <td>
                 <select id="product_id" name="product_id[{{$urut}}]" class="form-control select2_single" required="required">
                     <option value="">Pilih</option>
-                    @for($p=1; $p<=4; $p++)
+                    @for($p=1; $p<=19; $p++)
                   <option 
-                    value="{{ $arrProvNameSelect[$p] }}" 
-                    {{ $arrProvName[$i] == $arrProvNameSelect[$p] ? 'selected' : '' }}
+                    value="{{ $arrProduct[$p] }}" 
+                    {{ $arrProduct[$i] == $arrProduct[$p] ? 'selected' : '' }}
                   >
-                    {{ $arrProvNameSelect[$p] }}
+                    {{ $arrProduct[$p] }}
                   </option>
                   @endfor
                   </select>
               </td>
               <td>
-                <!-- <span class="label-hide">{{ $arrProvName[$i] }}</span> -->
                 <!-- <span class="label-hide">Rp. {{ number_format($arrPriceSell[$i],0) }}</span> -->
-                <input type="text" name="gross_sell_price[{{$urut}}]" class="form-control" value="{{ '100000' }}" onkeypress="return isNumber(event)">
+                <!-- <span class="label-hide">{{ $arrProduct[$i] }}</span> -->
+                <input type="text" name="gross_sell_price[{{$urut}}]" class="form-control" value="{{ $arrPriceSell[$i] }}" onkeypress="return isNumber(event)">
               </td>
               <td>
+                <!-- <span class="label-hide">3</span> -->
                 <input type="text" name="tax_percentage[{{$urut}}]" class="form-control" value="{{ '3' }}" onkeypress="return isNumber(event)" />
               </td>
               <td>

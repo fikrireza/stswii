@@ -11,6 +11,8 @@ class ProviderPrefix extends Model
     protected $fillable = ['provider_prefix_id','provider_id','prefix','version','create_datetime',
                           'create_user_id','update_datetime','update_user_id'];
 
+    protected $primaryKey = 'provider_prefix_id'; // or null
+
     public function provider()
     {
       return $this->belongsTo('App\Models\Provider', 'provider_id');

@@ -42,7 +42,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary disabled" id="setDelete">Yes</a>
+        <a class="btn btn-primary" id="setDelete">Yes</a>
       </div>
 
     </div>
@@ -62,7 +62,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary disabled" id="setUnpublish">Yes</a>
+        <a class="btn btn-primary" id="setUnpublish">Yes</a>
       </div>
     </div>
   </div>
@@ -81,7 +81,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary disabled" id="setPublish">Yes</a>
+        <a class="btn btn-primary" id="setPublish">Yes</a>
       </div>
     </div>
   </div>

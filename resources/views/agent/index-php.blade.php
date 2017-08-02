@@ -45,7 +45,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary disabled" id="setDelete">Ya</a>
+        <a class="btn btn-primary" id="setDelete">Ya</a>
       </div>
 
     </div>
