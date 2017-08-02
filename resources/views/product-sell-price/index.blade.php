@@ -114,6 +114,7 @@
           <thead>
             <tr role="row">
               <th>No</th>
+              <th>Provider Code</th>
               <th>Product Name</th>
               <th>Gross Sell Price</th>
               <th>Use Tax</th>
@@ -126,13 +127,34 @@
           </thead>
           <tbody>
             @php
-              $no = 1;
+              $arrProvCode = array(
+                '', 
+                'Prov-01', 'Prov-01', 'Prov-01', 'Prov-01', 'Prov-01', 
+                'Prov-02', 'Prov-02', 'Prov-02', 'Prov-02', 'Prov-02', 
+                'Prov-03', 'Prov-03', 'Prov-03', 'Prov-03', 'Prov-03', 
+                'Prov-04', 'Prov-04', 'Prov-04', 'Prov-04', 'Prov-04'
+              );
+              $arrProvName = array(
+                '', 
+                'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 
+                'Indosat', 'Indosat', 'Indosat', 'Indosat', 'Indosat', 
+                'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 
+                '3', '3', '3', '3', '3'
+              );
+              $arrPriceSell = array(
+                '', 
+                '5000', '10000', '20000', '50000', '100000', 
+                '5000', '10000', '20000', '50000', '100000', 
+                '5000', '10000', '20000', '50000', '100000', 
+                '5000', '10000', '20000', '50000', '100000'
+              );
             @endphp
-            @for ($i=0; $i < 100 ; $i++)
+            @for ($i=1; $i < 20 ; $i++)
             <tr>
-              <td>{{ $no++ }}</td>
-              <td>{{ 'Telkomsel' . $i }}</td>
-              <td>{{ $i . '00,000' }}</td>
+              <td>{{ $i }}</td>
+              <td>{{ $arrProvCode[$i] }}</td>
+              <td>{{ $arrPriceSell[$i].'-'.$arrProvName[$i] }}</td>
+              <td>{{ $arrPriceSell[$i] }}</td>
               <td>{{ 'Y' }}</td>
               <td>{{ 10 }}</td>
               <td>{{ '01/01/2017 00:00:00' }}</td>

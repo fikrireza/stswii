@@ -120,12 +120,13 @@
           <tbody>
             @php
               $no = 1;
+              $faker    = Faker\Factory::create();
             @endphp
             @for ($i=0; $i < 15; $i++)
             <tr>
               <td>{{ $no }}</td>
-              <td>Code Partner</td>
-              <td>Partner Cell</td>
+              <td>Partner.{{ rand(10,99) }}</td>
+              <td>{{$faker->name}}</td>
               <td>Description Partner Pulsa</td>
               <td>@if($i%3 == 0) {{'DEPOSIT'}} @elseif($i%2 == 1) {{'DENOM'}} @else {{'TERMIN'}}@endif</td>
               <td>{{ $i%2 ? '0' : '1' }}</td>

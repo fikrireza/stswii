@@ -180,6 +180,8 @@ return [
         // Excel
         Maatwebsite\Excel\ExcelServiceProvider::class,
 
+        //data table Yajra
+        Yajra\Datatables\DatatablesServiceProvider::class,
     ],
 
     /*

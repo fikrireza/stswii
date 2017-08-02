@@ -64,51 +64,19 @@
     <div class="x_panel">
       <div class="x_title">
         <h2>Agent </h2>
-        <ul class="nav panel_toolbox">
-          <a href="{{ route('agent.create') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add</a>
-        </ul>
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
         <table id="producttabel" class="table table-striped table-bordered no-footer" width="100%">
           <thead>
             <tr role="row">
-              <th>No</th>
               <th>Name</th>
               <th>Phone</th>
               <th>Address</th>
               <th>City</th>
-              <th>Action</th>
+              
             </tr>
           </thead>
-          <tbody>
-            @for($p=1; $p<=4; $p++)
-            <tr>
-              <td>{{$p}}</td>
-              <td>Agent Name</td>
-              <td>08XXXXXXXXX</td>
-              <td>Addres in here....</td>
-              <td>City Of Agent</td>
-              <td>
-                <a 
-                  href="{{ route('agent.edit', ['id' => '1']) }}" 
-                  class="update" 
-                >
-                  <span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>
-                </a>
-                <a 
-                  href="" 
-                  class="delete" 
-                  data-value="{{ $p }}" 
-                  data-toggle="modal" 
-                  data-target=".modal-delete"
-                >
-                  <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span>
-                </a>
-              </td>
-            </tr>
-            @endfor
-          </tbody>
         </table>
       </div>
     </div>
@@ -124,6 +92,18 @@
 <script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
 
 <script type="text/javascript">
-  $('#producttabel').DataTable();
+$(function() {
+    $('#producttabel').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: 'http://localhost/stswii/public/agent/php/getDatas',
+        columns: [
+            {data: 'agent_name'},
+            {data: 'phone_number'},
+            {data: 'address'},
+            {data: 'city'}
+        ]
+    });
+});
 </script>
 @endsection
