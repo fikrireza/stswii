@@ -12,14 +12,14 @@
 @if(Session::has('berhasil'))
 <script>
   window.setTimeout(function() {
-    $(".alert-success").fadeTo(700, 0).slideUp(700, function(){
+    $(".alert.alert-dismissible").fadeTo(700, 0).slideUp(700, function(){
         $(this).remove();
     });
   }, 5000);
 </script>
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
-    <div class="alert alert-success alert-dismissible fade in" role="alert">
+    <div class="alert {{ Session::get('alret') }} alert-dismissible fade in" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
       </button>
       <strong>{{ Session::get('berhasil') }}</strong>
@@ -52,15 +52,14 @@
                   required="required"
                 >
                   <option value="">Pilih</option>
-                  @php ($arrProvNameSelect = array('', 'Telkomsel', 'Indosat', 'Ooredo', '3'))
-                  @for($p=1; $p<=4; $p++)
+                  @foreach($getProvider as $list)
                   <option 
-                    value="{{ $p }}" 
-                    {{ old('provider_id') == $p ? 'selected' : '' }}
+                    value="{{ $list->provider_id }}" 
+                    {{ old('provider_id') == $list->provider_id ? 'selected' : '' }}
                   >
-                    {{ $arrProvNameSelect[$p] }}
+                    {{ $list->provider_code.' ('.$list->provider_name.')' }}
                   </option>
-                  @endfor
+                  @endforeach
                 </select>
                 @if($errors->has('provider_id'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_id')}}</span></code>
@@ -89,7 +88,7 @@
             </div>
         </div>
         <div class="modal-footer">
-          <button id="send" type="submit" class="btn btn-success" disabled="true">Submit</button>
+          <button id="send" type="submit" class="btn btn-success">Submit</button>
         </div>
       </form>
     </div>
@@ -120,15 +119,14 @@
                   required="required"
                 >
                   <option value="">Pilih</option>
-                  @php ($arrProvNameSelect = array('', 'Telkomsel', 'Indosat', 'Ooredo', '3'))
-                  @for($p=1; $p<=4; $p++)
+                  @foreach($getProvider as $list)
                   <option 
-                    value="{{ $p }}" 
-                    {{ old('provider_id') == $p ? 'selected' : '' }}
+                    value="{{ $list->provider_id }}" 
+                    {{ old('provider_id') == $list->provider_id ? 'selected' : '' }}
                   >
-                    {{ $arrProvNameSelect[$p] }}
+                    {{ $list->provider_code.' ('.$list->provider_name.')' }}
                   </option>
-                  @endfor
+                  @endforeach
                 </select>
                 @if($errors->has('provider_id'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_id')}}</span></code>
@@ -157,7 +155,7 @@
             </div>
         </div>
         <div class="modal-footer">
-          <button id="send" type="submit" class="btn btn-success" disabled="true">Submit</button>
+          <button id="send" type="submit" class="btn btn-success">Submit</button>
         </div>
       </form>
     </div>
@@ -177,7 +175,7 @@
         <h4>Yakin ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary disabled" id="setDelete">Ya</a>
+        <a class="btn btn-primary" id="setDelete">Ya</a>
       </div>
 
     </div>
@@ -211,22 +209,35 @@
             </tr>
           </thead>
           <tbody>
-            @php
-              $arrProvPrefix = array('', '0812', '0813', '0814', '0815', '0856', '0857', '0859', '0822', '0825', '0828', '0896', '0897');
-              $arrProvName = array('', 'Prov-01', 'Prov-01', 'Prov-01', 'Prov-01', 'Prov-02', 'Prov-02', 'Prov-02', 'Prov-03', 'Prov-03', 'Prov-03', 'Prov-04', 'Prov-04');
-              $arrProvId = array('', '1', '1', '1', '1', '2', '2', '2', '3', '3', '3', '4', '4');
-            @endphp
-            @for($p=1; $p<=12; $p++)
+            @php ($no = 1)
+            @foreach($getProviderPrefix as $list)
             <tr>
-              <td>{{ $p }}</td>
-              <td>{{ $arrProvPrefix[$p] }}</td>
-              <td>{{ $arrProvName[$p] }}</td>
+              <td>{{ $no++ }}</td>
+              <td>{{ $list->prefix or '-' }}</td>
+              <td>{{ $list->provider->provider_code or '-' }}</td>
               <td>
-                <a class="update" data-provider_id="{{ $arrProvId[$p] }}" data-prefix="{{ $arrProvPrefix[$p] }}" data-toggle="modal" data-target=".modal-form-update"><span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span></a>
-                <a href="" class="delete" data-value="{{ $p }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
+                <a 
+                  class="update" 
+                  data-provider_id="{{ $list->provider_id }}" 
+                  data-prefix_id="{{ $list->provider_prefix_id }}" 
+                  data-prefix="{{ $list->prefix }}" 
+                  data-toggle="modal" 
+                  data-target=".modal-form-update"
+                >
+                  <span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>
+                </a>
+                <a 
+                  href="" 
+                  class="delete" 
+                  data-value="{{ $list->provider_prefix_id }}" 
+                  data-toggle="modal" 
+                  data-target=".modal-delete"
+                >
+                  <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span>
+                </a>
               </td>
             </tr>
-            @endfor
+            @endforeach
           </tbody>
         </table>
       </div>

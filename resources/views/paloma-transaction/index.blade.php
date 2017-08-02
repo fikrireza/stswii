@@ -45,7 +45,7 @@
   //         <h4>Sure ?</h4>
   //       </div>
   //       <div class="modal-footer">
-  //         <a class="btn btn-primary disabled" id="setUnpublish">Ya</a>
+  //         <a class="btn btn-primary" id="setUnpublish">Ya</a>
   //       </div>
   //     </div>
   //   </div>
@@ -64,7 +64,7 @@
   //         <h4>Sure ?</h4>
   //       </div>
   //       <div class="modal-footer">
-  //         <a class="btn btn-primary disabled" id="setPublish">Ya</a>
+  //         <a class="btn btn-primary" id="setPublish">Ya</a>
   //       </div>
   //     </div>
   //   </div>
@@ -83,7 +83,7 @@
   //         <h4>Sure ?</h4>
   //       </div>
   //       <div class="modal-footer">
-  //         <a class="btn btn-primary disabled" id="setDelete">Ya</a>
+  //         <a class="btn btn-primary" id="setDelete">Ya</a>
   //       </div>
 
   //     </div>

@@ -11,6 +11,7 @@ use App\Models\ProviderPrefix;
 use DB;
 use Auth;
 use Validator;
+use Carbon\Carbon;
 
 class ProviderPrefixController extends Controller{
 
@@ -20,25 +21,32 @@ class ProviderPrefixController extends Controller{
      *
      * @return void
      */
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     
 
     public function index(){
-		// $getProvider = Provider::select(
-		// 		'id',
-		// 		'provider_name'
-		// 	)
-		// 	->orderBy('provider_name', 'asc')
-		//     ->get();
-		// $getProviderPrefix = ProviderPrefix::orderBy('provider_id', 'asc')
-  //           ->get();
-		return view('provider-prefix.index'/*, compact(
+		$getProvider = Provider::select(
+				'provider_id',
+				'provider_code',
+				'provider_name'
+			)
+		    ->get();
+
+		$getProviderPrefix = ProviderPrefix::select(
+				'provider_id',
+				'provider_prefix_id',
+				'prefix',
+				'version'
+			)
+            ->get();
+
+		return view('provider-prefix.index', compact(
 			'getProvider',
 			'getProviderPrefix'
-		)*/);
+		));
     }
     public function delete($id){
 		$delete = ProviderPrefix::find($id);
@@ -52,12 +60,12 @@ class ProviderPrefixController extends Controller{
 			'prefix.required' => 'mohon isi',
 			'prefix.unique' => 'Prefix ini sudah ada',
 			'prefix.numeric' => 'Prefix harus nomer',
-			'prefix.digits_between' => 'Prefix harus 3 sampai 5 digit',
+			'prefix.digits_between' => 'Prefix harus 1 sampai 18 digit',
 		];
 
 		$validator = Validator::make($request->all(), [
 			'provider_id' => 'required',
-			'prefix' => 'required|unique:amd_provider_prefixes|numeric|digits_between:3,5',
+			'prefix' => 'required|unique:sw_provider_prefix|numeric|digits_between:1,18',
 		], $message);
 
 		if($validator->fails()){
@@ -69,14 +77,17 @@ class ProviderPrefixController extends Controller{
 			$save = new ProviderPrefix;
 			$save->provider_id		= $request->provider_id;
 			$save->prefix			= $request->prefix;
-			$save->version 			= '1';
-			$save->create_user_id	= '1'/*Auth::user()->id*/;
-			$save->update_user_id	= '1'/*Auth::user()->id*/;
+			$save->version 			= 1;
+			$save->create_user_id	= Auth::user()->id;
+			$save->create_datetime	= Carbon::now()->format('YmdHis');
+			$save->update_user_id	= -99;/*Auth::user()->id*/
+			$save->update_datetime	= '';
 			$save->save();
 		});
 
 		return redirect()->route('provider-prefix.index')
-			->with('berhasil', 'Berhasil Menambahkan Provider Prefix'.$request->prefix);
+			->with('alret', 'alert-success')
+			->with('berhasil', 'Berhasil Menambahkan Provider Prefix '.$request->prefix);
     }
     public function update(Request $request){
 		$message = [
