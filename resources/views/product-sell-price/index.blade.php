@@ -114,7 +114,6 @@
           <thead>
             <tr role="row">
               <th>No</th>
-              <th>Provider Code</th>
               <th>Product Name</th>
               <th>Gross Sell Price</th>
               <th>Use Tax</th>
@@ -127,58 +126,37 @@
           </thead>
           <tbody>
             @php
-              $arrProvCode = array(
-                '', 
-                'Prov-01', 'Prov-01', 'Prov-01', 'Prov-01', 'Prov-01', 
-                'Prov-02', 'Prov-02', 'Prov-02', 'Prov-02', 'Prov-02', 
-                'Prov-03', 'Prov-03', 'Prov-03', 'Prov-03', 'Prov-03', 
-                'Prov-04', 'Prov-04', 'Prov-04', 'Prov-04', 'Prov-04'
-              );
-              $arrProvName = array(
-                '', 
-                'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 
-                'Indosat', 'Indosat', 'Indosat', 'Indosat', 'Indosat', 
-                'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 
-                '3', '3', '3', '3', '3'
-              );
-              $arrPriceSell = array(
-                '', 
-                '5000', '10000', '20000', '50000', '100000', 
-                '5000', '10000', '20000', '50000', '100000', 
-                '5000', '10000', '20000', '50000', '100000', 
-                '5000', '10000', '20000', '50000', '100000'
-              );
+              $count=1;
             @endphp
-            @for ($i=1; $i < 20 ; $i++)
+            @foreach ($index as $list)
             <tr>
-              <td>{{ $i }}</td>
-              <td>{{ $arrProvCode[$i] }}</td>
-              <td>{{ $arrPriceSell[$i].'-'.$arrProvName[$i] }}</td>
-              <td>{{ $arrPriceSell[$i] }}</td>
-              <td>{{ 'Y' }}</td>
-              <td>{{ 10 }}</td>
-              <td>{{ '01/01/2017 00:00:00' }}</td>
-              <td>{{ '31/12/2017 23:59:59' }}</td>
-              <td class="text-center">@if (rand ( 0 , 1 ))
+              <td>{{ $count }}</td>
+              <td>{{ $list->product->product_name }} - Rp. {{ number_format($list->product->nominal) }}</td>
+              <td>Rp. {{ number_format($list->gross_sell_price) }}</td>
+              <td>{{ $list->flg_tax ? 'Y' : 'N' }}</td>
+              <td>{{ $list->tax_percentage }} %</td>
+              <td>{{ date('d-m-Y H:i:s', strtotime($list->datetime_start))   }}</td>
+              <td>{{ date('d-m-Y H:i:s', strtotime($list->datetime_end)) }}</td>
+              <td class="text-center">@if ($list->active)
                     <a
                       href=""
                       class="unpublish"
-                      data-value="{{ 1 }}"
+                      data-value="{{ $list->product_sell_price_id }}"
                       data-toggle="modal"
                       data-target=".modal-nonactive"
                     >
                       <span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span>
                     </a>
                   @else
-                    <a href="" class="publish" data-value="{{ 1 }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
+                    <a href="" class="publish" data-value="{{ $list->product_sell_price_id }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
                   @endif
               </td>
               <td>
-                <a href="{{ route('product-sell-price.ubah', 1) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
-                <a href="" class="delete" data-value="{{ 1 }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
+                <a href="{{ route('product-sell-price.ubah', $list->product_sell_price_id) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
+                <a href="" class="delete" data-value="{{ $list->product_sell_price_id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
               </td>
             </tr>
-            @endfor
+            @endforeach
           </tbody>
         </table>
       </div>

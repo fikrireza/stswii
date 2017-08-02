@@ -63,13 +63,14 @@
       <div class="x_content">
         <form action="{{ route('product-sell-price.store') }}" method="POST" class="form-horizontal form-label-left" novalidate>
           {{ csrf_field() }}
+
           <div class="item form-group {{ $errors->has('product_id') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <select id="product_id" name="product_id" class="form-control select2_single" required="required">
                 <option value="">Pilih</option>
-                @foreach ($getProduct as $key)
-                  <option value="{{ $key->id }}" {{ old('product_id') == $key->id ? 'selected' : '' }}>{{ $key->product_name}}</option>
+                @foreach ($product as $list)
+                  <option value="{{ $list->product_id }}" {{ old('product_id') == $list->product_id ? 'selected' : '' }}>{{ $list->product_name}} - {{ $list->nominal}}</option>
                 @endforeach
               </select>
               @if($errors->has('product_id'))
@@ -87,23 +88,26 @@
               @endif
             </div>
           </div>
+
           <div class="item form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Tax</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input type="checkbox" name="flg_tax" id="flg_tax" value="1" {{ old('flg_tax') == 1 ? 'checked=""' : '' }}/>
+                <input type="checkbox" name="flg_tax" id="flg_tax" value="1" {{ old('flg_tax') == 1 ? 'checked' : '' }}/>
               </label>
             </div>
           </div>
-          <div class="item form-group {{ $errors->has('tax_percentage') ? 'has-error' : ''}}" id="tax_percentage" style="display:none">
+
+          <div class="item form-group {{ $errors->has('tax_percentage') ? 'has-error' : ''}}" id="tax_percentage" {{ old('flg_tax') == 1 ? '' : 'style=display:none'}}>
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Tax Percentage <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="tax_percentage" class="form-control" name="tax_percentage" placeholder="E.g: 50000" required="required" type="text" value="{{ old('tax_percentage') }}" onkeypress="return isNumber(event)" maxlength="9">
+              <input id="tax_percentage" class="form-control" name="tax_percentage" placeholder="E.g: 10" required="required" type="text" value="{{ old('tax_percentage') }}" onkeypress="return isNumber(event)" maxlength="9">
               @if($errors->has('tax_percentage'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('tax_percentage')}}</span></code>
               @endif
             </div>
           </div>
+
           <div class="item form-group {{ $errors->has('datetime_start') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Date Start <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -113,6 +117,7 @@
               @endif
             </div>
           </div>
+
           <div class="item form-group {{ $errors->has('datetime_end') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Date End <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -122,15 +127,18 @@
               @endif
             </div>
           </div>
+
           <div class="ln_solid"></div>
+
           <div class="item form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input type="checkbox" class="flat" name="active" value="1" {{ old('active') == 1 ? 'checked=""' : '' }}/>
+                <input type="checkbox" class="flat" name="active" value="1" {{ old('active') == 1 ? 'checked' : '' }}/>
               </label>
             </div>
           </div>
+
           <div class="ln_solid"></div>
           <div class="form-group">
             <div class="col-md-6 col-md-offset-3">

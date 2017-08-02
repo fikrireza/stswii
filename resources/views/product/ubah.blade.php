@@ -66,7 +66,7 @@
           {{ csrf_field() }}
 
           <input type="hidden" name="product_id" value="{{$index->product_id}}">
-          <input type="hidden" name="version" value="{{$index->version}}">
+          <input type="hidden" name="version" value="{{ old('version', $index->version) }}">
 
           <div class="item form-group {{ $errors->has('provider_id') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="provider_id">Provider</label>

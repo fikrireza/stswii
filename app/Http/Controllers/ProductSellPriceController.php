@@ -15,235 +15,369 @@ use Input;
 
 class ProductSellPriceController extends Controller
 {
-  
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+	
+	/**
+	 * Create a new controller instance.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+		$this->middleware('auth');
+	}
 
 
-    public function index()
-    {
-        $getProductSellPrice = ProductSellPrice::get();
+	public function index()
+	{
+		$index = ProductSellPrice::get();
 
-        return view('product-sell-price.index', ['getProductSellPrice' => $getProductSellPrice]);
-    }
+		return view('product-sell-price.index', compact('index'));
+	}
 
-    public function tambah()
-    {
-        $getProduct = Product::get();
+	public function tambah()
+	{
+		$product = Product::get();
 
-        return view('product-sell-price.tambah', compact('getProduct'));
-    }
+		return view('product-sell-price.tambah', compact('product'));
+	}
 
-    public function bindProduct($id)
-    {
-        $getProduct = Product::find($id);
+	public function bindProduct($id)
+	{
+		$index = Product::find($id);
 
-        return $getProduct;
-    }
+		return $index;
+	}
 
-    public function store(Request $request)
-    {
-      $message = [
-        'product_id.required' => 'This field is required.',
-        'gross_sell_price.required' => 'This field is required.',
-        'gross_sell_price.numeric' => 'Numeric Only.',
-        'datetime_start.required' => 'This field is required.',
-        'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
-        'datetime_end.required' => 'This field is required.',
-      ];
+	public function store(Request $request)
+	{
+		$message = [
+			'product_id.required' => 'This field is required.',
+			'gross_sell_price.required' => 'This field is required.',
+			'gross_sell_price.numeric' => 'Numeric Only.',
+			'tax_percentage.required_if' => 'This field is required.',
+			'datetime_start.required' => 'This field is required.',
+			'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
+			'datetime_end.required' => 'This field is required.',
+		];
 
-      $validator = Validator::make($request->all(), [
-        'product_id' => 'required',
-        'gross_sell_price' => 'required|numeric',
-        'datetime_start' => 'required|before_or_equal:datetime_end',
-        'datetime_end' => 'required',
-      ], $message);
+		$validator = Validator::make($request->all(), [
+			'product_id' => 'required',
+			'gross_sell_price' => 'required|numeric',
+			'tax_percentage' => 'required_if:flg_tax,1',
+			'datetime_start' => 'required|before_or_equal:datetime_end',
+			'datetime_end' => 'required',
+		], $message);
 
-      return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully saved.');
-    }
+		if($validator->fails()){
+			return redirect()->route('product-sell-price.tambah')->withErrors($validator)->withInput();
+		}
 
-    public function ubah($id)
-    {
-        $getProductSellPrice = ProductSellPrice::first();
+		$checkData = ProductSellPrice::where('product_id',$request->product_id)
+			->where('active',1)
+			->whereBetween('datetime_start', [date('YmdHis', strtotime($request->datetime_start)), date('YmdHis', strtotime($request->datetime_end))])
+			->orWhereBetween('datetime_end', [date('YmdHis', strtotime($request->datetime_start)), date('YmdHis', strtotime($request->datetime_end))])
+			->count();
 
-        $getProduct = Product::get();
+		if($checkData)
+		{
+			return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
+		}
 
-        return view('product-sell-price.ubah', compact('id','getProductSellPrice','getProduct'));
-    }
+		$index = new ProductSellPrice;
 
-    public function update(Request $request)
-    {
-        $message = [
-          'product_id.required' => 'This field is required.',
-          'gross_sell_price.required' => 'This field is required.',
-          'gross_sell_price.numeric' => 'Numeric Only.',
-          'datetime_start.required' => 'This field is required.',
-          'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
-          'datetime_end.required' => 'This field is required.',
-        ];
+		$index->product_id          = $request->product_id;
+		$index->gross_sell_price    = $request->gross_sell_price;
+		$index->flg_tax             = isset($request->flg_tax) ? 1 : 0;
+		$index->tax_percentage      = isset($request->flg_tax) ? $request->tax_percentage : 0;
+		$index->datetime_start      = date('YmdHis', strtotime($request->datetime_start));
+		$index->datetime_end        = date('YmdHis', strtotime($request->datetime_end));
 
-        $validator = Validator::make($request->all(), [
-          'product_id' => 'required',
-          'gross_sell_price' => 'required|numeric',
-          'datetime_start' => 'required|before_or_equal:datetime_end',
-          'datetime_end' => 'required',
-        ], $message);
+		$index->active              = isset($request->active) ? 1 : 0;
+		if(isset($request->active))
+		{
+			$index->active_datetime     = date('YmdHis');
+			$index->non_active_datetime = 00000000000000;
+		}
+		else
+		{
+			$index->active_datetime     = 00000000000000;
+			$index->non_active_datetime = date('YmdHis');
+		}
+		
 
-        if($validator->fails()){
-          return redirect()->route('product-sell-price.ubah', ['id' => 1])->withErrors($validator)->withInput();
-        }
+		$index->version             = 0;
+		$index->create_datetime     = date('YmdHis');
+		$index->create_user_id      = Auth::id();
+		$index->update_datetime     = 00000000000000;
+		$index->update_user_id      = -99;
+		
+		$index->save();
 
-        return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully updated.');
+		return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully saved.');
+	}
 
-    }
+	public function ubah($id)
+	{
+		$index = ProductSellPrice::find($id);
 
-    public function active($id)
-    {
-        $getProductSellPrice = ProductSellPrice::find($id);
+		$product = Product::get();
 
-        if (1) {
-          return redirect()->route('product-sell-price.index')->with('berhasil', 'Successfully Nonactive');
-        }else{
-          return redirect()->route('product-sell-price.index')->with('berhasil', 'Successfully Activated ');
-        }
-    }
+		return view('product-sell-price.ubah', compact('index','product'));
+	}
 
-    public function delete($id)
-    {
-        $getProductSellPrice = ProductSellPrice::find($id);
+	public function update(Request $request)
+	{
+		$message = [
+			'product_id.required' => 'This field is required.',
+			'gross_sell_price.required' => 'This field is required.',
+			'gross_sell_price.numeric' => 'Numeric Only.',
+			'tax_percentage.required_if' => 'This field is required.',
+			'datetime_start.required' => 'This field is required.',
+			'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
+			'datetime_end.required' => 'This field is required.',
+		];
 
-        $getProductSellPrice->delete();
+		$validator = Validator::make($request->all(), [
+			'product_id' => 'required',
+			'gross_sell_price' => 'required|numeric',
+			'tax_percentage' => 'required_if:flg_tax,1',
+			'datetime_start' => 'required|before_or_equal:datetime_end',
+			'datetime_end' => 'required',
+		], $message);
 
-        return redirect()->route('product-sell-price.index')->with('berhasil', 'Successfully Deleted ');
-    }
+		if($validator->fails()){
+			return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->withErrors($validator)->withInput();
+		}
 
-    public function upload()
-    {
+		$index = ProductSellPrice::find($request->product_sell_price_id);
 
-        return view('product-sell-price.masal');
-    }
+		if($index->version != $request->version)
+		{
+			return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Your data already updated.');
+		}
 
-    public function template()
-    {
-        $getProduct = Product::where('active', '=', 1)
-                              ->select('id', 'product_name', 'nominal')
-                              ->get()
-                              ->toArray();
+		$checkData = ProductSellPrice::where('product_id',$request->product_id)
+			->where('active',1)
+			->where('product_sell_price_id','<>',$request->product_sell_price_id)
+			->whereBetween('datetime_start', [date('YmdHis', strtotime($request->datetime_start)), date('YmdHis', strtotime($request->datetime_end))])
+			->orWhereBetween('datetime_end', [date('YmdHis', strtotime($request->datetime_start)), date('YmdHis', strtotime($request->datetime_end))])
+			->count();
 
-        return Excel::create('Template Import', function($excel) use($getProduct)
-        {
-          $excel->sheet('Data-Import', function($sheet){
-            $sheet->row(1, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end'));
-            $sheet->setColumnFormat(array(
-              'A' => '@',
-              'B' => '0.00',
-              'C' => '0.00',
-              'D' => 'yyyy-mm-dd hh:mm:ss',
-              'E' => 'yyyy-mm-dd hh:mm:ss',
-            ));
-          });
+		if($checkData)
+		{
+			return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
+		}
 
-          $excel->sheet('product_id', function($sheet) use($getProduct){
-            $sheet->fromArray($getProduct, null, 'A6', true);
-            $sheet->row(1, array('Example'));
-            $sheet->mergeCells('A1:E1');
-            $sheet->row(2, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end'));
-            // $sheet->row(2, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end', 'active', 'version'));
-            $sheet->row(3, array('1', '45000', '10', '2017-07-01 12:00:00', '2017-07-31 12:00:00'));
-            $sheet->row(5, array('Data Product'));
-            $sheet->mergeCells('A5:C5');
-            $sheet->row(6, array('id','product_name','nominal'));
-            $sheet->setAllBorders('thin');
-            $sheet->setFreeze('A7');
+		$index->product_id          = $request->product_id;
+		$index->gross_sell_price    = $request->gross_sell_price;
+		$index->flg_tax             = isset($request->flg_tax) ? 1 : 0;
+		$index->tax_percentage      = isset($request->flg_tax) ? $request->tax_percentage : 0;
+		$index->datetime_start      = date('YmdHis', strtotime($request->datetime_start));
+		$index->datetime_end        = date('YmdHis', strtotime($request->datetime_end));
 
-            $sheet->cells('A2:E3', function($cells){
-              $cells->setBackground('#5c92e8');
-              $cells->setFontColor('#000000');
-              $cells->setFontWeight('bold');
-            });
+		$index->active              = isset($request->active) ? 1 : 0;
+		if(isset($request->active))
+		{
+			$index->active_datetime     = date('YmdHis');
+		}
+		else
+		{
+			$index->non_active_datetime = date('YmdHis');
+		}
+		
 
-            $sheet->cells('A6:C6', function($cells){
-              $cells->setBackground('#000000');
-              $cells->setFontColor('#ffffff');
-              $cells->setFontWeight('bold');
-            });
+		$index->version             += 1;
+		$index->update_datetime     = date('YmdHis');
+		$index->update_user_id      = Auth::id();
+		
+		$index->save();
 
-          });
-        })->download('xls');
-    }
+		return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully updated.');
 
-    public function prosesTemplate(Request $request)
-    {
-      if($request->hasFile('file')){
-        $path = Input::file('file')->getRealPath();
-        $data = Excel::selectSheets('Data-Import')->load($path, function($reader) {
-        })->get();
+	}
 
-        if(!empty($data) && $data->count()){
-          foreach ($data as $key) {
-            $collect[] = ['product_id'         => $key->product_id,
-                         'gross_sell_price'    => $key->gross_sell_price,
-                         'tax_percentage'      => $key->tax_percentage,
-                         'datetime_start'       => $key->datetime_start,
-                         'datetime_end'     => $key->datetime_end,
-                        //  'active'        => $key->active,
-                        //  'version'=> $key->version
-                       ];
-          }
+	public function active($id)
+	{
+		$index = ProductSellPrice::find($id);
 
-          if(!empty($collect)){
+		if ($index->active) {
 
-            $collect = collect($collect);
+			$index->active = 0;
+			$index->non_active_datetime = date('YmdHis');
 
-            $getProduct = Product::where('active', '=', 1)->get();
+			$index->version += 1;
+			$index->update_datetime = date('YmdHis');
+			$index->update_user_id = Auth::id();
 
-            return view('product-sell-price.masal', compact('collect', 'getProduct'));
-          }
-        }else{
-          return view('product-sell-price.masal')->with('gagal', 'Please Download Template');
-        }
-      }else{
-        return view('product-sell-price.masal')->with('gagal', 'Please Select Template');
-      }
-    }
+			$index->save();
 
-    public function storeTemplate(Request $request)
-    {
-        // dd($request);
-        $product_id = Input::get('product_id');
-        $gross_sell_price = Input::get('gross_sell_price');
-        $tax_percentage = Input::get('tax_percentage');
-        $datetime_start = Input::get('datetime_start');
-        $datetime_end = Input::get('datetime_end');
-        // $active = Input::get('active');
-        // $version = Input::get('version');
-        // dd($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end, $active, $version);
-        // DB::transaction(function() use($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end){
-        //   foreach ($product_id as $key => $n ) {
-        //     /*Load array */
-        //     $arrData = ProductSellPrice::create(array("product_id"  =>  $product_id[$key],
-        //                       "gross_sell_price"  =>  $gross_sell_price[$key],
-        //                       "tax_percentage"  => $tax_percentage[$key],
-        //                       "datetime_start"  => $datetime_start[$key],
-        //                       "datetime_end"  => $datetime_end[$key],
-        //                       "create_user_id"  => 1,
-        //                       // "active"  => $active[$key],
-        //                       "version"  => 1,
-        //                     ));
-        //   }
+			return redirect()->route('product-sell-price.index')->with('berhasil', 'Successfully Nonactive');
+		}else{
 
-        // dd($arrData);
-          // $save = ProductSellPrice::create($arrData);
-        // });
+			$index->active = 1;
+			$index->active_datetime = date('YmdHis');
 
-        return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully uploaded.');
+			$index->version += 1;
+			$index->update_datetime = date('YmdHis');
+			$index->update_user_id = Auth::id();
 
-    }
+			$index->save();
+
+			return redirect()->route('product-sell-price.index')->with('berhasil', 'Successfully Activated ');
+		}
+	}
+
+	public function delete($id)
+	{
+		$index = ProductSellPrice::find($id);
+
+		$index->delete();
+
+		return redirect()->route('product-sell-price.index')->with('berhasil', 'Successfully Deleted ');
+	}
+
+	public function upload()
+	{
+		return view('product-sell-price.masal');
+	}
+
+	public function template()
+	{
+		$getProduct = Product::where('active', '=', 1)
+			->select('product_id', 'product_name', 'nominal')
+			->get()
+			->toArray();
+
+		return Excel::create('Template Import', function($excel) use($getProduct)
+		{
+			$excel->sheet('Data-Import', function($sheet){
+				$sheet->row(1, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end'));
+				$sheet->setColumnFormat(array(
+					'A' => '@',
+					'B' => '0.00',
+					'C' => '0.00',
+					'D' => 'yyyy-mm-dd hh:mm:ss',
+					'E' => 'yyyy-mm-dd hh:mm:ss',
+				));
+			});
+
+			$excel->sheet('product_id', function($sheet) use($getProduct){
+				$sheet->fromArray($getProduct, null, 'A6', true);
+				$sheet->row(1, array('Example'));
+				$sheet->mergeCells('A1:E1');
+				$sheet->row(2, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end'));
+				// $sheet->row(2, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end', 'active', 'version'));
+				$sheet->row(3, array('1', '45000', '10', '2017-07-01 12:00:00', '2017-07-31 12:00:00'));
+				$sheet->row(5, array('Data Product'));
+				$sheet->mergeCells('A5:C5');
+				$sheet->row(6, array('id','product_name','nominal'));
+				$sheet->setAllBorders('thin');
+				$sheet->setFreeze('A7');
+
+				$sheet->cells('A2:E3', function($cells){
+					$cells->setBackground('#5c92e8');
+					$cells->setFontColor('#000000');
+					$cells->setFontWeight('bold');
+				});
+
+				$sheet->cells('A6:C6', function($cells){
+					$cells->setBackground('#000000');
+					$cells->setFontColor('#ffffff');
+					$cells->setFontWeight('bold');
+				});
+
+			});
+		})->download('xls');
+	}
+
+	public function prosesTemplate(Request $request)
+	{
+		if($request->hasFile('file')){
+			$path = Input::file('file')->getRealPath();
+			$data = Excel::selectSheets('Data-Import')->load($path, function($reader) {
+			})->get();
+
+			if(!empty($data) && $data->count()){
+				foreach ($data as $key) {
+					$collect[] = [
+						'product_id'       => $key->product_id,
+						'gross_sell_price' => $key->gross_sell_price,
+						'tax_percentage'   => $key->tax_percentage,
+						'datetime_start'   => $key->datetime_start,
+						'datetime_end'     => $key->datetime_end,
+					];
+				}
+
+				if(!empty($collect)){
+
+					$collect = collect($collect);
+
+					$getProduct = Product::where('active', '=', 1)->get();
+
+					// return $collect;
+
+					return view('product-sell-price.masal', compact('collect', 'getProduct'));
+				}
+			}else{
+				return view('product-sell-price.masal')->with('gagal', 'Please Download Template');
+			}
+		}else{
+			return view('product-sell-price.masal')->with('gagal', 'Please Select Template');
+		}
+	}
+
+	public function storeTemplate(Request $request)
+	{
+		// dd($request);
+		$product_id       = Input::get('product_id');
+		$gross_sell_price = Input::get('gross_sell_price');
+		$tax_percentage   = Input::get('tax_percentage');
+		$datetime_start   = Input::get('datetime_start');
+		$datetime_end     = Input::get('datetime_end');
+		$active           = Input::get('active');
+
+		// dd($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end, $active, $version);
+		DB::transaction(function() use($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end, $active){
+		  
+			foreach ($product_id as $key => $n )
+			{
+			/*Load array */
+				$checkData = ProductSellPrice::where('product_id',$product_id[$key])
+					->where('active',1)
+					->whereBetween('datetime_start', [date('YmdHis', strtotime( $datetime_start[$key] )), date('YmdHis', strtotime( $datetime_end[$key] ))])
+					->orWhereBetween('datetime_end', [date('YmdHis', strtotime( $datetime_start[$key] )), date('YmdHis', strtotime( $datetime_end[$key] ))])
+					->count();
+
+				if(!$checkData)
+				{
+					return redirect()->back()->with('gagal', 'Data is still active in number'. ($key + 1));
+				}
+
+				$arrData = ProductSellPrice::create(array(
+					"product_id"          => $product_id[$key],
+					"flg_tax"             => $gross_sell_price[$key] <= 0 ? 0 : 1,
+					"gross_sell_price"    => $gross_sell_price[$key],
+					"tax_percentage"      => $tax_percentage[$key],
+					"datetime_start"      => date('YmdHis', strtotime( $datetime_start[$key] )),
+					"datetime_end"        => date('YmdHis', strtotime( $datetime_end[$key] )),
+					"create_user_id"      => Auth::id(),
+					"active"              => $active[$key],
+					"active_datetime"     => $active[$key] == 1 ? date('YmdHis') : '00000000000000',
+					"non_active_datetime" => $active[$key] == 0 ? date('YmdHis') : '00000000000000',
+					"version"             => 0,
+					"create_datetime"     => date('YmdHis'),
+					"create_user_id"      => Auth::id(),
+					"update_datetime"     => '00000000000000',
+					"update_user_id"      => -99,
+				));
+			}
+		});
+
+		// dd($arrData);
+			// $save = ProductSellPrice::create($arrData);
+		// });
+
+		return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully uploaded.');
+
+	}
 }
