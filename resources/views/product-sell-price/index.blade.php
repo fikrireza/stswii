@@ -143,7 +143,7 @@
             @endphp
             @foreach ($index as $list)
             <tr>
-              <td>{{ $count }}</td>
+              <td>{{ $count++ }}</td>
               <td>{{ $list->product->product_name }} - Rp. {{ number_format($list->product->nominal) }}</td>
               <td>Rp. {{ number_format($list->gross_sell_price) }}</td>
               <td>{{ $list->flg_tax ? 'Y' : 'N' }}</td>
