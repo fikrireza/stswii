@@ -56,17 +56,15 @@ class ProviderPrefixController extends Controller{
 			$info = 'Prefix gagal dihapus! Tidak dapat menemukan Prefix!';
 			$alret = 'alert-danger';
 		}
+		else if($delete->version != $version){
+			$User = User::find($delete->update_user_id);
+			$info = 'Prefix gagal dihapus! Prefix telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
+			$alret = 'alert-danger';
+		}
 		else{
-			if($delete->version != $version){
-				$User = User::find($delete->update_user_id);
-				$info = 'Prefix gagal dihapus! Prefix telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
-				$alret = 'alert-danger';
-			}
-			else{
-				$info = 'Berhasil menghapus Prefix '.$delete->prefix;
-				$alret = 'alert-success';
-				$delete->delete();
-			}
+			$info = 'Berhasil menghapus Prefix '.$delete->prefix;
+			$alret = 'alert-success';
+			$delete->delete();
 		}
 		return redirect()->route('provider-prefix.index')
 			->with('alret', $alret)
@@ -127,7 +125,12 @@ class ProviderPrefixController extends Controller{
 		}
 
 		$update = ProviderPrefix::find($request->provider_prefix_id);
-		if($update->version != $request->version){
+		
+		if($update == null){
+			$info = 'Prefix gagal diupdate! Tidak dapat menemukan Prefix!';
+			$alret = 'alert-danger';
+		}
+		else if($update->version != $request->version){
 			$User = User::find($update->update_user_id);
 			$info = 'Prefix gagal diupdate! Prefix telah diupdate Oleh '.$User->name;
 			$alret = 'alert-danger';

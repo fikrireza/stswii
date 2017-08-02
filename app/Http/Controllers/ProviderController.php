@@ -38,7 +38,7 @@ class ProviderController extends Controller{
 			->orderBy('provider_name', 'asc')
             ->get();
 
-        $newProvCode = 'prov-'.rand(1,99);
+        $newProvCode = 'prov-'.rand(1000,9999);
 
         $cekCode = Provider::where('provider_code', $newProvCode)->first();
         if(!$cekCode){
@@ -47,9 +47,9 @@ class ProviderController extends Controller{
 				'newProvCode'
 			));
         }
-        // else{
-        //    dd('Provider Code is Empty - Contact Amadeo Please');
-        // }
+        else{
+           dd('Provider Code is Empty - Contact Amadeo Please');
+        }
     }
     public function ajaxView($id){
     	$getProvider = Provider::select(
@@ -91,18 +91,17 @@ class ProviderController extends Controller{
 			$info = 'Provider gagal dihapus! Tidak dapat menemukan Provider!';
 			$alret = 'alert-danger';
 		}
-		else{
-			if($delete->version != $version){
-				$User = User::find($delete->update_user_id);
-				$info = 'Provider gagal dihapus! Provider telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
-				$alret = 'alert-danger';
-			}
-			else{
-				$info = 'Berhasil menghapus Provider '.$delete->prefix;
-				$alret = 'alert-success';
-				$delete->delete();
-			}
+		else if($delete->version != $version){
+			$User = User::find($delete->update_user_id);
+			$info = 'Provider gagal dihapus! Provider telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
+			$alret = 'alert-danger';
 		}
+		else{
+			$info = 'Berhasil menghapus Provider '.$delete->prefix;
+			$alret = 'alert-success';
+			$delete->delete();
+		}
+
 		return redirect()->route('provider.index')
 			->with('alret', $alret)
 			->with('berhasil', $info);
@@ -162,7 +161,11 @@ class ProviderController extends Controller{
 
 		$update = Provider::find($request->provider_id);
 
-		if($update->version != $request->version){
+		if($update == null){
+			$info = 'Provider gagal diupdate! Tidak dapat menemukan Provider!';
+			$alret = 'alert-danger';
+		}
+		else if($update->version != $request->version){
 			$User = User::find($update->update_user_id);
 			$info = 'Provider gagal diupdate! Provider telah diupdate Oleh '.$User->name;
 			$alret = 'alert-danger';
