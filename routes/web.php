@@ -27,8 +27,12 @@ Route::get('/home', 'HomeController@index')
 		->name('provider.store');
 	Route::post('/provider/update', 'ProviderController@update')
 		->name('provider.update');
-	Route::get('/provider/delete/{id}', 'ProviderController@delete')
+	Route::get('/provider/delete/{id}/{version}', 'ProviderController@delete')
 		->name('provider.delete');
+
+	Route::get('/provider/ajax-view/{id}', 'ProviderController@ajaxView')
+		->name('provider.ajax.view');
+
 // provider
 
 // provider prefix
@@ -38,7 +42,7 @@ Route::get('/home', 'HomeController@index')
 		->name('provider-prefix.store');
 	Route::post('/provider-prefix/update', 'ProviderPrefixController@update')
 		->name('provider-prefix.update');
-	Route::get('/provider-prefix/delete/{id}', 'ProviderPrefixController@delete')
+	Route::get('/provider-prefix/delete/{id}/{version}', 'ProviderPrefixController@delete')
 		->name('provider-prefix.delete');
 // provider prefix
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\User;
 use App\Models\Provider;
+use App\Models\ProviderPrefix;
 
 use DB;
 use Auth;
@@ -50,13 +51,63 @@ class ProviderController extends Controller{
         //    dd('Provider Code is Empty - Contact Amadeo Please');
         // }
     }
+    public function ajaxView($id){
+    	$getProvider = Provider::select(
+				'provider_id',
+				'provider_code',
+				'provider_name'
+			)
+			->where('provider_id', $id)
+			->first();
 
-    public function delete($id){
-		$delete = Provider::find($id);
-		$delete->delete();
-		return redirect()->route('provider.index')
-			->with('berhasil', 'Berhasil menghapus Provider ');
+		$getProviderPrefix = ProviderPrefix::select(
+				'provider_id',
+				'provider_prefix_id',
+				'prefix',
+				'version'
+			)
+			->where('provider_id', $id)
+            ->get();
+
+		if($getProvider == null){
+			$view = '<h3>Provider Rusak! Provider Tidak Ditemukan!</h3>';
+		}
+		else{
+	        if (count($getProviderPrefix) == 0) {
+	        	$view = '<h3>Tidak Ditemukan Prefix Pada Provider Ini!</h3>';
+	        }
+	        else{
+		        $view = view('provider.view',compact('getProvider', 'getProviderPrefix'))->render();
+	        }
+
+		}
+        return response()->json(['html'=>$view]);
+
     }
+    public function delete($id, $version){
+		$delete = Provider::find($id);
+
+		if($delete == null){
+			$info = 'Provider gagal dihapus! Tidak dapat menemukan Provider!';
+			$alret = 'alert-danger';
+		}
+		else{
+			if($delete->version != $version){
+				$User = User::find($delete->update_user_id);
+				$info = 'Provider gagal dihapus! Provider telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
+				$alret = 'alert-danger';
+			}
+			else{
+				$info = 'Berhasil menghapus Provider '.$delete->prefix;
+				$alret = 'alert-success';
+				$delete->delete();
+			}
+		}
+		return redirect()->route('provider.index')
+			->with('alret', $alret)
+			->with('berhasil', $info);
+    }
+
     public function store(Request $request){
 
 		$message = [
@@ -92,6 +143,7 @@ class ProviderController extends Controller{
 			->with('alret', 'alert-success')
 			->with('berhasil', 'Berhasil Menambahkan Provider '.$request->provider_name);
     }
+    
     public function update(Request $request){
 		$message = [
 			'provider_name.required' => 'mohon isi',
@@ -128,7 +180,7 @@ class ProviderController extends Controller{
 		}
 
 		return redirect()->route('provider.index')
-			->with('berhasil', $info)
-			->with('alret', $alret);
+			->with('alret', $alret)
+			->with('berhasil', $info);
     }
 }

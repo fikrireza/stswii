@@ -112,6 +112,18 @@
                 Provider <span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
+                <input 
+                  id="prefix_id_update" 
+                  name="provider_prefix_id" 
+                  type="hidden" 
+                  value="{{ old('provider_prefix_id') }}" 
+                >
+                <input 
+                  id="version_update" 
+                  name="version" 
+                  type="hidden" 
+                  value="{{ old('version') }}" 
+                >
                 <select 
                   id="provider_id_update" 
                   name="provider_id" 
@@ -221,6 +233,7 @@
                   data-provider_id="{{ $list->provider_id }}" 
                   data-prefix_id="{{ $list->provider_prefix_id }}" 
                   data-prefix="{{ $list->prefix }}" 
+                  data-version="{{ $list->version }}" 
                   data-toggle="modal" 
                   data-target=".modal-form-update"
                 >
@@ -230,6 +243,7 @@
                   href="" 
                   class="delete" 
                   data-value="{{ $list->provider_prefix_id }}" 
+                  data-version="{{ $list->version }}" 
                   data-toggle="modal" 
                   data-target=".modal-delete"
                 >
@@ -265,17 +279,22 @@ function isNumber(evt) {
 
 $(function(){
     $(document).on('click', '.update', function(e) {
-        var provider_id    = $(this).data('provider_id');
-        var prefix  = $(this).data('prefix');
+        var provider_id = $(this).data('provider_id');
+        var prefix_id   = $(this).data('prefix_id');
+        var prefix      = $(this).data('prefix');
+        var version      = $(this).data('version');
         $("#provider_id_update").val(provider_id);
+        $("#prefix_id_update").val(prefix_id);
         $("#prefix_update").val(prefix);
+        $("#version_update").val(version);
     });
 });
 
 $(function(){
   $('#dataTables').on('click', 'a.delete', function(){
     var a = $(this).data('value');
-    $('#setDelete').attr('href', "{{ url('/') }}/provider-prefix/delete/"+a);
+    var b = $(this).data('version');
+    $('#setDelete').attr('href', "{{ url('/') }}/provider-prefix/delete/"+a+"/"+b);
   });
 });
 </script>
