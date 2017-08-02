@@ -13,204 +13,213 @@ use Validator;
 
 class ProductController extends Controller
 {
-		/**
-		 * Create a new controller instance.
-		 *
-		 * @return void
-		 */
-		public function __construct()
+	/**
+	 * Create a new controller instance.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+			$this->middleware('auth');
+	}
+
+
+	public function index(Request $request)
+	{
+		$provider = Provider::get();
+
+		$index = Product::orderBy('product_id', 'ASC');
+
+		if(isset($request->f_provider) && $request->f_provider != '')
 		{
-				$this->middleware('auth');
+			$index->where('provider_id', $request->f_provider);
 		}
 
+		$index = $index->get();
 
-		public function index()
-		{
-				$index = Product::get();
+		return view('product.index', compact('index', 'request', 'provider'));
+	}
 
-				return view('product.index', compact('index'));
+	public function tambah()
+	{
+		$provider = Provider::get();
+
+		$rand = rand(1000,9999);
+
+		$product_code = 'prod'.'-'.$rand;
+
+		$cek_kode = Product::where('product_code', $product_code)->first();
+
+		if(!$cek_kode){
+			$product_code;
+		}else{
+			$product_code = 'Product Code is Empty - Contact Amadeo Please';
 		}
 
-		public function tambah()
+		return view('product.tambah', compact('provider', 'product_code'));
+	}
+
+	public function store(Request $request)
+	{
+		$message = [
+			'product_code.required' => 'This field required',
+			'product_code.unique' => 'This code has already taken',
+			'product_name.required' => 'This field required',
+			'provider_id.required' => 'This field required',
+			'nominal.required' => 'This field required',
+			'nominal.numeric' => 'Fill Numeric',
+			'type_product.required' => 'This field required',
+		];
+
+		$validator = Validator::make($request->all(), [
+			'product_code' => 'required|unique:sw_product',
+			'product_name' => 'required',
+			'provider_id' => 'required',
+			'nominal' => 'required|numeric',
+			'type_product' => 'required',
+		], $message);
+
+		if($validator->fails())
 		{
-				$provider = Provider::get();
-
-				$rand = rand(1000,9999);
-
-				$product_code = 'prod'.'-'.$rand;
-
-				$cek_kode = Product::where('product_code', $product_code)->first();
-
-				if(!$cek_kode){
-					$product_code;
-				}else{
-					$product_code = 'Product Code is Empty - Contact Amadeo Please';
-				}
-
-				return view('product.tambah', compact('provider', 'product_code'));
+			return redirect()->route('product.tambah')->withErrors($validator)->withInput();
 		}
 
-		public function store(Request $request)
+		$index = new Product;
+
+		$index->product_code = $request->product_code;
+		$index->product_name = $request->product_name;
+		$index->provider_id  = $request->provider_id;
+		$index->nominal      = $request->nominal;
+		$index->type_product = $request->type_product;
+
+		$index->active = isset($request->active) ? 1 : 0;
+
+		if(isset($request->active))
 		{
-				$message = [
-					'product_code.required' => 'This field required',
-					'product_code.unique' => 'This code has already taken',
-					'product_name.required' => 'This field required',
-					'provider_id.required' => 'This field required',
-					'nominal.required' => 'This field required',
-					'nominal.numeric' => 'Fill Numeric',
-					'type_product.required' => 'This field required',
-				];
+			$index->active_datetime = date('YmdHis');
+			$index->non_active_datetime = 00000000000000;
+		}
+		else
+		{
+			$index->active_datetime = 00000000000000;
+			$index->non_active_datetime = date('YmdHis');
+		}
+		
 
-				$validator = Validator::make($request->all(), [
-					'product_code' => 'required|unique:sw_product',
-					'product_name' => 'required',
-					'provider_id' => 'required',
-					'nominal' => 'required|numeric',
-					'type_product' => 'required',
-				], $message);
+		$index->version = 0;
+		$index->create_datetime = date('YmdHis');
+		$index->create_user_id = Auth::id();
+		$index->update_datetime = 00000000000000;
+		$index->update_user_id = -99;
 
-				if($validator->fails())
-				{
-					return redirect()->route('product.tambah')->withErrors($validator)->withInput();
-				}
+		$index->save();
 
-				$index = new Product;
+		return redirect()->route('product.index')->with('berhasil', 'Your data has been successfully saved.');
+	}
 
-				$index->product_code = $request->product_code;
-				$index->product_name = $request->product_name;
-				$index->provider_id  = $request->provider_id;
-				$index->nominal      = $request->nominal;
-				$index->type_product = $request->type_product;
+	public function ubah($product_code)
+	{
+		$index = Product::where('product_code',$product_code)->first();
 
-				$index->active = isset($request->active) ? 1 : 0;
+		$provider = Provider::get();
+		
+		return view('product.ubah', compact('index', 'provider'));
+	}
 
-				if(isset($request->active))
-				{
-					$index->active_datetime = date('YmdHis');
-					$index->non_active_datetime = 00000000000000;
-				}
-				else
-				{
-					$index->active_datetime = 00000000000000;
-					$index->non_active_datetime = date('YmdHis');
-				}
-				
+	public function update(Request $request)
+	{
+		$message = [
+			'provider_id.required' => 'This field required',
+			'product_code.required' => 'This field required',
+			'product_code.unique' => 'This code has already taken',
+			'product_name.required' => 'This field required',
+			'nominal.required' => 'This field required',
+			'nominal.numeric' => 'Fill Numeric',
+			'type_product.required' => 'This field required',
+		];
 
-				$index->version = 0;
-				$index->create_datetime = date('YmdHis');
-				$index->create_user_id = Auth::id();
-				$index->update_datetime = 00000000000000;
-				$index->update_user_id = -99;
+		$validator = Validator::make($request->all(), [
+			// 'product_code' => 'required|unique:sw_product,product_code,'.$request->product_id,
+			'product_name' => 'required',
+			'provider_id' => 'required',
+			'nominal' => 'required|numeric',
+			'type_product' => 'required',
+		], $message);
 
-				$index->save();
-
-				return redirect()->route('product.index')->with('berhasil', 'Your data has been successfully saved.');
+		if($validator->fails())
+		{
+			return redirect()->route('product.ubah', ['product_code' => $request->product_code])->withErrors($validator)->withInput();
 		}
 
-		public function ubah($product_code)
-		{
-			$index = Product::where('product_code',$product_code)->first();
+		$index = Product::where('product_id', $request->product_id)->first();
 
-			$provider = Provider::get();
-			
-			return view('product.ubah', compact('index', 'provider'));
+		if($index->version != $request->version)
+		{
+			return redirect()->route('product.ubah', ['product_code' => $request->product_code])->with('gagal', 'Your data already updated.');
 		}
 
-		public function update(Request $request)
+		$index->product_code = $request->product_code;
+		$index->product_name = $request->product_name;
+		$index->provider_id  = $request->provider_id;
+		$index->nominal      = $request->nominal;
+		$index->type_product = $request->type_product;
+
+		$index->active = isset($request->active) ? 1 : 0;
+
+		if(isset($request->active))
 		{
-				$message = [
-					'provider_id.required' => 'This field required',
-					'product_code.required' => 'This field required',
-					'product_code.unique' => 'This code has already taken',
-					'product_name.required' => 'This field required',
-					'nominal.required' => 'This field required',
-					'nominal.numeric' => 'Fill Numeric',
-					'type_product.required' => 'This field required',
-				];
-
-				$validator = Validator::make($request->all(), [
-					// 'product_code' => 'required|unique:sw_product,product_code,'.$request->product_id,
-					'product_name' => 'required',
-					'provider_id' => 'required',
-					'nominal' => 'required|numeric',
-					'type_product' => 'required',
-				], $message);
-
-				if($validator->fails())
-				{
-					return redirect()->route('product.ubah', ['product_code' => $request->product_code])->withErrors($validator)->withInput();
-				}
-
-				$index = Product::where('product_id', $request->product_id)->first();
-
-				if($index->version != $request->version)
-				{
-					return redirect()->route('product.ubah', ['product_code' => $request->product_code])->with('gagal', 'Your data already updated.')->withInput();
-				}
-
-				$index->product_code = $request->product_code;
-				$index->product_name = $request->product_name;
-				$index->provider_id  = $request->provider_id;
-				$index->nominal      = $request->nominal;
-				$index->type_product = $request->type_product;
-
-				$index->active = isset($request->active) ? 1 : 0;
-
-				if(isset($request->active))
-				{
-					$index->active_datetime = date('YmdHis');
-				}
-				else
-				{
-					$index->non_active_datetime = date('YmdHis');
-				}
-
-				$index->version = +1;
-				$index->update_datetime = date('YmdHis');
-				$index->update_user_id = Auth::id();
-
-				$index->save();
-
-				return redirect()->route('product.index')->with('berhasil', 'Your data has been successfully updated.');
+			$index->active_datetime = date('YmdHis');
+		}
+		else
+		{
+			$index->non_active_datetime = date('YmdHis');
 		}
 
-		public function active($id)
-		{
-			$index = Product::where('product_id', $id)->first();;
+		$index->version += 1;
+		$index->update_datetime = date('YmdHis');
+		$index->update_user_id = Auth::id();
 
-			if ($index->active) {
+		$index->save();
 
-				$index->active = 0;
-				$index->non_active_datetime = date('YmdHis');
+		return redirect()->route('product.index')->with('berhasil', 'Your data has been successfully updated.');
+	}
 
-				$index->version = +1;
-				$index->update_datetime = date('YmdHis');
-				$index->update_user_id = Auth::id();
+	public function active($id)
+	{
+		$index = Product::where('product_id', $id)->first();;
 
-				$index->save();
+		if ($index->active) {
 
-				return redirect()->route('product.index')->with('berhasil', 'Successfully Nonactive');
-			}else{
+			$index->active = 0;
+			$index->non_active_datetime = date('YmdHis');
 
-				$index->active = 1;
-				$index->active_datetime = date('YmdHis');
+			$index->version += 1;
+			$index->update_datetime = date('YmdHis');
+			$index->update_user_id = Auth::id();
 
-				$index->version = +1;
-				$index->update_datetime = date('YmdHis');
-				$index->update_user_id = Auth::id();
+			$index->save();
 
-				$index->save();
+			return redirect()->route('product.index')->with('berhasil', 'Successfully Nonactive');
+		}else{
 
-				return redirect()->route('product.index')->with('berhasil', 'Successfully Activated ');
-			}
+			$index->active = 1;
+			$index->active_datetime = date('YmdHis');
+
+			$index->version += 1;
+			$index->update_datetime = date('YmdHis');
+			$index->update_user_id = Auth::id();
+
+			$index->save();
+
+			return redirect()->route('product.index')->with('berhasil', 'Successfully Activated ');
 		}
+	}
 
-		public function delete($id)
-		{
-			$index = Product::where('product_id', $id)->delete();
+	public function delete($id)
+	{
+		$index = Product::where('product_id', $id)->delete();
 
-			return redirect()->route('product.index')->with('berhasil', 'Successfully Deleted ');
-		}
+		return redirect()->route('product.index')->with('berhasil', 'Successfully Deleted ');
+	}
 
 }
