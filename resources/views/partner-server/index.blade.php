@@ -174,7 +174,6 @@
           <thead>
             <tr role="row">
               <th>No</th>
-              <th>Partner Pulsa Code</th>
               <th>Server Url</th>
               <th>Api Key</th>
               <th>Api Secret</th>
@@ -185,20 +184,19 @@
             @php
               $no = 1;
             @endphp
-            @for ($i=1; $i < 4; $i++)
+            @foreach($index as $list)
             <tr>
               <td>{{ $no }}</td>
-              <td>Partner.{{ rand(10,99) }}</td>
-              <td>http://example.com/api/v2/bla-bla-boom</td>
-              <td>{{ base64_encode(openssl_random_pseudo_bytes(12)) }}</td>
-              <td>{{ base64_encode(openssl_random_pseudo_bytes(32)) }}</td>
+              <td>{{ $list->server_url }}</td>
+              <td>{{ $list->api_key }}</td>
+              <td>{{ $list->api_secret }}</td>
               <td>
                 <a
                   class="update"
-                  data-id="{{ $i }}"
-                  data-url="http://example.com/api/v2/bla-bla-boom"
-                  data-apikey="{{ base64_encode(openssl_random_pseudo_bytes(12)) }}"
-                  data-apisecret="{{ base64_encode(openssl_random_pseudo_bytes(32)) }}"
+                  data-id="{{ $list->partner_pulsa_properties_id }}"
+                  data-url="{{ $list->server_url }}"
+                  data-apikey="{{ $list->api_key }}"
+                  data-apisecret="{{ $list->api_secret }}"
                   data-toggle="modal"
                   data-target=".modal-form-update"
                 >
@@ -207,7 +205,7 @@
                 <a
                   href=""
                   class="delete"
-                  data-value="{{ $i }}"
+                  data-value="{{ $list->partner_pulsa_properties_id }}"
                   data-toggle="modal"
                   data-target=".modal-delete"
                 >
@@ -218,7 +216,7 @@
             @php
               $no++;
             @endphp
-            @endfor
+            @endforeach
           </tbody>
         </table>
       </div>
