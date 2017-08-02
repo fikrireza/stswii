@@ -62,8 +62,8 @@
               </div>
               <div class="row">
                 <div class="col-xs-12">
-                  <button class="btn btn-primary btn-block btn-flat">Log In</button>
-                  {{-- <a class="btn btn-primary btn-block btn-flat" href="{{ route('home.index') }}">Log In</a> --}}
+                  {{-- <button class="btn btn-primary btn-block btn-flat">Log In</button> --}}
+                  <a class="btn btn-primary btn-block btn-flat" href="{{ route('home.index') }}">Log In</a>
                 </div>
               </div>
 
