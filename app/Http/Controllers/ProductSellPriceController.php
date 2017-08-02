@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\ProductSellPrice;
 use App\Models\Product;
+use App\Models\Provider;
 
 use DB;
 use Auth;
@@ -27,11 +28,23 @@ class ProductSellPriceController extends Controller
 	}
 
 
-	public function index()
+	public function index(Request $request)
 	{
-		$index = ProductSellPrice::get();
+		$provider = Provider::get();
 
-		return view('product-sell-price.index', compact('index'));
+		$index = ProductSellPrice::join('sw_product', 'sw_product.product_id', '=', 'sw_product_sell_price.product_id')
+			->select('sw_product_sell_price.*');
+
+		if(isset($request->f_provider) && $request->f_provider != '')
+		{
+			$index->where('sw_product.provider_id', $request->f_provider);
+		}
+
+		$index->where('sw_product_sell_price.active', isset($request->f_active) ? $request->f_active : 1);
+
+		$index = $index->get();
+
+		return view('product-sell-price.index', compact('index', 'request', 'provider'));
 	}
 
 	public function tambah()

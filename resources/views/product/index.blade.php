@@ -109,6 +109,14 @@
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
+        <form class="form-inline text-right">
+          <select name="f_provider" class="form-control" onchange="this.form.submit()">
+            <option value="">Filter Provider</option>
+            @foreach($provider as $list)
+                <option value="{{$list->provider_id}}" @if($request->f_provider == $list->provider_id) selected @endif>{{$list->provider_name}}</option>
+            @endforeach
+          </select>
+        </form>
         <table id="producttabel" class="table table-striped table-bordered no-footer" width="100%">
           <thead>
             <tr role="row">

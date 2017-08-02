@@ -24,30 +24,39 @@ class ProductController extends Controller
 	}
 
 
-	public function index()
+	public function index(Request $request)
 	{
-			$index = Product::get();
+		$provider = Provider::get();
 
-			return view('product.index', compact('index'));
+		$index = Product::orderBy('product_id', 'ASC');
+
+		if(isset($request->f_provider) && $request->f_provider != '')
+		{
+			$index->where('provider_id', $request->f_provider);
+		}
+
+		$index = $index->get();
+
+		return view('product.index', compact('index', 'request', 'provider'));
 	}
 
 	public function tambah()
 	{
-			$provider = Provider::get();
+		$provider = Provider::get();
 
-			$rand = rand(1000,9999);
+		$rand = rand(1000,9999);
 
-			$product_code = 'prod'.'-'.$rand;
+		$product_code = 'prod'.'-'.$rand;
 
-			$cek_kode = Product::where('product_code', $product_code)->first();
+		$cek_kode = Product::where('product_code', $product_code)->first();
 
-			if(!$cek_kode){
-				$product_code;
-			}else{
-				$product_code = 'Product Code is Empty - Contact Amadeo Please';
-			}
+		if(!$cek_kode){
+			$product_code;
+		}else{
+			$product_code = 'Product Code is Empty - Contact Amadeo Please';
+		}
 
-			return view('product.tambah', compact('provider', 'product_code'));
+		return view('product.tambah', compact('provider', 'product_code'));
 	}
 
 	public function store(Request $request)

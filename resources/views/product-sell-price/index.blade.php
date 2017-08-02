@@ -110,6 +110,19 @@
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
+        <form class="form-inline text-right">
+          <select name="f_provider" class="form-control" onchange="this.form.submit()">
+            <option value="">Filter Provider</option>
+            @foreach($provider as $list)
+                <option value="{{$list->provider_id}}" @if($request->f_provider == $list->provider_id) selected @endif>{{$list->provider_name}}</option>
+            @endforeach
+          </select>
+          <select name="f_active" class="form-control" onchange="this.form.submit()">
+            <option value="1" @if(isset($request->f_active) && $request->f_active == 1) selected @endif>Active</option>
+            <option value="0" @if(isset($request->f_active) && $request->f_active == 0) selected @endif>Not Active</option>
+          </select>
+        </form>
+
         <table id="producttabel" class="table table-striped table-bordered no-footer" width="100%">
           <thead>
             <tr role="row">
@@ -137,7 +150,7 @@
               <td>{{ $list->tax_percentage }} %</td>
               <td>{{ date('d-m-Y H:i:s', strtotime($list->datetime_start))   }}</td>
               <td>{{ date('d-m-Y H:i:s', strtotime($list->datetime_end)) }}</td>
-              <td class="text-center">@if ($list->active)
+              <td class="text-center">@if($list->active)
                     <a
                       href=""
                       class="unpublish"
