@@ -95,10 +95,10 @@ class PartnerPulsaController extends Controller
   			$save->active              = /*isset($request->active) ? */1/* : 0*/;
   			$save->active_datetime     = Carbon::now()->format('YmdHis');
   			$save->non_active_datetime = '';
-  			$save->version 		         = '1';
+  			$save->version 		         = 0;
   			$save->create_user_id	     = Auth::user()->id;
         $save->create_datetime     = Carbon::now()->format('YmdHis');
-        $save->update_user_id      = -99;/*Auth::user()->id*/
+        $save->update_user_id      = 0;/*Auth::user()->id*/
         $save->update_datetime     = '';
   			$save->save();
   		});
@@ -128,7 +128,12 @@ class PartnerPulsaController extends Controller
           $getPartnerPulsa->active         = $status;
           $getPartnerPulsa->update_user_id = Auth::user()->id;
           $getPartnerPulsa->update_datetime= Carbon::now()->format('YmdHis');
-          $getPartnerPulsa->non_active_datetime= Carbon::now()->format('YmdHis');
+          if($status == 1){
+            $getPartnerPulsa->active_datetime  = Carbon::now()->format('YmdHis');
+          }
+          else if($status == 0){
+            $getPartnerPulsa->non_active_datetime  = Carbon::now()->format('YmdHis');
+          }
           $getPartnerPulsa->update();
         });
       }
@@ -215,16 +220,27 @@ class PartnerPulsaController extends Controller
         ->with('berhasil', $info);
     }
 
-    public function delete($id){
-    	$getPartnerPulsa = PartnerPulsa::find($id);
+    public function delete($id, $version){
+      $getPartnerPulsa = PartnerPulsa::find($id);
 
-    	if(!$getPartnerPulsa){
-          return view('errors.404');
-        }
-
-  		$getPartnerPulsa->delete();
-  		return redirect()->route('partner-pulsa.index')
-  			->with('berhasil', 'Berhasil menghapus Partner Pulsa ');
+      if($getPartnerPulsa == null){
+        $info = 'Data Partner gagal dihapus! Tidak dapat menemukan Partner!';
+        $alret = 'alert-danger';
+      }
+      else if($getPartnerPulsa->version != $version){
+        $User = User::find($getPartnerPulsa->update_user_id);
+        $info = 'Data Partner gagal dihapus! Data Partner telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
+        $alret = 'alert-danger';
+      }
+      else{
+        $info = 'Berhasil menghapus Partner Pulsa ';
+        $alret = 'alert-success';
+        $getPartnerPulsa->delete();
+      }
+      
+      return redirect()->route('partner-pulsa.index')
+        ->with('alret', $alret)
+        ->with('berhasil', $info);
     }
 
 }

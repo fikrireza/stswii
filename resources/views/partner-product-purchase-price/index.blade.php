@@ -12,14 +12,14 @@
 @if(Session::has('berhasil'))
 <script>
   window.setTimeout(function() {
-    $(".alert-success").fadeTo(700, 0).slideUp(700, function(){
+    $(".alert.alert-dismissible").fadeTo(700, 0).slideUp(700, function(){
         $(this).remove();
     });
   }, 5000);
 </script>
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
-    <div class="alert alert-success alert-dismissible fade in" role="alert">
+    <div class="alert {{ Session::get('alret') }} alert-dismissible fade in" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
       </button>
       <strong>{{ Session::get('berhasil') }}</strong>
@@ -120,66 +120,60 @@
             </tr>
           </thead>
           <tbody>
-            @php
-              $no = 1;
-              $arrProvName = array(
-                '', 
-                'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 
-                'Indosat', 'Indosat', 'Indosat', 'Indosat', 'Indosat', 
-                'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 
-                '3', '3', '3', '3', '3'
-              );
-              $arrPriceSellCOFP = array(
-                '', 
-                '5', '10', '20', '50', '100', 
-                '5', '10', '20', '50', '100', 
-                '5', '10', '20', '50', '100', 
-                '5', '10', '20', '50', '100'
-              );
-              $arrPriceSell = array(
-                '', 
-                '5000', '10000', '20000', '50000', '100000', 
-                '5000', '10000', '20000', '50000', '100000', 
-                '5000', '10000', '20000', '50000', '100000', 
-                '5000', '10000', '20000', '50000', '100000'
-              );
-            @endphp
-            @for ($i=1; $i < 20; $i++)
+            @php ($no = 1)
+            @foreach ($getPPPP as $list)
             <tr>
               <td>{{ $no++ }}</td>
-              <td>PP.Cd.{{ rand(10,99) }}</td>
-              <td>{{ $arrPriceSellCOFP[$i].'-'.$arrProvName[$i] }}</td>
-              <td>{{ $arrPriceSell[$i] }}</td>
-              <td>{{ $i%2 ? 'Y' : 'N' }}</td>
-              <td>{{ $i%2 ? '10' : '5' }}</td>
-              <td>{{ $i%2 ? '2017/01/01 00:00:01' : '2017/12/31 23:59:59' }}</td>
-              <td>{{ $i%2 ? '2017/01/01 00:00:01' : '2017/12/31 23:59:59' }}</td>
+              <td>{{ $list->partnerpulsa->partner_product_code }}</td>
+              <td>{{ $list->partnerpulsa->partner_product_name }}</td>
+              <td>{{ $list->gross_purch_price }}</td>
+              <td>{{ $list->flg_tax == 1 ? 'Y' : 'N' }}</td>
+              <td>{{ $list->flg_tax == 1 ? $list->tax_percentage.'%' : '0%' }}</td>
+              <td>{{ date('Y m d', strtotime($list->datetime_start)) }}</td>
+              <td>{{ date('Y m d', strtotime($list->datetime_end)) }}</td>
               <td class="text-center">
-                @if ($i%2 == 1)
-                  <a href="" class="unpublish" data-value="{{ $i }}" data-toggle="modal" data-target=".modal-nonactive" >
-                    <span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span>
-                  </a>
-                  <br>
-                @else
-                  <a href="" class="publish" data-value="{{ $i }}" data-toggle="modal" data-target=".modal-active">
-                    <span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span>
-                  </a>
-                  <br>
-                @endif
+                <a 
+                  href="" 
+                  data-value="{{ $list->partner_product_purch_price_id }}" 
+                  data-version="{{ $list->version }}" 
+                  data-toggle="modal" 
+                  @if($list->active == 1)
+                  class="unpublish"
+                  data-target=".modal-nonactive"
+                  @elseif($list->active == 0)
+                  class="publish" 
+                  data-target=".modal-active"
+                  @endif
+                >
+                  <span 
+                    data-toggle="tooltip" 
+                    data-placement="top" 
+                    @if($list->active == 1)
+                    class="label label-success" 
+                    title="Active"
+                    @elseif($list->active == 0)
+                    class="label label-danger" 
+                    title="Non Active"
+                    @endif
+                  >
+                    @if($list->active == 1)
+                    Active
+                    @elseif($list->active == 0)
+                    Non Active
+                    @endif
+                  </span>
+                </a>
               </td>
               <td>
-                <a href="{{ route('partner-product-purch-price.edit', ['id'=> $i]) }}">
+                <a href="{{ route('partner-product-purch-price.edit', ['id'=> $list->partner_product_purch_price_id]) }}">
                   <span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>
                 </a>
-                <a href="" class="delete" data-value="{{ $i }}" data-toggle="modal" data-target=".modal-delete">
+                <a href="" class="delete" data-value="{{ $list->partner_product_purch_price_id }}" data-toggle="modal" data-target=".modal-delete">
                   <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span>
                 </a>
               </td>
             </tr>
-            @php
-              $no++;
-            @endphp
-            @endfor
+            @endforeach
           </tbody>
         </table>
       </div>

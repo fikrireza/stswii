@@ -12,14 +12,14 @@
 @if(Session::has('berhasil'))
 <script>
   window.setTimeout(function() {
-    $(".alert-success").fadeTo(700, 0).slideUp(700, function(){
+    $(".alert.alert-dismissible").fadeTo(700, 0).slideUp(700, function(){
         $(this).remove();
     });
   }, 5000);
 </script>
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
-    <div class="alert alert-success alert-dismissible fade in" role="alert">
+    <div class="alert {{ Session::get('alret') }} alert-dismissible fade in" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
       </button>
       <strong>{{ Session::get('berhasil') }}</strong>
@@ -118,53 +118,69 @@
             </tr>
           </thead>
           <tbody>
-            @php
-              $arrProvCode = array(
-                '', 
-                'Prov-01', 'Prov-01', 'Prov-01', 'Prov-01', 'Prov-01', 
-                'Prov-02', 'Prov-02', 'Prov-02', 'Prov-02', 'Prov-02', 
-                'Prov-03', 'Prov-03', 'Prov-03', 'Prov-03', 'Prov-03', 
-                'Prov-04', 'Prov-04', 'Prov-04', 'Prov-04', 'Prov-04'
-              );
-              $arrProvName = array(
-                '', 
-                'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 
-                'Indosat', 'Indosat', 'Indosat', 'Indosat', 'Indosat', 
-                'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 
-                '3', '3', '3', '3', '3'
-              );
-              $arrPriceSellCOFP = array(
-                '', 
-                '5', '10', '20', '50', '100', 
-                '5', '10', '20', '50', '100', 
-                '5', '10', '20', '50', '100', 
-                '5', '10', '20', '50', '100'
-              );
-              $faker    = Faker\Factory::create();
-            @endphp
-            @for ($i=1; $i < 21; $i++)
+            @php ($no = 1)
+            @foreach ($getPartnerProduct as $list)
             <tr>
-              <td>{{ $i }}</td>
-              <td>Partner.{{ rand(10,99) }}</td>
-              <td>{{ $arrProvCode[$i] }}</td>
-              <td>Produc.{{ rand(10,99) }}</td>
-              <td>PP.Cd.{{ rand(10,99) }}</td>
-              <td>{{ $arrPriceSellCOFP[$i].'-'.$arrProvName[$i] }}</td>
-              <td class="text-center">@if ($i%2 == 1)
-                    <a href="" class="unpublish" data-value="{{ $i }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a>
-                    <br>
-                  @else
-                    <a href="" class="publish" data-value="{{ $i }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
-                    <br>
+              <td>{{ $no++ }}</td>
+              <td>{{ $list->partnerpulsa->partner_pulsa_code }}</td>
+              <td>{{ $list->provider->provider_code }}</td>
+              <td>{{ $list->product->product_code }}</td>
+              <td>{{ $list->partner_product_code }}</td>
+              <td>{{ $list->partner_product_name }}</td>
+              <td class="text-center">
+                <a 
+                  href="" 
+                  data-value="{{ $list->partner_product_id }}" 
+                  data-version="{{ $list->version }}" 
+                  data-toggle="modal" 
+                  @if($list->active == 1)
+                  class="unpublish"
+                  data-target=".modal-nonactive"
+                  @elseif($list->active == 0)
+                  class="publish" 
+                  data-target=".modal-active"
                   @endif
+                >
+                  <span 
+                    data-toggle="tooltip" 
+                    data-placement="top" 
+                    @if($list->active == 1)
+                    class="label label-success" 
+                    title="Active"
+                    @elseif($list->active == 0)
+                    class="label label-danger" 
+                    title="Non Active"
+                    @endif
+                  >
+                    @if($list->active == 1)
+                    Active
+                    @elseif($list->active == 0)
+                    Non Active
+                    @endif
+                  </span>
+                </a>
               </td>
               <td>
-                <a class="update" href="{{ route('partner-product.edit', ['id' => $i ]) }}"><span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span></a>
+                <a 
+                  class="update" 
+                  href="{{ route('partner-product.edit', ['id' => $list->partner_product_id, 'version' => $list->version ]) }}"
+                >
+                  <span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>
+                </a>
 
-                <a href="" class="delete" data-value="{{ $i }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
+                <a 
+                  href="" 
+                  class="delete" 
+                  data-value="{{ $list->partner_product_id }}" 
+                  data-version="{{ $list->version }}" 
+                  data-toggle="modal" 
+                  data-target=".modal-delete"
+                >
+                  <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span>
+                </a>
               </td>
             </tr>
-            @endfor
+            @endforeach
           </tbody>
         </table>
       </div>
@@ -182,23 +198,22 @@
 $('#dataTables').DataTable();
 
 $(function(){
-  $('#dataTables').on('click', 'a.delete', function(){
+  $(document).on('click','a.delete', function(){
     var a = $(this).data('value');
-    // $('#setDelete').attr('href', "{{ url('/') }}/partner-product/delete/"+a);
+    var b = $(this).data('version');
+    $('#setDelete').attr('href', "{{ url('/') }}/partner-product/delete/"+a+"/"+b);
   });
-});
 
-$(function(){
-  $('#dataTables').on('click','a.unpublish', function(){
+  $(document).on('click', 'a.publish', function(){
     var a = $(this).data('value');
-    // $('#setUnpublish').attr('href', "{{ url('/') }}/partner-product/active/"+a);
+    var b = $(this).data('version');
+    $('#setPublish').attr('href', "{{ url('/') }}/partner-product/actived/"+a+"/"+b+"/1");
   });
-});
 
-$(function(){
-  $('#dataTables').on('click', 'a.publish', function(){
+  $(document).on('click','a.unpublish', function(){
     var a = $(this).data('value');
-    // $('#setPublish').attr('href', "{{ url('/') }}/partner-product/active/"+a);
+    var b = $(this).data('version');
+    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-product/actived/"+a+"/"+b+"/0");
   });
 });
 

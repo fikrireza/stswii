@@ -93,10 +93,10 @@ class ProviderPrefixController extends Controller{
 			$save = new ProviderPrefix;
 			$save->provider_id		= $request->provider_id;
 			$save->prefix			= $request->prefix;
-			$save->version 			= 1;
+			$save->version 			= 0;
 			$save->create_user_id	= Auth::user()->id;
 			$save->create_datetime	= Carbon::now()->format('YmdHis');
-			$save->update_user_id	= -99;/*Auth::user()->id*/
+			$save->update_user_id	= 0;/*Auth::user()->id*/
 			$save->update_datetime	= '';
 			$save->save();
 		});

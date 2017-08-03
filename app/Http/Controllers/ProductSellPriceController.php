@@ -122,7 +122,7 @@ class ProductSellPriceController extends Controller
 		$index->create_datetime     = date('YmdHis');
 		$index->create_user_id      = Auth::id();
 		$index->update_datetime     = 00000000000000;
-		$index->update_user_id      = -99;
+		$index->update_user_id      = 0;
 		
 		$index->save();
 
@@ -381,7 +381,7 @@ class ProductSellPriceController extends Controller
 					"create_datetime"     => date('YmdHis'),
 					"create_user_id"      => Auth::id(),
 					"update_datetime"     => '00000000000000',
-					"update_user_id"      => -99,
+					"update_user_id"      => 0,
 				));
 			}
 		});
