@@ -32,13 +32,6 @@ class PartnerPulsaServerPropController extends Controller{
 		return view('partner-server.index', compact('index'));
     }
 
-    public function create()
-	{
-		$partnerPulsa = PartnerPulsa::all();
-
-		return view('partner-server.create', compact('partnerPulsa'));
-    }
-
 
     public function delete($id)
 	{
@@ -108,22 +101,26 @@ class PartnerPulsaServerPropController extends Controller{
 
 		if($validator->fails()){
 			return redirect()->route('partner-server.index')
-				->withErrors($validator)->withInput()->with('update-false', 'Something Errors');;
+				->withErrors($validator)->withInput()->with('update-false', 'Something Errors');
 		}
 
-		DB::transaction(function () use($request) {
-			$index = PartnerPulsaServerProp::find($request->id_data);
+		$index = PartnerPulsaServerProp::find($request->id_data);
 
-			$index->server_url       = $request->server_url;
-			$index->api_key          = $request->api_key;
-			$index->api_secret       = $request->api_secret;
+		if($index->version != $request->version)
+		{
+			return redirect()->route('partner-server.index')
+				->withErrors($validator)->withInput()->with('update-false', 'Your data already updated by ' . $index->updatedBy->name . '.');
+		}
 
-			$index->version          += 1;
-			$index->update_datetime  = date('YmdHis');
-			$index->update_user_id   = Auth::id();
+		$index->server_url       = $request->server_url;
+		$index->api_key          = $request->api_key;
+		$index->api_secret       = $request->api_secret;
 
-			$index->update();
-		});
+		$index->version          += 1;
+		$index->update_datetime  = date('YmdHis');
+		$index->update_user_id   = Auth::id();
+
+		$index->update();
 
 		return redirect()->route('partner-server.index')
 			->with('berhasil', 'Berhasil Memperbarui Prartner Server '.$request->server_url);

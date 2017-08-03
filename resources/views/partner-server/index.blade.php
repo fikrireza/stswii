@@ -92,7 +92,8 @@
         </div>
         <div class="modal-body">
             {{ csrf_field() }}
-            <input id="id_data" name="id_data" type="hidden" value="">
+            <input id="id_data" name="id_data" type="hidden" value="{{ old('id_data') }}">
+            <input id="version" name="version" type="hidden" value="{{ old('version') }}">
             <div class="item form-group {{ $errors->has('server_url') ? 'has-error' : ''}}">
               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Server Url <span class="required">*</span>
               </label>
@@ -123,7 +124,7 @@
                 @endif
               </div>
             </div>
-
+            <code><span style="color:red; font-size:12px;">{{ Session::get('update-false') }}</span></code>
         </div>
         <div class="modal-footer">
           <button id="send" type="submit" class="btn btn-success">Submit</button>
@@ -194,6 +195,7 @@
                 <a
                   class="update"
                   data-id="{{ $list->partner_pulsa_properties_id }}"
+                  data-version="{{ $list->version }}"
                   data-url="{{ $list->server_url }}"
                   data-apikey="{{ $list->api_key }}"
                   data-apisecret="{{ $list->api_secret }}"
@@ -236,10 +238,12 @@ $('#dataTables').DataTable();
 $(function(){
     $('.update').click(function() {
         var dataId    = $(this).data('id');
+        var dataVersion = $(this).data('version');
         var dataUrl  = $(this).data('url');
         var dataApiK  = $(this).data('apikey');
         var dataApiS  = $(this).data('apisecret');
         $("#id_data").val(dataId);
+        $("#version").val(dataVersion);
         $("#server_url_data").val(dataUrl);
         $("#api_key_data").val(dataApiK);
         $("#api_secret_data").val(dataApiS);
