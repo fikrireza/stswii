@@ -56,11 +56,11 @@ class AgentController extends Controller
   			$save->channel_user_id  	= rand(10,50);
   			$save->channel_chat_id  	= rand(10,50);
   			$save->paloma_member_code  	= rand(10,50);
-  			$save->client_id  			= -99;
+  			$save->client_id  			= 0;
   			$save->version  			= 0;
-  			$save->create_user_id  		= -99;
+  			$save->create_user_id  		= 0;
   			$save->create_datetime  	= $faker->dateTime;
-  			$save->update_user_id  		= -99;
+  			$save->update_user_id  		= 0;
   			$save->update_datetime  	= $faker->dateTime;
 			$save->save();
 		}

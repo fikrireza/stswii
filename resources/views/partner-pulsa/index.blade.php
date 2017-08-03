@@ -170,7 +170,8 @@
                 <a 
                   href="" 
                   class="delete" 
-                  data-value="" 
+                  data-value="{{ $list->partner_pulsa_id }}" 
+                  data-version="{{ $list->version }}"
                   data-toggle="modal" 
                   data-target=".modal-delete"
                 >
@@ -196,25 +197,22 @@
 $('#dataTables').DataTable();
 
 $(function(){
-  $('#dataTables').on('click', 'a.delete', function(){
-    var a = $(this).data('value');
-    // $('#setDelete').attr('href', "{{ url('/') }}/partner-?pulsa/delete/"+a);
-  });
-});
-
-$(function(){
-  $(document).on('click','a.unpublish', function(){
+  $(document).on('click','a.delete', function(){
     var a = $(this).data('value');
     var b = $(this).data('version');
-    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-pulsa/actived/"+a+"/"+b+"/0");
+    $('#setDelete').attr('href', "{{ url('/') }}/partner-pulsa/delete/"+a+"/"+b);
   });
-});
 
-$(function(){
   $(document).on('click', 'a.publish', function(){
     var a = $(this).data('value');
     var b = $(this).data('version');
     $('#setPublish').attr('href', "{{ url('/') }}/partner-pulsa/actived/"+a+"/"+b+"/1");
+  });
+
+  $(document).on('click','a.unpublish', function(){
+    var a = $(this).data('value');
+    var b = $(this).data('version');
+    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-pulsa/actived/"+a+"/"+b+"/0");
   });
 });
 

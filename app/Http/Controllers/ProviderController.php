@@ -35,7 +35,6 @@ class ProviderController extends Controller{
 				'version',
 				DB::raw('(select count(provider_prefix_id) from sw_provider_prefix where sw_provider.provider_id = sw_provider_prefix.provider_id) as count_provider_prefix')
 			)
-			->orderBy('provider_name', 'asc')
             ->get();
 
         $newProvCode = 'prov-'.rand(1000,9999);
@@ -130,10 +129,10 @@ class ProviderController extends Controller{
 			$save = new Provider;
 			$save->provider_code	= $request->provider_code;
 			$save->provider_name	= $request->provider_name;
-			$save->version 			= 1;
+			$save->version 			= 0;
 			$save->create_user_id	= Auth::user()->id;
 			$save->create_datetime	= Carbon::now()->format('YmdHis');
-			$save->update_user_id	= -99;/*Auth::user()->id*/
+			$save->update_user_id	= 0;/*Auth::user()->id*/
 			$save->update_datetime	= '';
 			$save->save();
 		});

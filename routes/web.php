@@ -80,7 +80,7 @@ Route::get('/home', 'HomeController@index')
 		->name('partner-pulsa.edit');
 	Route::post('/partner-pulsa/update/{id}/{version}', 'PartnerPulsaController@update')
 		->name('partner-pulsa.update');
-	Route::get('/partner-pulsa/delete/{id}', 'PartnerPulsaController@delete')
+	Route::get('/partner-pulsa/delete/{id}/{version}', 'PartnerPulsaController@delete')
 		->name('partner-pulsa.delete');
 	Route::get('/partner-pulsa/actived/{id}/{version}/{status}', 'PartnerPulsaController@active')
 		->name('partner-pulsa.active');
@@ -93,14 +93,15 @@ Route::get('/home', 'HomeController@index')
 		->name('partner-product.create');
 	Route::post('/partner-product/store', 'PartnerProductController@store')
 		->name('partner-product.store');
-	Route::get('/partner-product/edit/{id}', 'PartnerProductController@edit')
+	Route::get('/partner-product/edit/{id}/{version}', 'PartnerProductController@edit')
 		->name('partner-product.edit');
-	Route::post('/partner-product/update/{id}', 'PartnerProductController@update')
+	Route::post('/partner-product/update/{id}/{version}', 'PartnerProductController@update')
 		->name('partner-product.update');
-	Route::get('/partner-product/delete/{id}', 'PartnerProductController@delete')
+	Route::get('/partner-product/delete/{id}/{version}', 'PartnerProductController@delete')
 		->name('partner-product.delete');
-	Route::get('/partner-product/active/{id}', 'PartnerProductController@active')
+	Route::get('/partner-product/actived/{id}/{version}/{status}', 'PartnerProductController@active')
 		->name('partner-product.active');
+		
 	Route::get('/partner-product/ajaxGetProductList/{id?}', 'PartnerProductController@ajaxGetProductList')
 		->name('partner-product.ajaxGetProductList');
 // partner product
@@ -123,7 +124,6 @@ Route::get('/home', 'HomeController@index')
 	Route::get('partner-product-purch-price/upload', 'PartnerProductPurchPriceController@upload')
 	  ->name('partner-product-purch-price.upload');
 // partner product purch price
-
 
 // partner server
 	Route::get('/partner-server', 'PartnerPulsaServerPropController@index')
