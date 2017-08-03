@@ -87,13 +87,18 @@ class ProductSellPriceController extends Controller
 
 		$checkData = ProductSellPrice::where('product_id',$request->product_id)
 			->where('active',1)
-			->whereBetween('datetime_start', [date('YmdHis', strtotime($request->datetime_start)), date('YmdHis', strtotime($request->datetime_end))])
-			->orWhereBetween('datetime_end', [date('YmdHis', strtotime($request->datetime_start)), date('YmdHis', strtotime($request->datetime_end))])
-			->count();
+			->get();
 
-		if($checkData)
+		foreach ($checkData as $list)
 		{
-			return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
+			if($list->datetime_start <= date('YmdHis', strtotime($request->datetime_start)) && date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_end && isset($request->active))
+			{	
+				return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
+			}
+			if($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active))
+			{
+				return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
+			}
 		}
 
 		$index = new ProductSellPrice;
@@ -164,21 +169,28 @@ class ProductSellPriceController extends Controller
 
 		$index = ProductSellPrice::find($request->product_sell_price_id);
 
-		if($index->version != $request->version)
-		{
-			return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Your data already updated.');
-		}
+		
 
 		$checkData = ProductSellPrice::where('product_id',$request->product_id)
 			->where('active',1)
 			->where('product_sell_price_id','<>',$request->product_sell_price_id)
-			->whereBetween('datetime_start', [date('YmdHis', strtotime($request->datetime_start)), date('YmdHis', strtotime($request->datetime_end))])
-			->orWhereBetween('datetime_end', [date('YmdHis', strtotime($request->datetime_start)), date('YmdHis', strtotime($request->datetime_end))])
-			->count();
+			->get();
 
-		if($checkData)
+		foreach ($checkData as $list)
 		{
-			return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
+			if($list->datetime_start <= date('YmdHis', strtotime($request->datetime_start)) && date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_end && isset($request->active));
+			{
+				return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
+			}
+			if($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active));
+			{
+				return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
+			}
+		}
+
+		if($index->version != $request->version)
+		{
+			return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
 		}
 
 		$index->product_id          = $request->product_id;
@@ -209,9 +221,30 @@ class ProductSellPriceController extends Controller
 
 	}
 
-	public function active($id)
+	public function active($id, Request $request)
 	{
 		$index = ProductSellPrice::find($id);
+
+		$checkData = ProductSellPrice::where('product_id',$index->product_id)
+			->where('active',1)
+			->get();
+
+		foreach ($checkData as $list)
+		{
+			if($list->datetime_start <= date('YmdHis', strtotime($index->datetime_start)) && date('YmdHis', strtotime($index->datetime_start)) <= $list->datetime_end && !$index->active)
+			{
+				return redirect()->route('product-sell-price.index')->with('gagal', 'Data is still active.')->withInput();
+			}
+			if($list->datetime_start <= date('YmdHis', strtotime($index->datetime_end)) && date('YmdHis', strtotime($index->datetime_end)) <= $list->datetime_end && !$index->active)
+			{
+				return redirect()->route('product-sell-price.index')->with('gagal', 'Data is still active.')->withInput();
+			}
+		}
+
+		if($index->version != $request->version)
+		{
+			return redirect()->route('product.index')->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+		}
 
 		if ($index->active) {
 
@@ -357,32 +390,41 @@ class ProductSellPriceController extends Controller
 			/*Load array */
 				$checkData = ProductSellPrice::where('product_id',$product_id[$key])
 					->where('active',1)
-					->whereBetween('datetime_start', [date('YmdHis', strtotime( $datetime_start[$key] )), date('YmdHis', strtotime( $datetime_end[$key] ))])
-					->orWhereBetween('datetime_end', [date('YmdHis', strtotime( $datetime_start[$key] )), date('YmdHis', strtotime( $datetime_end[$key] ))])
-					->count();
+					->get();
 
-				if(!$checkData)
+				$skip = 0;
+				foreach ($checkData as $list)
 				{
-					return redirect()->back()->with('gagal', 'Data is still active in number'. ($key + 1));
+					if($list->datetime_start <= date('YmdHis', strtotime($datetime_start[$key])) && date('YmdHis', strtotime($datetime_start[$key])) <= $list->datetime_end && $active[$key] == 1)
+					{
+						$skip = 1;
+					}
+					if($list->datetime_start <= date('YmdHis', strtotime($datetime_end[$key])) && date('YmdHis', strtotime($datetime_end[$key])) <= $list->datetime_end && $active[$key] == 1)
+					{
+						$skip = 1;
+					}
 				}
 
-				$arrData = ProductSellPrice::create(array(
-					"product_id"          => $product_id[$key],
-					"flg_tax"             => $gross_sell_price[$key] <= 0 ? 0 : 1,
-					"gross_sell_price"    => $gross_sell_price[$key],
-					"tax_percentage"      => $tax_percentage[$key],
-					"datetime_start"      => date('YmdHis', strtotime( $datetime_start[$key] )),
-					"datetime_end"        => date('YmdHis', strtotime( $datetime_end[$key] )),
-					"create_user_id"      => Auth::id(),
-					"active"              => $active[$key],
-					"active_datetime"     => $active[$key] == 1 ? date('YmdHis') : '00000000000000',
-					"non_active_datetime" => $active[$key] == 0 ? date('YmdHis') : '00000000000000',
-					"version"             => 0,
-					"create_datetime"     => date('YmdHis'),
-					"create_user_id"      => Auth::id(),
-					"update_datetime"     => '00000000000000',
-					"update_user_id"      => 0,
-				));
+				if(!$skip)
+				{
+					$arrData = ProductSellPrice::create(array(
+						"product_id"          => $product_id[$key],
+						"flg_tax"             => $gross_sell_price[$key] <= 0 ? 0 : 1,
+						"gross_sell_price"    => $gross_sell_price[$key],
+						"tax_percentage"      => $tax_percentage[$key],
+						"datetime_start"      => date('YmdHis', strtotime( $datetime_start[$key] )),
+						"datetime_end"        => date('YmdHis', strtotime( $datetime_end[$key] )),
+						"create_user_id"      => Auth::id(),
+						"active"              => $active[$key],
+						"active_datetime"     => $active[$key] == 1 ? date('YmdHis') : '00000000000000',
+						"non_active_datetime" => $active[$key] == 0 ? date('YmdHis') : '00000000000000',
+						"version"             => 0,
+						"create_datetime"     => date('YmdHis'),
+						"create_user_id"      => Auth::id(),
+						"update_datetime"     => '00000000000000',
+						"update_user_id"      => -99,
+					));
+				}
 			}
 		});
 

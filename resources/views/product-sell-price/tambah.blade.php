@@ -173,7 +173,7 @@
   $('#datetime_start').daterangepicker({
     singleDatePicker: true,
     calender_style: "picker_3",
-    format: 'YYYY-MM-DD H:m:s',
+    format: 'YYYY-MM-DD',
     minDate: new Date(),
   });
 
