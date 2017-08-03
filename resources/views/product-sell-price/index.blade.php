@@ -32,6 +32,25 @@
 </div>
 @endif
 
+@if(Session::has('gagal'))
+<script>
+  window.setTimeout(function() {
+    $(".alert-danger").fadeTo(700, 0).slideUp(700, function(){
+        $(this).remove();
+    });
+  }, 15000);
+</script>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="alert alert-danger alert-dismissible fade in" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+      </button>
+      <strong>{{ Session::get('gagal') }}</strong>
+    </div>
+  </div>
+</div>
+@endif
+
 <div class="modal fade modal-nonactive" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
@@ -155,13 +174,14 @@
                       href=""
                       class="unpublish"
                       data-value="{{ $list->product_sell_price_id }}"
+                      data-version="{{ $list->version }}"
                       data-toggle="modal"
                       data-target=".modal-nonactive"
                     >
                       <span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span>
                     </a>
                   @else
-                    <a href="" class="publish" data-value="{{ $list->product_sell_price_id }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
+                    <a href="" class="publish" data-value="{{ $list->product_sell_price_id }}" data-version="{{ $list->version }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
                   @endif
               </td>
               <td>
@@ -192,13 +212,15 @@
   $(function(){
     $('#producttabel').on('click','a.unpublish', function(){
       var a = $(this).data('value');
-      $('#setUnpublish').attr('href', "{{ url('/') }}/product-sell-price/active/"+a);
+      var b = $(this).data('version');
+      $('#setUnpublish').attr('href', "{{ url('/') }}/product-sell-price/active/"+a+"?version="+b);
     });
   });
   $(function(){
     $('#producttabel').on('click', 'a.publish', function(){
       var a = $(this).data('value');
-      $('#setPublish').attr('href', "{{ url('/') }}/product-sell-price/active/"+a);
+      var b = $(this).data('version');
+      $('#setPublish').attr('href', "{{ url('/') }}/product-sell-price/active/"+a+"?version="+b);
     });
   });
   $(function(){

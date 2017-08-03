@@ -169,10 +169,7 @@ class ProductSellPriceController extends Controller
 
 		$index = ProductSellPrice::find($request->product_sell_price_id);
 
-		if($index->version != $request->version)
-		{
-			return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Your data already updated.');
-		}
+		
 
 		$checkData = ProductSellPrice::where('product_id',$request->product_id)
 			->where('active',1)
@@ -189,6 +186,11 @@ class ProductSellPriceController extends Controller
 			{
 				return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
 			}
+		}
+
+		if($index->version != $request->version)
+		{
+			return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
 		}
 
 		$index->product_id          = $request->product_id;
@@ -219,7 +221,7 @@ class ProductSellPriceController extends Controller
 
 	}
 
-	public function active($id)
+	public function active($id, Request $request)
 	{
 		$index = ProductSellPrice::find($id);
 
@@ -237,6 +239,11 @@ class ProductSellPriceController extends Controller
 			{
 				return redirect()->route('product-sell-price.index')->with('gagal', 'Data is still active.')->withInput();
 			}
+		}
+
+		if($index->version != $request->version)
+		{
+			return redirect()->route('product.index')->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
 		}
 
 		if ($index->active) {

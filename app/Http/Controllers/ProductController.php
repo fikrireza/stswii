@@ -155,7 +155,7 @@ class ProductController extends Controller
 
 		if($index->version != $request->version)
 		{
-			return redirect()->route('product.ubah', ['product_code' => $request->product_code])->with('gagal', 'Your data already updated.');
+			return redirect()->route('product.ubah', ['product_code' => $request->product_code])->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
 		}
 
 		$index->product_code = $request->product_code;
@@ -184,9 +184,14 @@ class ProductController extends Controller
 		return redirect()->route('product.index')->with('berhasil', 'Your data has been successfully updated.');
 	}
 
-	public function active($id)
+	public function active($id, Request $request)
 	{
-		$index = Product::where('product_id', $id)->first();;
+		$index = Product::where('product_id', $id)->first();
+
+		if($index->version != $request->version)
+		{
+			return redirect()->route('product.index')->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+		}
 
 		if ($index->active) {
 
