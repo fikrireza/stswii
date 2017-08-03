@@ -208,15 +208,15 @@ $(".select2_single").select2({
 $('#datetime_start').daterangepicker({
   singleDatePicker: true,
   calender_style: "picker_3",
-  format: 'YYYY-MM-DD H:m:s',
-  minDate: new Date(),
+  format: 'YYYY-MM-DD',
+  // minDate: new Date(),
 });
 
 $('#datetime_end').daterangepicker({
   singleDatePicker: true,
   calender_style: "picker_3",
-  format: 'YYYY-MM-DD H:m:s',
-  minDate: new Date(),
+  format: 'YYYY-MM-DD',
+  // minDate: new Date(),
 });
 
 $('#flg_tax').click(function() {

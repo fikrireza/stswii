@@ -191,21 +191,22 @@
 $('#dataTables').DataTable();
 
 $(function(){
-  $('.unpublish').click(function() {
+  $(document).on('click','a.delete', function(){
     var a = $(this).data('value');
-    // $('#setUnpublish').attr('href', "{{ url('/') }}/partner-product-purch-price/active/"+a);
+    var b = $(this).data('version');
+    $('#setDelete').attr('href', "{{ url('/') }}/partner-product-purch-price/delete/"+a+"/"+b);
   });
-});
-$(function(){
-  $('.publish').click(function() {
+
+  $(document).on('click', 'a.publish', function(){
     var a = $(this).data('value');
-    // $('#setPublish').attr('href', "{{ url('/') }}/partner-product-purch-price/active/"+a);
+    var b = $(this).data('version');
+    $('#setPublish').attr('href', "{{ url('/') }}/partner-product-purch-price/actived/"+a+"/"+b+"/1");
   });
-});
-$(function(){
-  $('.delete').click(function() {
+
+  $(document).on('click','a.unpublish', function(){
     var a = $(this).data('value');
-    // $('#setDelete').attr('href', "{{ url('/') }}/partner-product-purch-price/delete/"+a);
+    var b = $(this).data('version');
+    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-product-purch-price/actived/"+a+"/"+b+"/0");
   });
 });
 </script>

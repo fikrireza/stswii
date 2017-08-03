@@ -109,8 +109,10 @@ Route::get('/home', 'HomeController@index')
 // partner product purch price
 	Route::get('/partner-product-purch-price', 'PartnerProductPurchPriceController@index')
 		->name('partner-product-purch-price.index');
-	Route::get('/partner-product-purch-price/active/{id}', 'PartnerProductPurchPriceController@active')
+
+	Route::get('/partner-product-purch-price/actived/{id}/{version}/{status}', 'PartnerProductPurchPriceController@active')
 		->name('partner-product-purch-price.active');
+
 	Route::get('/partner-product-purch-price/delete/{id}', 'PartnerProductPurchPriceController@delete')
 		->name('partner-product-purch-price.delete');
 	Route::get('/partner-product-purch-price/add', 'PartnerProductPurchPriceController@tambah')
