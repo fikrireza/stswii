@@ -58,7 +58,9 @@
 			<div class="x_title">
 				<h2>Product Sell Price </h2>
 				<ul class="nav panel_toolbox">
+					@can('create-product-sell-price')
 					<a href="{{ route('product-sell-price.template') }}" class="btn btn-primary btn-sm"> Download Template</a>
+					@endcan
 				</ul>
 				<div class="clearfix"></div>
 			</div>
@@ -77,7 +79,9 @@
 					<div class="form-group">
 						<div class="col-md-6 col-md-offset-3">
 							<a href="{{ route('product-sell-price.index') }}" class="btn btn-primary">Cancel</a>
+							@can('create-product-sell-price')
 							<button id="send" type="submit" class="btn btn-success">Process</button>
+							@endcan
 						</div>
 					</div>
 				</form>
@@ -160,7 +164,7 @@
 						@endphp
 						@endforeach
 					</tbody>
-					
+
 				</table>
 				<button name="button" class="btn btn-success btn-bg btn-submit" onclick="return false">Upload</button>
 				</form>
@@ -216,7 +220,7 @@
 
 	function currency(number)
 	{
-		var format = '';    
+		var format = '';
 		var angkarev = number.toString().split('').reverse().join('');
 		for(var i = 0; i < angkarev.length; i++) if(i%3 == 0) format += angkarev.substr(i,3)+',';
 		return format.split('',format.length-1).reverse().join('');

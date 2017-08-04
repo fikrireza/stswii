@@ -51,6 +51,7 @@
 </div>
 @endif
 
+@can('activate-product')
 <div class="modal fade modal-nonactive" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
@@ -88,6 +89,7 @@
     </div>
   </div>
 </div>
+@endcan
 
 @can('delete-product')
 <div class="modal fade modal-delete" tabindex="-1" role="dialog" aria-hidden="true">

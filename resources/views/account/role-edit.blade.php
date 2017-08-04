@@ -111,6 +111,9 @@
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[delete-product]" {{ in_array('delete-product',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[activate-product]" {{ in_array('activate-product',$can) ? 'checked="checked"' : '' }} value="true" /> Status
           </label>
         </div>
       </div>
@@ -129,6 +132,9 @@
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[delete-product-sell-price]" {{ in_array('delete-product-sell-price',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[activate-product-sell-price]" {{ in_array('activate-product-sell-price',$can) ? 'checked="checked"' : '' }} value="true" /> Status
           </label>
         </div>
       </div>

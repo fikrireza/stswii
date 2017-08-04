@@ -78,7 +78,7 @@
               @endif
             </div>
           </div>
-          
+
           <div class="item form-group {{ $errors->has('gross_sell_price') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Gross Sell Price <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -143,7 +143,9 @@
           <div class="form-group">
             <div class="col-md-6 col-md-offset-3">
               <a href="{{ route('product-sell-price.index') }}" class="btn btn-primary">Cancel</a>
+              @can('create-product-sell-price')
               <button id="send" type="submit" class="btn btn-success">Submit</button>
+              @endcan
             </div>
           </div>
         </form>
