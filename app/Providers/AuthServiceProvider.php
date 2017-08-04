@@ -52,7 +52,7 @@ class AuthServiceProvider extends ServiceProvider
           return $user->hasAccess(['create-provider']);
         });
         Gate::define('update-provider', function($user){
-          return $user->hasAccess(['update-povider']);
+          return $user->hasAccess(['update-provider']);
         });
         Gate::define('activate-provider', function($user){
           return $user->hasAccess(['activate-provider']);
