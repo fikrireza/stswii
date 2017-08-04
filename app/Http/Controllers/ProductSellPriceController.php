@@ -423,7 +423,7 @@ class ProductSellPriceController extends Controller
 				{
 					$arrData = ProductSellPrice::create(array(
 						"product_id"          => $product_id[$key],
-						"flg_tax"             => $gross_sell_price[$key] < 0 ? 0 : 1,
+						"flg_tax"             => $gross_sell_price[$key] > 0 ? 0 : 1,
 						"gross_sell_price"    => $gross_sell_price[$key],
 						"tax_percentage"      => $tax_percentage[$key],
 						"datetime_start"      => date('YmdHis', strtotime( $datetime_start[$key] )),
