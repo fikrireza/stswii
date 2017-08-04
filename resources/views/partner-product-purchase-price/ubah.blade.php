@@ -14,14 +14,14 @@
 @if(Session::has('berhasil'))
 <script>
   window.setTimeout(function() {
-    $(".alert-success").fadeTo(700, 0).slideUp(700, function(){
+    $(".alert.alert-dismissible").fadeTo(700, 0).slideUp(700, function(){
         $(this).remove();
     });
   }, 5000);
 </script>
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
-    <div class="alert alert-success alert-dismissible fade in" role="alert">
+    <div class="alert {{ Session::get('alret') }} alert-dismissible fade in" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
       </button>
       <strong>{{ Session::get('berhasil') }}</strong>
@@ -29,26 +29,6 @@
   </div>
 </div>
 @endif
-
-@if(Session::has('gagal'))
-<script>
-  window.setTimeout(function() {
-    $(".alert-danger").fadeTo(700, 0).slideUp(700, function(){
-        $(this).remove();
-    });
-  }, 15000);
-</script>
-<div class="row">
-  <div class="col-md-12 col-sm-12 col-xs-12">
-    <div class="alert alert-danger alert-dismissible fade in" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
-      </button>
-      <strong>{{ Session::get('gagal') }}</strong>
-    </div>
-  </div>
-</div>
-@endif
-
 
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
@@ -61,22 +41,100 @@
         <div class="clearfix"></div>
       </div>
       <div class="x_content">
-        <form action="" class="form-horizontal form-label-left" novalidate>
+        <form 
+          action="{{ route('partner-product-purch-price.update', ['id'=> $getPartnerProductPurchPrice->partner_product_purch_price_id, 'version'=> $getPartnerProductPurchPrice->version]) }}" method="post" class="form-horizontal form-label-left" novalidate>
           {{ csrf_field() }}
-          <input type="hidden" name="product_purch_price_id" value="">
+          <div class="item form-group {{ $errors->has('partner_pulsa_id') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_pulsa_id">
+              Partner Pulsa <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <input 
+                id="partner_product_purch_price_id" 
+                class="form-control col-md-7 col-xs-12" 
+                name="partner_product_purch_price_id" 
+                type="hidden" 
+                value="{{ $getPartnerProductPurchPrice->partner_product_purch_price_id }}" 
+                readonly
+              >
+              <input 
+                id="version" 
+                class="form-control col-md-7 col-xs-12" 
+                name="version" 
+                type="hidden" 
+                value="{{ $getPartnerProductPurchPrice->version }}" 
+                readonly
+              >
+              <select 
+                id="partner_pulsa_id" 
+                name="partner_pulsa_id" 
+                class="form-control select2_single call-product-partner" 
+                required="required"
+              >
+                <option value="">Choose Partner Pulsa</option>
+                @foreach ($getPartner as $key)
+                <option 
+                  value="{{ $key->partner_pulsa_id }}" 
+                  {{ $findPartnerProduct->partner_pulsa_id == $key->partner_pulsa_id ? 'selected' : ''}}
+                >
+                  {{ $key->partner_pulsa_name.'('.$key->partner_pulsa_code.')' }}
+                </option>
+                @endforeach
+              </select>
+              @if($errors->has('partner_pulsa_id'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('partner_pulsa_id')}}</span></code>
+              @endif
+            </div>
+          </div>
+
+          <div class="item form-group {{ $errors->has('provider_id') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="provider_id">
+              Provider <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <select 
+                id="provider_id" 
+                name="provider_id" 
+                class="form-control select2_single call-product-partner" 
+                required="required"
+              >
+                <option value="">Choose Provider</option>
+                @foreach ($getProvider as $key)
+                <option 
+                  value="{{ $key->provider_id }}" 
+                  {{ $findPartnerProduct->provider_id == $key->provider_id ? 'selected' : ''}}
+                >
+                  {{ $key->provider_name.'('.$key->provider_code.')' }}
+                </option>
+                @endforeach
+              </select>
+              @if($errors->has('provider_id'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_id')}}</span></code>
+              @endif
+            </div>
+          </div>
           <div class="item form-group {{ $errors->has('partner_product_id') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
               Partner Product <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <select id="partner_product_id" name="partner_product_id" class="form-control select2_single" required="required">
-                <option value="">Pilih</option>
-                {{-- @foreach ($getPartnerProduct as $key)
-                <option value="{{ $key->id }}" {{ old('partner_product_id', $getPartnerProductPurchPrice->partner_product_id) == $key->id ? 'selected' : '' }}>{{ $key->partner_product_name}}</option>
-                @endforeach --}}
+              <select 
+                id="partner_product_id" 
+                name="partner_product_id" 
+                class="form-control select2_single" 
+                required="required"
+              >
+                <option value="">Choose</option>
+                @foreach($getPartnerProduct as $key)
+                <option 
+                  value="{{ $key->partner_product_id }}" 
+                  {{ $getPartnerProductPurchPrice->partner_product_id == $key->partner_product_id ? 'selected' : '' }}
+                >
+                  {{$key->partner_product_name." (".$key->partner_product_code.")"}}
+                @endforeach
               </select>
-              @if($errors->has('partner_product_id'))
-                <code><span style="color:red; font-size:12px;">{{ $errors->first('partner_product_id')}}</span></code>
+              @if($errors->has('partner_product_purch_price_id'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('partner_product_purch_price_id')}}</span></code>
               @endif
             </div>
           </div>
@@ -85,60 +143,102 @@
               Gross Purches Price <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="gross_purch_price" class="form-control" name="gross_purch_price" placeholder="E.g: 50000" required="required" type="text" value="{{ old('gross_purch_price', 10000) }}" onkeypress="return isNumber(event)" maxlength="9">
+              <input 
+                id="gross_purch_price" 
+                class="form-control" 
+                name="gross_purch_price" 
+                placeholder="E.g: 50000" 
+                required="required" 
+                type="text" 
+                value="{{ $getPartnerProductPurchPrice->gross_purch_price }}"
+                onkeypress="return isNumber(event)" 
+                maxlength="9"
+              >
               @if($errors->has('gross_purch_price'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('gross_purch_price')}}</span></code>
               @endif
             </div>
           </div>
           <div class="item form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Tax</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+              Tax
+            </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input type="checkbox" name="flg_tax" id="flg_tax" value="1"/>
+                <input type="checkbox" name="flg_tax" id="flg_tax" value="1" {{ $getPartnerProductPurchPrice->flg_tax == 1 ? 'checked=""' : '' }}/>
               </label>
             </div>
           </div>
-          <div class="item form-group {{ $errors->has('tax_percentage') ? 'has-error' : ''}}" id="tax_percentage" style="display:none">
+          <div class="item form-group {{ $errors->has('tax_percentage') ? 'has-error' : ''}}" id="tax_percentage" style="display:{{ $errors->has('tax_percentage') ? '' : 'none'}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Tax Percentage <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="tax_percentage" class="form-control" name="tax_percentage" placeholder="E.g: 50000" required="required" type="text" value="{{ old('tax_percentage') }}" onkeypress="return isNumber(event)" maxlength="9">
+              <input 
+                id="tax_percentage" 
+                class="form-control" 
+                name="tax_percentage" 
+                placeholder="E.g: 50000" 
+                required="required" 
+                type="text" 
+                value="{{ $getPartnerProductPurchPrice->tax_percentage }}"
+                onkeypress="return isNumber(event)" 
+                maxlength="9"
+              >
               @if($errors->has('tax_percentage'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('tax_percentage')}}</span></code>
               @endif
             </div>
           </div>
           <div class="item form-group {{ $errors->has('datetime_start') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Date Start <span class="required">*</span></label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">
+              Date Start <span class="required">*</span>
+            </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="datetime_start" name="datetime_start" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_start', date('Y-m-d h:i:s')) }}">
+              <input 
+                id="datetime_start" 
+                name="datetime_start" 
+                class="date-picker form-control col-md-7 col-xs-12" 
+                required="required" 
+                type="text" 
+                value="{{ date('Y-m-d',strtotime($getPartnerProductPurchPrice->datetime_start)) }}"
+              >
               @if($errors->has('datetime_start'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('datetime_start')}}</span></code>
               @endif
             </div>
           </div>
           <div class="item form-group {{ $errors->has('datetime_end') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Date End <span class="required">*</span></label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">
+              Date End <span class="required">*</span>
+            </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="datetime_end" name="datetime_end" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_end', date('Y-m-d h:i:s')) }}">
+              <input 
+                id="datetime_end" 
+                name="datetime_end" 
+                class="date-picker form-control col-md-7 col-xs-12" 
+                required="required" 
+                type="text" 
+                value="{{ date('Y-m-d',strtotime($getPartnerProductPurchPrice->datetime_end)) }}"
+              >
               @if($errors->has('datetime_end'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('datetime_end')}}</span></code>
               @endif
             </div>
           </div>
-          <div class="ln_solid"></div>
-          <div class="item form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <label>
-                <input type="checkbox" class="flat" name="active" value="1" checked="" />
-              </label>
-            </div>
-          </div>
+          <?php  
+            // <div class="ln_solid"></div>
+            // <div class="item form-group">
+            //   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
+            //   <div class="col-md-6 col-sm-6 col-xs-12">
+            //     <label>
+            //       <input type="checkbox" class="flat" name="active" value="1" {{ old('active') == 1 ? 'checked=""' : '' }}/>
+            //     </label>
+            //   </div>
+            // </div>
+          ?>
           <div class="ln_solid"></div>
           <div class="form-group">
             <div class="col-md-6 col-md-offset-3">
-              <a href="{{ route('product-sell-price.index') }}" class="btn btn-primary">Cancel</a>
+              <a href="{{ route('partner-product-purch-price.index') }}" class="btn btn-primary">Cancel</a>
               <button id="send" type="submit" class="btn btn-success">Submit</button>
             </div>
           </div>
@@ -160,38 +260,71 @@
 <script src="{{ asset('amadeo/js/moment/moment.min.js') }}"></script>
 <script src="{{ asset('amadeo/js/datepicker/daterangepicker.js') }}"></script>
 
+@if($getPartnerProductPurchPrice->tax_percentage != 0 or $getPartnerProductPurchPrice->flg_tax == 1)
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#tax_percentage").show();
+});
+</script>
+@endif
+
 <script>
-  $(".select2_single").select2({
-    placeholder: "Choose Partner Product",
-    allowClear: true
-  });
+$(".select2_single").select2({
+  // placeholder: "Choose Partner Product",
+  allowClear: true
+});
 
-  $('#datetime_start').daterangepicker({
-    singleDatePicker: true,
-    calender_style: "picker_3",
-    format: 'YYYY-MM-DD H:m:s',
-    minDate: new Date(),
-  });
+$(document).on('change','select.call-product-partner', function(){
+  var partner = $('select#partner_pulsa_id').val();
+  var provider= $('select#provider_id').val();
 
-  $('#datetime_end').daterangepicker({
-    singleDatePicker: true,
-    calender_style: "picker_3",
-    format: 'YYYY-MM-DD H:m:s',
-    minDate: new Date(),
-  });
-
-  $('#flg_tax').click(function() {
-    $("#tax_percentage").toggle(this.checked);
-  });
-
-  function isNumber(evt) {
-    evt = (evt) ? evt : window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
+  if((partner == '') || (provider == '')){
+    $('select#partner_product_id').val('');
+    $("select#partner_product_id").select2("val", "");
+    $('select#partner_product_id').prop("disabled", true);
   }
+  else{
+    $('select#partner_product_id').val('');
+    $("select#partner_product_id").select2("val", "");
+    $('select#partner_product_id').prop("disabled", false);
+    $.getJSON({url: "{{ route('partner-product-purch-price.ajaxGetProductPartner') }}/" + partner + "/" + provider, success: function(result){
+        $('select#partner_product_id').empty();
+        $('select#partner_product_id').append("<option value=''>Select Product</option>");
+        console.log(result)
+        $.each(result, function(i, field){
+          $('#partner_product_id').append("<option value='"+ field.partner_product_id +"'>"+ field.partner_product_name + " (" + field.partner_product_code + ")" + "</option>");
+        });
+      }
+    });
+  }
+});
+
+$('#datetime_start').daterangepicker({
+  singleDatePicker: true,
+  calender_style: "picker_3",
+  format: 'YYYY-MM-DD',
+  // minDate: new Date(),
+});
+
+$('#datetime_end').daterangepicker({
+  singleDatePicker: true,
+  calender_style: "picker_3",
+  format: 'YYYY-MM-DD',
+  // minDate: new Date(),
+});
+
+$('#flg_tax').click(function() {
+  $("#tax_percentage").toggle(this.checked);
+});
+
+function isNumber(evt) {
+  evt = (evt) ? evt : window.event;
+  var charCode = (evt.which) ? evt.which : evt.keyCode;
+  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    return false;
+  }
+  return true;
+}
 
 </script>
 @endsection

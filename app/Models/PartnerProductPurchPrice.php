@@ -12,7 +12,7 @@ class PartnerProductPurchPrice extends Model
 
     protected $primaryKey = 'partner_product_purch_price_id'; // or null
     
-    public function partnerpulsa()
+    public function partnerproduct()
     {
       return $this->belongsTo('App\Models\PartnerProduct', 'partner_product_id');
     }

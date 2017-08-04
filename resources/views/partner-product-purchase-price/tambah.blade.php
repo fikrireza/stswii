@@ -44,6 +44,57 @@
       <div class="x_content">
         <form action="{{ route('partner-product-purch-price.store') }}" method="POST" class="form-horizontal form-label-left" novalidate>
           {{ csrf_field() }}
+          <div class="item form-group {{ $errors->has('partner_pulsa_id') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_pulsa_id">
+              Partner Pulsa <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <select 
+                id="partner_pulsa_id" 
+                name="partner_pulsa_id" 
+                class="form-control select2_single call-product-partner" 
+                required="required"
+              >
+                <option value="">Choose Partner Pulsa</option>
+                @foreach ($getPartner as $key)
+                <option 
+                  value="{{ $key->partner_pulsa_id }}" 
+                >
+                  {{ $key->partner_pulsa_name.'('.$key->partner_pulsa_code.')' }}
+                </option>
+                @endforeach
+              </select>
+              @if($errors->has('partner_pulsa_id'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('partner_pulsa_id')}}</span></code>
+              @endif
+            </div>
+          </div>
+
+          <div class="item form-group {{ $errors->has('provider_id') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="provider_id">
+              Provider <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <select 
+                id="provider_id" 
+                name="provider_id" 
+                class="form-control select2_single call-product-partner" 
+                required="required"
+              >
+                <option value="">Choose Provider</option>
+                @foreach ($getProvider as $key)
+                <option 
+                  value="{{ $key->provider_id }}" 
+                >
+                  {{ $key->provider_name.'('.$key->provider_code.')' }}
+                </option>
+                @endforeach
+              </select>
+              @if($errors->has('provider_id'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_id')}}</span></code>
+              @endif
+            </div>
+          </div>
           <div class="item form-group {{ $errors->has('partner_product_id') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
               Partner Product <span class="required">*</span>
@@ -56,14 +107,6 @@
                 required="required"
               >
                 <option value="">Choose</option>
-                @foreach ($getPartnerProduct as $key)
-                <option 
-                  value="{{ $key->partner_product_id }}" 
-                  {{ old('partner_product_id') == $key->partner_product_id ? 'selected' : '' }}
-                >
-                  {{ $key->partner_product_name.'('.$key->partner_product_code.'/'.$key->partnerpulsa->partner_pulsa_name.'--'.$key->partnerpulsa->partner_pulsa_code.')' }}
-                </option>
-                @endforeach
               </select>
               @if($errors->has('partner_product_id'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('partner_product_id')}}</span></code>
@@ -201,8 +244,37 @@ $(document).ready(function(){
 
 <script>
 $(".select2_single").select2({
-  placeholder: "Choose Partner Product",
+  // placeholder: "Choose Partner Product",
   allowClear: true
+});
+
+$(document).ready(function(){
+  $('select#partner_product_id').prop("disabled", true);
+});
+
+$(document).on('change','select.call-product-partner', function(){
+  var partner = $('select#partner_pulsa_id').val();
+  var provider= $('select#provider_id').val();
+
+  if((partner == '') || (provider == '')){
+    $('select#partner_product_id').val('');
+    $("select#partner_product_id").select2("val", "");
+    $('select#partner_product_id').prop("disabled", true);
+  }
+  else{
+    $('select#partner_product_id').val('');
+    $("select#partner_product_id").select2("val", "");
+    $('select#partner_product_id').prop("disabled", false);
+    $.getJSON({url: "{{ route('partner-product-purch-price.ajaxGetProductPartner') }}/" + partner + "/" + provider, success: function(result){
+        $('select#partner_product_id').empty();
+        $('select#partner_product_id').append("<option value=''>Select Product</option>");
+        console.log(result)
+        $.each(result, function(i, field){
+          $('#partner_product_id').append("<option value='"+ field.partner_product_id +"'>"+ field.partner_product_name + " (" + field.partner_product_code + ")" + "</option>");
+        });
+      }
+    });
+  }
 });
 
 $('#datetime_start').daterangepicker({

@@ -186,8 +186,10 @@ class PartnerPulsaController extends Controller
       ], $message);
 
   		if($validator->fails()){
-  			return redirect()->route('partner-pulsa.edit', ['id' => $id, 'version' => $version])
-  				->withErrors($validator)->withInput();
+  			return redirect()
+          ->route('partner-pulsa.edit', ['id' => $id, 'version' => $version])
+  				->withErrors($validator)
+          ->withInput();
   		}
 
       $update = PartnerPulsa::find($request->partner_pulsa_id);
