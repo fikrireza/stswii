@@ -47,8 +47,12 @@
               <i class="fa fa-beer"></i> Manage Product <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="{{ Route::is('product.*') ? 'display: block;' : '' }}{{ Route::is('product-*') ? 'display: block;' : '' }}">
+              @can('read-product')
               <li class="{{ Route::is('product.*') ? 'current-page' : '' }}"><a href="{{ route('product.index') }}">Product</a></li>
+              @endcan
+              @can('read-product-sell-price')
               <li class="{{ Route::is('product-*') ? 'current-page' : '' }}"><a href="{{ route('product-sell-price.index') }}">Product Sell Price</a></li>
+              @endcan
             </ul>
           </li>
           <li class="{{ Route::is('partner-product*') ? 'active' : '' }}{{ Route::is('partner-pulsa*') ? 'active' : '' }}{{ Route::is('partner-server*') ? 'active' : '' }}">
