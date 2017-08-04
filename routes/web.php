@@ -32,7 +32,6 @@ Route::get('/home', 'HomeController@index')
 
 	Route::get('/provider/ajax-view/{id}', 'ProviderController@ajaxView')
 		->name('provider.ajax.view');
-
 // provider
 
 // provider prefix
@@ -113,16 +112,22 @@ Route::get('/home', 'HomeController@index')
 	Route::get('/partner-product-purch-price/actived/{id}/{version}/{status}', 'PartnerProductPurchPriceController@active')
 		->name('partner-product-purch-price.active');
 
-	Route::get('/partner-product-purch-price/delete/{id}', 'PartnerProductPurchPriceController@delete')
+	Route::get('/partner-product-purch-price/delete/{id}/{version}', 'PartnerProductPurchPriceController@delete')
 		->name('partner-product-purch-price.delete');
+
 	Route::get('/partner-product-purch-price/add', 'PartnerProductPurchPriceController@tambah')
 		->name('partner-product-purch-price.tambah');
 	Route::post('/partner-product-purch-price/store', 'PartnerProductPurchPriceController@store')
 		->name('partner-product-purch-price.store');
-	Route::get('/partner-product-purch-price/edit/{id}', 'PartnerProductPurchPriceController@edit')
+
+	Route::get('/partner-product-purch-price/edit/{id}/{version}', 'PartnerProductPurchPriceController@edit')
 		->name('partner-product-purch-price.edit');
-	Route::post('/partner-product-purch-price/edit', 'PartnerProductPurchPriceController@update')
+	Route::post('/partner-product-purch-price/edit/{id}/{version}', 'PartnerProductPurchPriceController@update')
 		->name('partner-product-purch-price.update');
+
+	Route::get('/partner-product-purch-price/ajax-get-product-partner/{partner?}/{provider?}', 'PartnerProductPurchPriceController@ajaxGetProductPartner')
+		->name('partner-product-purch-price.ajaxGetProductPartner');
+
 	Route::get('partner-product-purch-price/upload', 'PartnerProductPurchPriceController@upload')
 	  ->name('partner-product-purch-price.upload');
 // partner product purch price

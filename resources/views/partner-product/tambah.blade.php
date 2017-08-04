@@ -40,7 +40,6 @@
 				                @foreach ($getPartner as $key)
 								<option 
 									value="{{ $key->partner_pulsa_id }}" 
-									{{ old('partner_pulsa_id') == $key->partner_pulsa_id ? 'selected' : '' }}
 								>
 									{{ $key->partner_pulsa_name.'('.$key->partner_pulsa_code.')' }}
 								</option>
@@ -67,7 +66,6 @@
                 				@foreach ($getProvider as $key)
 								<option 
 									value="{{ $key->provider_id }}" 
-									{{ old('provider_id') == $key->provider_id ? 'selected' : '' }}
 								>
 									{{ $key->provider_name.'('.$key->provider_code.')' }}
 								</option>

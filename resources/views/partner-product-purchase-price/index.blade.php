@@ -124,8 +124,8 @@
             @foreach ($getPPPP as $list)
             <tr>
               <td>{{ $no++ }}</td>
-              <td>{{ $list->partnerpulsa->partner_product_code }}</td>
-              <td>{{ $list->partnerpulsa->partner_product_name }}</td>
+              <td>{{ $list->partnerproduct->partner_product_code }}</td>
+              <td>{{ $list->partnerproduct->partner_product_name }}</td>
               <td>{{ $list->gross_purch_price }}</td>
               <td>{{ $list->flg_tax == 1 ? 'Y' : 'N' }}</td>
               <td>{{ $list->flg_tax == 1 ? $list->tax_percentage.'%' : '0%' }}</td>
@@ -165,10 +165,16 @@
                 </a>
               </td>
               <td>
-                <a href="{{ route('partner-product-purch-price.edit', ['id'=> $list->partner_product_purch_price_id]) }}">
+                <a href="{{ route('partner-product-purch-price.edit', ['id'=> $list->partner_product_purch_price_id, 'version'=> $list->version]) }}">
                   <span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>
                 </a>
-                <a href="" class="delete" data-value="{{ $list->partner_product_purch_price_id }}" data-toggle="modal" data-target=".modal-delete">
+                <a 
+                  href="" 
+                  class="delete" 
+                  data-value="{{ $list->partner_product_purch_price_id }}" 
+                  data-version="{{ $list->version }}" 
+                  data-toggle="modal" 
+                  data-target=".modal-delete">
                   <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span>
                 </a>
               </td>
