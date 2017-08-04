@@ -89,6 +89,7 @@
   </div>
 </div>
 
+@can('delete-product')
 <div class="modal fade modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
@@ -108,7 +109,7 @@
     </div>
   </div>
 </div>
-
+@endcan
 
 <div class="page-title">
   <div class="title_left">
@@ -123,7 +124,9 @@
       <div class="x_title">
         <h2>Product </h2>
         <ul class="nav panel_toolbox">
+          @can('create-product')
           <a href="{{ route('product.tambah') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add</a>
+          @endcan
         </ul>
         <div class="clearfix"></div>
       </div>
@@ -145,7 +148,9 @@
               <th>Product Name</th>
               <th>Nominal</th>
               <th>Type Product</th>
+              @can('activate-product')
               <th>Status</th>
+              @endcan
               <th>Action</th>
             </tr>
           </thead>
@@ -159,7 +164,9 @@
               <td>{{ $list->product_name }}</td>
               <td>Rp. {{ number_format($list->nominal, 2) }}</td>
               <td>{{ $list->type_product }}</td>
-              <td class="text-center">@if ($list->active)
+              @can('activate-product')
+              <td class="text-center">
+                  @if ($list->active)
                     <a href="" class="unpublish" data-value="{{ $list->product_id }}" data-version="{{ $list->version }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a>
                     <br>
                   @else
@@ -167,9 +174,14 @@
                     <br>
                   @endif
               </td>
+              @endcan
               <td>
+                @can('update-product')
                 <a href="{{ route('product.ubah',$list->product_code) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
+                @endcan
+                @can('delete-product')
                 <a href="" class="delete" data-value="{{ $list->product_id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
+                @endcan
               </td>
             </tr>
             @endforeach
