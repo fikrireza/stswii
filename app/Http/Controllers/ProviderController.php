@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use Yajra\Datatables\Facades\Datatables;
+
 use App\Models\User;
 use App\Models\Provider;
 use App\Models\ProviderPrefix;
@@ -28,21 +30,10 @@ class ProviderController extends Controller{
     
 
     public function index(){
-		$getProvider = Provider::select(
-				'provider_id',
-				'provider_code',
-				'provider_name',
-				'version',
-				DB::raw('(select count(provider_prefix_id) from sw_provider_prefix where sw_provider.provider_id = sw_provider_prefix.provider_id) as count_provider_prefix')
-			)
-            ->get();
-
         $newProvCode = 'prov-'.rand(1000,9999);
-
         $cekCode = Provider::where('provider_code', $newProvCode)->first();
         if(!$cekCode){
           return view('provider.index', compact(
-				'getProvider',
 				'newProvCode'
 			));
         }
@@ -81,7 +72,6 @@ class ProviderController extends Controller{
 
 		}
         return response()->json(['html'=>$view]);
-
     }
     public function delete($id, $version){
 		$delete = Provider::find($id);
@@ -185,4 +175,47 @@ class ProviderController extends Controller{
 			->with('alret', $alret)
 			->with('berhasil', $info);
     }
+
+    public function yajraGetData(){
+
+    	$getProviders = Provider::select([
+	    		'provider_id',
+				'provider_code',
+				'provider_name',
+				'version',
+				DB::raw('(select count(provider_prefix_id) from sw_provider_prefix where sw_provider.provider_id = sw_provider_prefix.provider_id) as count_provider_prefix')
+    		])
+    		->get();
+
+        return Datatables::of($getProviders)
+            ->addColumn('action', function ($getProvider) {
+            	$actionHtml = '';
+            	if (Auth::user()->can('read-provider')) { // harusnya read provider prefix
+            		$actionHtml = $actionHtml."<a class='read' data-id='".$getProvider->provider_id."' ";
+            		if($getProvider->count_provider_prefix!= 0){
+            			$actionHtml = $actionHtml."data-toggle='modal' data-target='.modal-form-read' ";
+            		}
+
+                	$actionHtml = $actionHtml."><span class='btn btn-xs btn-info btn-sm ";
+
+                	if($getProvider->count_provider_prefix == 0){
+                		$actionHtml = $actionHtml."disabled";
+                	}
+
+            		$actionHtml = $actionHtml."' data-toggle='tooltip' data-placement='top' title='View'><i class='fa fa-archive'></i></span></a>";
+				}
+				if (Auth::user()->can('update-provider')) {
+					$actionHtml = $actionHtml." <a class='update' data-id='".$getProvider->provider_id."' data-code='".$getProvider->provider_code."' data-name='".$getProvider->provider_name."' data-version='".$getProvider->version."' data-toggle='modal' data-target='.modal-form-update'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Update'><i class='fa fa-pencil'></i></span></a>";
+				}
+				if (Auth::user()->can('delete-provider')) {
+					$actionHtml = $actionHtml."<a href='' class='delete' data-value='".$getProvider->provider_id."'data-version='".$getProvider->version."' data-toggle='modal' data-target='.modal-delete'><span class='btn btn-xs btn-danger btn-sm' data-toggle='tooltip' data-placement='top' title='Hapus'><i class='fa fa-remove'></i></span></a>";
+				}
+                return $actionHtml;
+            })
+            ->removeColumn('provider_id')
+            ->removeColumn('version')
+            ->removeColumn('count_provider_prefix')
+            ->make(true);
+    }
+    
 }

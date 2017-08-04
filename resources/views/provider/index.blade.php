@@ -314,63 +314,11 @@
         <table id="dataTables" class="table table-striped table-bordered no-footer" width="100%">
           <thead>
             <tr role="row">
-              <th>No</th>
               <th>Provider Code</th>
               <th>Provider Name</th>
               <th>Aksi</th>
             </tr>
           </thead>
-          <tbody>
-            @php ($no = 1)
-            @foreach($getProvider as $list)
-            <tr>
-              <td>{{ $no++ }}</td>
-              <td>{{ $list->provider_code or '-' }}</td>
-              <td>{{ $list->provider_name or '-' }}</td>
-              <td>
-                @can('read-provider')
-                <a
-                  class="read"
-                  data-id="{{ $list->provider_id }}"
-                  @if($list->count_provider_prefix != 0)
-                  data-toggle="modal"
-                  data-target=".modal-form-read"
-                  @endif
-                >
-                  <span class="btn btn-xs btn-info btn-sm {{ $list->count_provider_prefix == 0 ? 'disabled' : '' }}" data-toggle="tooltip" data-placement="top" title="View"><i class="fa fa-archive"></i></span>
-                </a>
-                @endcan
-
-                @can('update-provider')
-                <a
-                  class="update"
-                  data-id="{{ $list->provider_id }}"
-                  data-code="{{ $list->provider_code or '-' }}"
-                  data-name="{{ $list->provider_name or '-' }}"
-                  data-version="{{ $list->version or '-' }}"
-                  data-toggle="modal"
-                  data-target=".modal-form-update"
-                >
-                  <span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>
-                </a>
-                @endcan
-
-                @can('delete-provider')
-                <a
-                  href=""
-                  class="delete"
-                  data-value="{{ $list->provider_id }}"
-                  data-version="{{ $list->version }}"
-                  data-toggle="modal"
-                  data-target=".modal-delete"
-                >
-                  <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span>
-                </a>
-                @endcan
-              </td>
-            </tr>
-            @endforeach
-          </tbody>
         </table>
       </div>
     </div>
@@ -384,63 +332,65 @@
 <script src="{{ asset('amadeo/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
 <script type="text/javascript">
-$('#dataTables').DataTable();
+// $('#dataTables').DataTable();
+$(function() {
+    $('#dataTables').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('provider.yajra.getDatas') }}",
+        columns: [
+            {data: 'provider_code', name: 'Provider Code'},
+            {data: 'provider_name', name: 'Provider Name'},
+            {data: 'action', name: 'Action', orderable: false, searchable: false}
+        ]
+    });
+});
 
 $(function(){
-    $(document).on('click', '.read', function(e) {
-        var idProvider    = $(this).data('id');
-        $.ajax(
-          {
-              url: "{{ url('/') }}/provider/ajax-view/" + idProvider,
-              type: "get"/*,
-              beforeSend: function()
-              {
-                  $('.ajax-load').show();
-              }*/
-          })
-          .done(function(data)
-          {
-              if(!data.html){
-                // $('.ajax-load').hide();
-                // $('#callNext').hide();
-                return;
-              }
-              // $('.ajax-load').hide();
-              $("#modal-form-read-html.modal-body").html(data.html);
-          })
-          .fail(function(jqXHR, ajaxOptions, thrownError)
-          {
-                alert('server not responding...');
-          });
-    });
+  $(document).on('click', '.read', function(e) {
+      var idProvider    = $(this).data('id');
+      $.ajax(
+        {
+            url: "{{ url('/') }}/provider/ajax-view/" + idProvider,
+            type: "get"
+        })
+        .done(function(data)
+        {
+            $("#modal-form-read-html.modal-body").html(data.html);
+        })
+        .fail(function(jqXHR, ajaxOptions, thrownError)
+        {
+              alert('server not responding...');
+        });
+  });
 
-    $(document).on('click', '.update', function(e) {
-        var idProvider    = $(this).data('id');
-        var codeProvider  = $(this).data('code');
-        var versionProvider  = $(this).data('version');
-        var nameProvider  = $(this).data('name');
-        $("#id_provider_update").val(idProvider);
-        $("#code_provider_update").val(codeProvider);
-        $("#version_provider_update").val(versionProvider);
-        $("#name_provider_update").val(nameProvider);
-    });
+  $(document).on('click', '.update', function(e) {
+      var idProvider    = $(this).data('id');
+      var codeProvider  = $(this).data('code');
+      var versionProvider  = $(this).data('version');
+      var nameProvider  = $(this).data('name');
+      $("#id_provider_update").val(idProvider);
+      $("#code_provider_update").val(codeProvider);
+      $("#version_provider_update").val(versionProvider);
+      $("#name_provider_update").val(nameProvider);
+  });
 
-    $(document).on('click', '.update-prefix', function(e) {
-        var provider_id = $(this).data('provider_id');
-        var prefix_id   = $(this).data('prefix_id');
-        var prefix      = $(this).data('prefix');
-        var version      = $(this).data('version');
-        $("#provider_id_update").val(provider_id);
-        $("#prefix_id_update").val(prefix_id);
-        $("#prefix_update").val(prefix);
-        $("#version_update").val(version);
-    });
+  $(document).on('click', '.update-prefix', function(e) {
+      var provider_id = $(this).data('provider_id');
+      var prefix_id   = $(this).data('prefix_id');
+      var prefix      = $(this).data('prefix');
+      var version      = $(this).data('version');
+      $("#provider_id_update").val(provider_id);
+      $("#prefix_id_update").val(prefix_id);
+      $("#prefix_update").val(prefix);
+      $("#version_update").val(version);
+  });
 
-    $(document).on('click', '.delete-prefix', function(e) {
-      var a = $(this).data('value');
-      var b = $(this).data('version');
-      $('#setDeletePrefix').attr('href', "{{ url('/') }}/provider-prefix/delete/"+a+"/"+b);
-    });
+  $(document).on('click', '.delete-prefix', function(e) {
+    var a = $(this).data('value');
+    var b = $(this).data('version');
+    $('#setDeletePrefix').attr('href', "{{ url('/') }}/provider-prefix/delete/"+a+"/"+b);
+  });
 });
 
 $(function(){
