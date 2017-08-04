@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 
+use Illuminate\Support\Facades\DB;
+
 
 class AccountController extends Controller
 {
@@ -58,16 +60,18 @@ class AccountController extends Controller
 
     public function roleEdit(Request $request)
     {
+      // return str_replace("\"true\"", "true", $request->permissions);
 
-      $task = array();
+      $task = "{";
       foreach ($request->permissions as $key => $value) {
-        $task = array($key=>$value);
+        $task .= "\"".$key."\": ".$value.", ";
       }
 
-      $update = Role::find($request->id);
-      $update->name = $request->name;
-      $update->permissions = $task;
-      $update->update();
+      $task = strrev(substr(strrev($task), 2))."}";
+
+      $query = 'UPDATE sw_roles SET permissions = \''.$task.'\' WHERE id = '.$request->id;
+
+      DB::statement($query);
 
       return redirect()->route('account.role')->with('berhasil', 'value');
     }
