@@ -169,14 +169,14 @@
   $('#datetime_start').daterangepicker({
     singleDatePicker: true,
     calender_style: "picker_3",
-    format: 'YYYY-MM-DD H:m:s',
+    format: 'YYYY-MM-DD 00:00:00',
     minDate: new Date(),
   });
 
   $('#datetime_end').daterangepicker({
     singleDatePicker: true,
     calender_style: "picker_3",
-    format: 'YYYY-MM-DD H:m:s',
+    format: 'YYYY-MM-DD 23:59:59',
     minDate: new Date(),
   });
 
