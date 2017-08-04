@@ -328,7 +328,7 @@
               <td>{{ $list->provider_code or '-' }}</td>
               <td>{{ $list->provider_name or '-' }}</td>
               <td>
-                @can('view-provider')
+                @can('read-provider')
                 <a
                   class="read"
                   data-id="{{ $list->provider_id }}"

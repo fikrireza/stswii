@@ -49,7 +49,7 @@ Route::get('/home', 'HomeController@index')
 // agent
 	Route::get('/agent/js', 'AgentController@indexJs')
 		->name('agent.index.table.js');
-	
+
 	Route::get('/agent/php', 'AgentController@indexPhp')
 		->name('agent.index.table.php');
 	Route::get('/agent/php/getDatas', 'AgentController@getDataTables')
@@ -101,7 +101,7 @@ Route::get('/home', 'HomeController@index')
 		->name('partner-product.delete');
 	Route::get('/partner-product/actived/{id}/{version}/{status}', 'PartnerProductController@active')
 		->name('partner-product.active');
-		
+
 	Route::get('/partner-product/ajaxGetProductList/{id?}', 'PartnerProductController@ajaxGetProductList')
 		->name('partner-product.ajaxGetProductList');
 // partner product
@@ -185,10 +185,10 @@ Route::get('/home', 'HomeController@index')
 //----- PRODUCT SELL PRICE -----//
 
 //----- Management Account -----//
-	Route::get('account', 'AccountController@index')->name('account.index')->middleware('can:user-read');
-	Route::get('account/add', 'AccountController@tambah')->name('account.tambah')->middleware('can:user-create');
-	Route::get('account/edit/{id}', 'AccountController@ubah')->name('account.ubah')->middleware('can:user-update');
-	Route::get('account/role', 'AccountController@role')->name('account.role')->middleware('can:role-read');
-	Route::get('account/role/{id}', 'AccountController@roleUbah')->name('account.roleUbah')->middleware('can:role-update');
-	Route::post('account/role', 'AccountController@roleEdit')->name('account.roleEdit')->middleware('can:role-update');
+	Route::get('account', 'AccountController@index')->name('account.index')->middleware('can:read-user');
+	Route::get('account/add', 'AccountController@tambah')->name('account.tambah')->middleware('can:create-user');
+	Route::get('account/edit/{id}', 'AccountController@ubah')->name('account.ubah')->middleware('can:update-user');
+	Route::get('account/role', 'AccountController@role')->name('account.role')->middleware('can:read-role');
+	Route::get('account/role/{id}', 'AccountController@roleUbah')->name('account.roleUbah')->middleware('can:update-role');
+	Route::post('account/role', 'AccountController@roleEdit')->name('account.roleEdit')->middleware('can:update-role');
 //----- Management Account -----//

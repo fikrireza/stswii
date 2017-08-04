@@ -60,71 +60,189 @@
           @endif
         </div>
       </div>
-      <div class="item form-group">
-        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product</label>
-        <div class="col-md-6 col-sm-6 col-xs-12">
-          <label>
-            <input type="checkbox" class="flat" name="permissions[product-read]" {{ in_array('product-read',$can) ? 'checked="checked"' : '' }} value="true"/> Product - Read
-          </label><br>
-          <label>
-            <input type="checkbox" class="flat" name="permissions[product-create]" {{ in_array('product-create',$can) ? 'checked="checked"' : '' }} value="true"/> Product - Create
-          </label><br>
-          <label>
-            <input type="checkbox" class="flat" name="permissions[product-update]" {{ in_array('product-update',$can) ? 'checked="checked"' : '' }} value="true" /> Product - Update
-          </label><br>
-          <label>
-            <input type="checkbox" class="flat" name="permissions[product-delete]" {{ in_array('product-delete',$can) ? 'checked="checked"' : '' }} value="true" /> Product - Delete
-          </label>
-        </div>
-      </div>
+      <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Provider</label>
         <div class="col-md-6 col-sm-6 col-xs-12">
           <label>
-            <input type="checkbox" class="flat" name="permissions[provider-read]" {{ in_array('provider-read',$can) ? 'checked="checked"' : '' }} value="true" /> Provider - Read
+            <input type="checkbox" class="flat" name="permissions[read-provider]" {{ in_array('read-provider',$can) ? 'checked="checked"' : '' }} value="true" /> Read
           </label><br>
           <label>
-            <input type="checkbox" class="flat" name="permissions[provider-create]" {{ in_array('provider-create',$can) ? 'checked="checked"' : '' }} value="true" /> Provider - Create
+            <input type="checkbox" class="flat" name="permissions[create-provider]" {{ in_array('create-provider',$can) ? 'checked="checked"' : '' }} value="true" /> Create
           </label><br>
           <label>
-            <input type="checkbox" class="flat" name="permissions[provider-update]" {{ in_array('provider-update',$can) ? 'checked="checked"' : '' }} value="true" /> Provider - Update
+            <input type="checkbox" class="flat" name="permissions[update-provider]" {{ in_array('update-provider',$can) ? 'checked="checked"' : '' }} value="true" /> Update
           </label><br>
           <label>
-            <input type="checkbox" class="flat" name="permissions[provider-delete]" {{ in_array('provider-delete',$can) ? 'checked="checked"' : '' }} value="true" /> Provider - Delete
+            <input type="checkbox" class="flat" name="permissions[delete-provider]" {{ in_array('delete-provider',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
           </label>
         </div>
       </div>
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Provider Prefix</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-provider-prefix]" {{ in_array('read-provider-prefix',$can) ? 'checked="checked"' : '' }} value="true" /> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[create-provider-prefix]" {{ in_array('create-provider-prefix',$can) ? 'checked="checked"' : '' }} value="true" /> Create
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[update-provider-prefix]" {{ in_array('update-provider-prefix',$can) ? 'checked="checked"' : '' }} value="true" /> Update
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[delete-provider-prefix]" {{ in_array('delete-provider-prefix',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label>
+        </div>
+      </div>
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-product]" {{ in_array('read-product',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[create-product]" {{ in_array('create-product',$can) ? 'checked="checked"' : '' }} value="true"/> Create
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[update-product]" {{ in_array('update-product',$can) ? 'checked="checked"' : '' }} value="true" /> Update
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[delete-product]" {{ in_array('delete-product',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label>
+        </div>
+      </div>
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product Sell Price</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-product-sell-price]" {{ in_array('read-product-sell-price',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[create-product-sell-price]" {{ in_array('create-product-sell-price',$can) ? 'checked="checked"' : '' }} value="true"/> Create
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[update-product-sell-price]" {{ in_array('update-product-sell-price',$can) ? 'checked="checked"' : '' }} value="true" /> Update
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[delete-product-sell-price]" {{ in_array('delete-product-sell-price',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label>
+        </div>
+      </div>
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Partner Pulsa</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-partner-pulsa]" {{ in_array('read-partner-pulsa',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[create-partner-pulsa]" {{ in_array('create-partner-pulsa',$can) ? 'checked="checked"' : '' }} value="true"/> Create
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[update-partner-pulsa]" {{ in_array('update-partner-pulsa',$can) ? 'checked="checked"' : '' }} value="true" /> Update
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[delete-partner-pulsa]" {{ in_array('delete-partner-pulsa',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label>
+        </div>
+      </div>
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Partner Product</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-partner-product]" {{ in_array('read-partner-product',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[create-partner-product]" {{ in_array('create-partner-product',$can) ? 'checked="checked"' : '' }} value="true"/> Create
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[update-partner-product]" {{ in_array('update-partner-product',$can) ? 'checked="checked"' : '' }} value="true" /> Update
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[delete-partner-product]" {{ in_array('delete-partner-product',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label>
+        </div>
+      </div>
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Partner Product Purch Price</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-partner-product-purch-price]" {{ in_array('read-partner-product-purch-price',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[create-partner-product-purch-price]" {{ in_array('create-partner-product-purch-price',$can) ? 'checked="checked"' : '' }} value="true"/> Create
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[update-partner-product-purch-price]" {{ in_array('update-partner-product-purch-price',$can) ? 'checked="checked"' : '' }} value="true" /> Update
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[delete-partner-product-purch-price]" {{ in_array('delete-partner-product-purch-price',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label>
+        </div>
+      </div>
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Partner Server</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-partner-server]" {{ in_array('read-partner-server',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[create-partner-server]" {{ in_array('create-partner-server',$can) ? 'checked="checked"' : '' }} value="true"/> Create
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[update-partner-server]" {{ in_array('update-partner-server',$can) ? 'checked="checked"' : '' }} value="true" /> Update
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[delete-partner-server]" {{ in_array('delete-partner-server',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label>
+        </div>
+      </div>
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Agent</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-agent]" {{ in_array('read-agent',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[update-agent]" {{ in_array('update-agent',$can) ? 'checked="checked"' : '' }} value="true"/> Update
+          </label>
+        </div>
+      </div>
+      <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Users</label>
         <div class="col-md-6 col-sm-6 col-xs-12">
           <label>
-            <input type="checkbox" class="flat" name="permissions[user-read]" {{ in_array('user-read',$can) ? 'checked="checked"' : '' }} value="true" /> User - Read
+            <input type="checkbox" class="flat" name="permissions[read-user]" {{ in_array('read-user',$can) ? 'checked="checked"' : '' }} value="true" /> Read
           </label><br>
           <label>
-            <input type="checkbox" class="flat" name="permissions[user-create]" {{ in_array('user-create',$can) ? 'checked="checked"' : '' }} value="true" /> User - Create
+            <input type="checkbox" class="flat" name="permissions[create-user]" {{ in_array('create-user',$can) ? 'checked="checked"' : '' }} value="true" /> Create
           </label><br>
           <label>
-            <input type="checkbox" class="flat" name="permissions[user-update]" {{ in_array('user-update',$can) ? 'checked="checked"' : '' }} value="true" /> User - Update
+            <input type="checkbox" class="flat" name="permissions[update-user]" {{ in_array('update-user',$can) ? 'checked="checked"' : '' }} value="true" /> Update
           </label><br>
           <label>
-            <input type="checkbox" class="flat" name="permissions[user-delete]" {{ in_array('user-delete',$can) ? 'checked="checked"' : '' }} value="true" /> User - Delete
+            <input type="checkbox" class="flat" name="permissions[delete-user]" {{ in_array('delete-user',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
           </label>
         </div>
       </div>
+      <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Roles</label>
         <div class="col-md-6 col-sm-6 col-xs-12">
           <label>
-            <input type="checkbox" class="flat" name="permissions[role-read]" {{ in_array('role-read',$can) ? 'checked="checked"' : '' }} value="true" /> Role - Read
+            <input type="checkbox" class="flat" name="permissions[read-role]" {{ in_array('read-role',$can) ? 'checked="checked"' : '' }} value="true" /> Read
           </label><br>
           <label>
-            <input type="checkbox" class="flat" name="permissions[role-create]" {{ in_array('role-create',$can) ? 'checked="checked"' : '' }} value="true" /> Role - Create
-          </label><br>
-          <label>
-            <input type="checkbox" class="flat" name="permissions[role-update]" {{ in_array('role-update',$can) ? 'checked="checked"' : '' }} value="true" /> Role - Update
-          </label><br>
-          <label>
-            <input type="checkbox" class="flat" name="permissions[role-delete]" {{ in_array('role-delete',$can) ? 'checked="checked"' : '' }} value="true" /> Role - Delete
+            <input type="checkbox" class="flat" name="permissions[update-role]" {{ in_array('update-role',$can) ? 'checked="checked"' : '' }} value="true" /> Update
           </label>
         </div>
       </div>

@@ -45,8 +45,8 @@ class AuthServiceProvider extends ServiceProvider
 
     public function registerProviderPolicies()
     {
-        Gate::define('view-provider', function($user){
-          return $user->hasAccess(['view-provider']);
+        Gate::define('read-provider', function($user){
+          return $user->hasAccess(['read-provider']);
         });
         Gate::define('create-provider', function($user){
           return $user->hasAccess(['create-provider']);
@@ -64,14 +64,14 @@ class AuthServiceProvider extends ServiceProvider
 
     public function registerProviderPrevixPolicies()
     {
-        Gate::define('view-provider-prefix', function($user){
-          return $user->hasAccess(['view-provider-prefix']);
+        Gate::define('read-provider-prefix', function($user){
+          return $user->hasAccess(['read-provider-prefix']);
         });
         Gate::define('create-provider-prefix', function($user){
           return $user->hasAccess(['create-provider-prefix']);
         });
         Gate::define('update-provider-prefix', function($user){
-          return $user->hasAccess(['update-povider-prefix']);
+          return $user->hasAccess(['update-provider-prefix']);
         });
         Gate::define('activate-provider-prefix', function($user){
           return $user->hasAccess(['activate-provider-prefix']);
@@ -83,8 +83,8 @@ class AuthServiceProvider extends ServiceProvider
 
     public function registerProductPolicies()
     {
-        Gate::define('view-product', function($user){
-          return $user->hasAccess(['view-product']);
+        Gate::define('read-product', function($user){
+          return $user->hasAccess(['read-product']);
         });
         Gate::define('create-product', function($user){
           return $user->hasAccess(['create-product']);
@@ -102,8 +102,8 @@ class AuthServiceProvider extends ServiceProvider
 
     public function registerProductSellPricePolicies()
     {
-        Gate::define('view-product-sell-price', function($user){
-          return $user->hasAccess(['view-product-sell-price']);
+        Gate::define('read-product-sell-price', function($user){
+          return $user->hasAccess(['read-product-sell-price']);
         });
         Gate::define('create-product-sell-price', function($user){
           return $user->hasAccess(['create-product-sell-price']);
@@ -121,8 +121,8 @@ class AuthServiceProvider extends ServiceProvider
 
     public function registerPartnerPulsaPolicies()
     {
-        Gate::define('view-partner-pulsa', function($user){
-          return $user->hasAccess(['view-partner-pulsa']);
+        Gate::define('read-partner-pulsa', function($user){
+          return $user->hasAccess(['read-partner-pulsa']);
         });
         Gate::define('create-partner-pulsa', function($user){
           return $user->hasAccess(['create-partner-pulsa']);
@@ -140,8 +140,8 @@ class AuthServiceProvider extends ServiceProvider
 
     public function registerPartnerProductPolicies()
     {
-        Gate::define('view-partner-product', function($user){
-          return $user->hasAccess(['view-partner-product']);
+        Gate::define('read-partner-product', function($user){
+          return $user->hasAccess(['read-partner-product']);
         });
         Gate::define('create-partner-product', function($user){
           return $user->hasAccess(['create-partner-product']);
@@ -159,8 +159,8 @@ class AuthServiceProvider extends ServiceProvider
 
     public function registerPartnerProductPurchPricePolicies()
     {
-        Gate::define('view-partner-product-purch-price', function($user){
-          return $user->hasAccess(['view-partner-product-purch-price']);
+        Gate::define('read-partner-product-purch-price', function($user){
+          return $user->hasAccess(['read-partner-product-purch-price']);
         });
         Gate::define('create-partner-product-purch-price', function($user){
           return $user->hasAccess(['create-partner-product-purch-price']);
@@ -178,8 +178,8 @@ class AuthServiceProvider extends ServiceProvider
 
     public function registerPartnerServerPolicies()
     {
-        Gate::define('view-partner-server', function($user){
-          return $user->hasAccess(['view-partner-server']);
+        Gate::define('read-partner-server', function($user){
+          return $user->hasAccess(['read-partner-server']);
         });
         Gate::define('create-partner-server', function($user){
           return $user->hasAccess(['create-partner-server']);
@@ -197,27 +197,18 @@ class AuthServiceProvider extends ServiceProvider
 
     public function registerAgent()
     {
-        Gate::define('view-agent', function($user){
-          return $user->hasAccess(['view-agent']);
-        });
-        Gate::define('create-agent', function($user){
-          return $user->hasAccess(['create-agent']);
+        Gate::define('read-agent', function($user){
+          return $user->hasAccess(['read-agent']);
         });
         Gate::define('update-agent', function($user){
           return $user->hasAccess(['update-agent']);
-        });
-        Gate::define('activate-agent', function($user){
-          return $user->hasAccess(['activate-agent']);
-        });
-        Gate::define('delete-agent', function($user){
-          return $user->hasAccess(['delete-agent']);
         });
     }
 
     public function registerPalomaDepositTrx()
     {
-        Gate::define('view-paloma-deposit-trx', function($user){
-          return $user->hasAccess(['view-paloma-deposit-trx']);
+        Gate::define('read-paloma-deposit-trx', function($user){
+          return $user->hasAccess(['read-paloma-deposit-trx']);
         });
         Gate::define('create-paloma-deposit-trx', function($user){
           return $user->hasAccess(['create-paloma-deposit-trx']);
@@ -235,28 +226,28 @@ class AuthServiceProvider extends ServiceProvider
 
     public function registerUsersPolicies()
     {
-        Gate::define('user-read', function($user){
-          return $user->hasAccess(['user-read']);
+        Gate::define('read-user', function($user){
+          return $user->hasAccess(['read-user']);
         });
-        Gate::define('user-create', function($user){
-          return $user->hasAccess(['user-create']);
+        Gate::define('create-user', function($user){
+          return $user->hasAccess(['create-user']);
         });
-        Gate::define('user-update', function($user){
-          return $user->hasAccess(['user-update']);
+        Gate::define('update-user', function($user){
+          return $user->hasAccess(['update-user']);
         });
-        Gate::define('user-delete', function($user){
-          return $user->hasAccess(['user-delete']);
+        Gate::define('delete-user', function($user){
+          return $user->hasAccess(['delete-user']);
         });
-        Gate::define('role-read', function($user){
-          return $user->hasAccess(['role-read']);
+        Gate::define('read-role', function($user){
+          return $user->hasAccess(['read-role']);
         });
-        Gate::define('role-update', function($user){
-          return $user->hasAccess(['role-update']);
+        Gate::define('update-role', function($user){
+          return $user->hasAccess(['update-role']);
         });
-        Gate::define('user-management', function($user){
+        Gate::define('management-user', function($user){
           return $user->inRole('administrator');
         });
-        Gate::define('role-management', function($user){
+        Gate::define('management-role', function($user){
           return $user->inRole('administrator');
         });
     }
