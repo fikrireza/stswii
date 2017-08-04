@@ -27,7 +27,7 @@
           </li>
           <li class="{{ Route::is('provider*') ? 'active' : '' }}">
             <a>
-              <i class="fa fa-beer"></i> Manage Provider <span class="fa fa-chevron-down"></span>
+              <i class="fa fa-phone"></i> Manage Provider <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="{{ Route::is('provider*') ? 'display: block;' : '' }}">
               @can('read-provider')
@@ -57,7 +57,7 @@
           </li>
           <li class="{{ Route::is('partner-product*') ? 'active' : '' }}{{ Route::is('partner-pulsa*') ? 'active' : '' }}{{ Route::is('partner-server*') ? 'active' : '' }}">
             <a>
-              <i class="fa fa-beer"></i> Manage Partner <span class="fa fa-chevron-down"></span>
+              <i class="fa fa-anchor"></i> Manage Partner <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="{{ Route::is('partner-product*') ? 'display: block;' : '' }}{{ Route::is('partner-pulsa*') ? 'display: block;' : '' }}">
               <li class="{{ Route::is('partner-pulsa*') ? 'current-page' : '' }}">
@@ -76,7 +76,7 @@
           </li>
           <li class="{{ Route::is('agent*') ? 'active' : '' }}">
             <a>
-              <i class="fa fa-beer"></i> Manage Agent <span class="fa fa-chevron-down"></span>
+              <i class="fa fa-suitcase"></i> Manage Agent <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="{{ Route::is('agent*') ? 'display: block;' : '' }}">
               <li class="{{ Route::is('agent.index.table.js') ? 'current-page' : '' }}">
@@ -89,7 +89,7 @@
           </li>
           <li class="{{ Route::is('paloma*') ? 'active' : '' }}">
             <a>
-              <i class="fa fa-beer"></i> Paloma Deposit <span class="fa fa-chevron-down"></span>
+              <i class="fa fa-money"></i> Paloma Deposit <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="">
               <li class="{{ Route::is('paloma.transaction*') ? 'current-page' : '' }}">

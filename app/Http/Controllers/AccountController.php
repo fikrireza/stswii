@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 
 use App\Models\User;
 use App\Models\Role;
+use App\Models\RoleUser;
 
-use Illuminate\Support\Facades\DB;
-
+use DB;
+use Auth;
+use Validator;
+use Hash;
 
 class AccountController extends Controller
 {
@@ -26,14 +29,68 @@ class AccountController extends Controller
 
     public function index()
     {
+        $getUser = User::with('roles')->get();
 
-        return view('account.index');
+        return view('account.index', compact('getUser'));
     }
 
     public function tambah()
     {
-        return view('account.tambah');
+        $getRole = Role::get();
+
+        return view('account.tambah', compact('getRole'));
     }
+
+    public function store(Request $request)
+    {
+        $message = [
+          'name.required' => 'Wajib di isi',
+          'email.required' => 'Wajib di isi',
+          'email.email' => 'Format email',
+          'email.unique' => 'Email sudah dipakai',
+        ];
+
+        $validator = Validator::make($request->all(), [
+          'name' => 'required',
+          'email' => 'required|email|unique:sw_users'
+        ], $message);
+
+        if($validator->fails())
+        {
+          return redirect()->route('account.tambah')->withErrors($validator)->withInput();
+        }
+
+        DB::transaction(function() use($request){
+          $confirmation_code = str_random(30).time();
+          $userSave = User::create([
+            'name' => $request->name,
+            'avatar' => 'userdefault.png',
+            'email' => $request->email,
+            'password' => Hash::make(12345678),
+            'confirmed' => 0,
+            'login_count' => 0,
+            'confirmation_code' => $confirmation_code,
+          ]);
+
+          foreach ($request->role as $key) {
+            $role = RoleUser::firstOrCreate(['user_id' => $userSave->id, 'role_id' => $key]);
+          }
+
+          // $data = array([
+          //     'name' => $request->name,
+          //     'email' => $request->email,
+          //     'confirmation_code' => $confirmation_code
+          //   ]);
+          //
+          // Mail::send('email.confirm', ['data' => $data], function($message) use ($data) {
+          //   $message->to($data[0]['email'], $data[0]['name'])->subject('Aktifasi Akun Web Admin');
+          // });
+
+        });
+
+        return redirect()->route('account.index')->with('berhasil', 'Akun baru sudah dibuat, cek '.$request->email.' untuk verifiakasi');
+    }
+
 
     public function role()
     {
