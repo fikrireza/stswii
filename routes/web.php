@@ -32,6 +32,9 @@ Route::get('/home', 'HomeController@index')
 
 	Route::get('/provider/ajax-view/{id}', 'ProviderController@ajaxView')
 		->name('provider.ajax.view');
+
+	Route::get('/provider/yajra/getDatas', 'ProviderController@yajraGetData')
+		->name('provider.yajra.getDatas');
 // provider
 
 // provider prefix
