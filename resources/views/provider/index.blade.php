@@ -28,6 +28,7 @@
 </div>
 @endif
 
+@can('create-provider')
 <div class="modal fade modal-form-add" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -44,11 +45,11 @@
                 Provider Code<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input 
-                  id="code" 
-                  class="form-control col-md-7 col-xs-12" 
-                  name="provider_code" 
-                  type="text" 
+                <input
+                  id="code"
+                  class="form-control col-md-7 col-xs-12"
+                  name="provider_code"
+                  type="text"
                   value="{{ $newProvCode }}"
                   readonly
                 >
@@ -59,13 +60,13 @@
                 Provider Name<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input 
-                  id="name" 
-                  class="form-control col-md-7 col-xs-12" 
-                  name="provider_name" 
-                  placeholder="Contoh: Nama Provider" 
-                  required="required" 
-                  type="text" 
+                <input
+                  id="name"
+                  class="form-control col-md-7 col-xs-12"
+                  name="provider_name"
+                  placeholder="Contoh: Nama Provider"
+                  required="required"
+                  type="text"
                   value="{{ old('provider_name') }}"
                 >
                 @if($errors->has('provider_name'))
@@ -81,7 +82,9 @@
     </div>
   </div>
 </div>
+@endcan
 
+@can('update-provider')
 <div class="modal fade modal-form-update" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -98,23 +101,23 @@
                 Provider Code<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input 
-                  id="id_provider_update" 
-                  name="provider_id" 
-                  type="hidden" 
-                  value="{{ old('provider_id') }}" 
+                <input
+                  id="id_provider_update"
+                  name="provider_id"
+                  type="hidden"
+                  value="{{ old('provider_id') }}"
                 >
-                <input 
-                  id="version_provider_update" 
-                  name="version" 
-                  type="hidden" 
-                  value="{{ old('version') }}" 
+                <input
+                  id="version_provider_update"
+                  name="version"
+                  type="hidden"
+                  value="{{ old('version') }}"
                 >
-                <input 
-                  id="code_provider_update" 
-                  class="form-control col-md-7 col-xs-12" 
+                <input
+                  id="code_provider_update"
+                  class="form-control col-md-7 col-xs-12"
                   name="provider_code"
-                  type="text" 
+                  type="text"
                   value="{{ old('provider_code') }}"
                   readonly
                 >
@@ -125,13 +128,13 @@
                 Nama Provider <span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input 
-                  id="name_provider_update" 
-                  class="form-control col-md-7 col-xs-12" 
-                  name="provider_name" 
-                  placeholder="Contoh: Nama Provider" 
-                  required="required" 
-                  type="text" 
+                <input
+                  id="name_provider_update"
+                  class="form-control col-md-7 col-xs-12"
+                  name="provider_name"
+                  placeholder="Contoh: Nama Provider"
+                  required="required"
+                  type="text"
                   value="{{ old('provider_name') }}"
                 >
                 @if($errors->has('provider_name'))
@@ -147,7 +150,9 @@
     </div>
   </div>
 </div>
+@endcan
 
+@can('delete-provider')
 <div class="modal fade modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
@@ -167,6 +172,8 @@
     </div>
   </div>
 </div>
+@endcan
+
 
 <div class="modal fade modal-form-read" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
@@ -177,7 +184,7 @@
         <h4 class="modal-title" id="myModalLabel2">View Provider</h4>
       </div>
       <div id="modal-form-read-html" class="modal-body">
-          
+
       </div>
       <div class="modal-footer">
 
@@ -203,28 +210,28 @@
                 Provider <span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input 
-                  id="prefix_id_update" 
-                  name="provider_prefix_id" 
-                  type="hidden" 
-                  value="{{ old('provider_prefix_id') }}" 
+                <input
+                  id="prefix_id_update"
+                  name="provider_prefix_id"
+                  type="hidden"
+                  value="{{ old('provider_prefix_id') }}"
                 >
-                <input 
-                  id="version_update" 
-                  name="version" 
-                  type="hidden" 
-                  value="{{ old('version') }}" 
+                <input
+                  id="version_update"
+                  name="version"
+                  type="hidden"
+                  value="{{ old('version') }}"
                 >
-                <select 
-                  id="provider_id_update" 
-                  name="provider_id" 
-                  class="form-control select2_single" 
+                <select
+                  id="provider_id_update"
+                  name="provider_id"
+                  class="form-control select2_single"
                   required="required"
                 >
                   <option value="">Pilih</option>
                   @foreach($getProvider as $list)
-                  <option 
-                    value="{{ $list->provider_id }}" 
+                  <option
+                    value="{{ $list->provider_id }}"
                     {{ old('provider_id') == $list->provider_id ? 'selected' : '' }}
                   >
                     {{ $list->provider_code.' ('.$list->provider_name.')' }}
@@ -241,13 +248,13 @@
                 Provider Prefix<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input 
-                  id="prefix_update" 
-                  class="form-control col-md-7 col-xs-12" 
-                  name="prefix" 
-                  placeholder="Contoh: Provider Prefix" 
-                  required="required" 
-                  type="text" 
+                <input
+                  id="prefix_update"
+                  class="form-control col-md-7 col-xs-12"
+                  name="prefix"
+                  placeholder="Contoh: Provider Prefix"
+                  required="required"
+                  type="text"
                   onkeypress="return isNumber(event)"
                   value="{{ old('prefix') }}"
                 >
@@ -297,7 +304,9 @@
       <div class="x_title">
         <h2>Provider </h2>
         <ul class="nav panel_toolbox">
+          @can('create-provider')
           <a class="btn btn-success btn-sm publish" data-toggle="modal" data-target=".modal-form-add" ><i class="fa fa-plus"></i> Add</a>
+          @endcan
         </ul>
         <div class="clearfix"></div>
       </div>
@@ -319,37 +328,45 @@
               <td>{{ $list->provider_code or '-' }}</td>
               <td>{{ $list->provider_name or '-' }}</td>
               <td>
-                <a 
-                  class="read" 
+                @can('read-provider')
+                <a
+                  class="read"
                   data-id="{{ $list->provider_id }}"
                   @if($list->count_provider_prefix != 0)
-                  data-toggle="modal" 
+                  data-toggle="modal"
                   data-target=".modal-form-read"
                   @endif
                 >
                   <span class="btn btn-xs btn-info btn-sm {{ $list->count_provider_prefix == 0 ? 'disabled' : '' }}" data-toggle="tooltip" data-placement="top" title="View"><i class="fa fa-archive"></i></span>
                 </a>
-                <a 
-                  class="update" 
-                  data-id="{{ $list->provider_id }}" 
-                  data-code="{{ $list->provider_code or '-' }}" 
-                  data-name="{{ $list->provider_name or '-' }}" 
-                  data-version="{{ $list->version or '-' }}" 
-                  data-toggle="modal" 
+                @endcan
+
+                @can('update-provider')
+                <a
+                  class="update"
+                  data-id="{{ $list->provider_id }}"
+                  data-code="{{ $list->provider_code or '-' }}"
+                  data-name="{{ $list->provider_name or '-' }}"
+                  data-version="{{ $list->version or '-' }}"
+                  data-toggle="modal"
                   data-target=".modal-form-update"
                 >
                   <span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>
                 </a>
-                <a 
-                  href="" 
-                  class="delete" 
-                  data-value="{{ $list->provider_id }}" 
-                  data-version="{{ $list->version }}" 
-                  data-toggle="modal" 
+                @endcan
+
+                @can('delete-provider')
+                <a
+                  href=""
+                  class="delete"
+                  data-value="{{ $list->provider_id }}"
+                  data-version="{{ $list->version }}"
+                  data-toggle="modal"
                   data-target=".modal-delete"
                 >
                   <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span>
                 </a>
+                @endcan
               </td>
             </tr>
             @endforeach
@@ -407,7 +424,7 @@ $(function(){
         $("#version_provider_update").val(versionProvider);
         $("#name_provider_update").val(nameProvider);
     });
-    
+
     $(document).on('click', '.update-prefix', function(e) {
         var provider_id = $(this).data('provider_id');
         var prefix_id   = $(this).data('prefix_id');

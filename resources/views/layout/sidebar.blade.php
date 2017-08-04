@@ -30,12 +30,16 @@
               <i class="fa fa-beer"></i> Manage Provider <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="{{ Route::is('provider*') ? 'display: block;' : '' }}">
+              @can('read-provider')
               <li class="{{ Route::is('provider.index') ? 'current-page' : '' }}">
                 <a href="{{ route('provider.index') }}">Provider</a>
               </li>
+              @endcan
+              @can('read-provider-prefix')
               <li class="{{ Route::is('provider-prefix.index') ? 'current-page' : '' }}">
                 <a href="{{ route('provider-prefix.index') }}">Provider Prefix</a>
               </li>
+              @endcan
             </ul>
           </li>
           <li class="{{ Route::is('product.*') ? 'active' : '' }}{{ Route::is('product-*') ? 'active' : '' }}">
@@ -97,14 +101,14 @@
       <div class="menu_section">
         <h3>Extra</h3>
         <ul class="nav side-menu">
-          @can('user-management')
+          @can('management-user')
           <li class="{{ Route::is('account*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-users"></i> Manage Account <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="{{ Route::is('account*') ? 'display: block;' : '' }}">
               <li class="{{ Route::is('account.index') ? 'current-page' : '' }}"><a href="{{ route('account.index') }}">Users</a></li>
-              @can('role-management')
+              @can('management-role')
               <li class="{{ Route::is('account.role') ? 'current-page' : '' }}"><a href="{{ route('account.role') }}">Role Task</a></li>
               @endcan
             </ul>

@@ -16,7 +16,7 @@ use Input;
 
 class ProductSellPriceController extends Controller
 {
-	
+
 	/**
 	 * Create a new controller instance.
 	 *
@@ -31,6 +31,22 @@ class ProductSellPriceController extends Controller
 	public function index(Request $request)
 	{
 		$provider = Provider::get();
+
+		$message = [
+			'f_provider.integer' => 'Invalid filter',
+			'f_active.integer' => 'Invalid filter',
+			'f_active.in' => 'Invalid filter',
+		];
+
+		$validator = Validator::make($request->all(), [
+			'f_provider' => 'integer|nullable',
+			'f_active' => 'integer|nullable|in:0,1',
+		], $message);
+
+		if($validator->fails())
+		{
+			return redirect()->route('product-sell-price.index');
+		}
 
 		$index = ProductSellPrice::join('sw_product', 'sw_product.product_id', '=', 'sw_product_sell_price.product_id')
 			->select('sw_product_sell_price.*');
@@ -92,7 +108,7 @@ class ProductSellPriceController extends Controller
 		foreach ($checkData as $list)
 		{
 			if($list->datetime_start <= date('YmdHis', strtotime($request->datetime_start)) && date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_end && isset($request->active))
-			{	
+			{
 				return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
 			}
 			if($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active))
@@ -121,14 +137,14 @@ class ProductSellPriceController extends Controller
 			$index->active_datetime     = 00000000000000;
 			$index->non_active_datetime = date('YmdHis');
 		}
-		
+
 
 		$index->version             = 0;
 		$index->create_datetime     = date('YmdHis');
 		$index->create_user_id      = Auth::id();
 		$index->update_datetime     = 00000000000000;
 		$index->update_user_id      = 0;
-		
+
 		$index->save();
 
 		return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully saved.');
@@ -169,7 +185,7 @@ class ProductSellPriceController extends Controller
 
 		$index = ProductSellPrice::find($request->product_sell_price_id);
 
-		
+
 
 		$checkData = ProductSellPrice::where('product_id',$request->product_id)
 			->where('active',1)
@@ -209,12 +225,12 @@ class ProductSellPriceController extends Controller
 		{
 			$index->non_active_datetime = date('YmdHis');
 		}
-		
+
 
 		$index->version             += 1;
 		$index->update_datetime     = date('YmdHis');
 		$index->update_user_id      = Auth::id();
-		
+
 		$index->save();
 
 		return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully updated.');
@@ -289,8 +305,8 @@ class ProductSellPriceController extends Controller
 
 	public function template()
 	{
-		$getProduct = Product::where('active', '=', 1)
-			->select('product_id', 'product_name', 'nominal')
+		$getProduct = Product::join('sw_provider', 'sw_provider.provider_id', '=', 'sw_product.provider_id')->where('sw_product.active', '=', 1)
+			->select('sw_product.product_id', 'sw_product.product_name', 'sw_product.nominal', 'sw_provider.provider_name')
 			->get()
 			->toArray();
 
@@ -302,8 +318,8 @@ class ProductSellPriceController extends Controller
 					'A' => '@',
 					'B' => '0.00',
 					'C' => '0.00',
-					'D' => 'yyyy-mm-dd hh:mm:ss',
-					'E' => 'yyyy-mm-dd hh:mm:ss',
+					'D' => 'YYYY-MM-DD HH:mm:ss',
+					'E' => 'YYYY-MM-DD HH:mm:ss',
 				));
 			});
 
@@ -316,7 +332,7 @@ class ProductSellPriceController extends Controller
 				$sheet->row(3, array('1', '45000', '10', '2017-07-01 12:00:00', '2017-07-31 12:00:00'));
 				$sheet->row(5, array('Data Product'));
 				$sheet->mergeCells('A5:C5');
-				$sheet->row(6, array('id','product_name','nominal'));
+				$sheet->row(6, array('id','product_name','nominal', 'provider_name'));
 				$sheet->setAllBorders('thin');
 				$sheet->setFreeze('A7');
 
@@ -326,7 +342,7 @@ class ProductSellPriceController extends Controller
 					$cells->setFontWeight('bold');
 				});
 
-				$sheet->cells('A6:C6', function($cells){
+				$sheet->cells('A6:D6', function($cells){
 					$cells->setBackground('#000000');
 					$cells->setFontColor('#ffffff');
 					$cells->setFontWeight('bold');
@@ -360,8 +376,6 @@ class ProductSellPriceController extends Controller
 
 					$getProduct = Product::where('active', '=', 1)->get();
 
-					// return $collect;
-
 					return view('product-sell-price.masal', compact('collect', 'getProduct'));
 				}
 			}else{
@@ -374,17 +388,17 @@ class ProductSellPriceController extends Controller
 
 	public function storeTemplate(Request $request)
 	{
-		// dd($request);
-		$product_id       = Input::get('product_id');
-		$gross_sell_price = Input::get('gross_sell_price');
-		$tax_percentage   = Input::get('tax_percentage');
-		$datetime_start   = Input::get('datetime_start');
-		$datetime_end     = Input::get('datetime_end');
-		$active           = Input::get('active');
+		// return $request->all();
 
-		// dd($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end, $active, $version);
+		$product_id       = $request->product_id;
+		$gross_sell_price = $request->gross_sell_price;
+		$tax_percentage   = $request->tax_percentage;
+		$datetime_start   = $request->datetime_start;
+		$datetime_end     = $request->datetime_end;
+		$active           = $request->active;
+
 		DB::transaction(function() use($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end, $active){
-		  
+
 			foreach ($product_id as $key => $n )
 			{
 			/*Load array */
@@ -405,11 +419,11 @@ class ProductSellPriceController extends Controller
 					}
 				}
 
-				if(!$skip)
+				if(!$skip && $product_id[$key] != 0)
 				{
 					$arrData = ProductSellPrice::create(array(
 						"product_id"          => $product_id[$key],
-						"flg_tax"             => $gross_sell_price[$key] <= 0 ? 0 : 1,
+						"flg_tax"             => $gross_sell_price[$key] > 0 ? 0 : 1,
 						"gross_sell_price"    => $gross_sell_price[$key],
 						"tax_percentage"      => $tax_percentage[$key],
 						"datetime_start"      => date('YmdHis', strtotime( $datetime_start[$key] )),
@@ -427,10 +441,6 @@ class ProductSellPriceController extends Controller
 				}
 			}
 		});
-
-		// dd($arrData);
-			// $save = ProductSellPrice::create($arrData);
-		// });
 
 		return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully uploaded.');
 
