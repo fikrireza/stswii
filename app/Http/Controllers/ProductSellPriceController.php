@@ -16,7 +16,7 @@ use Input;
 
 class ProductSellPriceController extends Controller
 {
-	
+
 	/**
 	 * Create a new controller instance.
 	 *
@@ -92,7 +92,7 @@ class ProductSellPriceController extends Controller
 		foreach ($checkData as $list)
 		{
 			if($list->datetime_start <= date('YmdHis', strtotime($request->datetime_start)) && date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_end && isset($request->active))
-			{	
+			{
 				return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
 			}
 			if($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active))
@@ -121,14 +121,14 @@ class ProductSellPriceController extends Controller
 			$index->active_datetime     = 00000000000000;
 			$index->non_active_datetime = date('YmdHis');
 		}
-		
+
 
 		$index->version             = 0;
 		$index->create_datetime     = date('YmdHis');
 		$index->create_user_id      = Auth::id();
 		$index->update_datetime     = 00000000000000;
 		$index->update_user_id      = 0;
-		
+
 		$index->save();
 
 		return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully saved.');
@@ -169,7 +169,7 @@ class ProductSellPriceController extends Controller
 
 		$index = ProductSellPrice::find($request->product_sell_price_id);
 
-		
+
 
 		$checkData = ProductSellPrice::where('product_id',$request->product_id)
 			->where('active',1)
@@ -209,12 +209,12 @@ class ProductSellPriceController extends Controller
 		{
 			$index->non_active_datetime = date('YmdHis');
 		}
-		
+
 
 		$index->version             += 1;
 		$index->update_datetime     = date('YmdHis');
 		$index->update_user_id      = Auth::id();
-		
+
 		$index->save();
 
 		return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully updated.');
@@ -289,8 +289,8 @@ class ProductSellPriceController extends Controller
 
 	public function template()
 	{
-		$getProduct = Product::where('active', '=', 1)
-			->select('product_id', 'product_name', 'nominal')
+		$getProduct = Product::join('sw_provider', 'sw_provider.provider_id', '=', 'sw_product.provider_id')->where('sw_product.active', '=', 1)
+			->select('sw_product.product_id', 'sw_product.product_name', 'sw_product.nominal', 'sw_provider.provider_name')
 			->get()
 			->toArray();
 
@@ -302,8 +302,8 @@ class ProductSellPriceController extends Controller
 					'A' => '@',
 					'B' => '0.00',
 					'C' => '0.00',
-					'D' => 'yyyy-mm-dd hh:mm:ss',
-					'E' => 'yyyy-mm-dd hh:mm:ss',
+					'D' => '@',
+					'E' => '@',
 				));
 			});
 
@@ -313,10 +313,10 @@ class ProductSellPriceController extends Controller
 				$sheet->mergeCells('A1:E1');
 				$sheet->row(2, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end'));
 				// $sheet->row(2, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end', 'active', 'version'));
-				$sheet->row(3, array('1', '45000', '10', '2017-07-01 12:00:00', '2017-07-31 12:00:00'));
+				$sheet->row(3, array('1', '45000', '10', '20170701120000', '20170731120000'));
 				$sheet->row(5, array('Data Product'));
 				$sheet->mergeCells('A5:C5');
-				$sheet->row(6, array('id','product_name','nominal'));
+				$sheet->row(6, array('id','product_name','nominal', 'provider_name'));
 				$sheet->setAllBorders('thin');
 				$sheet->setFreeze('A7');
 
@@ -326,7 +326,7 @@ class ProductSellPriceController extends Controller
 					$cells->setFontWeight('bold');
 				});
 
-				$sheet->cells('A6:C6', function($cells){
+				$sheet->cells('A6:D6', function($cells){
 					$cells->setBackground('#000000');
 					$cells->setFontColor('#ffffff');
 					$cells->setFontWeight('bold');
@@ -384,7 +384,7 @@ class ProductSellPriceController extends Controller
 
 		// dd($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end, $active, $version);
 		DB::transaction(function() use($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end, $active){
-		  
+
 			foreach ($product_id as $key => $n )
 			{
 			/*Load array */
