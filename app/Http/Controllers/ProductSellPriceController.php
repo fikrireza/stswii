@@ -32,6 +32,22 @@ class ProductSellPriceController extends Controller
 	{
 		$provider = Provider::get();
 
+		$message = [
+			'f_provider.integer' => 'Invalid filter',
+			'f_active.integer' => 'Invalid filter',
+			'f_active.in' => 'Invalid filter',
+		];
+
+		$validator = Validator::make($request->all(), [
+			'f_provider' => 'integer|nullable',
+			'f_active' => 'integer|nullable|in:0,1',
+		], $message);
+
+		if($validator->fails())
+		{
+			return redirect()->route('product-sell-price.index');
+		}
+
 		$index = ProductSellPrice::join('sw_product', 'sw_product.product_id', '=', 'sw_product_sell_price.product_id')
 			->select('sw_product_sell_price.*');
 

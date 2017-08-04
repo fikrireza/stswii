@@ -28,6 +28,19 @@ class ProductController extends Controller
 	{
 		$provider = Provider::get();
 
+		$message = [
+			'f_provider.integer' => 'Invalid filter',
+		];
+
+		$validator = Validator::make($request->all(), [
+			'f_provider' => 'integer|nullable',
+		], $message);
+
+		if($validator->fails())
+		{
+			return redirect()->route('product.index');
+		}
+
 		$index = Product::orderBy('product_id', 'ASC');
 
 		if(isset($request->f_provider) && $request->f_provider != '')
