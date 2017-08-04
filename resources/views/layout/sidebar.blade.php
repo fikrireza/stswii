@@ -30,12 +30,16 @@
               <i class="fa fa-beer"></i> Manage Provider <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="{{ Route::is('provider*') ? 'display: block;' : '' }}">
+              @can('view-provider')
               <li class="{{ Route::is('provider.index') ? 'current-page' : '' }}">
                 <a href="{{ route('provider.index') }}">Provider</a>
               </li>
+              @endcan
+              @can('view-provider-prefix')
               <li class="{{ Route::is('provider-prefix.index') ? 'current-page' : '' }}">
                 <a href="{{ route('provider-prefix.index') }}">Provider Prefix</a>
               </li>
+              @endcan
             </ul>
           </li>
           <li class="{{ Route::is('product.*') ? 'active' : '' }}{{ Route::is('product-*') ? 'active' : '' }}">
