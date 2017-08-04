@@ -116,34 +116,42 @@
 						<tr>
 							<td>
 								{{ $urut + 1 }}
-								<input type="button" name="delete" value="x" class="btn btn-danger btn-sm" onclick="DeleteRowFunction(this);">
+								<input type="button" name="delete" value="x" class="btn btn-danger btn-sm btn-delete">
 							</td>
 							<td>
-								<select id="product_id" name="product_id[{{$urut}}]" class="form-control select2_single input-hide input-text" required="required">
-									<option value="">Pilih</option>
-									@foreach ($getProduct as $product)
-										<option value="{{ $product->product_id }}" {{ old('product_id', $key['product_id']) == $product->product_id ? 'selected' : '' }}>{{ $product->product_name }} - {{ $product->nominal }}</option>
-									@endforeach
-								</select>
+								@php $empty = 1; @endphp
+								@foreach($getProduct as $list)
+									@if($list->product_id == $key['product_id'])
+										{{$list->product_name}} - Rp. {{ number_format($list->nominal) }}
+										<input type="hidden" name="product_id[{{$urut}}]" value="{{$key['product_id']}}">
+										@php $empty = 0; @endphp
+										@break
+									@endif
+								@endforeach
+								@if($empty)
+								<input type="hidden" name="product_id[{{$urut}}]" value="0">
+								@endif
 							</td>
 							<td>
-								<span style="display: none;">{{ $key['gross_sell_price'] }}</span>
-								<span style="display: none;">{{ $key['product_id'] }}</span>
-								<input type="text" name="gross_sell_price[{{$urut}}]" class="form-control input-hide input-text currency" value="{{ $key['gross_sell_price'] }}" onkeypress="return isNumber(event)">
+								Rp. {{ number_format($key['gross_sell_price']) }}
+								<input type="hidden" name="gross_sell_price[{{$urut}}]" value="{{ $key['gross_sell_price'] }}"/>
 							</td>
 							<td>
-								<input type="text" name="tax_percentage[{{$urut}}]" class="form-control input-hide input-text percentage" value="{{ $key['tax_percentage'] }}" onkeypress="return isNumber(event) "/>
+								{{ $key['tax_percentage'] }} %
+								<input type="hidden" name="tax_percentage[{{$urut}}]" value="{{ $key['tax_percentage'] }}"/>
 							</td>
 							<td>
-								<input type="text" name="datetime_start[{{$urut}}]" class="datetime_start form-control input-hide input-text" value="{{ $key['datetime_start'] }}" />
+								{{ $key['datetime_start'] }}
+								<input type="hidden" name="datetime_start[{{$urut}}]" value="{{ $key['datetime_start'] }}"/>
 							</td>
 							<td>
-								<input type="text" name="datetime_end[{{$urut}}]" class="datetime_end form-control input-hide input-text" value="{{ $key['datetime_end'] }}" />
+								{{ $key['datetime_end'] }}
+								<input type="hidden" name="datetime_end[{{$urut}}]" value="{{ $key['datetime_end'] }}"/>
 							</td>
 							<td>
 								<select class="form-control" name="active[{{$urut}}]">
-									<option value="1" {{ old('active') == 1 ? 'selected' : '' }}>Active</option>
-									<option value="0" {{ old('active') == 1 ? 'selected' : '' }}>Not Active</option>
+									<option value="1">Active</option>
+									<option value="0">Not Active</option>
 								</select>
 							</td>
 						</tr>
@@ -154,7 +162,7 @@
 					</tbody>
 					
 				</table>
-				<button type="submit" name="button" class="btn btn-success btn-bg">Upload</button>
+				<button name="button" class="btn btn-success btn-bg btn-submit" onclick="return false">Upload</button>
 				</form>
 			</div>
 		</div>
@@ -217,29 +225,35 @@
 	$('.datetime_start').daterangepicker({
 		singleDatePicker: true,
 		calender_style: "picker_2",
-		format: 'YYYY-MM-DD hh:mm:ss',
+		format: 'YYYY-MM-DD 00:00:00',
 		timePicker: true,
 		// minDate: new Date(),
 	});
 	$('.datetime_end').daterangepicker({
 		singleDatePicker: true,
 		calender_style: "picker_2",
-		format: 'YYYY-MM-DD hh:mm:ss',
+		format: 'YYYY-MM-DD 23:59:59',
 		timePicker: true,
 		// minDate: new Date(),
 	});
 
-	$('.tablecheck').DataTable({
+	var table = $('.tablecheck').DataTable({
 		"aoColumnDefs": [
-			{ "bSearchable": false, "aTargets": [ 0, 1 ] }
+			{ "bSearchable": false, "aTargets": [ 0 ] }
 		]
 	});
 
-	// $(function() {
-	//   $('input.input-hide').change(function(event) {
-	//     console.log($(this).val());
-	//   });
-	// });
+	$('.tablecheck').on( 'click', '.btn-delete', function () {
+	    table
+	        .row( $(this).parents('tr') )
+	        .remove()
+	        .draw();
+	} );
+
+	$('.btn-submit').click( function() {
+        var data = table.$('input, select').serialize();
+        window.location = "{{ route('product-sell-price.storeTemplate') }}?"+data;
+    } );
 </script>
 
 

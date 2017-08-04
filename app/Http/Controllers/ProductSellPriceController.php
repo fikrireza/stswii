@@ -318,8 +318,8 @@ class ProductSellPriceController extends Controller
 					'A' => '@',
 					'B' => '0.00',
 					'C' => '0.00',
-					'D' => '@',
-					'E' => '@',
+					'D' => 'YYYY-MM-DD HH:mm:ss',
+					'E' => 'YYYY-MM-DD HH:mm:ss',
 				));
 			});
 
@@ -329,7 +329,7 @@ class ProductSellPriceController extends Controller
 				$sheet->mergeCells('A1:E1');
 				$sheet->row(2, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end'));
 				// $sheet->row(2, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end', 'active', 'version'));
-				$sheet->row(3, array('1', '45000', '10', '20170701120000', '20170731120000'));
+				$sheet->row(3, array('1', '45000', '10', '2017-07-01 12:00:00', '2017-07-31 12:00:00'));
 				$sheet->row(5, array('Data Product'));
 				$sheet->mergeCells('A5:C5');
 				$sheet->row(6, array('id','product_name','nominal', 'provider_name'));
@@ -376,8 +376,6 @@ class ProductSellPriceController extends Controller
 
 					$getProduct = Product::where('active', '=', 1)->get();
 
-					// return $collect;
-
 					return view('product-sell-price.masal', compact('collect', 'getProduct'));
 				}
 			}else{
@@ -390,15 +388,15 @@ class ProductSellPriceController extends Controller
 
 	public function storeTemplate(Request $request)
 	{
-		// dd($request);
-		$product_id       = Input::get('product_id');
-		$gross_sell_price = Input::get('gross_sell_price');
-		$tax_percentage   = Input::get('tax_percentage');
-		$datetime_start   = Input::get('datetime_start');
-		$datetime_end     = Input::get('datetime_end');
-		$active           = Input::get('active');
+		// return $request->all();
 
-		// dd($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end, $active, $version);
+		$product_id       = $request->product_id;
+		$gross_sell_price = $request->gross_sell_price;
+		$tax_percentage   = $request->tax_percentage;
+		$datetime_start   = $request->datetime_start;
+		$datetime_end     = $request->datetime_end;
+		$active           = $request->active;
+
 		DB::transaction(function() use($product_id, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end, $active){
 
 			foreach ($product_id as $key => $n )
@@ -421,11 +419,11 @@ class ProductSellPriceController extends Controller
 					}
 				}
 
-				if(!$skip)
+				if(!$skip && $product_id[$key] != 0)
 				{
 					$arrData = ProductSellPrice::create(array(
 						"product_id"          => $product_id[$key],
-						"flg_tax"             => $gross_sell_price[$key] <= 0 ? 0 : 1,
+						"flg_tax"             => $gross_sell_price[$key] < 0 ? 0 : 1,
 						"gross_sell_price"    => $gross_sell_price[$key],
 						"tax_percentage"      => $tax_percentage[$key],
 						"datetime_start"      => date('YmdHis', strtotime( $datetime_start[$key] )),
@@ -443,10 +441,6 @@ class ProductSellPriceController extends Controller
 				}
 			}
 		});
-
-		// dd($arrData);
-			// $save = ProductSellPrice::create($arrData);
-		// });
 
 		return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully uploaded.');
 

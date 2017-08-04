@@ -180,7 +180,7 @@ Route::get('/home', 'HomeController@index')
 	  ->name('product-sell-price.template');
 	Route::post('product-sell-price/upload/template', 'ProductSellPriceController@prosesTemplate')
 	  ->name('product-sell-price.prosesTemplate');
-	Route::post('product-sell-price/upload', 'ProductSellPriceController@storeTemplate')
+	Route::get('product-sell-price/upload/store-template', 'ProductSellPriceController@storeTemplate')
 	  ->name('product-sell-price.storeTemplate');
 //----- PRODUCT SELL PRICE -----//
 
