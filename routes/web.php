@@ -137,13 +137,13 @@ Route::get('/home', 'HomeController@index')
 
 // partner server
 	Route::get('/partner-server', 'PartnerPulsaServerPropController@index')
-		->name('partner-server.index');
+		->name('partner-server.index')->middleware('can:read-partner-server');
 	Route::post('/partner-server/store', 'PartnerPulsaServerPropController@store')
-		->name('partner-server.store');
+		->name('partner-server.store')->middleware('can:create-partner-server');
 	Route::post('/partner-server/update', 'PartnerPulsaServerPropController@update')
-		->name('partner-server.update');
+		->name('partner-server.update')->middleware('can:update-partner-server');
 	Route::get('/partner-server/delete/{id}', 'PartnerPulsaServerPropController@delete')
-		->name('partner-server.delete');
+		->name('partner-server.delete')->middleware('can:delete-partner-server');
 // partner server
 
 //----- START PRODUCT -----//
