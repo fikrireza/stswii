@@ -110,29 +110,29 @@ Route::get('/home', 'HomeController@index')
 
 // partner product purch price
 	Route::get('/partner-product-purch-price', 'PartnerProductPurchPriceController@index')
-		->name('partner-product-purch-price.index');
+		->name('partner-product-purch-price.index')->middleware('can:read-partner-product-purch-price');
 
 	Route::get('/partner-product-purch-price/actived/{id}/{version}/{status}', 'PartnerProductPurchPriceController@active')
-		->name('partner-product-purch-price.active');
+		->name('partner-product-purch-price.active')->middleware('can:activate-partner-product-purch-price');
 
 	Route::get('/partner-product-purch-price/delete/{id}/{version}', 'PartnerProductPurchPriceController@delete')
-		->name('partner-product-purch-price.delete');
+		->name('partner-product-purch-price.delete')->middleware('can:delete-partner-product-purch-price');
 
 	Route::get('/partner-product-purch-price/add', 'PartnerProductPurchPriceController@tambah')
-		->name('partner-product-purch-price.tambah');
+		->name('partner-product-purch-price.tambah')->middleware('can:create-partner-product-purch-price');
 	Route::post('/partner-product-purch-price/store', 'PartnerProductPurchPriceController@store')
-		->name('partner-product-purch-price.store');
+		->name('partner-product-purch-price.store')->middleware('can:create-partner-product-purch-price');
 
 	Route::get('/partner-product-purch-price/edit/{id}/{version}', 'PartnerProductPurchPriceController@edit')
-		->name('partner-product-purch-price.edit');
+		->name('partner-product-purch-price.edit')->middleware('can:update-partner-product-purch-price');
 	Route::post('/partner-product-purch-price/edit/{id}/{version}', 'PartnerProductPurchPriceController@update')
-		->name('partner-product-purch-price.update');
+		->name('partner-product-purch-price.update')->middleware('can:update-partner-product-purch-price');
 
 	Route::get('/partner-product-purch-price/ajax-get-product-partner/{partner?}/{provider?}', 'PartnerProductPurchPriceController@ajaxGetProductPartner')
 		->name('partner-product-purch-price.ajaxGetProductPartner');
 
 	Route::get('partner-product-purch-price/upload', 'PartnerProductPurchPriceController@upload')
-	  ->name('partner-product-purch-price.upload');
+	  ->name('partner-product-purch-price.upload')->middleware('can:create-partner-product-purch-price');
 // partner product purch price
 
 // partner server
