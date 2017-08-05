@@ -153,6 +153,9 @@
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[delete-partner-pulsa]" {{ in_array('delete-partner-pulsa',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[activate-partner-pulsa]" {{ in_array('activate-partner-pulsa',$can) ? 'checked="checked"' : '' }} value="true" /> Status
           </label>
         </div>
       </div>

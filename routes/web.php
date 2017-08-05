@@ -73,19 +73,19 @@ Route::get('/home', 'HomeController@index')
 
 // partner pulsa
 	Route::get('/partner-pulsa', 'PartnerPulsaController@index')
-		->name('partner-pulsa.index');
+		->name('partner-pulsa.index')->middleware('can:read-partner-pulsa');
 	Route::get('/partner-pulsa/create', 'PartnerPulsaController@create')
-		->name('partner-pulsa.create');
+		->name('partner-pulsa.create')->middleware('can:create-partner-pulsa');
 	Route::post('/partner-pulsa/store', 'PartnerPulsaController@store')
-		->name('partner-pulsa.store');
+		->name('partner-pulsa.store')->middleware('can:create-partner-pulsa');
 	Route::get('/partner-pulsa/edit/{id}/{version}', 'PartnerPulsaController@edit')
-		->name('partner-pulsa.edit');
+		->name('partner-pulsa.edit')->middleware('can:update-partner-pulsa');
 	Route::post('/partner-pulsa/update/{id}/{version}', 'PartnerPulsaController@update')
-		->name('partner-pulsa.update');
+		->name('partner-pulsa.update')->middleware('can:update-partner-pulsa');
 	Route::get('/partner-pulsa/delete/{id}/{version}', 'PartnerPulsaController@delete')
-		->name('partner-pulsa.delete');
+		->name('partner-pulsa.delete')->middleware('can:delete-partner-pulsa');
 	Route::get('/partner-pulsa/actived/{id}/{version}/{status}', 'PartnerPulsaController@active')
-		->name('partner-pulsa.active');
+		->name('partner-pulsa.active')->middleware('can:activate-partner-pulsa');
 // partner pulsa
 
 // partner product
