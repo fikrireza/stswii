@@ -32,9 +32,18 @@ class ProviderController extends Controller{
     public function index(){
         $newProvCode = 'prov-'.rand(1000,9999);
         $cekCode = Provider::where('provider_code', $newProvCode)->first();
+
+        $getProvider = Provider::select([
+	    		'provider_id',
+				'provider_code',
+				'provider_name'
+    		])
+    		->get();
+
         if(!$cekCode){
           return view('provider.index', compact(
-				'newProvCode'
+				'newProvCode',
+				'getProvider'
 			));
         }
         else{
