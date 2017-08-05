@@ -174,6 +174,9 @@
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[delete-partner-product]" {{ in_array('delete-partner-product',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[activate-partner-product]" {{ in_array('activate-partner-product',$can) ? 'checked="checked"' : '' }} value="true" /> Status
           </label>
         </div>
       </div>

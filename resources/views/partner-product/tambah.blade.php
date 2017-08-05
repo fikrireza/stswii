@@ -30,16 +30,16 @@
 							Partner Pulsa <span class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
-							<select 
-								id="partner_pulsa_id" 
-								name="partner_pulsa_id" 
-								class="form-control select2_single" 
+							<select
+								id="partner_pulsa_id"
+								name="partner_pulsa_id"
+								class="form-control select2_single"
 								required="required"
 							>
 								<option value="">Choose Partner Pulsa</option>
 				                @foreach ($getPartner as $key)
-								<option 
-									value="{{ $key->partner_pulsa_id }}" 
+								<option
+									value="{{ $key->partner_pulsa_id }}" {{ old('partner_pulsa_id') == $key->partner_pulsa_id ? 'selected=""' : ''}}
 								>
 									{{ $key->partner_pulsa_name.'('.$key->partner_pulsa_code.')' }}
 								</option>
@@ -56,16 +56,16 @@
 							Provider <span class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
-							<select 
-								id="provider_id" 
-								name="provider_id" 
-								class="form-control select2_single" 
+							<select
+								id="provider_id"
+								name="provider_id"
+								class="form-control select2_single"
 								required="required"
 							>
 								<option value="">Choose Provider</option>
                 				@foreach ($getProvider as $key)
-								<option 
-									value="{{ $key->provider_id }}" 
+								<option
+									value="{{ $key->provider_id }}"
 								>
 									{{ $key->provider_name.'('.$key->provider_code.')' }}
 								</option>
@@ -82,10 +82,10 @@
 							Product <span class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
-							<select 
-								id="product_id" 
-								name="product_id" 
-								class="form-control select2_single" 
+							<select
+								id="product_id"
+								name="product_id"
+								class="form-control select2_single"
 								required="required"
 							>
 								<option value="">Choose Product Partner</option>
@@ -101,12 +101,12 @@
 							Partner Product Code
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
-							<input 
-								id="name" 
-								class="form-control col-md-7 col-xs-12" 
-								name="partner_product_code" 
-								type="text" 
-								value="{{ $partner_product_code }}" 
+							<input
+								id="name"
+								class="form-control col-md-7 col-xs-12"
+								name="partner_product_code"
+								type="text"
+								value="{{ $partner_product_code }}"
 								readonly
 							>
 						</div>
@@ -117,12 +117,12 @@
 							Partner Product Name<span class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
-							<input 
-								id="partner_product_name" 
-								class="form-control" 
-								name="partner_product_name" 
-								required="required" 
-								type="text" 
+							<input
+								id="partner_product_name"
+								class="form-control"
+								name="partner_product_name"
+								required="required"
+								type="text"
 								value="{{ old('partner_product_name') }}"
 							>
 							@if($errors->has('partner_product_name'))
@@ -147,7 +147,9 @@
 					<div class="form-group">
 						<div class="col-md-6 col-md-offset-3">
 							<a href="{{ route('partner-product.index') }}" class="btn btn-primary">Cancel</a>
+							@can('create-partner-product')
 							<button id="send" type="submit" class="btn btn-success">Submit</button>
+							@endcan
 						</div>
 					</div>
 				</form>

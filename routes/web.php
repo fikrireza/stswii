@@ -90,19 +90,19 @@ Route::get('/home', 'HomeController@index')
 
 // partner product
 	Route::get('/partner-product', 'PartnerProductController@index')
-		->name('partner-product.index');
+		->name('partner-product.index')->middleware('can:read-partner-product');
 	Route::get('/partner-product/create', 'PartnerProductController@create')
-		->name('partner-product.create');
+		->name('partner-product.create')->middleware('can:create-partner-product');
 	Route::post('/partner-product/store', 'PartnerProductController@store')
-		->name('partner-product.store');
+		->name('partner-product.store')->middleware('can:create-partner-product');
 	Route::get('/partner-product/edit/{id}/{version}', 'PartnerProductController@edit')
-		->name('partner-product.edit');
+		->name('partner-product.edit')->middleware('can:update-partner-product');
 	Route::post('/partner-product/update/{id}/{version}', 'PartnerProductController@update')
-		->name('partner-product.update');
+		->name('partner-product.update')->middleware('can:update-partner-product');
 	Route::get('/partner-product/delete/{id}/{version}', 'PartnerProductController@delete')
-		->name('partner-product.delete');
+		->name('partner-product.delete')->middleware('can:delete-partner-product');
 	Route::get('/partner-product/actived/{id}/{version}/{status}', 'PartnerProductController@active')
-		->name('partner-product.active');
+		->name('partner-product.active')->middleware('can:activate-partner-product');
 
 	Route::get('/partner-product/ajaxGetProductList/{id?}', 'PartnerProductController@ajaxGetProductList')
 		->name('partner-product.ajaxGetProductList');
