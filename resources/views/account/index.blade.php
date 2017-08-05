@@ -70,6 +70,7 @@
   </div>
 </div>
 
+@can('delete-user')
 <div class="modal fade modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
@@ -89,7 +90,7 @@
     </div>
   </div>
 </div>
-
+@endcan
 
 <div class="page-title">
   <div class="title_left">
@@ -104,7 +105,9 @@
       <div class="x_title">
         <h2>Account </h2>
         <ul class="nav panel_toolbox">
+          @can('create-user')
           <a href="{{ route('account.tambah') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add</a>
+          @endcan
         </ul>
         <div class="clearfix"></div>
       </div>
@@ -122,37 +125,35 @@
             </tr>
           </thead>
           <tbody>
+            @php
+              $no = 1;
+            @endphp
+            @foreach ($getUser as $key)
             <tr>
-              <td>1</td>
-              <td>Jajang</td>
-              <td>jajang@gmail.com</td>
-              <td>-</td>
-              <td>Administrator, Finance</td>
-              <td class="text-center">
-                    <a href="" class="unpublish" data-value="{{ 1 }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a>
-                    {{-- <a href="" class="publish" data-value="{{ 1 }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a> --}}
-                    <br>
+              <td>{{ $no++ }}</td>
+              <td>{{ $key->name }}</td>
+              <td>{{ $key->email }}</td>
+              <td>{{ $key->avatar }}</td>
+              <td>@foreach($key->roles as $role)
+                  {{ $role->name }}
+                  @endforeach
               </td>
-              <td>
-                <a href="{{ route('account.ubah', 1) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
-                <a href="" class="delete" data-value="{{ 1 }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Reset"><i class="fa fa-recycle"></i></span></a>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Dingdong</td>
-              <td>dingdong@gmail.com</td>
-              <td>-</td>
-              <td>Partner</td>
-              <td class="text-center">
-                    {{-- <a href="" class="unpublish" data-value="{{ 2 }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a> --}}
+              <td>@if($key->confirmed == 1)
+                    <a href="" class="unpublish" data-value="{{ 2 }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a>
+                  @else
                     <a href="" class="publish" data-value="{{ 1 }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
+                  @endif
               </td>
               <td>
+                @can('update-user')
                 <a href="{{ route('account.ubah', 2) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
+                @endcan
+                @can('delete-user')
                 <a href="" class="delete" data-value="{{ 2 }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Reset"><i class="fa fa-recycle"></i></span></a>
+                @endcan
               </td>
             </tr>
+            @endforeach
           </tbody>
         </table>
       </div>

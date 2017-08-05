@@ -195,6 +195,7 @@ Route::get('/home', 'HomeController@index')
 //----- Management Account -----//
 	Route::get('account', 'AccountController@index')->name('account.index')->middleware('can:read-user');
 	Route::get('account/add', 'AccountController@tambah')->name('account.tambah')->middleware('can:create-user');
+	Route::post('account/add', 'AccountController@store')->name('account.store')->middleware('can:create-user');
 	Route::get('account/edit/{id}', 'AccountController@ubah')->name('account.ubah')->middleware('can:update-user');
 	Route::get('account/role', 'AccountController@role')->name('account.role')->middleware('can:read-role');
 	Route::get('account/role/{id}', 'AccountController@roleUbah')->name('account.roleUbah')->middleware('can:update-role');
