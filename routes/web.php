@@ -201,3 +201,10 @@ Route::get('/home', 'HomeController@index')
 	Route::get('account/reset/{id}', 'AccountController@reset')->middleware('can:reset-user');
 	Route::get('account/actived/{id}', 'AccountController@activate')->middleware('can:activate-user');
 //----- Management Account -----//
+
+//------- Deposit Agent -------//
+Route::get('deposit-agent', 'DepositAgentController@index')->name('deposit-agent.index');
+Route::post('deposit-agent', 'DepositAgentController@getUniqueCode')->name('deposit-agent.getUniqueCode');
+Route::post('deposit-agent-proses-confirm', 'DepositAgentController@confirm')->name('deposit-agent.confirm');
+// Route::get('getUnconfirmedUniqueCodes', 'DepositAgentController@getUnconfirmedUniqueCodes');
+// Route::post('walletTopupWithCode', 'DepositAgentController@walletTopupWithCode');

@@ -94,11 +94,14 @@
               @endcan
             </ul>
           </li>
-          <li class="{{ Route::is('paloma*') ? 'active' : '' }}">
+          <li class="{{ Route::is('paloma*') ? 'active' : '' }}{{ Route::is('deposit-agent*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-money"></i> Paloma Deposit <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="">
+              <li class="{{ Route::is('deposit-agent*') ? 'current-page' : '' }}">
+                <a href="{{ route('deposit-agent.index') }}">Deposit Agent</a>
+              </li>
               <li class="{{ Route::is('paloma.transaction*') ? 'current-page' : '' }}">
                 <a href="{{ route('paloma.transaction.index') }}">Transaction</a>
               </li>
