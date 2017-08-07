@@ -79,11 +79,8 @@
               <i class="fa fa-beer"></i> Manage Agent <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="{{ Route::is('agent*') ? 'display: block;' : '' }}">
-              <li class="{{ Route::is('agent.index.table.js') ? 'current-page' : '' }}">
-                <a href="{{ route('agent.index.table.js') }}">Agent Js</a>
-              </li>
               <li class="{{ Route::is('agent.index.table.php') ? 'current-page' : '' }}">
-                <a href="{{ route('agent.index.table.php') }}">Agent PHP</a>
+                <a href="{{ route('agent.index.table.php') }}">Agent</a>
               </li>
             </ul>
           </li>
