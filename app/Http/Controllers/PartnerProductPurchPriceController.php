@@ -59,7 +59,7 @@ class PartnerProductPurchPriceController extends Controller
         $alret = 'alert-danger';
       }
       else if($status == 1){
-        if (date('Ymd',strtotime($findData->datetime_end)) < Carbon::now()->format('Ymd')) {
+        if (date('YmdHis',strtotime($findData->datetime_end)) < Carbon::now()->format('YmdHis')) {
           $info  = 'Status Partner Produk Price gagal diubah! Periode Telah Lewat Tidak Dapat Diaktifkan!';
           $alret = 'alert-danger';
         }
@@ -71,8 +71,8 @@ class PartnerProductPurchPriceController extends Controller
           if(count($checkData) != 0){
             foreach ($checkData as $list){
               if(
-                  date('Ymd', strtotime($findData->datetime_start)) >= $list->datetime_start && 
-                  date('Ymd', strtotime($findData->datetime_start)) <= $list->datetime_end
+                  date('YmdHis', strtotime($findData->datetime_start)) >= date('YmdHis', strtotime($list->datetime_start)) && 
+                  date('YmdHis', strtotime($findData->datetime_start)) <= date('YmdHis', strtotime($list->datetime_end))
                 ){ 
                 $retrun= 'update';
                 $info  = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
@@ -80,8 +80,8 @@ class PartnerProductPurchPriceController extends Controller
                 break;
               }
               else if(
-                date('Ymd', strtotime($findData->datetime_start)) <= $list->datetime_start && 
-                date('Ymd', strtotime($findData->datetime_end))  >= $list->datetime_end
+                date('YmdHis', strtotime($findData->datetime_start)) <= date('YmdHis', strtotime($list->datetime_start)) && 
+                date('YmdHis', strtotime($findData->datetime_end))  >= date('YmdHis', strtotime($list->datetime_end))
               ){
                 $retrun= 'update';
                 $info  = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
@@ -89,8 +89,8 @@ class PartnerProductPurchPriceController extends Controller
                 break;
               }
               else if(
-                date('Ymd', strtotime($findData->datetime_end)) >= $list->datetime_start && 
-                date('Ymd', strtotime($findData->datetime_end)) <= $list->datetime_end
+                date('YmdHis', strtotime($findData->datetime_end)) >= date('YmdHis', strtotime($list->datetime_start)) && 
+                date('YmdHis', strtotime($findData->datetime_end)) <= date('YmdHis', strtotime($list->datetime_end))
               ){
                 $retrun= 'update';
                 $info  = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
@@ -108,7 +108,7 @@ class PartnerProductPurchPriceController extends Controller
         DB::transaction(function () use($findData, $status) {
           $findData->increment('version');
           $findData->active         = $status;
-          $findData->update_user_id = Auth::user()->id;
+          $findData->update_user_id = Auth::id();
           $findData->update_datetime= Carbon::now()->format('YmdHis');
           if($status == 1){
             $findData->active_datetime  = Carbon::now()->format('YmdHis');
@@ -194,7 +194,7 @@ class PartnerProductPurchPriceController extends Controller
       }
 
       // cek jika periode sudah lewat atau belum
-      if (date('Ymd',strtotime($request->datetime_end)) < Carbon::now()->format('Ymd')) {
+      if (date('YmdHis',strtotime($request->datetime_end)) < Carbon::now()->format('YmdHis')) {
         $active = 0;
       }
       else{
@@ -205,8 +205,8 @@ class PartnerProductPurchPriceController extends Controller
         if(count($checkData) != 0){
           foreach ($checkData as $list){
             if(
-                date('Ymd', strtotime($request->datetime_start)) >= $list->datetime_start && 
-                date('Ymd', strtotime($request->datetime_start)) <= $list->datetime_end
+                date('YmdHis', strtotime($request->datetime_start)) >= date('YmdHis', strtotime($list->datetime_start)) && 
+                date('YmdHis', strtotime($request->datetime_start)) <= date('YmdHis', strtotime($list->datetime_end))
               ){ 
               $retrun= 'update';
               $info  = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
@@ -214,8 +214,8 @@ class PartnerProductPurchPriceController extends Controller
               break;
             }
             else if(
-              date('Ymd', strtotime($request->datetime_start)) <= $list->datetime_start && 
-              date('Ymd', strtotime($request->datetime_end))  >= $list->datetime_end
+              date('YmdHis', strtotime($request->datetime_start)) <= date('YmdHis', strtotime($list->datetime_start)) && 
+              date('YmdHis', strtotime($request->datetime_end))  >= date('YmdHis', strtotime($list->datetime_end))
             ){
               $retrun= 'update';
               $info  = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
@@ -223,8 +223,8 @@ class PartnerProductPurchPriceController extends Controller
               break;
             }
             else if(
-              date('Ymd', strtotime($request->datetime_end)) >= $list->datetime_start && 
-              date('Ymd', strtotime($request->datetime_end)) <= $list->datetime_end
+              date('YmdHis', strtotime($request->datetime_end)) >= date('YmdHis', strtotime($list->datetime_start)) && 
+              date('YmdHis', strtotime($request->datetime_end)) <= date('YmdHis', strtotime($list->datetime_end))
             ){
               $retrun= 'update';
               $info  = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
@@ -242,18 +242,18 @@ class PartnerProductPurchPriceController extends Controller
           $save = New PartnerProductPurchPrice;
           $save->partner_product_id = $request->partner_product_id;
           $save->gross_purch_price  = $request->gross_purch_price;
-          $save->datetime_start     = date('Ymd',strtotime($request->datetime_start));
-          $save->datetime_end       = date('Ymd',strtotime($request->datetime_end));
+          $save->datetime_start     = date('YmdHis',strtotime($request->datetime_start));
+          $save->datetime_end       = date('YmdHis',strtotime($request->datetime_end));
           $save->flg_tax            = $request->flg_tax == null ? 0 : 1;
           $save->tax_percentage     = $request->flg_tax == null ? 0 : $request->tax_percentage;
           $save->active             = $active;
-          $save->active_datetime    = Carbon::now()->format('YmdHis');
-          $save->non_active_datetime= '';
+          $save->active_datetime    = $active == 1 ? Carbon::now()->format('YmdHis') : '00000000000000';
+          $save->non_active_datetime= $active == 0 ? Carbon::now()->format('YmdHis') : '00000000000000';
           $save->version            = 0;
-          $save->create_user_id     = Auth::user()->id;
+          $save->create_user_id     = Auth::id();
           $save->create_datetime    = Carbon::now()->format('YmdHis');
-          $save->update_user_id     = 0;/*Auth::user()->id*/
-          $save->update_datetime    = '';
+          $save->update_user_id     = -99;
+          $save->update_datetime    = '00000000000000';
           $save->save();
         });
       }
@@ -372,7 +372,7 @@ class PartnerProductPurchPriceController extends Controller
         $info = 'Data Partner Produk Price gagal diubah! Data Partner Produk Price telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
         $alret = 'alert-danger';
       }
-      else if(date('Ymd', strtotime($request->datetime_end)) >= Carbon::now()->format('Ymd')){
+      else if(date('YmdHis', strtotime($request->datetime_end)) >= Carbon::now()->format('YmdHis')){
 
         $checkData = PartnerProductPurchPrice::where('partner_product_id',$findData->partner_product_id)
           ->whereNotIn(
@@ -386,8 +386,8 @@ class PartnerProductPurchPriceController extends Controller
         if(count($checkData) != 0){
           foreach ($checkData as $list){
             if(
-              date('Ymd', strtotime($request->datetime_start)) >= $list->datetime_start && 
-              date('Ymd', strtotime($request->datetime_start)) <= $list->datetime_end
+              date('YmdHis', strtotime($request->datetime_start)) >= date('YmdHis', strtotime($list->datetime_start)) && 
+              date('YmdHis', strtotime($request->datetime_start)) <= date('YmdHis', strtotime($list->datetime_end))
             ){ 
               $retrun= 'update';
               $info  = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
@@ -395,8 +395,8 @@ class PartnerProductPurchPriceController extends Controller
               break;
             }
             else if(
-              date('Ymd', strtotime($request->datetime_start)) <= $list->datetime_start && 
-              date('Ymd', strtotime($request->datetime_end))  >= $list->datetime_end
+              date('YmdHis', strtotime($request->datetime_start)) <= date('YmdHis', strtotime($list->datetime_start)) && 
+              date('YmdHis', strtotime($request->datetime_end))  >= date('YmdHis', strtotime($list->datetime_end))
             ){
               $retrun= 'update';
               $info  = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
@@ -404,8 +404,8 @@ class PartnerProductPurchPriceController extends Controller
               break;
             }
             else if(
-              date('Ymd', strtotime($request->datetime_end)) >= $list->datetime_start && 
-              date('Ymd', strtotime($request->datetime_end)) <= $list->datetime_end
+              date('YmdHis', strtotime($request->datetime_end)) >= date('YmdHis', strtotime($list->datetime_start)) && 
+              date('YmdHis', strtotime($request->datetime_end)) <= date('YmdHis', strtotime($list->datetime_end))
             ){
               $retrun= 'update';
               $info  = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
@@ -421,21 +421,23 @@ class PartnerProductPurchPriceController extends Controller
         $info  = 'Data Partner Produk Price Berhasil di update!';
         $alret = 'alert-success';
         DB::transaction(function() use($findData, $request){
-          if(date('Ymd', strtotime($request->datetime_end)) >= Carbon::now()->format('Ymd')){
-            $findData->active             = 1;
+          if(date('YmdHis', strtotime($request->datetime_end)) >= Carbon::now()->format('YmdHis')){
+            $findData->active          = 1;
+            $findData->active_datetime = Carbon::now()->format('YmdHis');
           }
-          else if(date('Ymd', strtotime($request->datetime_end)) < Carbon::now()->format('Ymd')){
-            $findData->active             = 0;
+          else if(date('YmdHis', strtotime($request->datetime_end)) < Carbon::now()->format('YmdHis')){
+            $findData->active              = 0;
+            $findData->non_active_datetime = Carbon::now()->format('YmdHis');
           }
 
           $findData->increment('version');
           $findData->partner_product_id = $request->partner_product_id;
           $findData->gross_purch_price  = $request->gross_purch_price;
-          $findData->datetime_start     = date('Ymd',strtotime($request->datetime_start));
-          $findData->datetime_end       = date('Ymd',strtotime($request->datetime_end));
+          $findData->datetime_start     = date('YmdHis',strtotime($request->datetime_start));
+          $findData->datetime_end       = date('YmdHis',strtotime($request->datetime_end));
           $findData->flg_tax            = $request->flg_tax == null ? 0 : 1;
           $findData->tax_percentage     = $request->flg_tax == null ? 0 : $request->tax_percentage;
-          $findData->update_user_id     = Auth::user()->id;
+          $findData->update_user_id     = Auth::id();
           $findData->update_datetime    = Carbon::now()->format('YmdHis');
           $findData->update();
         });

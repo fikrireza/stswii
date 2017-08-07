@@ -304,14 +304,14 @@ $(document).on('change','select.call-product-partner', function(){
 $('#datetime_start').daterangepicker({
   singleDatePicker: true,
   calender_style: "picker_3",
-  format: 'YYYY-MM-DD',
+  format: 'YYYY-MM-DD H:m:s',
   // minDate: new Date(),
 });
 
 $('#datetime_end').daterangepicker({
   singleDatePicker: true,
   calender_style: "picker_3",
-  format: 'YYYY-MM-DD',
+  format: 'YYYY-MM-DD H:m:s',
   // minDate: new Date(),
 });
 
