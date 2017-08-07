@@ -235,8 +235,11 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('update-user', function($user){
           return $user->hasAccess(['update-user']);
         });
-        Gate::define('delete-user', function($user){
-          return $user->hasAccess(['delete-user']);
+        Gate::define('reset-user', function($user){
+          return $user->hasAccess(['reset-user']);
+        });
+        Gate::define('activate-user', function($user){
+          return $user->hasAccess(['activate-user']);
         });
         Gate::define('read-role', function($user){
           return $user->hasAccess(['read-role']);

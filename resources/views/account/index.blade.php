@@ -32,7 +32,8 @@
 </div>
 @endif
 
-<div class="modal fade modal-nonactive" tabindex="-1" role="dialog" aria-hidden="true">
+@can('activate-user')
+<div class="modal fade modal-inactive" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
 
@@ -45,7 +46,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setUnpublish">Ya</a>
+        <a class="btn btn-primary" id="setInActive">Ya</a>
       </div>
     </div>
   </div>
@@ -64,27 +65,28 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setPublish">Ya</a>
+        <a class="btn btn-primary" id="setActive">Ya</a>
       </div>
     </div>
   </div>
 </div>
+@endcan
 
-@can('delete-user')
-<div class="modal fade modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
+@can('reset-user')
+<div class="modal fade modal-reset" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
 
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Delete Account</h4>
+        <h4 class="modal-title" id="myModalLabel2">Reset Password Account</h4>
       </div>
       <div class="modal-body">
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setDelete">Ya</a>
+        <a class="btn btn-primary" id="setReset">Ya</a>
       </div>
 
     </div>
@@ -120,7 +122,9 @@
               <th>Email</th>
               <th>Avatar</th>
               <th>Role</th>
+              @can('activate-user')
               <th>Status</th>
+              @endcan
               <th>Action</th>
             </tr>
           </thead>
@@ -138,18 +142,20 @@
                   {{ $role->name }}
                   @endforeach
               </td>
+              @can('activate-user')
               <td>@if($key->confirmed == 1)
-                    <a href="" class="unpublish" data-value="{{ 2 }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a>
+                    <a href="" class="inactive" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-inactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a>
                   @else
-                    <a href="" class="publish" data-value="{{ 1 }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
+                    <a href="" class="active" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
                   @endif
               </td>
+              @endcan
               <td>
                 @can('update-user')
-                <a href="{{ route('account.ubah', 2) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
+                <a href="{{ route('account.ubah', $key->id) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
                 @endcan
-                @can('delete-user')
-                <a href="" class="delete" data-value="{{ 2 }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Reset"><i class="fa fa-recycle"></i></span></a>
+                @can('reset-user')
+                <a href="" class="reset" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-reset"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Reset"><i class="fa fa-recycle"></i></span></a>
                 @endcan
               </td>
             </tr>
@@ -171,5 +177,26 @@
 
 <script type="text/javascript">
   $('#producttabel').DataTable();
+
+  $(function(){
+    @can('reset-user')
+    $(document).on('click','a.reset', function(){
+      var a = $(this).data('value');
+      $('#setReset').attr('href', "{{ url('/') }}/account/reset/"+a);
+    });
+    @endcan
+
+    @can('activate-user')
+    $(document).on('click', 'a.active', function(){
+      var a = $(this).data('value');
+      $('#setActive').attr('href', "{{ url('/') }}/account/actived/"+a);
+    });
+
+    $(document).on('click','a.inactive', function(){
+      var a = $(this).data('value');
+      $('#setInActive').attr('href', "{{ url('/') }}/account/actived/"+a);
+    });
+    @endcan
+  });
 </script>
 @endsection

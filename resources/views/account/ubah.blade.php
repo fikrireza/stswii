@@ -42,18 +42,19 @@
         <div class="clearfix"></div>
       </div>
       <div class="x_content">
-        <form action="{{ route('account.store') }}" method="POST" class="form-horizontal form-label-left" novalidate>
+        <form action="{{ route('account.update') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data">
           {{ csrf_field() }}
+          <input type="hidden" name="id" value="{{ $getUser->id }}">
           <div class="item form-group {{ $errors->has('name') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Name <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="name" class="form-control col-md-7 col-xs-12" name="name" type="text" placeholder="E.g: John Doe" value="{{ old('name') }}">
+              <input id="name" class="form-control col-md-7 col-xs-12" name="name" type="text" placeholder="E.g: John Doe" value="{{ old('name', $getUser->name ) }}">
             </div>
           </div>
           <div class="item form-group {{ $errors->has('email') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Email <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="name" class="form-control" name="email" placeholder="E.g: john.doe@gmail.com" required="required" type="text" value="{{ old('email') }}">
+              <input id="name" class="form-control" name="email" placeholder="E.g: john.doe@gmail.com" required="required" type="text" value="{{ old('email', $getUser->email) }}">
               @if($errors->has('email'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('email')}}</span></code>
               @endif
@@ -62,10 +63,16 @@
           <div class="item form-group {{ $errors->has('avatar') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Avatar</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="name" class="form-control" name="avatar" required="required" type="file" value="{{ old('avatar') }}" accept=".jpg,.bmp,.png">
+              <input id="name" class="form-control" name="avatar" type="file" value="{{ old('avatar') }}" accept=".jpg,.bmp,.png">
               @if($errors->has('avatar'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('avatar')}}</span></code>
               @endif
+            </div>
+          </div>
+          <div class="item form-group">
+            <label class="col-md-3"></label>
+            <div class="col-md-3">
+              <img src="{{ asset('amadeo/images/profile').'/'.$getUser->avatar }}" alt="" class="thumbnail">
             </div>
           </div>
           <div class="ln_solid"></div>
@@ -74,8 +81,14 @@
             <div class="col-md-6 col-sm-6 col-xs-12">
               <select id="role" name="role[]" class="form-control" required="required" multiple>
                 <option value="">Pilih</option>
+                @php
+                  $roles = array();
+                  foreach ($getUser->roles as $role) {
+                    $roles[] = $role->id;
+                  }
+                @endphp
                 @foreach ($getRole as $key)
-                <option value="{{ $key->id }}">{{ $key->name }}</option>
+                <option value="{{ $key->id }}" {{ in_array($key->id, $roles) ? 'selected=""' : '' }}>{{ $key->name }}</option>
                 @endforeach
               </select>
               @if($errors->has('role'))
@@ -87,7 +100,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input type="checkbox" class="flat" name="active" value="1" />
+                <input type="checkbox" class="flat" name="active" value="1" {{ old('active', $getUser->confirmed) == 1 ? 'checked=""' : ''}} />
               </label>
             </div>
           </div>
@@ -119,17 +132,5 @@
     placeholder: "Choose Role",
     allowClear: true
   });
-  $("#task").select2({
-    placeholder: "Choose Task",
-    allowClear: true
-  });
-  function isNumber(evt) {
-    evt = (evt) ? evt : window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
-  }
 </script>
 @endsection

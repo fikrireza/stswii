@@ -12,6 +12,7 @@ use DB;
 use Auth;
 use Validator;
 use Hash;
+use Image;
 
 class AccountController extends Controller
 {
@@ -44,15 +45,18 @@ class AccountController extends Controller
     public function store(Request $request)
     {
         $message = [
-          'name.required' => 'Wajib di isi',
-          'email.required' => 'Wajib di isi',
-          'email.email' => 'Format email',
-          'email.unique' => 'Email sudah dipakai',
+          'name.required' => 'This field is required',
+          'email.required' => 'This field is required',
+          'email.email' => 'Format email not supported',
+          'email.unique' => 'Email has already taken',
+          'avatar.image' => 'Format not supported',
+          'avatar.max' => 'File Size Too Big',
         ];
 
         $validator = Validator::make($request->all(), [
           'name' => 'required',
-          'email' => 'required|email|unique:sw_users'
+          'email' => 'required|email|unique:sw_users',
+          'avatar' => 'image|mimes:jpeg,bmp,png|max:1000'
         ], $message);
 
         if($validator->fails())
@@ -64,7 +68,7 @@ class AccountController extends Controller
           $confirmation_code = str_random(30).time();
           $userSave = User::create([
             'name' => $request->name,
-            'avatar' => 'userdefault.png',
+            'avatar' => 'user.png',
             'email' => $request->email,
             'password' => Hash::make(12345678),
             'confirmed' => 0,
@@ -91,6 +95,102 @@ class AccountController extends Controller
         return redirect()->route('account.index')->with('berhasil', 'Akun baru sudah dibuat, cek '.$request->email.' untuk verifiakasi');
     }
 
+    public function ubah($id)
+    {
+      $getUser = User::find($id);
+
+      if(!$getUser){
+        abort(404);
+      }
+
+      $getRole = Role::get();
+
+      return view('account.ubah', compact('getUser', 'getRole'));
+    }
+
+    public function update(Request $request)
+    {
+      $message = [
+        'name.required' => 'This field is required.',
+        'email.required' => 'This field is required.',
+        'email.email' => 'Format not supported',
+        'email.unique' => 'Email has already taken',
+        'avatar.image' => 'Format not supported',
+        'avatar.max' => 'File Size Too Big',
+      ];
+
+      $validator = Validator::make($request->all(), [
+        'name' => 'required',
+        'email' => 'required|email|unique:sw_users,email,'.$request->id,
+        'avatar' => 'image|mimes:jpeg,bmp,png|max:1000'
+      ], $message);
+
+      if($validator->fails())
+      {
+        return redirect()->route('account.ubah', ['id' => $request->id ])->withErrors($validator)->withInput();
+      }
+
+      DB::transaction(function() use($request){
+        $image = $request->file('avatar');
+
+        if($request->active == 1){
+          $confirmed = 1;
+        }else{
+          $confirmed = 0;
+        }
+
+        $update = User::find($request->id);
+        $update->name = $request->name;
+        $update->email = $request->email;
+        $update->confirmed = $confirmed;
+        if($image){
+          $img_url = 'web-admin-'.str_slug($request->name,'-').'.'. $image->getClientOriginalExtension();
+          Image::make($image)->fit(250,250)->save('amadeo/images/profile/'. $img_url);
+          $update->avatar = $img_url;
+        }
+        $update->update();
+
+        $rolesUpdate = RoleUser::where('user_id', $request->id)->delete();
+
+        foreach ($request->role as $key) {
+          $role = RoleUser::firstOrCreate(['user_id' => $request->id, 'role_id' => $key]);
+        }
+      });
+
+
+      return redirect()->route('account.index')->with('berhasil', 'User has been successfully updated');
+
+    }
+
+    public function reset($id)
+    {
+      $getUser = User::find($id);
+
+      if(!$getUser){
+        abort(404);
+      }
+
+      $getUser->password = Hash::make(12345678);
+      $getUser->save();
+
+      if($getUser->id == Auth::user()->id){
+          auth()->logout();
+      }
+
+      // $data = array([
+      //   'name' => $getUser->name,
+      //   'email' => $getUser->email,
+      //   'password' => 12345678
+      // ]);
+      //
+      // Mail::send('email.reset', ['data' => $data], function($message) use ($data) {
+      //   $message->from('administrator@amadeo.id', 'Administrator')
+      //           ->to($data[0]['email'], $data[0]['name'])
+      //           ->subject('Reset Password Akun Web Admin');
+      // });
+
+      return redirect()->route('account.index')->with('berhasil', 'Password user '.$getUser->name.' Has been reset');
+    }
 
     public function role()
     {
@@ -117,7 +217,6 @@ class AccountController extends Controller
 
     public function roleEdit(Request $request)
     {
-      // return str_replace("\"true\"", "true", $request->permissions);
 
       $task = "{";
       foreach ($request->permissions as $key => $value) {
@@ -130,6 +229,6 @@ class AccountController extends Controller
 
       DB::statement($query);
 
-      return redirect()->route('account.role')->with('berhasil', 'value');
+      return redirect()->route('account.role')->with('berhasil', 'Data Role has been successfully updated');
     }
 }

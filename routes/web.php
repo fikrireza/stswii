@@ -14,8 +14,6 @@
 Auth::routes();
 
 Route::get('/', 'Auth\LoginController@showLoginForm');
-// Route::get('/', 'HomeController@login')
-// 	->name('login');
 
 Route::get('/home', 'HomeController@index')
 	->name('home.index');
@@ -197,7 +195,10 @@ Route::get('/home', 'HomeController@index')
 	Route::get('account/add', 'AccountController@tambah')->name('account.tambah')->middleware('can:create-user');
 	Route::post('account/add', 'AccountController@store')->name('account.store')->middleware('can:create-user');
 	Route::get('account/edit/{id}', 'AccountController@ubah')->name('account.ubah')->middleware('can:update-user');
+	Route::post('account/edit', 'AccountController@update')->name('account.update')->middleware('can:update-user');
 	Route::get('account/role', 'AccountController@role')->name('account.role')->middleware('can:read-role');
 	Route::get('account/role/{id}', 'AccountController@roleUbah')->name('account.roleUbah')->middleware('can:update-role');
 	Route::post('account/role', 'AccountController@roleEdit')->name('account.roleEdit')->middleware('can:update-role');
+	Route::get('account/reset/{id}', 'AccountController@reset')->middleware('can:reset-user');
+	Route::get('account/actived/{id}', 'AccountController@activate')->middleware('can:activate-user');
 //----- Management Account -----//

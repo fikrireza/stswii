@@ -8,7 +8,7 @@
 
     <div class="profile">
       <div class="profile_pic">
-        <img src="{{ asset('amadeo/images/img.jpg')}}" alt="..." class="img-circle profile_img">
+        <img src="{{ asset('amadeo/images/profile/').'/'.Auth::user()->avatar }}" alt="..." class="img-circle profile_img">
       </div>
       <div class="profile_info">
         <span>Hai,</span>

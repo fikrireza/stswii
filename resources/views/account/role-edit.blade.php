@@ -245,7 +245,10 @@
             <input type="checkbox" class="flat" name="permissions[update-user]" {{ in_array('update-user',$can) ? 'checked="checked"' : '' }} value="true" /> Update
           </label><br>
           <label>
-            <input type="checkbox" class="flat" name="permissions[delete-user]" {{ in_array('delete-user',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
+            <input type="checkbox" class="flat" name="permissions[reset-user]" {{ in_array('reset-user',$can) ? 'checked="checked"' : '' }} value="true" /> Reset
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[activate-user]" {{ in_array('activate-user',$can) ? 'checked="checked"' : '' }} value="true" /> Status
           </label>
         </div>
       </div>

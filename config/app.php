@@ -182,6 +182,9 @@ return [
 
         //data table Yajra
         Yajra\Datatables\DatatablesServiceProvider::class,
+
+        //intevention Image
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -232,7 +235,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Input' => Illuminate\Support\Facades\Input::class,
-
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];
