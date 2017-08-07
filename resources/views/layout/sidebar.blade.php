@@ -87,9 +87,11 @@
               <i class="fa fa-suitcase"></i> Manage Agent <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="{{ Route::is('agent*') ? 'display: block;' : '' }}">
+              @can('read-agent')
               <li class="{{ Route::is('agent.index.table.php') ? 'current-page' : '' }}">
                 <a href="{{ route('agent.index.table.php') }}">Agent</a>
               </li>
+              @endcan
             </ul>
           </li>
           <li class="{{ Route::is('paloma*') ? 'active' : '' }}">
