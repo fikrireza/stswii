@@ -52,11 +52,13 @@ Route::get('/home', 'HomeController@index')
 
 	Route::get('/agent/php', 'AgentController@indexPhp')
 		->name('agent.index.table.php');
+
 	Route::get('/agent/php/getDatas', 'AgentController@getDataTables')
 		->name('agent.index.table.php.getDatas');
 
 	Route::get('/agent/edit/{id}', 'AgentController@edit')
 		->name('agent.edit');
+		
 	Route::post('/agent/update', 'AgentController@update')
 		->name('agent.update');
 
