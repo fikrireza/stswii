@@ -42,7 +42,7 @@
         <div class="clearfix"></div>
       </div>
       <div class="x_content">
-        <form action="" method="POST" class="form-horizontal form-label-left" novalidate>
+        <form action="{{ route('account.store') }}" method="POST" class="form-horizontal form-label-left" novalidate>
           {{ csrf_field() }}
           <div class="item form-group {{ $errors->has('name') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Name <span class="required">*</span></label>
@@ -72,10 +72,11 @@
           <div class="item form-group {{ $errors->has('role') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Role <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <select id="role" name="role" class="form-control" required="required" multiple>
+              <select id="role" name="role[]" class="form-control" required="required" multiple>
                 <option value="">Pilih</option>
-                <option value="1">Administrator</option>
-                <option value="2">Admin</option>
+                @foreach ($getRole as $key)
+                <option value="{{ $key->id }}">{{ $key->name }}</option>
+                @endforeach
               </select>
               @if($errors->has('role'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('role')}}</span></code>
@@ -86,7 +87,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input type="checkbox" class="flat" name="active" />
+                <input type="checkbox" class="flat" name="active" value="1" />
               </label>
             </div>
           </div>

@@ -28,7 +28,7 @@
 </div>
 @endif
 
-
+@can('delete-partner-product')
 <div class="modal fade modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
@@ -48,7 +48,8 @@
     </div>
   </div>
 </div>
-
+@endcan
+@can('activate-partner-product')
 <div class="modal fade modal-nonactive" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
@@ -86,6 +87,7 @@
     </div>
   </div>
 </div>
+@endcan
 
 <div class="page-title">
   <div class="title_left">
@@ -99,7 +101,9 @@
       <div class="x_title">
         <h2>Partner Product </h2>
         <ul class="nav panel_toolbox">
+          @can('create-partner-product')
           <a class="btn btn-success btn-sm publish" href="{{ route('partner-product.create') }}"><i class="fa fa-plus"></i> Add</a>
+          @endcan
         </ul>
         <div class="clearfix"></div>
       </div>
@@ -113,7 +117,9 @@
               <th>Product Code</th>
               <th>Partner Product Code</th>
               <th>Partner Product Name</th>
+              @can('activate-partner-product')
               <th>Status</th>
+              @endcan
               <th>Aksi</th>
             </tr>
           </thead>
@@ -127,28 +133,29 @@
               <td>{{ $list->product->product_code }}</td>
               <td>{{ $list->partner_product_code }}</td>
               <td>{{ $list->partner_product_name }}</td>
+              @can('activate-partner-product')
               <td class="text-center">
-                <a 
-                  href="" 
-                  data-value="{{ $list->partner_product_id }}" 
-                  data-version="{{ $list->version }}" 
-                  data-toggle="modal" 
+                <a
+                  href=""
+                  data-value="{{ $list->partner_product_id }}"
+                  data-version="{{ $list->version }}"
+                  data-toggle="modal"
                   @if($list->active == 1)
                   class="unpublish"
                   data-target=".modal-nonactive"
                   @elseif($list->active == 0)
-                  class="publish" 
+                  class="publish"
                   data-target=".modal-active"
                   @endif
                 >
-                  <span 
-                    data-toggle="tooltip" 
-                    data-placement="top" 
+                  <span
+                    data-toggle="tooltip"
+                    data-placement="top"
                     @if($list->active == 1)
-                    class="label label-success" 
+                    class="label label-success"
                     title="Active"
                     @elseif($list->active == 0)
-                    class="label label-danger" 
+                    class="label label-danger"
                     title="Non Active"
                     @endif
                   >
@@ -160,24 +167,28 @@
                   </span>
                 </a>
               </td>
+              @endcan
               <td>
-                <a 
-                  class="update" 
+                @can('update-partner-product')
+                <a
+                  class="update"
                   href="{{ route('partner-product.edit', ['id' => $list->partner_product_id, 'version' => $list->version ]) }}"
                 >
                   <span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>
                 </a>
-
-                <a 
-                  href="" 
-                  class="delete" 
-                  data-value="{{ $list->partner_product_id }}" 
-                  data-version="{{ $list->version }}" 
-                  data-toggle="modal" 
+                @endcan
+                @can('delete-partner-product')
+                <a
+                  href=""
+                  class="delete"
+                  data-value="{{ $list->partner_product_id }}"
+                  data-version="{{ $list->version }}"
+                  data-toggle="modal"
                   data-target=".modal-delete"
                 >
                   <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span>
                 </a>
+                @endcan
               </td>
             </tr>
             @endforeach
@@ -198,12 +209,15 @@
 $('#dataTables').DataTable();
 
 $(function(){
+  @can('delete-partner-product')
   $(document).on('click','a.delete', function(){
     var a = $(this).data('value');
     var b = $(this).data('version');
     $('#setDelete').attr('href', "{{ url('/') }}/partner-product/delete/"+a+"/"+b);
   });
+  @endcan
 
+  @can('activate-partner-product')
   $(document).on('click', 'a.publish', function(){
     var a = $(this).data('value');
     var b = $(this).data('version');
@@ -215,6 +229,7 @@ $(function(){
     var b = $(this).data('version');
     $('#setUnpublish').attr('href', "{{ url('/') }}/partner-product/actived/"+a+"/"+b+"/0");
   });
+  @endcan
 });
 
 </script>

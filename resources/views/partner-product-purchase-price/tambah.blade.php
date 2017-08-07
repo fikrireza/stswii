@@ -49,16 +49,16 @@
               Partner Pulsa <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <select 
-                id="partner_pulsa_id" 
-                name="partner_pulsa_id" 
-                class="form-control select2_single call-product-partner" 
+              <select
+                id="partner_pulsa_id"
+                name="partner_pulsa_id"
+                class="form-control select2_single call-product-partner"
                 required="required"
               >
                 <option value="">Choose Partner Pulsa</option>
                 @foreach ($getPartner as $key)
-                <option 
-                  value="{{ $key->partner_pulsa_id }}" 
+                <option
+                  value="{{ $key->partner_pulsa_id }}"
                 >
                   {{ $key->partner_pulsa_name.'('.$key->partner_pulsa_code.')' }}
                 </option>
@@ -75,16 +75,16 @@
               Provider <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <select 
-                id="provider_id" 
-                name="provider_id" 
-                class="form-control select2_single call-product-partner" 
+              <select
+                id="provider_id"
+                name="provider_id"
+                class="form-control select2_single call-product-partner"
                 required="required"
               >
                 <option value="">Choose Provider</option>
                 @foreach ($getProvider as $key)
-                <option 
-                  value="{{ $key->provider_id }}" 
+                <option
+                  value="{{ $key->provider_id }}"
                 >
                   {{ $key->provider_name.'('.$key->provider_code.')' }}
                 </option>
@@ -100,10 +100,10 @@
               Partner Product <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <select 
-                id="partner_product_id" 
-                name="partner_product_id" 
-                class="form-control select2_single" 
+              <select
+                id="partner_product_id"
+                name="partner_product_id"
+                class="form-control select2_single"
                 required="required"
               >
                 <option value="">Choose</option>
@@ -118,15 +118,15 @@
               Gross Purches Price <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input 
-                id="gross_purch_price" 
-                class="form-control" 
-                name="gross_purch_price" 
-                placeholder="E.g: 50000" 
-                required="required" 
-                type="text" 
-                value="{{ old('gross_purch_price') }}" 
-                onkeypress="return isNumber(event)" 
+              <input
+                id="gross_purch_price"
+                class="form-control"
+                name="gross_purch_price"
+                placeholder="E.g: 50000"
+                required="required"
+                type="text"
+                value="{{ old('gross_purch_price') }}"
+                onkeypress="return isNumber(event)"
                 maxlength="9"
               >
               @if($errors->has('gross_purch_price'))
@@ -147,15 +147,15 @@
           <div class="item form-group {{ $errors->has('tax_percentage') ? 'has-error' : ''}}" id="tax_percentage" style="display:{{ $errors->has('tax_percentage') ? '' : 'none'}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Tax Percentage <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input 
-                id="tax_percentage" 
-                class="form-control" 
-                name="tax_percentage" 
-                placeholder="E.g: 50000" 
-                required="required" 
-                type="text" 
-                value="{{ old('tax_percentage') }}" 
-                onkeypress="return isNumber(event)" 
+              <input
+                id="tax_percentage"
+                class="form-control"
+                name="tax_percentage"
+                placeholder="E.g: 50000"
+                required="required"
+                type="text"
+                value="{{ old('tax_percentage') }}"
+                onkeypress="return isNumber(event)"
                 maxlength="9"
               >
               @if($errors->has('tax_percentage'))
@@ -168,13 +168,13 @@
               Date Start <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input 
-                id="datetime_start" 
-                name="datetime_start" 
-                class="date-picker form-control col-md-7 col-xs-12" 
-                required="required" 
-                type="text" 
-                value="{{ old('datetime_start', date('Y-m-d')) }}"
+              <input
+                id="datetime_start"
+                name="datetime_start"
+                class="date-picker form-control col-md-7 col-xs-12"
+                required="required"
+                type="text"
+                value="{{ old('datetime_start', date('Y-m-d h:i:s')) }}"
               >
               @if($errors->has('datetime_start'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('datetime_start')}}</span></code>
@@ -186,20 +186,20 @@
               Date End <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input 
-                id="datetime_end" 
-                name="datetime_end" 
-                class="date-picker form-control col-md-7 col-xs-12" 
-                required="required" 
-                type="text" 
-                value="{{ old('datetime_end', date('Y-m-d')) }}"
+              <input
+                id="datetime_end"
+                name="datetime_end"
+                class="date-picker form-control col-md-7 col-xs-12"
+                required="required"
+                type="text"
+                value="{{ old('datetime_end', date('Y-m-d h:i:s')) }}"
               >
               @if($errors->has('datetime_end'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('datetime_end')}}</span></code>
               @endif
             </div>
           </div>
-          <?php  
+          <?php
             // <div class="ln_solid"></div>
             // <div class="item form-group">
             //   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
@@ -214,7 +214,9 @@
           <div class="form-group">
             <div class="col-md-6 col-md-offset-3">
               <a href="{{ route('partner-product-purch-price.index') }}" class="btn btn-primary">Cancel</a>
+              @can('create-partner-product-purch-price')
               <button id="send" type="submit" class="btn btn-success">Submit</button>
+              @endcan
             </div>
           </div>
         </form>

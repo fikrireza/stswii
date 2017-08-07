@@ -28,6 +28,7 @@
 </div>
 @endif
 
+@can('create-partner-server')
 <div class="modal fade modal-form-add" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -79,7 +80,8 @@
     </div>
   </div>
 </div>
-
+@endcan
+@can('update-partner-server')
 <div class="modal fade modal-form-update" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -133,7 +135,8 @@
     </div>
   </div>
 </div>
-
+@endcan
+@can('delete-partner-server')
 <div class="modal fade modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
@@ -153,6 +156,7 @@
     </div>
   </div>
 </div>
+@endcan
 
 <div class="page-title">
   <div class="title_left">
@@ -166,7 +170,9 @@
       <div class="x_title">
         <h2>Partner Server </h2>
         <ul class="nav panel_toolbox">
+          @can('create-partner-server')
           <a class="btn btn-success btn-sm publish" data-toggle="modal" data-target=".modal-form-add" ><i class="fa fa-plus"></i> Add</a>
+          @endcan
         </ul>
         <div class="clearfix"></div>
       </div>
@@ -192,6 +198,7 @@
               <td>{{ $list->api_key }}</td>
               <td>{{ $list->api_secret }}</td>
               <td>
+                @can('update-partner-server')
                 <a
                   class="update"
                   data-id="{{ $list->partner_pulsa_properties_id }}"
@@ -204,6 +211,8 @@
                 >
                   <span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>
                 </a>
+                @endcan
+                @can('delete-partner-server')
                 <a
                   href=""
                   class="delete"
@@ -213,6 +222,7 @@
                 >
                   <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span>
                 </a>
+                @endcan
               </td>
             </tr>
             @php
@@ -250,12 +260,14 @@ $(function(){
     });
 });
 
+@can('delete-partner-server')
 $(function(){
   $('#dataTables').on('click', 'a.delete', function(){
     var a = $(this).data('value');
     $('#setDelete').attr('href', "{{ url('/') }}/partner-server/delete/"+a);
   });
 });
+@endcan
 </script>
 
 @if(Session::has('add-false'))

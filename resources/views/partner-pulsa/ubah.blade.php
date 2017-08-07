@@ -50,28 +50,28 @@
               Partner Pulsa Code
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input 
-                id="partner_pulsa_id" 
-                class="form-control col-md-7 col-xs-12" 
-                name="partner_pulsa_id" 
-                type="hidden" 
-                value="{{ $getPartnerPulsa->partner_pulsa_id }}" 
+              <input
+                id="partner_pulsa_id"
+                class="form-control col-md-7 col-xs-12"
+                name="partner_pulsa_id"
+                type="hidden"
+                value="{{ $getPartnerPulsa->partner_pulsa_id }}"
                 readonly
               >
-              <input 
-                id="version" 
-                class="form-control col-md-7 col-xs-12" 
-                name="version" 
-                type="hidden" 
-                value="{{ $getPartnerPulsa->version }}" 
+              <input
+                id="version"
+                class="form-control col-md-7 col-xs-12"
+                name="version"
+                type="hidden"
+                value="{{ $getPartnerPulsa->version }}"
                 readonly
               >
-              <input 
-                id="name" 
-                class="form-control col-md-7 col-xs-12" 
-                name="partner_pulsa_code" 
-                type="text" 
-                value="{{ $getPartnerPulsa->partner_pulsa_code }}" 
+              <input
+                id="name"
+                class="form-control col-md-7 col-xs-12"
+                name="partner_pulsa_code"
+                type="text"
+                value="{{ $getPartnerPulsa->partner_pulsa_code }}"
                 readonly
               >
             </div>
@@ -82,12 +82,12 @@
               Partner Pulsa Name<span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input 
-                id="partner_pulsa_name" 
-                class="form-control" 
-                name="partner_pulsa_name" 
-                required="required" 
-                type="text" 
+              <input
+                id="partner_pulsa_name"
+                class="form-control"
+                name="partner_pulsa_name"
+                required="required"
+                type="text"
                 value="{{ $getPartnerPulsa->partner_pulsa_name }}"
               >
               @if($errors->has('partner_pulsa_name'))
@@ -101,10 +101,10 @@
               Description<span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <textarea 
-                id="description" 
-                class="form-control" 
-                name="description" 
+              <textarea
+                id="description"
+                class="form-control"
+                name="description"
                 required="required"
               >{{ $getPartnerPulsa->description }}</textarea>
               @if($errors->has('description'))
@@ -118,8 +118,8 @@
               Type TOP <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <select 
-                class="form-control select2_single" 
+              <select
+                class="form-control select2_single"
                 name="type_top"
                 required="required"
 
@@ -127,7 +127,7 @@
                 <option value="">Pilih</option>
                 @php ($arrTT = array('DEPOSIT','DENOM','TERMIN'))
                 @for($i=0; $i<=2; $i++)
-                <option 
+                <option
                   value="{{ $arrTT[$i] }}"
                   {{ $getPartnerPulsa->type_top == $arrTT[$i] ? 'selected' : '' }}
                 >
@@ -147,15 +147,15 @@
           //     Payment Termin <span class="required">*</span>
           //   </label>
           //   <div class="col-md-6 col-sm-6 col-xs-12">
-          //     <input 
-          //       id="payment_termin" 
-          //       class="form-control" 
-          //       name="payment_termin" 
-          //       placeholder="E.g: 0" 
-          //       required="required" 
-          //       type="text" 
-          //       value="{{ old('payment_termin') }}" 
-          //       onkeypress="return isNumber(event)" 
+          //     <input
+          //       id="payment_termin"
+          //       class="form-control"
+          //       name="payment_termin"
+          //       placeholder="E.g: 0"
+          //       required="required"
+          //       type="text"
+          //       value="{{ old('payment_termin') }}"
+          //       onkeypress="return isNumber(event)"
           //       maxlength="9"
           //     >
           //     @if($errors->has('payment_termin'))
@@ -179,7 +179,9 @@
           <div class="form-group">
             <div class="col-md-6 col-md-offset-3">
               <a href="{{ route('partner-pulsa.index') }}" class="btn btn-primary">Cancel</a>
+              @can('update-partner-pulsa')
               <button id="send" type="submit" class="btn btn-success">Submit</button>
+              @endcan
             </div>
           </div>
         </form>

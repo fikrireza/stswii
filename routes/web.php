@@ -75,36 +75,36 @@ Route::get('/home', 'HomeController@index')
 
 // partner pulsa
 	Route::get('/partner-pulsa', 'PartnerPulsaController@index')
-		->name('partner-pulsa.index');
+		->name('partner-pulsa.index')->middleware('can:read-partner-pulsa');
 	Route::get('/partner-pulsa/create', 'PartnerPulsaController@create')
-		->name('partner-pulsa.create');
+		->name('partner-pulsa.create')->middleware('can:create-partner-pulsa');
 	Route::post('/partner-pulsa/store', 'PartnerPulsaController@store')
-		->name('partner-pulsa.store');
+		->name('partner-pulsa.store')->middleware('can:create-partner-pulsa');
 	Route::get('/partner-pulsa/edit/{id}/{version}', 'PartnerPulsaController@edit')
-		->name('partner-pulsa.edit');
+		->name('partner-pulsa.edit')->middleware('can:update-partner-pulsa');
 	Route::post('/partner-pulsa/update/{id}/{version}', 'PartnerPulsaController@update')
-		->name('partner-pulsa.update');
+		->name('partner-pulsa.update')->middleware('can:update-partner-pulsa');
 	Route::get('/partner-pulsa/delete/{id}/{version}', 'PartnerPulsaController@delete')
-		->name('partner-pulsa.delete');
+		->name('partner-pulsa.delete')->middleware('can:delete-partner-pulsa');
 	Route::get('/partner-pulsa/actived/{id}/{version}/{status}', 'PartnerPulsaController@active')
-		->name('partner-pulsa.active');
+		->name('partner-pulsa.active')->middleware('can:activate-partner-pulsa');
 // partner pulsa
 
 // partner product
 	Route::get('/partner-product', 'PartnerProductController@index')
-		->name('partner-product.index');
+		->name('partner-product.index')->middleware('can:read-partner-product');
 	Route::get('/partner-product/create', 'PartnerProductController@create')
-		->name('partner-product.create');
+		->name('partner-product.create')->middleware('can:create-partner-product');
 	Route::post('/partner-product/store', 'PartnerProductController@store')
-		->name('partner-product.store');
+		->name('partner-product.store')->middleware('can:create-partner-product');
 	Route::get('/partner-product/edit/{id}/{version}', 'PartnerProductController@edit')
-		->name('partner-product.edit');
+		->name('partner-product.edit')->middleware('can:update-partner-product');
 	Route::post('/partner-product/update/{id}/{version}', 'PartnerProductController@update')
-		->name('partner-product.update');
+		->name('partner-product.update')->middleware('can:update-partner-product');
 	Route::get('/partner-product/delete/{id}/{version}', 'PartnerProductController@delete')
-		->name('partner-product.delete');
+		->name('partner-product.delete')->middleware('can:delete-partner-product');
 	Route::get('/partner-product/actived/{id}/{version}/{status}', 'PartnerProductController@active')
-		->name('partner-product.active');
+		->name('partner-product.active')->middleware('can:activate-partner-product');
 
 	Route::get('/partner-product/ajaxGetProductList/{id?}', 'PartnerProductController@ajaxGetProductList')
 		->name('partner-product.ajaxGetProductList');
@@ -112,40 +112,40 @@ Route::get('/home', 'HomeController@index')
 
 // partner product purch price
 	Route::get('/partner-product-purch-price', 'PartnerProductPurchPriceController@index')
-		->name('partner-product-purch-price.index');
+		->name('partner-product-purch-price.index')->middleware('can:read-partner-product-purch-price');
 
 	Route::get('/partner-product-purch-price/actived/{id}/{version}/{status}', 'PartnerProductPurchPriceController@active')
-		->name('partner-product-purch-price.active');
+		->name('partner-product-purch-price.active')->middleware('can:activate-partner-product-purch-price');
 
 	Route::get('/partner-product-purch-price/delete/{id}/{version}', 'PartnerProductPurchPriceController@delete')
-		->name('partner-product-purch-price.delete');
+		->name('partner-product-purch-price.delete')->middleware('can:delete-partner-product-purch-price');
 
 	Route::get('/partner-product-purch-price/add', 'PartnerProductPurchPriceController@tambah')
-		->name('partner-product-purch-price.tambah');
+		->name('partner-product-purch-price.tambah')->middleware('can:create-partner-product-purch-price');
 	Route::post('/partner-product-purch-price/store', 'PartnerProductPurchPriceController@store')
-		->name('partner-product-purch-price.store');
+		->name('partner-product-purch-price.store')->middleware('can:create-partner-product-purch-price');
 
 	Route::get('/partner-product-purch-price/edit/{id}/{version}', 'PartnerProductPurchPriceController@edit')
-		->name('partner-product-purch-price.edit');
+		->name('partner-product-purch-price.edit')->middleware('can:update-partner-product-purch-price');
 	Route::post('/partner-product-purch-price/edit/{id}/{version}', 'PartnerProductPurchPriceController@update')
-		->name('partner-product-purch-price.update');
+		->name('partner-product-purch-price.update')->middleware('can:update-partner-product-purch-price');
 
 	Route::get('/partner-product-purch-price/ajax-get-product-partner/{partner?}/{provider?}', 'PartnerProductPurchPriceController@ajaxGetProductPartner')
 		->name('partner-product-purch-price.ajaxGetProductPartner');
 
 	Route::get('partner-product-purch-price/upload', 'PartnerProductPurchPriceController@upload')
-	  ->name('partner-product-purch-price.upload');
+	  ->name('partner-product-purch-price.upload')->middleware('can:create-partner-product-purch-price');
 // partner product purch price
 
 // partner server
 	Route::get('/partner-server', 'PartnerPulsaServerPropController@index')
-		->name('partner-server.index');
+		->name('partner-server.index')->middleware('can:read-partner-server');
 	Route::post('/partner-server/store', 'PartnerPulsaServerPropController@store')
-		->name('partner-server.store');
+		->name('partner-server.store')->middleware('can:create-partner-server');
 	Route::post('/partner-server/update', 'PartnerPulsaServerPropController@update')
-		->name('partner-server.update');
+		->name('partner-server.update')->middleware('can:update-partner-server');
 	Route::get('/partner-server/delete/{id}', 'PartnerPulsaServerPropController@delete')
-		->name('partner-server.delete');
+		->name('partner-server.delete')->middleware('can:delete-partner-server');
 // partner server
 
 //----- START PRODUCT -----//
@@ -197,6 +197,7 @@ Route::get('/home', 'HomeController@index')
 //----- Management Account -----//
 	Route::get('account', 'AccountController@index')->name('account.index')->middleware('can:read-user');
 	Route::get('account/add', 'AccountController@tambah')->name('account.tambah')->middleware('can:create-user');
+	Route::post('account/add', 'AccountController@store')->name('account.store')->middleware('can:create-user');
 	Route::get('account/edit/{id}', 'AccountController@ubah')->name('account.ubah')->middleware('can:update-user');
 	Route::get('account/role', 'AccountController@role')->name('account.role')->middleware('can:read-role');
 	Route::get('account/role/{id}', 'AccountController@roleUbah')->name('account.roleUbah')->middleware('can:update-role');
