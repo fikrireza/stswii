@@ -47,18 +47,15 @@ Route::get('/home', 'HomeController@index')
 // provider prefix
 
 // agent
-	Route::get('/agent/js', 'AgentController@indexJs')
-		->name('agent.index.table.js');
+	Route::get('/agent', 'AgentController@index')
+		->name('agent.index');
 
-	Route::get('/agent/php', 'AgentController@indexPhp')
-		->name('agent.index.table.php');
-
-	Route::get('/agent/php/getDatas', 'AgentController@getDataTables')
-		->name('agent.index.table.php.getDatas');
+	Route::get('/agent/getDatas', 'AgentController@getDataTables')
+		->name('agent.getDatas');
 
 	Route::get('/agent/edit/{id}', 'AgentController@edit')
 		->name('agent.edit');
-		
+
 	Route::post('/agent/update', 'AgentController@update')
 		->name('agent.update');
 

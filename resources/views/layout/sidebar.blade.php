@@ -88,8 +88,8 @@
             </a>
             <ul class="nav child_menu" style="{{ Route::is('agent*') ? 'display: block;' : '' }}">
               @can('read-agent')
-              <li class="{{ Route::is('agent.index.table.php') ? 'current-page' : '' }}">
-                <a href="{{ route('agent.index.table.php') }}">Agent</a>
+              <li class="{{ Route::is('agent.index') ? 'current-page' : '' }}">
+                <a href="{{ route('agent.index') }}">Agent</a>
               </li>
               @endcan
             </ul>

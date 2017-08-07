@@ -187,7 +187,7 @@ $(function() {
     $('#producttabel').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '{{route('agent.index.table.php.getDatas')}}',
+        ajax: '{{route('agent.getDatas')}}',
         columns: [
             {data: 'agent_name'},
             {data: 'phone_number'},
