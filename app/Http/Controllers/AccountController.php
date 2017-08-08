@@ -74,6 +74,7 @@ class AccountController extends Controller
             'confirmed' => 0,
             'login_count' => 0,
             'confirmation_code' => $confirmation_code,
+            'api_token' => base64_encode(openssl_random_pseudo_bytes(60)),
           ]);
 
           foreach ($request->role as $key) {

@@ -213,4 +213,3 @@ Route::get('deposit-agent-confirmed-top-up', 'DepositAgentController@indexConfir
 Route::post('deposit-agent-confirmed-top-up', 'DepositAgentController@getRangeDate')->name('deposit-agent-reversal.getRangeDate');
 Route::post('deposit-agent-proses-reversal', 'DepositAgentController@reversalTrx')->name('deposit-agent-reversal.reversalTrx');
 Route::get('getConfirmedTopUp', 'DepositAgentController@getConfirmedTopUp');
-// Route::post('walletTopupWithCode', 'DepositAgentController@walletTopupWithCode')->middleware('auth:api');
