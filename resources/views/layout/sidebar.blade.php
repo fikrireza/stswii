@@ -99,11 +99,14 @@
               <i class="fa fa-money"></i> Paloma Deposit <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="">
-              <li class="{{ Route::is('deposit-agent*') ? 'current-page' : '' }}">
-                <a href="{{ route('deposit-agent.index') }}">Deposit Agent</a>
+              <li class="{{ Route::is('deposit-agent-confirm*') ? 'current-page' : '' }}">
+                <a href="{{ route('deposit-agent-confirm.index') }}">Deposit Agent Confirm</a>
+              </li>
+              <li class="{{ Route::is('deposit-agent-reversal*') ? 'current-page' : '' }}">
+                <a href="{{ route('deposit-agent-reversal.index') }}">Deposit Agent Reversal</a>
               </li>
               <li class="{{ Route::is('paloma.transaction*') ? 'current-page' : '' }}">
-                <a href="{{ route('paloma.transaction.index') }}">Transaction</a>
+                <a href="{{ route('paloma.transaction.index') }}">Deposit Transaction</a>
               </li>
               <li class="{{ Route::is('paloma.balance*') ? 'current-page' : '' }}">
                 <a href="#">Balance</a>

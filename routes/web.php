@@ -203,8 +203,14 @@ Route::get('/home', 'HomeController@index')
 //----- Management Account -----//
 
 //------- Deposit Agent -------//
-Route::get('deposit-agent', 'DepositAgentController@index')->name('deposit-agent.index');
-Route::post('deposit-agent', 'DepositAgentController@getUniqueCode')->name('deposit-agent.getUniqueCode');
+Route::get('deposit-agent-confirm', 'DepositAgentController@indexConfirm')->name('deposit-agent-confirm.index');
+Route::post('deposit-agent-confirm', 'DepositAgentController@getUniqueCode')->name('deposit-agent-confirm.getUniqueCode');
 Route::post('deposit-agent-proses-confirm', 'DepositAgentController@confirm')->name('deposit-agent.confirm');
-// Route::get('getUnconfirmedUniqueCodes', 'DepositAgentController@getUnconfirmedUniqueCodes');
-// Route::post('walletTopupWithCode', 'DepositAgentController@walletTopupWithCode');
+Route::get('getUnconfirmedUniqueCodes', 'DepositAgentController@getUnconfirmedUniqueCodes');
+
+
+Route::get('deposit-agent-confirmed-top-up', 'DepositAgentController@indexConfirmTopUp')->name('deposit-agent-reversal.index');
+Route::post('deposit-agent-confirmed-top-up', 'DepositAgentController@getRangeDate')->name('deposit-agent-reversal.getRangeDate');
+Route::post('deposit-agent-proses-reversal', 'DepositAgentController@reversalTrx')->name('deposit-agent-reversal.reversalTrx');
+Route::get('getConfirmedTopUp', 'DepositAgentController@getConfirmedTopUp');
+// Route::post('walletTopupWithCode', 'DepositAgentController@walletTopupWithCode')->middleware('auth:api');
