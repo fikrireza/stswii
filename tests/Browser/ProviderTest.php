@@ -37,7 +37,19 @@ class ProviderTest extends DuskTestCase
         });
     }
 
-    public function testValidation()
+    public function testValidationEmpty()
+    {
+        $this->browse(function ($browser) {
+            $browser->loginAs(User::find(3))
+                    ->visit('/provider')
+                    ->clickLink('Add')
+                    ->press('Submit')
+                    ->pause(2000)
+                    ->assertSee('mohon isi');
+        });
+    }
+
+    public function testValidationExist()
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::find(3))
