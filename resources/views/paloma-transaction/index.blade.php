@@ -135,10 +135,10 @@
               <td>{{ "Code Partner" }}</td>
               <td>{{ $no . '0,000' }}</td>
               <td class="text-center">@if (Rand(0,1))
-                    <a href="" class="unpublish" data-value="1" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a>
+                    <a href="" class="unpublish" data-value="1" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Sudah Confirmed</span></a>
                     <br>
                   @else
-                    <a href="" class="publish" data-value="1" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
+                    <a href="" class="publish" data-value="1" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Draft</span></a>
                     <br>
                   @endif
               </td>

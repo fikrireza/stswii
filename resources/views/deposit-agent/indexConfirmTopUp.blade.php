@@ -54,10 +54,10 @@
 <div class="modal fade modal-form-confirm" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="{{ route('deposit-agent.confirm') }}" method="POST" class="form-horizontal form-label-left">
+      <form action="{{ route('deposit-agent-reversal.reversalTrx') }}" method="POST" class="form-horizontal form-label-left">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-          <h4 class="modal-title" id="myModalLabel2">Confirm Deposit Agent</h4>
+          <h4 class="modal-title" id="myModalLabel2">Reversal Deposit Agent</h4>
         </div>
         <div class="modal-body">
           {{ csrf_field() }}
@@ -68,28 +68,16 @@
             </div>
           </div>
           <div class="item form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Ref No</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="confirm_name" class="form-control col-md-7 col-xs-12" name="name" type="text" value="" readonly="">
+              <input id="confirm_refno" class="form-control col-md-7 col-xs-12" name="name" type="text" value="" readonly="">
             </div>
           </div>
           <div class="item form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Unique Code</label>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="confirm_uniqueCode" class="form-control col-md-7 col-xs-12" name="uniqueCode" type="text" value="" readonly="">
-            </div>
-          </div>
-          <div class="item form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Unique Code Date</label>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="confirm_uniqueCodeDate" class="form-control col-md-7 col-xs-12" name="uniqueCodeDate" type="text" value="" readonly="">
-            </div>
-          </div>
-          <div class="item form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Amount <span class="required">*</span>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Password <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input class="form-control col-md-7 col-xs-12" name="amount" type="text" value="" onkeypress="return isNumber(event)">
+              <input class="form-control col-md-7 col-xs-12" name="password" type="password" value="" required="">
             </div>
           </div>
         </div>
@@ -105,18 +93,48 @@
   <div class="col-md-8 col-md-offset-2">
     <div class="x_panel">
       <div class="x_title">
-        <p>Check Unique Code</p>
+        <p>Filter Confirmed Topup</p>
       </div>
-      <form action="{{ route('deposit-agent.getUniqueCode')}}" method="POST" class="form-horizontal form-label-left">
+      <form action="{{ route('deposit-agent-reversal.getRangeDate')}}" method="POST" class="form-horizontal form-label-left">
       {{ csrf_field() }}
       <div class="x_content">
-        <div class="item form-group {{ $errors->has('uniqueCode') ? 'has-error' : ''}}">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_code">Unique Code</label>
+        <div class="item form-group {{ $errors->has('startDate') ? 'has-error' : ''}}">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_code">Start Date</label>
           <div class="col-md-6 col-sm-6 col-xs-12">
-            @if (isset($prosesUniqueCode))
-              <input class="form-control col-md-7 col-xs-12" name="uniqueCode" type="text" value="{{ old('uniqueCode', $uniqueCode) }}">
+            @if (isset($proses))
+              <input id="startDate" name="startDate" class="startDate form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('startDate', $startDate) }}">
             @else
-              <input class="form-control col-md-7 col-xs-12" name="uniqueCode" type="text" value="{{ old('uniqueCode') }}">
+              <input id="startDate" name="startDate" class="startDate form-control col-md-7 col-xs-12" required="required" type="text" value="{{ date('Y-m-d') }}">
+            @endif
+          </div>
+        </div>
+        <div class="item form-group {{ $errors->has('endDate') ? 'has-error' : ''}}">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_code">End Date</label>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            @if (isset($proses))
+              <input id="endDate" name="endDate" class="endDate form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('endDate', $endDate) }}">
+            @else
+              <input id="endDate" name="endDate" class="endDate form-control col-md-7 col-xs-12" required="required" type="text" value="{{ date('Y-m-d') }}">
+            @endif
+          </div>
+        </div>
+        <div class="item form-group {{ $errors->has('limit') ? 'has-error' : ''}}">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_code">Limit</label>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            @if (isset($proses))
+              <input name="limit" class="form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('limit', $limit) }}" onkeypress="return isNumber(event)">
+            @else
+              <input name="limit" class="form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('limit') }}" onkeypress="return isNumber(event)">
+            @endif
+          </div>
+        </div>
+        <div class="item form-group {{ $errors->has('offset') ? 'has-error' : ''}}">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_code">Offset</label>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            @if (isset($proses))
+              <input name="offset" class="form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('offset', $offset) }}" onkeypress="return isNumber(event)">
+            @else
+              <input name="offset" class="form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('offset') }}" onkeypress="return isNumber(event)">
             @endif
           </div>
         </div>
@@ -131,10 +149,10 @@
   </div>
 </div>
 
-@if (isset($prosesUniqueCode))
+@if (isset($proses))
   <div class="page-title">
     <div class="title_left">
-      <h3>Agent List <small></small></h3>
+      <h3>Confirmed Top Up List <small></small></h3>
     </div>
   </div>
 
@@ -147,27 +165,39 @@
           <div class="clearfix"></div>
         </div>
         <div class="x_content table-responsive">
-          <table id="deposit-agent" class="table table-striped table-bordered no-footer" width="100%">
+          <table id="confirmed-agent" class="table table-striped table-bordered no-footer" width="100%">
             <thead>
               <tr role="row">
                 <th>No</th>
                 <th>Client ID</th>
+                <th>Ref No</th>
+                <th>Biller Id</th>
+                <th>Doc Type Id</th>
+                <th>Acquirer Id</th>
                 <th>Name</th>
+                <th>Amount</th>
                 <th>Unique Code</th>
                 <th>Unique Code Date</th>
+                <th>Confirm Date</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
               @php $count=1; @endphp
-              @foreach ($prosesUniqueCode->uniqueCodeList as $list)
+              @foreach ($proses->topupList as $list)
               <tr>
                 <td>{{ $count++ }}</td>
                 <td>{{ $list->clientId }}</td>
+                <td>{{ $list->refNo }}</td>
+                <td>{{ $list->billerId }}</td>
+                <td>{{ $list->docTypeId }}</td>
+                <td>{{ $list->acquirerId }}</td>
                 <td>{{ $list->name }}</td>
+                <td>{{ $list->amount }}</td>
                 <td>{{ $list->uniqueCode }}</td>
                 <td>{{ $list->uniqueCodeDate }}</td>
-                <td><a class="confirm" data-name="{{$list->name}}" data-clientid="{{$list->clientId}}" data-uniquecode="{{$list->uniqueCode}}" data-uniquecodedate="{{$list->uniqueCodeDate}}" data-toggle='modal' data-target='.modal-form-confirm'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Confirm'>Confirm</span></a></td>
+                <td>{{ $list->confirmDate }}</td>
+                <td><a class="confirm" data-clientid="{{$list->clientId}}" data-uniquecode="{{$list->uniqueCode}}" data-uniquecodedate="{{$list->uniqueCodeDate}}" data-toggle='modal' data-target='.modal-form-confirm'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Reversal'>Reversal</span></a></td>
               @endforeach
             </tbody>
           </table>
@@ -186,21 +216,32 @@
 <script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
+<script src="{{ asset('amadeo/js/moment/moment.min.js') }}"></script>
+<script src="{{ asset('amadeo/js/datepicker/daterangepicker.js') }}"></script>
 
 <script type="text/javascript">
-  $('#deposit-agent').DataTable();
+  $('#confirmed-agent').DataTable();
 
   $(function(){
     $(document).on('click', '.confirm', function(e) {
       var clientId        = $(this).data('clientid');
-      var name            = $(this).data('name');
       var uniqueCode      = $(this).data('uniquecode');
       var uniqueCodeDate  = $(this).data('uniquecodedate');
       $("#confirm_clientId").val(clientId);
-      $("#confirm_name").val(name);
-      $("#confirm_uniqueCode").val(uniqueCode);
-      $("#confirm_uniqueCodeDate").val(uniqueCodeDate);
+      $("#confirm_refno").val(uniqueCodeDate+uniqueCode);
     });
+  });
+
+  $('#startDate').daterangepicker({
+    singleDatePicker: true,
+    calender_style: "picker_3",
+    format: 'YYYY-MM-DD',
+  });
+
+  $('#endDate').daterangepicker({
+    singleDatePicker: true,
+    calender_style: "picker_3",
+    format: 'YYYY-MM-DD',
   });
 
   function isNumber(evt) {
