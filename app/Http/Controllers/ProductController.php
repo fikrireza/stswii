@@ -81,7 +81,7 @@ class ProductController extends Controller
 			'provider_id.required' => 'This field required',
 			'nominal.required' => 'This field required',
 			'nominal.numeric' => 'Fill Numeric',
-			'type_product.required' => 'This field required',
+			'type.required' => 'This field required',
 		];
 
 		$validator = Validator::make($request->all(), [
@@ -89,7 +89,7 @@ class ProductController extends Controller
 			'product_name' => 'required',
 			'provider_id' => 'required',
 			'nominal' => 'required|numeric',
-			'type_product' => 'required',
+			'type' => 'required',
 		], $message);
 
 		if($validator->fails())
@@ -103,7 +103,7 @@ class ProductController extends Controller
 		$index->product_name = $request->product_name;
 		$index->provider_id  = $request->provider_id;
 		$index->nominal      = $request->nominal;
-		$index->type_product = $request->type_product;
+		$index->type = $request->type;
 
 		$index->active = isset($request->active) ? 1 : 0;
 
@@ -117,7 +117,7 @@ class ProductController extends Controller
 			$index->active_datetime = 00000000000000;
 			$index->non_active_datetime = date('YmdHis');
 		}
-		
+
 
 		$index->version = 0;
 		$index->create_datetime = date('YmdHis');
@@ -135,7 +135,7 @@ class ProductController extends Controller
 		$index = Product::where('product_code',$product_code)->first();
 
 		$provider = Provider::get();
-		
+
 		return view('product.ubah', compact('index', 'provider'));
 	}
 
@@ -148,7 +148,7 @@ class ProductController extends Controller
 			'product_name.required' => 'This field required',
 			'nominal.required' => 'This field required',
 			'nominal.numeric' => 'Fill Numeric',
-			'type_product.required' => 'This field required',
+			'type.required' => 'This field required',
 		];
 
 		$validator = Validator::make($request->all(), [
@@ -156,7 +156,7 @@ class ProductController extends Controller
 			'product_name' => 'required',
 			'provider_id' => 'required',
 			'nominal' => 'required|numeric',
-			'type_product' => 'required',
+			'type' => 'required',
 		], $message);
 
 		if($validator->fails())
@@ -175,7 +175,7 @@ class ProductController extends Controller
 		$index->product_name = $request->product_name;
 		$index->provider_id  = $request->provider_id;
 		$index->nominal      = $request->nominal;
-		$index->type_product = $request->type_product;
+		$index->type = $request->type;
 
 		$index->active = isset($request->active) ? 1 : 0;
 

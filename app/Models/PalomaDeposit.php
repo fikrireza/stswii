@@ -10,7 +10,9 @@ class PalomaDeposit extends Model
 
     protected $primaryKey = 'paloma_deposit_trx_id';
 
-    protected $fillable = ['paloma_deposit_trx_id','tenant_id','ou_id','doc_type_id','doc_no','doc_date','partner_code','deposit_amount','status','confirmed_user_id','confirmed_datetime','version','create_datetime','create_user_id','update_datetime','update_user_id'];
+    public $timestamps = false;
+
+    protected $fillable = ['tenant_id','ou_id','doc_type_id','doc_no','doc_date','partner_code','deposit_amount','status','confirmed_user_id','confirmed_datetime','version','create_datetime','create_user_id','update_datetime','update_user_id'];
 
     public function createdBy()
     {

@@ -8,7 +8,11 @@ class PartnerDepositBalance extends Model
 {
     protected $table = 'sw_paloma_deposit_balance';
 
-    protected $fillable = ['paloma_deposit_balance_id','partner_id','balance_amount','version','create_datetime','create_user_id','update_datetime','update_user_id'];
+    protected $primaryKey = 'paloma_deposit_balance_id';
+
+    public $timestamps = false;
+
+    protected $fillable = ['partner_id','balance_amount','version','create_datetime','create_user_id','update_datetime','update_user_id'];
 
     public function partnerpulsa()
     {

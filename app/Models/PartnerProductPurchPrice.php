@@ -8,10 +8,13 @@ class PartnerProductPurchPrice extends Model
 {
     protected $table = 'sw_partner_product_purch_price';
 
+    protected $primaryKey = 'partner_product_purch_price_id';
+
+    public $timestamps = false;
+
     protected $fillbale = ['partner_product_purch_price_id','partner_product_id','gross_purch_price','flg_tax','tax_percentage','datetime_start','datetime_end','active','active_datetime','non_active_datetime','version','create_datetime','create_user_id','update_datetime','update_user_id'];
 
-    protected $primaryKey = 'partner_product_purch_price_id'; // or null
-    
+
     public function partnerproduct()
     {
       return $this->belongsTo('App\Models\PartnerProduct', 'partner_product_id');

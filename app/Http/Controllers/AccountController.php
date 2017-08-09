@@ -226,7 +226,7 @@ class AccountController extends Controller
 
       $task = strrev(substr(strrev($task), 2))."}";
 
-      $query = 'UPDATE sw_roles SET permissions = \''.$task.'\' WHERE id = '.$request->id;
+      $query = 'UPDATE wa_roles SET permissions = \''.$task.'\' WHERE id = '.$request->id;
 
       DB::statement($query);
 

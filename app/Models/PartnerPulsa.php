@@ -8,9 +8,12 @@ class PartnerPulsa extends Model
 {
     protected $table = 'sw_partner_pulsa';
 
+    protected $primaryKey = 'partner_pulsa_id';
+
+    public $timestamps = false;
+
     protected $fillable = ['partner_pulsa_id','partner_pulsa_code','description','partner_pulsa_name','type_top','payment_termin','active','active_datetime','non_active_datetime','version','create_datetime','create_user_id','update_datetime','update_user_id'];
-    
-    protected $primaryKey = 'partner_pulsa_id'; // or null
+
 
     public function createdBy()
     {

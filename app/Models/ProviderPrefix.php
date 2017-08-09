@@ -8,10 +8,12 @@ class ProviderPrefix extends Model
 {
     protected $table = 'sw_provider_prefix';
 
-    protected $fillable = ['provider_prefix_id','provider_id','prefix','version','create_datetime',
-                          'create_user_id','update_datetime','update_user_id'];
+    protected $primaryKey = 'provider_prefix_id';
 
-    protected $primaryKey = 'provider_prefix_id'; // or null
+    public $timestamps = false;
+
+    protected $fillable = ['provider_prefix_id','provider_id','prefix','version','create_datetime','create_user_id','update_datetime','update_user_id'];
+
 
     public function provider()
     {

@@ -27,7 +27,7 @@ class ProviderController extends Controller{
     {
         $this->middleware('auth');
     }
-    
+
 
     public function index(){
         $newProvCode = 'prov-'.rand(1000,9999);
@@ -140,7 +140,7 @@ class ProviderController extends Controller{
 			->with('alret', 'alert-success')
 			->with('berhasil', 'Berhasil Menambahkan Provider '.$request->provider_name);
     }
-    
+
     public function update(Request $request){
 		$message = [
 			'provider_name.required' => 'mohon isi',
@@ -226,5 +226,5 @@ class ProviderController extends Controller{
             ->removeColumn('count_provider_prefix')
             ->make(true);
     }
-    
+
 }

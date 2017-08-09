@@ -280,17 +280,25 @@ $(document).on('change','select.call-product-partner', function(){
 });
 
 $('#datetime_start').daterangepicker({
-  singleDatePicker: true,
-  calender_style: "picker_3",
-  format: 'YYYY-MM-DD H:m:s',
-  // minDate: new Date(),
+  "calender_style": "picker_3",
+  "singleDatePicker": true,
+  "format": 'YYYY-MM-DD H:m:s',
+  "showDropdowns": true,
+  "timePicker": true,
+  "timePicker24Hour": true,
+  "timePickerSeconds": true,
+  "timePickerIncrement": 1,
 });
 
 $('#datetime_end').daterangepicker({
-  singleDatePicker: true,
-  calender_style: "picker_3",
-  format: 'YYYY-MM-DD H:m:s',
-  // minDate: new Date(),
+  "calender_style": "picker_3",
+  "singleDatePicker": true,
+  "format": 'YYYY-MM-DD H:m:s',
+  "showDropdowns": true,
+  "timePicker": true,
+  "timePicker24Hour": true,
+  "timePickerSeconds": true,
+  "timePickerIncrement": 1,
 });
 
 $('#flg_tax').click(function() {

@@ -111,7 +111,7 @@
           <div class="item form-group {{ $errors->has('datetime_start') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Date Start <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="datetime_start" name="datetime_start" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_start', date('Y-m-d')) }}">
+              <input id="datetime_start" name="datetime_start" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_start', date('Y-m-d H:i:s')) }}">
               @if($errors->has('datetime_start'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('datetime_start')}}</span></code>
               @endif
@@ -121,7 +121,7 @@
           <div class="item form-group {{ $errors->has('datetime_end') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Date End <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="datetime_end" name="datetime_end" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_end', date('Y-m-d')) }}">
+              <input id="datetime_end" name="datetime_end" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_end', date('Y-m-d H:i:s')) }}">
               @if($errors->has('datetime_end'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('datetime_end')}}</span></code>
               @endif
@@ -165,6 +165,7 @@
 <script src="{{ asset('amadeo/vendors/switchery/dist/switchery.min.js')}}"></script>
 <script src="{{ asset('amadeo/js/moment/moment.min.js') }}"></script>
 <script src="{{ asset('amadeo/js/datepicker/daterangepicker.js') }}"></script>
+<script src="http://trentrichardson.com/examples/timepicker/jquery-ui-timepicker-addon.js"></script>
 
 <script>
   $(".select2_single").select2({
@@ -173,17 +174,26 @@
   });
 
   $('#datetime_start').daterangepicker({
-    singleDatePicker: true,
-    calender_style: "picker_3",
-    format: 'YYYY-MM-DD 00:00:00',
-    minDate: new Date(),
+    "calender_style": "picker_3",
+    "singleDatePicker": true,
+    "format": 'YYYY-MM-DD H:m:s',
+    "showDropdowns": true,
+    "timePicker": true,
+    "timePicker24Hour": true,
+    "timePickerSeconds": true,
+    "timePickerIncrement": 1,
+
   });
 
   $('#datetime_end').daterangepicker({
-    singleDatePicker: true,
-    calender_style: "picker_3",
-    format: 'YYYY-MM-DD 23:59:59',
-    minDate: new Date(),
+    "calender_style": "picker_3",
+    "singleDatePicker": true,
+    "format": 'YYYY-MM-DD H:m:s',
+    "showDropdowns": true,
+    "timePicker": true,
+    "timePicker24Hour": true,
+    "timePickerSeconds": true,
+    "timePickerIncrement": 1,
   });
 
   $('#flg_tax').click(function() {
