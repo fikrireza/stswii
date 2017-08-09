@@ -62,7 +62,7 @@
           <div class="item form-group {{ $errors->has('avatar') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Avatar</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="name" class="form-control" name="avatar" required="required" type="file" value="{{ old('avatar') }}" accept=".jpg,.bmp,.png">
+              <input id="name" class="form-control" name="avatar" type="file" value="{{ old('avatar') }}" accept=".jpg,.bmp,.png">
               @if($errors->has('avatar'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('avatar')}}</span></code>
               @endif
