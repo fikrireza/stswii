@@ -3,6 +3,7 @@
 namespace Tests\Browser;
 
 use App\Models\User;
+use App\Models\Provider;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -17,7 +18,7 @@ class ProviderTest extends DuskTestCase
     public function testRead()
     {
         $this->browse(function ($browser) {
-            $browser->loginAs(User::find(3))
+            $browser->loginAs(User::first())
                     ->visit('/home')
                     ->pause(2000)
                     ->clickLink('Manage Provider')
@@ -30,79 +31,94 @@ class ProviderTest extends DuskTestCase
 
     public function testCreate()
     {
-        $this->browse(function ($browser) {
-            $browser->loginAs(User::find(3))
+        $provider = ['Telkomsel', 'Indosat', 'XL', 'Axis', '3 Indonesia', 'BOLT!', 'Smartfren', 'PSN', 'Bakrie Telecom'];
+
+        $random = $provider[rand(0,8)] . '-' . str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+
+        $this->browse(function ($browser) use ($random){
+            $browser->loginAs(User::first())
                     ->visit('/provider')
                     ->pause(2000)
                     ->clickLink('Add')
                     ->pause(2000)
-                    ->type('input[name=provider_name]', 'Example Provider')
+                    ->type('provider_name', $random)
                     ->pause(2000)
                     ->press('Submit')
                     ->pause(2000)
-                    ->assertSee('Example Provider');
+                    ->assertSee($random);
         });
     }
 
-    public function testValidationEmpty()
+    public function testValidation()
     {
-        $this->browse(function ($browser) {
-            $browser->loginAs(User::find(3))
-                    ->visit('/provider')
-                    ->pause(2000)
-                    ->clickLink('Add')
-                    ->pause(2000)
-                    ->press('Submit')
-                    ->pause(2000)
-                    ->assertSee('mohon isi');
-        });
-    }
+        $provider = ['Telkomsel', 'Indosat', 'XL', 'Axis', '3 Indonesia', 'BOLT!', 'Smartfren', 'PSN', 'Bakrie Telecom'];
 
-    public function testValidationExist()
-    {
-        $this->browse(function ($browser) {
-            $browser->loginAs(User::find(3))
+        $random = $provider[rand(0,8)] . '-' . str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+
+        $this->browse(function ($browser) use ($random){
+            $browser->loginAs(User::first())
                     ->visit('/provider')
                     ->pause(2000)
                     ->clickLink('Add')
                     ->pause(2000)
-                    ->type('input[name=provider_name]', 'Example Provider')
+                    ->type('provider_name', $random)
                     ->pause(2000)
                     ->press('Submit')
                     ->pause(2000)
-                    ->assertSee('Provider ini sudah ada');
+                    ->clickLink('Add')
+                    ->pause(2000)
+                    ->press('Submit')
+                    ->pause(2000)
+                    ->assertSeeIn('.modal-form-add div div form div div div code span', 'mohon isi')
+                    ->type('provider_name', $random)
+                    ->pause(2000)
+                    ->press('Submit')
+                    ->pause(2000)
+                    ->assertSeeIn('.modal-form-add div div form div div div code span', 'Provider ini sudah ada')
+                    ->clear('provider_name')
+                    ->type('provider_name', 'Example Provider Over By 25 Character')
+                    ->pause(2000)
+                    ->press('Submit')
+                    ->pause(2000)
+                    ->assertSeeIn('.modal-form-add div div form div div div code span', 'Terlalu Panjang, Maks 25 Karakter');
         });
     }
 
     public function testEdit()
     {
-        $this->browse(function ($browser) {
-            $browser->loginAs(User::find(3))
+        $provider = ['Telkomsel', 'Indosat', 'XL', 'Axis', '3 Indonesia', 'BOLT!', 'Smartfren', 'PSN', 'Bakrie Telecom'];
+
+        $random = $provider[rand(0,8)] . '-' . str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+
+        $this->browse(function ($browser) use ($random) {
+            $browser->loginAs(User::first())
                     ->visit('/provider')
                     ->waitFor('#dataTables')
-                    ->click('#dataTables>tbody>tr:nth-last-child(1)>td:nth-last-child(1)>a:nth-child(2)')
+                    ->click('#dataTables>tbody>tr:nth-child(1)>td:nth-last-child(1)>a:nth-child(2)')
                     ->pause(2000)
                     ->clear('#name_provider_update')
                     ->pause(2000)
-                    ->type('#name_provider_update', 'Example Provider Edited')
+                    ->type('#name_provider_update', $random)
                     ->pause(2000)
                     ->press('Submit')
                     ->pause(2000)
-                    ->assertSee('Example Provider Edited');
+                    ->assertSee($random);
         });
     }
 
     public function testDelete()
     {
-        $this->browse(function ($browser) {
-            $browser->loginAs(User::find(3))
+        $provider = Provider::first();
+
+        $this->browse(function ($browser) use ($provider) {
+            $browser->loginAs(User::first())
                     ->visit('/provider')
                     ->waitFor('#dataTables')
                     ->click('#dataTables>tbody>tr:nth-last-child(1)>td:nth-last-child(1)>a:nth-child(3)')
                     ->pause(2000)
                     ->click('#setDelete')
                     ->pause(2000)
-                    ->assertDontSee('Example Provider Edited');
+                    ->assertDontSee($provider->provider_name);
         });
     }
 }
