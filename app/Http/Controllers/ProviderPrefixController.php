@@ -81,7 +81,12 @@ class ProviderPrefixController extends Controller{
 
 		$validator = Validator::make($request->all(), [
 			'provider_id' => 'required',
-			'prefix' => 'required|unique:sw_provider_prefix|numeric|digits_between:1,18',
+			'prefix' => '
+				required|
+				numeric|
+				digits_between:1,18|
+				unique:sw_provider_prefix,prefix,NULL,provider_prefix_id,provider_id,'.$request->provider_id
+			,
 		], $message);
 
 		if($validator->fails()){
