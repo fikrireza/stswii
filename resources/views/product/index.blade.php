@@ -133,7 +133,7 @@
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
-        <form class="form-inline text-right">
+        <form class="form-inline text-center">
           <select name="f_provider" class="form-control" onchange="this.form.submit()">
             <option value="">Filter Provider</option>
             @foreach($provider as $list)
@@ -141,6 +141,8 @@
             @endforeach
           </select>
         </form>
+        <div class="ln_solid"></div>
+
         <table id="producttabel" class="table table-striped table-bordered no-footer" width="100%">
           <thead>
             <tr role="row">
@@ -165,7 +167,7 @@
               <td>{{ $list->product_code }}</td>
               <td>{{ $list->product_name }}</td>
               <td>Rp. {{ number_format($list->nominal, 2) }}</td>
-              <td>{{ $list->type_product }}</td>
+              <td>{{ $list->type }}</td>
               @can('activate-product')
               <td class="text-center">
                   @if ($list->active)

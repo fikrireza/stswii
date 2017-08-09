@@ -201,7 +201,7 @@
                 @can('update-partner-server')
                 <a
                   class="update"
-                  data-id="{{ $list->partner_pulsa_properties_id }}"
+                  data-id="{{ $list->partner_pulsa_id }}"
                   data-version="{{ $list->version }}"
                   data-url="{{ $list->server_url }}"
                   data-apikey="{{ $list->api_key }}"
@@ -216,7 +216,7 @@
                 <a
                   href=""
                   class="delete"
-                  data-value="{{ $list->partner_pulsa_properties_id }}"
+                  data-value="{{ $list->partner_pulsa_id }}"
                   data-toggle="modal"
                   data-target=".modal-delete"
                 >

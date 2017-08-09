@@ -134,7 +134,7 @@
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
-        <form class="form-inline text-right">
+        <form class="form-inline text-center">
           <select name="f_provider" class="form-control" onchange="this.form.submit()">
             <option value="">Filter Provider</option>
             @foreach($provider as $list)
@@ -146,6 +146,7 @@
             <option value="0" @if(isset($request->f_active) && $request->f_active == 0) selected @endif>Not Active</option>
           </select>
         </form>
+        <div class="ln_solid"></div>
 
         <table id="producttabel" class="table table-striped table-bordered no-footer" width="100%">
           <thead>

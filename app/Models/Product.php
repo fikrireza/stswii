@@ -10,7 +10,9 @@ class Product extends Model
 
     protected $primaryKey = 'product_id';
 
-    protected $fillbale = ['product_id','product_code','product_name','provider_id','nominal','type_product','active','active_datetime','non_active_datetime','version','create_datetime','create_user_id','update_datetime','update_user_id'];
+    public $timestamps = false;
+
+    protected $fillbale = ['product_id','product_code','product_name','provider_id','nominal','type','active','active_datetime','non_active_datetime','version','create_datetime','create_user_id','update_datetime','update_user_id'];
 
     public function provider()
     {

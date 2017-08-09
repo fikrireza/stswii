@@ -94,9 +94,9 @@ class PartnerPulsaServerPropController extends Controller{
 		];
 
 		$validator = Validator::make($request->all(), [
-			'server_url' 	   => 'required|unique:sw_partner_pulsa_server_properties,server_url,'.$request->id_data.',partner_pulsa_properties_id',
-			'api_key' 	   	   => 'required|unique:sw_partner_pulsa_server_properties,api_key,'.$request->id_data.',partner_pulsa_properties_id',
-			'api_secret' 	   => 'required|unique:sw_partner_pulsa_server_properties,api_secret,'.$request->id_data.',partner_pulsa_properties_id',
+			'server_url' 	   => 'required|unique:sw_partner_pulsa_server_properties,server_url,'.$request->id_data.',partner_pulsa_id',
+			'api_key' 	   	   => 'required|unique:sw_partner_pulsa_server_properties,api_key,'.$request->id_data.',partner_pulsa_id',
+			'api_secret' 	   => 'required|unique:sw_partner_pulsa_server_properties,api_secret,'.$request->id_data.',partner_pulsa_id',
 		], $message);
 
 		if($validator->fails()){

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class RoleUser extends Authenticatable
 {
-    protected $table = 'sw_role_users';
+    protected $table = 'wa_role_users';
     /**
      * The attributes that are mass assignable.
      *

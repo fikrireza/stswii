@@ -110,13 +110,13 @@
             </div>
           </div>
 
-          <div class="item form-group {{ $errors->has('type_product') ? 'has-error' : ''}}">
+          <div class="item form-group {{ $errors->has('type') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Type Product <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <label class="radio-inline"><input type="radio" name="type_product" {{ old('type_product', $index->type_product) == 'PULSA' ? 'checked' : '' }} value="PULSA">PULSA</label>
-              <label class="radio-inline"><input type="radio" name="type_product" {{ old('type_product', $index->type_product) == 'DATA' ? 'checked' : '' }} value="DATA">DATA</label>
-              @if($errors->has('type_product'))
-                <code><span style="color:red; font-size:12px;">{{ $errors->first('type_product')}}</span></code>
+              <label class="radio-inline"><input type="radio" name="type" {{ old('type', $index->type) == 'PULSA' ? 'checked' : '' }} value="PULSA">PULSA</label>
+              <label class="radio-inline"><input type="radio" name="type" {{ old('type', $index->type) == 'DATA' ? 'checked' : '' }} value="DATA">DATA</label>
+              @if($errors->has('type'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('type')}}</span></code>
               @endif
             </div>
           </div>
