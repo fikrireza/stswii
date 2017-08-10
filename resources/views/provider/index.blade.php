@@ -40,19 +40,12 @@
         </div>
         <div class="modal-body">
             {{ csrf_field() }}
-            <div class="item form-group">
+            <div class="item form-group {{ $errors->has('provider_code') ? 'has-error' : ''}}">
               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
                 Provider Code<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input
-                  id="code"
-                  class="form-control col-md-7 col-xs-12"
-                  name="provider_code"
-                  type="text"
-                  value="{{ old('provider_code') }}"
-                  onchange="this.value = this.value.toUpperCase()"
-                >
+                <input id="code" class="form-control col-md-7 col-xs-12" name="provider_code" placeholder="E.g: AXIATA" type="text" value="{{ old('provider_code')}}">
                 @if($errors->has('provider_code'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_code')}}</span></code>
                 @endif
@@ -63,16 +56,7 @@
                 Provider Name<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input
-                  id="name"
-                  class="form-control col-md-7 col-xs-12"
-                  name="provider_name"
-                  placeholder="Contoh: Nama Provider"
-                  required="required"
-                  type="text"
-                  value="{{ old('provider_name') }}"
-                  onchange="this.value = this.value.toUpperCase()"
-                >
+                <input id="name" class="form-control col-md-7 col-xs-12" name="provider_name" placeholder="E.g: Xl" required="required" type="text" value="{{ old('provider_name') }}">
                 @if($errors->has('provider_name'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_name')}}</span></code>
                 @endif
@@ -105,47 +89,18 @@
                 Provider Code<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input
-                  id="id_provider_update"
-                  name="provider_id"
-                  type="hidden"
-                  value="{{ old('provider_id') }}"
-                >
-                <input
-                  id="version_provider_update"
-                  name="version"
-                  type="hidden"
-                  value="{{ old('version') }}"
-                >
-                <input
-                  id="code_provider_update"
-                  class="form-control col-md-7 col-xs-12"
-                  name="provider_code"
-                  type="text"
-                  value="{{ old('provider_code') }}"
-                  onchange="this.value = this.value.toUpperCase()"
-                  
-                >
-                @if($errors->has('provider_code'))
-                  <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_code')}}</span></code>
-                @endif
+
+                <input id="id_provider_update" name="provider_id" type="hidden" value="{{ old('provider_id') }}">
+                <input id="version_provider_update" name="version" type="hidden" value="{{ old('version') }}">
+                <input id="code_provider_update" class="form-control col-md-7 col-xs-12" name="provider_code" type="text" value="{{ old('provider_code') }}" readonly>
               </div>
             </div>
             <div class="item form-group {{ $errors->has('provider_name') ? 'has-error' : ''}}">
               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-                Nama Provider <span class="required">*</span>
+                Provider Name <span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input
-                  id="name_provider_update"
-                  class="form-control col-md-7 col-xs-12"
-                  name="provider_name"
-                  placeholder="Contoh: Nama Provider"
-                  required="required"
-                  type="text"
-                  value="{{ old('provider_name') }}"
-                  onchange="this.value = this.value.toUpperCase()"
-                >
+                <input id="name_provider_update" class="form-control col-md-7 col-xs-12" name="provider_name" placeholder="E.g: XL" required="required" type="text" value="{{ old('provider_name') }}">
                 @if($errors->has('provider_name'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_name')}}</span></code>
                 @endif
@@ -169,13 +124,13 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Hapus Provider</h4>
+        <h4 class="modal-title" id="myModalLabel2">Delete Provider</h4>
       </div>
       <div class="modal-body">
-        <h4>Yakin ?</h4>
+        <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setDelete">Ya</a>
+        <a class="btn btn-primary" id="setDelete">Yes</a>
       </div>
 
     </div>
@@ -219,30 +174,12 @@
                 Provider <span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input
-                  id="prefix_id_update"
-                  name="provider_prefix_id"
-                  type="hidden"
-                  value="{{ old('provider_prefix_id') }}"
-                >
-                <input
-                  id="version_update"
-                  name="version"
-                  type="hidden"
-                  value="{{ old('version') }}"
-                >
-                <select
-                  id="provider_id_update"
-                  name="provider_id"
-                  class="form-control select2_single"
-                  required="required"
-                >
+                <input id="prefix_id_update" name="provider_prefix_id" type="hidden" value="{{ old('provider_prefix_id') }}">
+                <input id="version_update" name="version" type="hidden" value="{{ old('version') }}">
+                <select id="provider_id_update" name="provider_id" class="form-control select2_single" required="required">
                   <option value="">Pilih</option>
                   @foreach($getProvider as $list)
-                  <option
-                    value="{{ $list->provider_id }}"
-                    {{ old('provider_id') == $list->provider_id ? 'selected' : '' }}
-                  >
+                  <option value="{{ $list->provider_id }}" {{ old('provider_id') == $list->provider_id ? 'selected' : '' }}>
                     {{ $list->provider_code.' ('.$list->provider_name.')' }}
                   </option>
                   @endforeach
@@ -257,16 +194,7 @@
                 Provider Prefix<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input
-                  id="prefix_update"
-                  class="form-control col-md-7 col-xs-12"
-                  name="prefix"
-                  placeholder="Contoh: Provider Prefix"
-                  required="required"
-                  type="text"
-                  onkeypress="return isNumber(event)"
-                  value="{{ old('prefix') }}"
-                >
+                <input id="prefix_update" class="form-control col-md-7 col-xs-12" name="prefix" placeholder="E.g: 0808" required="required" type="text" onkeypress="return isNumber(event)" value="{{ old('prefix') }}">
                 @if($errors->has('prefix'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('prefix')}}</span></code>
                 @endif
@@ -288,13 +216,13 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Hapus Provider Prefix</h4>
+        <h4 class="modal-title" id="myModalLabel2">Delete Provider Prefix</h4>
       </div>
       <div class="modal-body">
-        <h4>Yakin ?</h4>
+        <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setDeletePrefix">Ya</a>
+        <a class="btn btn-primary" id="setDeletePrefix">Yes</a>
       </div>
 
     </div>
@@ -357,6 +285,7 @@ $(function() {
 });
 
 $(function(){
+  @can('read-provider-prefix')
   $(document).on('click', '.read', function(e) {
       var idProvider    = $(this).data('id');
       $.ajax(
@@ -373,7 +302,9 @@ $(function(){
               alert('server not responding...');
         });
   });
+  @endcan
 
+  @can('update-provider')
   $(document).on('click', '.update', function(e) {
       var idProvider    = $(this).data('id');
       var codeProvider  = $(this).data('code');
@@ -384,7 +315,9 @@ $(function(){
       $("#version_provider_update").val(versionProvider);
       $("#name_provider_update").val(nameProvider);
   });
+  @endcan
 
+  @can('update-provider-prefix')
   $(document).on('click', '.update-prefix', function(e) {
       var provider_id = $(this).data('provider_id');
       var prefix_id   = $(this).data('prefix_id');
@@ -395,14 +328,18 @@ $(function(){
       $("#prefix_update").val(prefix);
       $("#version_update").val(version);
   });
+  @endcan
 
+  @can('delete-provider-prefix')
   $(document).on('click', '.delete-prefix', function(e) {
     var a = $(this).data('value');
     var b = $(this).data('version');
     $('#setDeletePrefix').attr('href', "{{ url('/') }}/provider-prefix/delete/"+a+"/"+b);
   });
+  @endcan
 });
 
+@can('delete-provider')
 $(function(){
   $('#dataTables').on('click', 'a.delete', function(){
     var a = $(this).data('value');
@@ -410,6 +347,7 @@ $(function(){
     $('#setDelete').attr('href', "{{ url('/') }}/provider/delete/"+a+"/"+b);
   });
 });
+@endcan
 
 function isNumber(evt) {
     evt = (evt) ? evt : window.event;
