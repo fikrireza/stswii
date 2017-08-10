@@ -29,7 +29,15 @@ class AgentController extends Controller
   	}
 
   	function getDataTables(){
-  		$index = Agent::select('agent_id','agent_name','phone_number','address','city','version')->get();
+  		$index = Agent::select(
+          'agent_id',
+          'agent_name',
+          'phone_number',
+          'address',
+          'city',
+          'version'
+        )
+      ->get();
 
   		return Datatables::of($index)
   				->addColumn('action', function($index) {
@@ -44,6 +52,7 @@ class AgentController extends Controller
   					}
   					return $html;
                   })
+          ->removeColumn('version')
   				->make(true);
   	}
 
