@@ -43,7 +43,7 @@ class Login extends BasePage
 
     public function loginForm(Browser $browser)
     {
-        $browser->type('input[name=email]', 'administrator@gmail.com')
+        $browser->type('input[name=email]', 'administrator@amadeo.id')
                 ->type('input[name=password]', '12345678')
                 ->press('Log In');
     }

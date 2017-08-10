@@ -163,7 +163,7 @@
             @foreach ($index as $list)
             <tr>
               <td>{{ $count++ }}</td>
-              <td>{{ $list->provider->provider_code }}</td>
+              <td>{{ $list->provider->provider_code or '-'}}</td>
               <td>{{ $list->product_code }}</td>
               <td>{{ $list->product_name }}</td>
               <td>Rp. {{ number_format($list->nominal, 2) }}</td>

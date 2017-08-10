@@ -57,19 +57,7 @@ class ProductController extends Controller
 	{
 		$provider = Provider::get();
 
-		$rand = rand(1000,9999);
-
-		$product_code = 'prod'.'-'.$rand;
-
-		$cek_kode = Product::where('product_code', $product_code)->first();
-
-		if(!$cek_kode){
-			$product_code;
-		}else{
-			$product_code = 'Product Code is Empty - Contact Amadeo Please';
-		}
-
-		return view('product.tambah', compact('provider', 'product_code'));
+		return view('product.tambah', compact('provider'));
 	}
 
 	public function store(Request $request)
@@ -152,7 +140,7 @@ class ProductController extends Controller
 		];
 
 		$validator = Validator::make($request->all(), [
-			// 'product_code' => 'required|unique:sw_product,product_code,'.$request->product_id,
+			'product_code' => 'required|unique:sw_product,product_code,'.$request->product_id.',product_id',
 			'product_name' => 'required',
 			'provider_id' => 'required',
 			'nominal' => 'required|numeric',

@@ -50,9 +50,12 @@
                   class="form-control col-md-7 col-xs-12"
                   name="provider_code"
                   type="text"
-                  value="{{ $newProvCode }}"
-                  readonly
+                  value="{{ old('provider_code') }}"
+                  onchange="this.value = this.value.toUpperCase()"
                 >
+                @if($errors->has('provider_code'))
+                  <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_code')}}</span></code>
+                @endif
               </div>
             </div>
             <div class="item form-group {{ $errors->has('provider_name') ? 'has-error' : ''}}">
@@ -68,6 +71,7 @@
                   required="required"
                   type="text"
                   value="{{ old('provider_name') }}"
+                  onchange="this.value = this.value.toUpperCase()"
                 >
                 @if($errors->has('provider_name'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_name')}}</span></code>
@@ -119,8 +123,12 @@
                   name="provider_code"
                   type="text"
                   value="{{ old('provider_code') }}"
-                  readonly
+                  onchange="this.value = this.value.toUpperCase()"
+                  
                 >
+                @if($errors->has('provider_code'))
+                  <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_code')}}</span></code>
+                @endif
               </div>
             </div>
             <div class="item form-group {{ $errors->has('provider_name') ? 'has-error' : ''}}">
@@ -136,6 +144,7 @@
                   required="required"
                   type="text"
                   value="{{ old('provider_name') }}"
+                  onchange="this.value = this.value.toUpperCase()"
                 >
                 @if($errors->has('provider_name'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_name')}}</span></code>

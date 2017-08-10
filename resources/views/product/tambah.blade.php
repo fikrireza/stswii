@@ -82,14 +82,17 @@
           <div class="item form-group {{ $errors->has('product_code') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_code">Product Code</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="product_code" class="form-control col-md-7 col-xs-12" name="product_code" type="text" value="{{ $product_code }}" readonly>
+              <input id="product_code" class="form-control col-md-7 col-xs-12" name="product_code" type="text" value="{{ old('product_code') }}" onchange="this.value = this.value.toUpperCase()">
+              @if($errors->has('product_code'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('product_code')}}</span></code>
+              @endif
             </div>
           </div>
 
           <div class="item form-group {{ $errors->has('product_name') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_name">Product Name <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="product_name" class="form-control" name="product_name" placeholder="E.g: " required="required" type="text" value="{{ old('product_name') }}">
+              <input id="product_name" class="form-control" name="product_name" placeholder="E.g: " required="required" type="text" value="{{ old('product_name') }}" onchange="this.value = this.value.toUpperCase()">
               @if($errors->has('product_name'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('product_name')}}</span></code>
               @endif

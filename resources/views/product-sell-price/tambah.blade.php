@@ -65,7 +65,7 @@
           {{ csrf_field() }}
 
           <div class="item form-group {{ $errors->has('product_id') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product <span class="required">*</span></label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_id">Product <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <select id="product_id" name="product_id" class="form-control select2_single" required="required">
                 <option value="">Pilih</option>
@@ -80,7 +80,7 @@
           </div>
 
           <div class="item form-group {{ $errors->has('gross_sell_price') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Gross Sell Price <span class="required">*</span></label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="gross_sell_price">Gross Sell Price <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input id="gross_sell_price" class="form-control" name="gross_sell_price" placeholder="E.g: 50000" required="required" type="text" value="{{ old('gross_sell_price') }}" onkeypress="return isNumber(event)" maxlength="9">
               @if($errors->has('gross_sell_price'))
@@ -90,7 +90,7 @@
           </div>
 
           <div class="item form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Tax</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="flg_tax">Tax</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
                 <input type="checkbox" name="flg_tax" id="flg_tax" value="1" {{ old('flg_tax') == 1 ? 'checked' : '' }}/>
@@ -99,7 +99,7 @@
           </div>
 
           <div class="item form-group {{ $errors->has('tax_percentage') ? 'has-error' : ''}}" id="tax_percentage" {{ old('flg_tax') == 1 ? '' : 'style=display:none'}}>
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Tax Percentage <span class="required">*</span></label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tax_percentage">Tax Percentage <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input id="tax_percentage" class="form-control" name="tax_percentage" placeholder="E.g: 10" required="required" type="text" value="{{ old('tax_percentage') }}" onkeypress="return isNumber(event)" maxlength="9">
               @if($errors->has('tax_percentage'))
@@ -109,7 +109,7 @@
           </div>
 
           <div class="item form-group {{ $errors->has('datetime_start') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Date Start <span class="required">*</span></label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="datetime_start">Date Start <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input id="datetime_start" name="datetime_start" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_start', date('Y-m-d H:i:s')) }}">
               @if($errors->has('datetime_start'))
@@ -119,7 +119,7 @@
           </div>
 
           <div class="item form-group {{ $errors->has('datetime_end') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Date End <span class="required">*</span></label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="datetime_end">Date End <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input id="datetime_end" name="datetime_end" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_end', date('Y-m-d H:i:s')) }}">
               @if($errors->has('datetime_end'))
@@ -131,10 +131,10 @@
           <div class="ln_solid"></div>
 
           <div class="item form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="active">Active</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input type="checkbox" class="flat" name="active" value="1" {{ old('active') == 1 ? 'checked' : '' }}/>
+                <input id="active" type="checkbox" class="flat" name="active" value="1" {{ old('active') == 1 ? 'checked' : '' }}/>
               </label>
             </div>
           </div>
