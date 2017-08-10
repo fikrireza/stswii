@@ -58,19 +58,7 @@ class ProductController extends Controller
 	{
 		$provider = Provider::get();
 
-		$rand = rand(1000,9999);
-
-		$product_code = 'prod'.'-'.$rand;
-
-		$cek_kode = Product::where('product_code', $product_code)->first();
-
-		if(!$cek_kode){
-			$product_code;
-		}else{
-			$product_code = 'Product Code is Empty - Contact Amadeo Please';
-		}
-
-		return view('product.tambah', compact('provider', 'product_code'));
+		return view('product.tambah', compact('provider'));
 	}
 
 	public function store(Request $request)
@@ -153,7 +141,7 @@ class ProductController extends Controller
 		];
 
 		$validator = Validator::make($request->all(), [
-			// 'product_code' => 'required|unique:sw_product,product_code,'.$request->product_id,
+			'product_code' => 'required|unique:sw_product,product_code,'.$request->product_id.',product_id',
 			'product_name' => 'required',
 			'provider_id' => 'required',
 			'nominal' => 'required|numeric',
@@ -245,20 +233,22 @@ class ProductController extends Controller
 
 		$f_provider = $request->query('f_provider');
 
-    	$getProducts = Product::select([
-	    		'provider_id',
+    	$getProducts = Product::leftJoin('sw_provider', 'sw_provider.provider_id', 'sw_product.provider_id')
+	    	->select([
+	    		'sw_provider.provider_code as provider_code',
+	    		'sw_product.provider_id as provider_id',
 	    		'product_id',
 	    		'product_code',
 				'product_name',
 				'nominal',
 				'type',
 				'active',
-				'version'
+				'sw_product.version'
     		]);
 
     	if($f_provider != null)
 		{
-			$getProducts->where('provider_id', $f_provider);
+			$getProducts->where('sw_product.provider_id', $f_provider);
 		}
 
     	$getProducts = $getProducts->get();
@@ -267,9 +257,6 @@ class ProductController extends Controller
         $Datatables = Datatables::of($getProducts)
             ->addColumn('slno', function ($getProduct) use (&$start) {
                 return $start++;
-            })
-            ->addColumn('provider_code', function ($getProduct){
-                return $getProduct->provider->provider_code;
             })
             ->editColumn('nominal',  function ($getProduct){
                 return 'Rp. '.number_format($getProduct->nominal, 2);

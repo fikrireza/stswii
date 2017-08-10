@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Yajra\Datatables\Facades\Datatables;
 
 use App\Models\ProductSellPrice;
 use App\Models\Product;
@@ -297,6 +298,147 @@ class ProductSellPriceController extends Controller
 
 		return redirect()->route('product-sell-price.index')->with('berhasil', 'Successfully Deleted ');
 	}
+
+	public function yajraGetData(Request $request){
+
+		$f_provider = $request->query('f_provider');
+		$f_active	= $request->query('f_active');
+
+    	$getDatas = ProductSellPrice::leftJoin('sw_product', 'sw_product.product_id', 'sw_product_sell_price.product_id')
+	    	->select([
+	    		'sw_product.product_name as product_name',
+	    		'sw_product.nominal as nominal',
+	    		'product_sell_price_id',
+	    		'gross_sell_price',
+	    		'flg_tax',
+				'tax_percentage',
+				'datetime_start',
+				'datetime_end',
+				'sw_product_sell_price.active',
+				'sw_product_sell_price.version'
+    		]);
+
+    	if($f_provider != null){
+			$getDatas->where('sw_product.provider_id', $f_provider);
+		}
+    	if($f_active != null){
+			$getDatas->where('sw_product_sell_price.active', $f_active);
+		}
+    	$getDatas = $getDatas->get();
+
+    	$start=1;
+        $Datatables = Datatables::of($getDatas)
+            ->addColumn('slno', function ($getData) use (&$start) {
+                return $start++;
+            })
+            ->editColumn('product_name',  function ($getData){
+                return $getData->product_name.' - Rp. '.number_format($getData->nominal, 2);
+            })
+            ->editColumn('gross_sell_price',  function ($getData){
+                return 'Rp. '.number_format($getData->gross_sell_price, 2);
+            })
+            ->editColumn('flg_tax',  function ($getData){
+            	if($getData->flg_tax == 1){
+            		return "Y";
+            	}
+            	else if($getData->flg_tax == 0){
+            		return "N";
+            	}
+            })
+            ->editColumn('tax_percentage',  function ($getData){
+            	if($getData->flg_tax == 1){
+            		return $getData->tax_percentage."%";
+            	}
+            	else if($getData->flg_tax == 0){
+            		return "0%";
+            	}
+            })
+            ->editColumn('datetime_start',  function ($getData){
+                return date('d-m-Y H:i:s', strtotime($getData->datetime_start));
+            })
+            ->editColumn('datetime_end',  function ($getData){
+                return date('d-m-Y H:i:s', strtotime($getData->datetime_end));
+            })
+            ->addColumn('action', function ($getData) {
+            	$actionHtml = '';
+				if (Auth::user()->can('update-product-sell-price')) {
+					$actionHtml = $actionHtml." 
+						<a 
+							href='".route('product-sell-price.ubah',$getData->product_sell_price_id)."''
+							class='btn btn-xs btn-warning btn-sm' 
+							data-toggle='tooltip'
+							data-placement='top' 
+							title='Ubah'
+						><i class='fa fa-pencil'></i></a>";
+				}
+				if (Auth::user()->can('delete-product-sell-price')) {
+					$actionHtml = $actionHtml." 
+						<a 
+							href='' 
+							class='delete' 
+							data-value='".$getData->product_sell_price_id."' 
+							data-version='".$getData->version."' 
+							data-toggle='modal' 
+							data-target='.modal-delete'
+						>
+							<span 
+								class='btn btn-xs btn-danger btn-sm' 
+								data-toggle='tooltip' 
+								data-placement='top' 
+								title='Hapus'
+							><i class='fa fa-remove'></i></span>
+						</a>";
+				}
+                return $actionHtml;
+            });
+
+		if (Auth::user()->can('activate-product-sell-price')) {
+			$Datatables = $Datatables->editColumn('active', function ($getData){
+				if($getData->active == 1){
+					return "
+						<a 
+							href='' 
+							class='unpublish' 
+							data-value='".$getData->product_sell_price_id."' 
+							data-version='".$getData->version."' 
+							data-toggle='modal' 
+							data-target='.modal-nonactive'
+						>
+							<span 
+								class='label label-success' 
+								data-toggle='tooltip' 
+								data-placement='top' 
+								title='Active'
+							>Active</span>
+						</a><br>";
+				}
+				else{
+					return "
+						<a 
+							href='' 
+							class='publish' 
+							data-value='".$getData->product_sell_price_id."' 
+							data-version='".$getData->version."' 
+							data-toggle='modal' 
+							data-target='.modal-nonactive'
+						>
+							<span 
+								class='label label-success' 
+								data-toggle='tooltip' 
+								data-placement='top' 
+								title='Non Active'
+							>Non Active</span>
+						</a><br>";
+				}
+            });
+		}
+
+        $Datatables = $Datatables
+            ->escapeColumns(['*'])
+            ->make(true);
+
+        return $Datatables;
+    }
 
 	public function upload()
 	{

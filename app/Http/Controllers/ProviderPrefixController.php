@@ -160,11 +160,13 @@ class ProviderPrefixController extends Controller{
     }
     public function yajraGetData(){
 
-    	$getProviderPrefixs = ProviderPrefix::select([
-	    		'provider_id',
+    	$getProviderPrefixs = ProviderPrefix::leftJoin('sw_provider', 'sw_provider.provider_id', 'sw_provider_prefix.provider_id')
+	    	->select([
+	    		'sw_provider_prefix.provider_id as provider_id',
+	    		'sw_provider.provider_code as provider_code',
 				'provider_prefix_id',
 				'prefix',
-				'version'
+				'sw_provider_prefix.version'
     		])
     		->get();
 
@@ -172,9 +174,6 @@ class ProviderPrefixController extends Controller{
         return Datatables::of($getProviderPrefixs)
             ->addColumn('slno', function ($getProviderPrefix) use (&$start) {
                 return $start++;
-            })
-            ->addColumn('provider_code', function ($getProviderPrefix){
-                return $getProviderPrefix->provider->provider_code;
             })
             ->addColumn('action', function ($getProviderPrefix) {
             	$actionHtml = '';
@@ -186,7 +185,6 @@ class ProviderPrefixController extends Controller{
 				}
                 return $actionHtml;
             })
-            ->removeColumn('provider_id')
             ->removeColumn('provider_prefix_id')
             ->removeColumn('version')
             ->make(true);

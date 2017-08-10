@@ -75,6 +75,11 @@ class ProviderPrefixTest extends DuskTestCase
                     ->assertSeeIn('.modal-form-add div div form div div:nth-child(3) div code span', 'mohon isi')
                     ->select('#provider_id')
                     ->pause(2000)
+                    ->type('#prefix', $random)
+                    ->pause(2000)
+                    ->press('Submit')
+                    ->pause(2000)
+                    ->assertSeeIn('.modal-form-add div div form div div:nth-child(3) div code span', 'Prefix ini sudah ada')
                     ->type('#prefix', '012345678901234567890')
                     ->pause(2000)
                     ->press('Submit')
@@ -105,17 +110,18 @@ class ProviderPrefixTest extends DuskTestCase
 
     public function testDelete()
     {
-        $providerPrefix = ProviderPrefix::first();
-
-        $this->browse(function ($browser) use ($providerPrefix){
+        $this->browse(function ($browser){
             $browser->loginAs(User::first())
                     ->visit('/provider-prefix')
-                    ->waitFor('#dataTables')
-                    ->click('#dataTables>tbody>tr:nth-child(1)>td:nth-last-child(1)>a:nth-child(2)')
+                    ->waitFor('#dataTables');
+
+            $text = strtoupper($browser->text('#dataTables tbody tr:nth-child(1) td:nth-child(3)'));
+
+            $browser->click('#dataTables>tbody>tr:nth-child(1)>td:nth-last-child(1)>a:nth-child(2)')
                     ->pause(2000)
                     ->click('#setDelete')
                     ->pause(2000)
-                    ->assertDontSee($providerPrefix->prefix);
+                    ->assertDontSeeIn('#dataTables tbody tr:nth-child(1) td:nth-child(3)', $text);
         });
     }
 }

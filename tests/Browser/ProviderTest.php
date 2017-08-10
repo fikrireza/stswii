@@ -41,6 +41,8 @@ class ProviderTest extends DuskTestCase
                     ->pause(2000)
                     ->clickLink('Add')
                     ->pause(2000)
+                    ->type('provider_code', $random)
+                    ->pause(2000)
                     ->type('provider_name', $random)
                     ->pause(2000)
                     ->press('Submit')
@@ -58,8 +60,10 @@ class ProviderTest extends DuskTestCase
         $this->browse(function ($browser) use ($random){
             $browser->loginAs(User::first())
                     ->visit('/provider')
-                    ->pause(2000)
+                    ->waitFor('#dataTables')
                     ->clickLink('Add')
+                    ->pause(2000)
+                    ->type('provider_code', $random)
                     ->pause(2000)
                     ->type('provider_name', $random)
                     ->pause(2000)
@@ -69,18 +73,22 @@ class ProviderTest extends DuskTestCase
                     ->pause(2000)
                     ->press('Submit')
                     ->pause(2000)
-                    ->assertSeeIn('.modal-form-add div div form div div div code span', 'mohon isi')
+                    ->assertSeeIn('.modal-form-add div div form div div:nth-child(2) div code span', 'mohon isi')
+                    ->assertSeeIn('.modal-form-add div div form div div:nth-child(3) div code span', 'mohon isi')
+                    ->type('provider_code', $random)
+                    ->pause(2000)
                     ->type('provider_name', $random)
                     ->pause(2000)
                     ->press('Submit')
                     ->pause(2000)
-                    ->assertSeeIn('.modal-form-add div div form div div div code span', 'Provider ini sudah ada')
+                    ->assertSeeIn('.modal-form-add div div form div div:nth-child(2) div code span', 'Provider Code ini sudah ada')
+                    ->assertSeeIn('.modal-form-add div div form div div:nth-child(3) div code span', 'Provider ini sudah ada')
                     ->clear('provider_name')
                     ->type('provider_name', 'Example Provider Over By 25 Character')
                     ->pause(2000)
                     ->press('Submit')
                     ->pause(2000)
-                    ->assertSeeIn('.modal-form-add div div form div div div code span', 'Terlalu Panjang, Maks 25 Karakter');
+                    ->assertSeeIn('.modal-form-add div div form div div:nth-child(3) div code span', 'Terlalu Panjang, Maks 25 Karakter');
         });
     }
 
@@ -96,6 +104,10 @@ class ProviderTest extends DuskTestCase
                     ->waitFor('#dataTables')
                     ->click('#dataTables>tbody>tr:nth-child(1)>td:nth-last-child(1)>a:nth-child(2)')
                     ->pause(2000)
+                    ->clear('#code_provider_update')
+                    ->pause(2000)
+                    ->type('#code_provider_update', $random)
+                    ->pause(2000)
                     ->clear('#name_provider_update')
                     ->pause(2000)
                     ->type('#name_provider_update', $random)
@@ -108,17 +120,18 @@ class ProviderTest extends DuskTestCase
 
     public function testDelete()
     {
-        $provider = Provider::first();
-
-        $this->browse(function ($browser) use ($provider) {
+        $this->browse(function ($browser){
             $browser->loginAs(User::first())
                     ->visit('/provider')
-                    ->waitFor('#dataTables')
-                    ->click('#dataTables>tbody>tr:nth-last-child(1)>td:nth-last-child(1)>a:nth-child(3)')
+                    ->waitFor('#dataTables');
+
+            $text = strtoupper($browser->text('#dataTables tbody tr:nth-child(1) td:nth-child(1)'));
+
+            $browser->click('#dataTables>tbody>tr:nth-child(1)>td:nth-last-child(1)>a:nth-child(3)')
                     ->pause(2000)
                     ->click('#setDelete')
                     ->pause(2000)
-                    ->assertDontSee($provider->provider_name);
+                    ->assertDontSeeIn('#dataTables tbody tr:nth-child(1) td:nth-child(1)', $text);
         });
     }
 }

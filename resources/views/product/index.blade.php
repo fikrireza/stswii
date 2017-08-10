@@ -164,7 +164,7 @@
             @foreach ($index as $list)
             <tr>
               <td>{{ $count++ }}</td>
-              <td>{{ $list->provider->provider_code }}</td>
+              <td>{{ $list->provider->provider_code or '-'}}</td>
               <td>{{ $list->product_code }}</td>
               <td>{{ $list->product_name }}</td>
               <td>Rp. {{ number_format($list->nominal, 2) }}</td>
@@ -229,13 +229,13 @@ $(function() {
         ajax: "{{ route('product.yajra.getDatas') }}?f_provider={{ $request->f_provider }}",
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},
-            {data: 'provider_code', name: 'Provider Code', orderable: false, searchable: false},
-            {data: 'product_code', name: 'Product Code'},
-            {data: 'product_name', name: 'Product Name'},
-            {data: 'nominal', name: 'Nominal'},
-            {data: 'type', name: 'Type Product'},
+            {data: 'provider_code'},
+            {data: 'product_code'},
+            {data: 'product_name'},
+            {data: 'nominal'},
+            {data: 'type'},
             @can('activate-product')
-              {data: 'active', name: 'Status', orderable: false, searchable: false},
+              {data: 'active', orderable: false, searchable: false},
             @endcan
             {data: 'action', name: 'Action', orderable: false, searchable: false}
         ],
