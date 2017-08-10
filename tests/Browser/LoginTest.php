@@ -18,12 +18,12 @@ class LoginTest extends DuskTestCase
      *
      * @return void
      */
-    // public function testLogin()
-    // {
-    //     $this->browse(function ($browser) {
-    //         $browser->visit(new Login)
-    //                 ->loginForm()
-    //                 ->assertPathIs('/stswii/public/home');
-    //     });
-    // }
+    public function testLogin()
+    {
+        $this->browse(function ($browser) {
+            $browser->visit(new Login)
+                    ->loginForm()
+                    ->assertPathIs('/stswii/public/home');
+        });
+    }
 }
