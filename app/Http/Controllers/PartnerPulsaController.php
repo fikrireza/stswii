@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Yajra\Datatables\Facades\Datatables;
 
 use App\Models\User;
 use App\Models\PartnerPulsa;
@@ -245,4 +247,95 @@ class PartnerPulsaController extends Controller
         ->with('berhasil', $info);
     }
 
+    public function yajraGetData(){
+
+      $getDatas = PartnerPulsa::select([
+        'partner_pulsa_id',
+        'partner_pulsa_code',
+        'partner_pulsa_name',
+        'description',
+        'type_top',
+        'payment_termin',
+        'active',
+        'version'
+        ])
+        ->get();
+
+      $start=1;
+      $Datatables = Datatables::of($getDatas)
+          ->addColumn('slno', function ($getData) use (&$start) {
+              return $start++;
+          })
+          ->addColumn('action', function ($getData) {
+            $actionHtml = '';
+            if (Auth::user()->can('update-partner-pulsa')) {
+              $actionHtml = $actionHtml." 
+                <a
+                class='update'
+                href='".route('partner-pulsa.edit', ['id' => $getData->partner_pulsa_id, 'version' => $getData->version])."'
+              >
+                <span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Update'><i class='fa fa-pencil'></i></span>
+              </a>";
+            }
+            if (Auth::user()->can('delete-partner-pulsa')) {
+              $actionHtml = $actionHtml."
+                <a 
+                  href='' 
+                  class='delete' 
+                  data-value='".$getData->partner_pulsa_id."'
+                  data-version='".$getData->version."' 
+                  data-toggle='modal' 
+                  data-target='.modal-delete'
+                >
+                  <span class='btn btn-xs btn-danger btn-sm' data-toggle='tooltip' data-placement='top' title='Hapus'><i class='fa fa-remove'></i></span>
+                </a>";
+            }
+              return $actionHtml;
+          });
+
+      if (Auth::user()->can('activate-partner-pulsa')) {
+        $Datatables = $Datatables->editColumn('active', function ($getData){
+        if($getData->active == 1){
+          return "
+            <a 
+              href='' 
+              class='unpublish' 
+              data-value='".$getData->partner_pulsa_id."' 
+              data-version='".$getData->version."' 
+              data-toggle='modal' 
+              data-target='.modal-nonactive'
+            >
+              <span 
+                class='label label-success' 
+                data-toggle='tooltip' 
+                data-placement='top' 
+                title='Active'
+              >Active</span>
+            </a><br>";
+        }
+        else if($getData->active == 0){
+          return "
+            <a 
+              href='' 
+              class='publish' 
+              data-value='".$getData->partner_pulsa_id."' 
+              data-version='".$getData->version."' 
+              data-toggle='modal' 
+              data-target='.modal-active'
+            >
+              <span 
+                class='label label-danger' 
+                data-toggle='tooltip' 
+                data-placement='top' 
+                title='Non Active'
+              >Non Active</span>
+            </a><br>";
+        }
+      });
+      }
+      $Datatables = $Datatables
+        ->escapeColumns(['*'])
+        ->make(true);
+      return $Datatables;
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Yajra\Datatables\Facades\Datatables;
 
 use App\Models\User;
 use App\Models\PartnerProductPurchPrice;
@@ -29,21 +30,47 @@ class PartnerProductPurchPriceController extends Controller
     }
 
 
-    public function index(){
-        $getPPPP = PartnerProductPurchPrice::select(
-            'partner_product_id',
-            'partner_product_purch_price_id',
-            'gross_purch_price',
-            'flg_tax',
-            'tax_percentage',
-            'datetime_start',
-            'datetime_end',
-            'active',
-            'version'
-          )
-          ->get();
+    public function index(Request $request){
+      $provider = Provider::get();
+      $partner = PartnerPulsa::get();
 
-        return view('partner-product-purchase-price.index', compact('getPPPP'));
+      $message = [
+        'f_provider.integer' => 'Invalid filter',
+        'f_partner.integer' => 'Invalid filter',
+        'f_active.integer' => 'Invalid filter',
+        'f_active.in' => 'Invalid filter',
+      ];
+
+      $validator = Validator::make($request->all(), [
+        'f_provider' => 'integer|nullable',
+        'f_partner' => 'integer|nullable',
+        'f_active' => 'integer|nullable|in:0,1',
+      ], $message);
+
+      if($validator->fails())
+      {
+        return redirect()->route('product-sell-price.index');
+      }
+
+      // $getPPPP = PartnerProductPurchPrice::select(
+      //     'partner_product_id',
+      //     'partner_product_purch_price_id',
+      //     'gross_purch_price',
+      //     'flg_tax',
+      //     'tax_percentage',
+      //     'datetime_start',
+      //     'datetime_end',
+      //     'active',
+      //     'version'
+      //   )
+      //   ->get();
+
+      return view('partner-product-purchase-price.index', compact(
+          // 'getPPPP'
+        'request', 
+        'provider',
+        'partner'
+      ));
     }
 
     public function active($id, $version, $status){
@@ -466,6 +493,152 @@ class PartnerProductPurchPriceController extends Controller
         ->get();
 
       return $getPartnerProduct;
+    }
+
+    public function yajraGetData(Request $request){
+
+      $f_provider = $request->query('f_provider');
+      $f_partner = $request->query('f_partner');
+      $f_active = $request->query('f_active');
+
+      $getDatas = PartnerProductPurchPrice::leftJoin(
+          'sw_partner_product', 
+          'sw_partner_product.partner_product_id',
+          'sw_partner_product_purch_price.partner_product_id'
+        )
+        ->select([
+          'sw_partner_product.partner_product_code as partner_product_code',
+          'sw_partner_product.partner_product_name as partner_product_name',
+          'partner_product_purch_price_id',
+          'gross_purch_price',
+          'flg_tax',
+          'tax_percentage',
+          'datetime_start',
+          'datetime_end',
+          'sw_partner_product_purch_price.active as active',
+          'sw_partner_product_purch_price.version as version'
+        ]);
+
+      if($f_provider != null){
+        $getDatas->where('sw_partner_product.provider_id', $f_provider);
+      }
+      if($f_partner != null){
+        $getDatas->where('sw_partner_product.partner_pulsa_id', $f_partner);
+      }
+      if($f_active != null){
+        $getDatas->where('sw_partner_product_purch_price.active', $f_active);
+      }
+      $getDatas = $getDatas->get();
+      
+      $start=1;
+      $Datatables = Datatables::of($getDatas)
+        ->addColumn('slno', function ($getData) use (&$start) {
+            return $start++;
+        })
+        ->editColumn('gross_purch_price',  function ($getData){
+                return 'Rp. '.number_format($getData->gross_purch_price, 2);
+            })
+        ->editColumn('flg_tax',  function ($getData){
+          if($getData->flg_tax == 1){
+            return "Y";
+          }
+          else if($getData->flg_tax == 0){
+            return "N";
+          }
+        })
+        ->editColumn('tax_percentage',  function ($getData){
+          if($getData->flg_tax == 1){
+            return $getData->tax_percentage."%";
+          }
+          else if($getData->flg_tax == 0){
+            return "0%";
+          }
+        })
+        ->editColumn('datetime_start',  function ($getData){
+            return date('d-m-Y H:i:s', strtotime($getData->datetime_start));
+        })
+        ->editColumn('datetime_end',  function ($getData){
+            return date('d-m-Y H:i:s', strtotime($getData->datetime_end));
+        })
+        ->addColumn('action', function ($getData) {
+          $actionHtml = '';
+          if (Auth::user()->can('update-partner-product-purch-price')) {
+            $actionHtml = $actionHtml." 
+              <a 
+                href='".route('partner-product-purch-price.edit', ['id' => $getData->partner_product_purch_price_id, 'version' => $getData->version ])."''
+                class='btn btn-xs btn-warning btn-sm' 
+                data-toggle='tooltip'
+                data-placement='top' 
+                title='Ubah'
+              ><i class='fa fa-pencil'></i></a>";
+          }
+          if (Auth::user()->can('delete-partner-product-purch-price')) {
+            $actionHtml = $actionHtml." 
+              <a 
+                href='' 
+                class='delete' 
+                data-value='".$getData->partner_product_purch_price_id."' 
+                data-version='".$getData->version."' 
+                data-toggle='modal' 
+                data-target='.modal-delete'
+              >
+                <span 
+                  class='btn btn-xs btn-danger btn-sm' 
+                  data-toggle='tooltip' 
+                  data-placement='top' 
+                  title='Hapus'
+                ><i class='fa fa-remove'></i></span>
+              </a>";
+          }
+            return $actionHtml;
+        });
+
+      if (Auth::user()->can('activate-partner-product-purch-price')) {
+        $Datatables = $Datatables->editColumn('active', function ($getData){
+          if($getData->active == 1){
+            return "
+              <a 
+                href='' 
+                class='unpublish' 
+                data-value='".$getData->partner_product_purch_price_id."' 
+                data-version='".$getData->version."' 
+                data-toggle='modal' 
+                data-target='.modal-nonactive'
+              >
+                <span 
+                  class='label label-success' 
+                  data-toggle='tooltip' 
+                  data-placement='top' 
+                  title='Active'
+                >Active</span>
+              </a><br>";
+          }
+          else if($getData->active == 0){
+            return "
+              <a 
+                href='' 
+                class='publish' 
+                data-value='".$getData->partner_product_purch_price_id."' 
+                data-version='".$getData->version."' 
+                data-toggle='modal' 
+                data-target='.modal-active'
+              >
+                <span 
+                  class='label label-danger' 
+                  data-toggle='tooltip' 
+                  data-placement='top' 
+                  title='Non Active'
+                >Non Active</span>
+              </a><br>";
+          }
+        });
+      }
+
+      $Datatables = $Datatables
+          ->escapeColumns(['*'])
+          ->make(true);
+
+      return $Datatables;
     }
 
     public function upload(){

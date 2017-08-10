@@ -420,10 +420,10 @@ class ProductSellPriceController extends Controller
 							data-value='".$getData->product_sell_price_id."' 
 							data-version='".$getData->version."' 
 							data-toggle='modal' 
-							data-target='.modal-nonactive'
+							data-target='.modal-active'
 						>
 							<span 
-								class='label label-success' 
+								class='label label-danger' 
 								data-toggle='tooltip' 
 								data-placement='top' 
 								title='Non Active'

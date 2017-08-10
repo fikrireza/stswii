@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Yajra\Datatables\Facades\Datatables;
 
 use App\Models\User;
 use App\Models\PartnerProduct;
@@ -28,20 +29,30 @@ class PartnerProductController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(){
-        $getPartnerProduct = PartnerProduct::select(
-            'partner_pulsa_id',
-            'provider_id',
-            'product_id',
-            'partner_product_id',
-            'partner_product_code',
-            'partner_product_name',
-            'active',
-            'version'
-          )
-          ->get();
+    public function index(Request $request){
+      $provider = Provider::get();
+      $partner = PartnerPulsa::get();
 
-      	return view('partner-product.index', compact('getPartnerProduct'));
+      $message = [
+        'f_provider.integer' => 'Invalid filter',
+        'f_partner.integer' => 'Invalid filter',
+      ];
+
+      $validator = Validator::make($request->all(), [
+        'f_provider' => 'integer|nullable',
+        'f_partner' => 'integer|nullable',
+      ], $message);
+
+      if($validator->fails())
+      {
+        return redirect()->route('product-sell-price.index');
+      }
+
+    	return view('partner-product.index', compact(
+          'request', 
+          'provider',
+          'partner'
+        ));
     }
 
     public function create(){
@@ -301,5 +312,130 @@ class PartnerProductController extends Controller
     	$getProduct = Product::where('provider_id', $id)->get();
 
     	return $getProduct;
+    }
+
+    public function yajraGetData(Request $request){
+
+      $f_provider = $request->query('f_provider');
+      $f_partner = $request->query('f_partner');
+
+      $getDatas = PartnerProduct::leftJoin('sw_partner_pulsa', 'sw_partner_pulsa.partner_pulsa_id', 'sw_partner_product.partner_pulsa_id')
+        ->leftJoin('sw_provider', 'sw_provider.provider_id', 'sw_partner_product.provider_id')
+        ->leftJoin('sw_product', 'sw_product.product_id', 'sw_partner_product.product_id')
+        ->select([
+          'sw_partner_pulsa.partner_pulsa_code as partner_pulsa_code',
+          'sw_partner_pulsa.partner_pulsa_name as partner_pulsa_name',
+          'sw_provider.provider_code as provider_code',
+          'sw_provider.provider_name as provider_name',
+          'sw_product.product_code as product_code',
+          'sw_product.product_name as product_name',
+          'partner_product_id',
+          'partner_product_code',
+          'partner_product_name',
+          'sw_partner_product.active as active',
+          'sw_partner_product.version as version'
+        ]);
+
+      if($f_provider != null){
+        $getDatas->where('sw_partner_product.provider_id', $f_provider);
+      }
+      if($f_partner != null){
+        $getDatas->where('sw_partner_product.partner_pulsa_id', $f_partner);
+      }
+      $getDatas = $getDatas->get();
+      
+      $start=1;
+      $Datatables = Datatables::of($getDatas)
+            ->addColumn('slno', function ($getData) use (&$start) {
+                return $start++;
+            })
+            ->editColumn('partner_pulsa_code',  function ($getData){
+                return $getData->partner_pulsa_code.' - '.$getData->partner_pulsa_name;
+            })
+            ->editColumn('provider_code',  function ($getData){
+                return $getData->provider_code.' - '.$getData->provider_name;
+            })
+            ->editColumn('product_code',  function ($getData){
+                return $getData->product_code.' - '.$getData->product_name;
+            })
+            ->addColumn('action', function ($getData) {
+              $actionHtml = '';
+              if (Auth::user()->can('update-partner-product')) {
+                $actionHtml = $actionHtml." 
+                  <a 
+                    href='".route('partner-product.edit', ['id' => $getData->partner_product_id, 'version' => $getData->version ])."''
+                    class='btn btn-xs btn-warning btn-sm' 
+                    data-toggle='tooltip'
+                    data-placement='top' 
+                    title='Ubah'
+                  ><i class='fa fa-pencil'></i></a>";
+              }
+              if (Auth::user()->can('delete-partner-product')) {
+                $actionHtml = $actionHtml." 
+                  <a 
+                    href='' 
+                    class='delete' 
+                    data-value='".$getData->partner_product_id."' 
+                    data-version='".$getData->version."' 
+                    data-toggle='modal' 
+                    data-target='.modal-delete'
+                  >
+                    <span 
+                      class='btn btn-xs btn-danger btn-sm' 
+                      data-toggle='tooltip' 
+                      data-placement='top' 
+                      title='Hapus'
+                    ><i class='fa fa-remove'></i></span>
+                  </a>";
+              }
+                return $actionHtml;
+            });
+
+      if (Auth::user()->can('activate-product-sell-price')) {
+        $Datatables = $Datatables->editColumn('active', function ($getData){
+          if($getData->active == 1){
+            return "
+              <a 
+                href='' 
+                class='unpublish' 
+                data-value='".$getData->partner_product_id."' 
+                data-version='".$getData->version."' 
+                data-toggle='modal' 
+                data-target='.modal-nonactive'
+              >
+                <span 
+                  class='label label-success' 
+                  data-toggle='tooltip' 
+                  data-placement='top' 
+                  title='Active'
+                >Active</span>
+              </a><br>";
+          }
+          else if($getData->active == 0){
+            return "
+              <a 
+                href='' 
+                class='publish' 
+                data-value='".$getData->partner_product_id."' 
+                data-version='".$getData->version."' 
+                data-toggle='modal' 
+                data-target='.modal-active'
+              >
+                <span 
+                  class='label label-danger' 
+                  data-toggle='tooltip' 
+                  data-placement='top' 
+                  title='Non Active'
+                >Non Active</span>
+              </a><br>";
+          }
+        });
+      }
+
+      $Datatables = $Datatables
+          ->escapeColumns(['*'])
+          ->make(true);
+
+      return $Datatables;
     }
 }

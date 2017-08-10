@@ -275,10 +275,28 @@ class ProductController extends Controller
 		if (Auth::user()->can('activate-product')) {
 			$Datatables = $Datatables->editColumn('active', function ($getProduct){
 				if($getProduct->active == 1){
-					return "<a href='' class='unpublish' data-value='".$getProduct->product_id."' data-version='".$getProduct->version."' data-toggle='modal' data-target='.modal-nonactive'><span class='label label-success' data-toggle='tooltip' data-placement='top' title='Active'>Active</span></a><br>";
+					return "
+						<a 
+							href='' 
+							class='unpublish' 
+							data-value='".$getProduct->product_id."' 
+							data-version='".$getProduct->version."' 
+							data-toggle='modal' 
+							data-target='.modal-nonactive'
+						><span class='label label-success' data-toggle='tooltip' data-placement='top' title='Active'>Active</span>
+						</a><br>";
 				}
 				else{
-					return "<a href='' class='publish' data-value='".$getProduct->product_id."' data-version='".$getProduct->version."' data-toggle='modal' data-target='.modal-nonactive'><span class='label label-success' data-toggle='tooltip' data-placement='top' title='Non Active'>Non Active</span></a><br>";
+					return "
+						<a 
+							href='' 
+							class='publish' 
+							data-value='".$getProduct->product_id."' 
+							data-version='".$getProduct->version."' 
+							data-toggle='modal' 
+							data-target='.modal-active'
+						><span class='label label-danger' data-toggle='tooltip' data-placement='top' title='Non Active'>Non Active</span>
+						</a><br>";
 				}
             });
 		}
