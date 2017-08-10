@@ -85,6 +85,8 @@ Route::get('/home', 'HomeController@index')
 		->name('partner-pulsa.delete')->middleware('can:delete-partner-pulsa');
 	Route::get('/partner-pulsa/actived/{id}/{version}/{status}', 'PartnerPulsaController@active')
 		->name('partner-pulsa.active')->middleware('can:activate-partner-pulsa');
+	Route::get('/partner-pulsa/yajra/getDatas', 'PartnerPulsaController@yajraGetData')
+		->name('partner-pulsa.yajra.getDatas');
 // partner pulsa
 
 // partner product
@@ -181,6 +183,9 @@ Route::get('/home', 'HomeController@index')
 	  ->name('product-sell-price.active');
 	Route::get('product-sell-price/delete/{id}', 'ProductSellPriceController@delete')
 	  ->name('product-sell-price.delete');
+
+	Route::get('/product-sell-price/yajra/getDatas/{request?}', 'ProductSellPriceController@yajraGetData')
+		->name('product-sell-price.yajra.getDatas');
 
 	  //----- Upload Excel
 	Route::get('product-sell-price/upload', 'ProductSellPriceController@upload')

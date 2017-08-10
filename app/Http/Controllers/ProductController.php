@@ -233,20 +233,22 @@ class ProductController extends Controller
 
 		$f_provider = $request->query('f_provider');
 
-    	$getProducts = Product::select([
-	    		'provider_id',
+    	$getProducts = Product::leftJoin('sw_provider', 'sw_provider.provider_id', 'sw_product.provider_id')
+	    	->select([
+	    		'sw_provider.provider_code as provider_code',
+	    		'sw_product.provider_id as provider_id',
 	    		'product_id',
 	    		'product_code',
 				'product_name',
 				'nominal',
 				'type',
 				'active',
-				'version'
+				'sw_product.version'
     		]);
 
     	if($f_provider != null)
 		{
-			$getProducts->where('provider_id', $f_provider);
+			$getProducts->where('sw_product.provider_id', $f_provider);
 		}
 
     	$getProducts = $getProducts->get();
@@ -255,9 +257,6 @@ class ProductController extends Controller
         $Datatables = Datatables::of($getProducts)
             ->addColumn('slno', function ($getProduct) use (&$start) {
                 return $start++;
-            })
-            ->addColumn('provider_code', function ($getProduct){
-                return $getProduct->provider->provider_code;
             })
             ->editColumn('nominal',  function ($getProduct){
                 return 'Rp. '.number_format($getProduct->nominal, 2);
