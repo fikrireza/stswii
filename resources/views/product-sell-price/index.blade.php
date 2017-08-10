@@ -164,6 +164,7 @@
               <th>Action</th>
             </tr>
           </thead>
+          {{--
           <tbody>
             @php
               $count=1;
@@ -205,6 +206,22 @@
             </tr>
             @endforeach
           </tbody>
+          --}}
+          <tfoot>
+            <tr>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              @can('activate-product-sell-price')
+              <th></th>
+              @endcan
+              <th></th>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>
@@ -221,8 +238,75 @@
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
 
+@if(isset($request))
 <script type="text/javascript">
-  $('#producttabel').DataTable();
+$(function() {
+    $('#producttabel').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('product-sell-price.yajra.getDatas') }}?f_provider={{ $request->f_provider }}&f_active={{ $request->f_active }}",
+        columns: [
+            {data: 'slno', name: 'No', orderable: false, searchable: false},
+            {data: 'product_name'},
+            {data: 'gross_sell_price'},
+            {data: 'flg_tax'},
+            {data: 'tax_percentage'},
+            {data: 'datetime_start'},
+            {data: 'datetime_end'},
+            @can('activate-product')
+              {data: 'active', name: 'Status', orderable: false, searchable: false},
+            @endcan
+            {data: 'action', name: 'Action', orderable: false, searchable: false}
+        ],
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                var input = document.createElement("input");
+                $(input).appendTo($(column.footer()).empty())
+                .on('change', function () {
+                    column.search($(this).val(), false, false, true).draw();
+                });
+            });
+        }
+    });
+});
+</script>
+@else
+<script type="text/javascript">
+$(function() {
+    $('#producttabel').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('product-sell-price.yajra.getDatas') }}",
+        columns: [
+            {data: 'slno', name: 'No', orderable: false, searchable: false},
+            {data: 'product_name'},
+            {data: 'gross_sell_price'},
+            {data: 'flg_tax'},
+            {data: 'tax_percentage'},
+            {data: 'datetime_start'},
+            {data: 'datetime_end'},
+            @can('activate-product')
+              {data: 'active', name: 'Status', orderable: false, searchable: false},
+            @endcan
+            {data: 'action', name: 'Action', orderable: false, searchable: false}
+        ],
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                var input = document.createElement("input");
+                $(input).appendTo($(column.footer()).empty())
+                .on('change', function () {
+                    column.search($(this).val(), false, false, true).draw();
+                });
+            });
+        }
+    });
+});
+</script>
+@endif
+
+<script type="text/javascript">
   $(function(){
     $('#producttabel').on('click','a.unpublish', function(){
       var a = $(this).data('value');
