@@ -7,14 +7,14 @@ use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class ProductTest extends DuskTestCase
+class ADProductTest extends DuskTestCase
 {
     /**
      * A Dusk test example.
      *
      * @return void
      */
-    public function testRead()
+    public function testReadProduct()
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::first())
@@ -28,7 +28,7 @@ class ProductTest extends DuskTestCase
         });
     }
 
-    public function testCreate()
+    public function testCreateProduct()
     {
         $product = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliet', 'Kilo', 'Lima', 'Mike', 'November', 'Oskar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'];
 
@@ -61,7 +61,7 @@ class ProductTest extends DuskTestCase
         });
     }
 
-    public function testValidation()
+    public function testValidationProduct()
     {
         $product = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliet', 'Kilo', 'Lima', 'Mike', 'November', 'Oskar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'];
 
@@ -122,7 +122,7 @@ class ProductTest extends DuskTestCase
         });
     }
 
-    public function testUpdate()
+    public function testUpdateProduct()
     {
         $product = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliet', 'Kilo', 'Lima', 'Mike', 'November', 'Oskar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'];
 
@@ -155,7 +155,7 @@ class ProductTest extends DuskTestCase
         });
     }
 
-    public function testDelete()
+    public function testDeleteProduct()
     {
 
         $this->browse(function ($browser){

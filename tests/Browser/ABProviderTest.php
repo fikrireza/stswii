@@ -8,14 +8,14 @@ use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class ProviderTest extends DuskTestCase
+class ABProviderTest extends DuskTestCase
 {
     /**
      * A Dusk test example.
      *
      * @return void
      */
-    public function testRead()
+    public function testReadProvider()
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::first())
@@ -29,7 +29,7 @@ class ProviderTest extends DuskTestCase
         });
     }
 
-    public function testCreate()
+    public function testCreateProvider()
     {
         $provider = ['Telkomsel', 'Indosat', 'XL', 'Axis', '3 Indonesia', 'BOLT!', 'Smartfren', 'PSN', 'Bakrie Telecom'];
 
@@ -51,7 +51,7 @@ class ProviderTest extends DuskTestCase
         });
     }
 
-    public function testValidation()
+    public function testValidationProvider()
     {
         $provider = ['Telkomsel', 'Indosat', 'XL', 'Axis', '3 Indonesia', 'BOLT!', 'Smartfren', 'PSN', 'Bakrie Telecom'];
 
@@ -92,7 +92,7 @@ class ProviderTest extends DuskTestCase
         });
     }
 
-    public function testEdit()
+    public function testUpdateProvider()
     {
         $provider = ['Telkomsel', 'Indosat', 'XL', 'Axis', '3 Indonesia', 'BOLT!', 'Smartfren', 'PSN', 'Bakrie Telecom'];
 
@@ -114,24 +114,24 @@ class ProviderTest extends DuskTestCase
                     ->pause(2000)
                     ->press('Submit')
                     ->pause(2000)
-                    ->assertSee($random);
+                    ->assertSeeIn('#dataTables tbody tr:nth-child(1) td:nth-child(2)',$random);
         });
     }
 
-    public function testDelete()
+    public function testDeleteProvider()
     {
         $this->browse(function ($browser){
             $browser->loginAs(User::first())
                     ->visit('/provider')
                     ->waitFor('#dataTables');
 
-            $text = strtoupper($browser->text('#dataTables tbody tr:nth-child(1) td:nth-child(1)'));
+            $text = strtoupper($browser->text('#dataTables tbody tr:nth-child(1) td:nth-child(2)'));
 
             $browser->click('#dataTables>tbody>tr:nth-child(1)>td:nth-last-child(1)>a:nth-child(3)')
                     ->pause(2000)
                     ->click('#setDelete')
                     ->pause(2000)
-                    ->assertDontSeeIn('#dataTables tbody tr:nth-child(1) td:nth-child(1)', $text);
+                    ->assertDontSeeIn('#dataTables tbody tr:nth-child(1) td:nth-child(2)', $text);
         });
     }
 }

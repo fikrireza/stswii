@@ -8,14 +8,14 @@ use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class ProviderPrefixTest extends DuskTestCase
+class ACProviderPrefixTest extends DuskTestCase
 {
     /**
      * A Dusk test example.
      *
      * @return void
      */
-    public function testRead()
+    public function testReadProviderPrefix()
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::first())
@@ -29,7 +29,7 @@ class ProviderPrefixTest extends DuskTestCase
         });
     }
 
-    public function testCreate()
+    public function testCreateProviderPrefix()
     {
         $random = str_pad(rand(800, 999), 4, '0', STR_PAD_LEFT);
 
@@ -49,7 +49,7 @@ class ProviderPrefixTest extends DuskTestCase
         });
     }
 
-    public function testValidation()
+    public function testValidationProviderPrefix()
     {
         $random = str_pad(rand(8000, 8999), 5, '0', STR_PAD_LEFT);
         $text = 'prefix number';
@@ -64,8 +64,11 @@ class ProviderPrefixTest extends DuskTestCase
                     ->select('provider_id')
                     ->pause(2000)
                     ->type('#prefix', $random)
-                    ->pause(2000)
-                    ->press('Submit')
+                    ->pause(2000);
+
+            $provider_id = $browser->value('select[name=provider_id]');
+
+            $browser->press('Submit')
                     ->pause(2000)
                     ->clickLink('Add')
                     ->pause(2000)
@@ -73,7 +76,7 @@ class ProviderPrefixTest extends DuskTestCase
                     ->pause(2000)
                     ->assertSeeIn('.modal-form-add div div form div div:nth-child(2) div code span', 'mohon isi')
                     ->assertSeeIn('.modal-form-add div div form div div:nth-child(3) div code span', 'mohon isi')
-                    ->select('#provider_id')
+                    ->select('#provider_id', $provider_id)
                     ->pause(2000)
                     ->type('#prefix', $random)
                     ->pause(2000)
@@ -88,7 +91,7 @@ class ProviderPrefixTest extends DuskTestCase
         });
     }
 
-    public function testEdit()
+    public function testUpdateProviderPrefix()
     {
         $random = str_pad(rand(8000, 8999), 5, '0', STR_PAD_LEFT);
 
@@ -104,11 +107,11 @@ class ProviderPrefixTest extends DuskTestCase
                     ->pause(2000)
                     ->press('Submit')
                     ->pause(2000)
-                    ->assertSee($random);
+                    ->assertSeeIn('#dataTables tbody tr:nth-child(1) td:nth-child(2)', $random);
         });
     }
 
-    public function testDelete()
+    public function testDeleteProviderPrefix()
     {
         $this->browse(function ($browser){
             $browser->loginAs(User::first())

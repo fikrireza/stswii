@@ -26,4 +26,5 @@ class LoginTest extends DuskTestCase
                     ->assertPathIs('/stswii/public/home');
         });
     }
+
 }

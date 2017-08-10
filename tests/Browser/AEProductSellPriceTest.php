@@ -7,14 +7,14 @@ use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class ProductSellPriceTest extends DuskTestCase
+class AEProductSellPriceTest extends DuskTestCase
 {
     /**
      * A Dusk test example.
      *
      * @return void
      */
-    public function testRead()
+    public function testReadProductSellPrice()
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::first())
@@ -28,7 +28,7 @@ class ProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function testReadUpload()
+    public function testReadUploadProductSellPrice()
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::first())
@@ -40,7 +40,7 @@ class ProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function testCreate()
+    public function testCreateProductSellPrice()
     {
         // disarankan untuk mengosongkan table produt sell price supaya bisa jalan dengan baik
         $nominal = rand(1,999) * 1000;
@@ -74,7 +74,7 @@ class ProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function testValidation()
+    public function testValidationProductSellPrice()
     {
         // disarankan untuk mengosongkan table produt sell price supaya bisa jalan dengan baik
         $nominal = rand(1,999) * 1000;
@@ -150,7 +150,7 @@ class ProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function testUpdate()
+    public function testUpdateProductSellPrice()
     {
         // disarankan untuk mengosongkan table produt sell price supaya bisa jalan dengan baik
         $nominal = rand(1,999) * 1000;
@@ -182,7 +182,7 @@ class ProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function testDelete()
+    public function testDeleteProductSellPrice()
     {
 
         $this->browse(function ($browser){
