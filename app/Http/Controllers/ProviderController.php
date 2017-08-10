@@ -30,9 +30,6 @@ class ProviderController extends Controller{
 
 
     public function index(){
-        $newProvCode = 'prov-'.rand(1000,9999);
-        $cekCode = Provider::where('provider_code', $newProvCode)->first();
-
         $getProvider = Provider::select([
 	    		'provider_id',
 				'provider_code',
@@ -40,15 +37,10 @@ class ProviderController extends Controller{
     		])
     		->get();
 
-        if(!$cekCode){
-          return view('provider.index', compact(
-				'newProvCode',
-				'getProvider'
-			));
-        }
-        else{
-           dd('Provider Code is Empty - Contact Amadeo Please');
-        }
+		return view('provider.index', compact(
+			'getProvider'
+		));
+       
     }
     public function ajaxView($id){
     	$getProvider = Provider::select(
@@ -111,11 +103,12 @@ class ProviderController extends Controller{
 			'provider_name.required' => 'mohon isi',
 			'provider_name.max' => 'Terlalu Panjang, Maks 25 Karakter',
 			'provider_name.unique' => 'Provider ini sudah ada',
+			'provider_code.required' => 'mohon isi',
 			'provider_code.unique' => 'Provider Code ini sudah ada',
 		];
 
 		$validator = Validator::make($request->all(), [
-			'provider_code' => 'unique:sw_provider',
+			'provider_code' => 'required|unique:sw_provider',
 			'provider_name' => 'required|unique:sw_provider|max:25',
 		], $message);
 
@@ -126,8 +119,8 @@ class ProviderController extends Controller{
 
 		DB::transaction(function () use($request) {
 			$save = new Provider;
-			$save->provider_code	= $request->provider_code;
-			$save->provider_name	= $request->provider_name;
+			$save->provider_code	= strtoupper($request->provider_code);
+			$save->provider_name	= strtoupper($request->provider_name);
 			$save->version 			= 0;
 			$save->create_user_id	= Auth::user()->id;
 			$save->create_datetime	= Carbon::now()->format('YmdHis');
@@ -146,10 +139,13 @@ class ProviderController extends Controller{
 			'provider_name.required' => 'mohon isi',
 			'provider_name.max' => 'Terlalu Panjang, Maks 25 Karakter',
 			'provider_name.unique' => 'Provider ini sudah ada',
+			'provider_code.required' => 'mohon isi',
+			'provider_code.unique' => 'Provider Code ini sudah ada',
 		];
 
 		$validator = Validator::make($request->all(), [
-			'provider_name' => 'required|unique:sw_provider|max:25',
+			'provider_code' => 'required|unique:sw_provider,provider_code,'.$request->provider_id.',provider_id',
+			'provider_name' => 'required|unique:sw_provider,provider_name,'.$request->provider_id.',provider_id|max:25',
 		], $message);
 
 		if($validator->fails()){
@@ -173,7 +169,8 @@ class ProviderController extends Controller{
 			$alret = 'alert-success';
 			DB::transaction(function () use($request, $update) {
 				$update->increment('version');
-				$update->provider_name	= $request->provider_name;
+				$update->provider_code	= strtoupper($request->provider_code);
+				$update->provider_name	= strtoupper($request->provider_name);
 				$update->update_user_id	= Auth::user()->id;
 				$update->update_datetime= Carbon::now()->format('YmdHis');
 				$update->update();
