@@ -29,26 +29,11 @@ class ProviderController extends Controller{
     }
 
 
-<<<<<<< HEAD
     public function index()
     {
       $getProvider = Provider::select(['provider_id','provider_code','provider_name'])->get();
 
       return view('provider.index', compact('newProvCode','getProvider'));
-=======
-    public function index(){
-        $getProvider = Provider::select([
-	    		'provider_id',
-				'provider_code',
-				'provider_name'
-    		])
-    		->get();
-
-		return view('provider.index', compact(
-			'getProvider'
-		));
-       
->>>>>>> d11c7ed01a6aad7c9681e4fd9717574ee352029b
     }
 
     public function ajaxView($id){
@@ -109,19 +94,11 @@ class ProviderController extends Controller{
     public function store(Request $request){
 
 		$message = [
-<<<<<<< HEAD
       'provider_name.required' => 'This field required',
 			'provider_name.max' => 'Too Long, Max 25 Character',
 			'provider_name.unique' => 'This Provider Name has already taken',
       'provider_code.required' => 'This field required',
 			'provider_code.unique' => 'This Provider Code has already taken',
-=======
-			'provider_name.required' => 'mohon isi',
-			'provider_name.max' => 'Terlalu Panjang, Maks 25 Karakter',
-			'provider_name.unique' => 'Provider ini sudah ada',
-			'provider_code.required' => 'mohon isi',
-			'provider_code.unique' => 'Provider Code ini sudah ada',
->>>>>>> d11c7ed01a6aad7c9681e4fd9717574ee352029b
 		];
 
 		$validator = Validator::make($request->all(), [
@@ -153,26 +130,12 @@ class ProviderController extends Controller{
 
     public function update(Request $request){
 		$message = [
-<<<<<<< HEAD
-			'provider_name.required' => 'This field required',
 			'provider_name.max' => 'Too Long, Max 25 Character',
 			'provider_name.unique' => 'This Provider Name has already taken',
 		];
 
 		$validator = Validator::make($request->all(), [
 			'provider_name' => 'required|max:25|unique:sw_provider',
-=======
-			'provider_name.required' => 'mohon isi',
-			'provider_name.max' => 'Terlalu Panjang, Maks 25 Karakter',
-			'provider_name.unique' => 'Provider ini sudah ada',
-			'provider_code.required' => 'mohon isi',
-			'provider_code.unique' => 'Provider Code ini sudah ada',
-		];
-
-		$validator = Validator::make($request->all(), [
-			'provider_code' => 'required|unique:sw_provider,provider_code,'.$request->provider_id.',provider_id',
-			'provider_name' => 'required|unique:sw_provider,provider_name,'.$request->provider_id.',provider_id|max:25',
->>>>>>> d11c7ed01a6aad7c9681e4fd9717574ee352029b
 		], $message);
 
 		if($validator->fails()){
@@ -196,10 +159,7 @@ class ProviderController extends Controller{
 			$alret = 'alert-success';
 			DB::transaction(function () use($request, $update) {
 				$update->increment('version');
-<<<<<<< HEAD
-=======
 				$update->provider_code	= strtoupper($request->provider_code);
->>>>>>> d11c7ed01a6aad7c9681e4fd9717574ee352029b
 				$update->provider_name	= strtoupper($request->provider_name);
 				$update->update_user_id	= Auth::user()->id;
 				$update->update_datetime= Carbon::now()->format('YmdHis');
