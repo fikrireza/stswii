@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Yajra\Datatables\Facades\Datatables;
 
 use App\Models\Product;
 use App\Models\Provider;
@@ -228,4 +229,71 @@ class ProductController extends Controller
 		return redirect()->route('product.index')->with('berhasil', 'Successfully Deleted ');
 	}
 
+	public function yajraGetData(Request $request){
+
+		$f_provider = $request->query('f_provider');
+
+    	$getProducts = Product::select([
+	    		'provider_id',
+	    		'product_id',
+	    		'product_code',
+				'product_name',
+				'nominal',
+				'type',
+				'active',
+				'version'
+    		]);
+
+    	if($f_provider != null)
+		{
+			$getProducts->where('provider_id', $f_provider);
+		}
+
+    	$getProducts = $getProducts->get();
+    	
+    	$start=1;
+        $Datatables = Datatables::of($getProducts)
+            ->addColumn('slno', function ($getProduct) use (&$start) {
+                return $start++;
+            })
+            ->addColumn('provider_code', function ($getProduct){
+                return $getProduct->provider->provider_code;
+            })
+            ->editColumn('nominal',  function ($getProduct){
+                return 'Rp. '.number_format($getProduct->nominal, 2);
+            })
+            ->addColumn('action', function ($getProduct) {
+            	$actionHtml = '';
+				if (Auth::user()->can('update-product')) {
+					$actionHtml = $actionHtml." <a href='".route('product.ubah',$getProduct->product_code)."'' class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Ubah'><i class='fa fa-pencil'></i></a>";
+				}
+				if (Auth::user()->can('delete-product')) {
+					$actionHtml = $actionHtml." <a href='' class='delete' data-value='".$getProduct->product_id."' data-version='".$getProduct->version."' data-toggle='modal' data-target='.modal-delete'><span class='btn btn-xs btn-danger btn-sm' data-toggle='tooltip' data-placement='top' title='Hapus'><i class='fa fa-remove'></i></span></a>";
+				}
+                return $actionHtml;
+            });
+
+		if (Auth::user()->can('activate-product')) {
+			$Datatables = $Datatables->editColumn('active', function ($getProduct){
+				if($getProduct->active == 1){
+					return "<a href='' class='unpublish' data-value='".$getProduct->product_id."' data-version='".$getProduct->version."' data-toggle='modal' data-target='.modal-nonactive'><span class='label label-success' data-toggle='tooltip' data-placement='top' title='Active'>Active</span></a><br>";
+				}
+				else{
+					return "<a href='' class='publish' data-value='".$getProduct->product_id."' data-version='".$getProduct->version."' data-toggle='modal' data-target='.modal-nonactive'><span class='label label-success' data-toggle='tooltip' data-placement='top' title='Non Active'>Non Active</span></a><br>";
+				}
+            });
+		}
+		else{
+            $Datatables = $Datatables->removeColumn('active');
+		}
+
+        $Datatables = $Datatables
+        	->removeColumn('provider_id')
+            ->removeColumn('product_id')
+            ->removeColumn('version')
+            ->escapeColumns(['*'])
+            ->make(true);
+
+        return $Datatables;
+    }
 }

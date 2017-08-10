@@ -323,6 +323,7 @@
         <table id="dataTables" class="table table-striped table-bordered no-footer" width="100%">
           <thead>
             <tr role="row">
+              <th>No</th>
               <th>Provider Code</th>
               <th>Provider Name</th>
               <th>Aksi</th>
@@ -341,15 +342,15 @@
 <script src="{{ asset('amadeo/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
 <script type="text/javascript">
-// $('#dataTables').DataTable();
 $(function() {
     $('#dataTables').DataTable({
         processing: true,
         serverSide: true,
         ajax: "{{ route('provider.yajra.getDatas') }}",
         columns: [
-            {data: 'provider_code', name: 'Provider Code'},
-            {data: 'provider_name', name: 'Provider Name'},
+            {data: 'slno', name: 'No'},
+            {data: 'provider_code'},
+            {data: 'provider_name'},
             {data: 'action', name: 'Action', orderable: false, searchable: false}
         ]
     });

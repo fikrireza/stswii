@@ -168,6 +168,13 @@
               <th>Action</th>
             </tr>
           </thead>
+          <tfoot>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tfoot>
         </table>
       </div>
     </div>
@@ -194,7 +201,17 @@ $(function() {
             {data: 'address'},
             {data: 'city'},
             {data: 'action', orderable: false, searchable: false },
-        ]
+        ],
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                var input = document.createElement("input");
+                $(input).appendTo($(column.footer()).empty())
+                .on('change', function () {
+                    column.search($(this).val(), false, false, true).draw();
+                });
+            });
+        }
     });
 
     $('#producttabel').on('click', '.update', function(e) {

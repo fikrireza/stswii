@@ -108,9 +108,6 @@
               <li class="{{ Route::is('paloma.transaction*') ? 'current-page' : '' }}">
                 <a href="{{ route('paloma.transaction.index') }}">Deposit Transaction</a>
               </li>
-              <li class="{{ Route::is('paloma.balance*') ? 'current-page' : '' }}">
-                <a href="#">Balance</a>
-              </li>
             </ul>
           </li>
         </ul>

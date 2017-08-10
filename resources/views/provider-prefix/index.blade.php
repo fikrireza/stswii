@@ -229,43 +229,6 @@
               <th>Aksi</th>
             </tr>
           </thead>
-          <tbody>
-            @php ($no = 1)
-            @foreach($getProviderPrefix as $list)
-            <tr>
-              <td>{{ $no++ }}</td>
-              <td>{{ $list->prefix or '-' }}</td>
-              <td>{{ $list->provider->provider_code or '-' }}</td>
-              <td>
-                @can('update-provider-prefix')
-                <a
-                  class="update"
-                  data-provider_id="{{ $list->provider_id }}"
-                  data-prefix_id="{{ $list->provider_prefix_id }}"
-                  data-prefix="{{ $list->prefix }}"
-                  data-version="{{ $list->version }}"
-                  data-toggle="modal"
-                  data-target=".modal-form-update"
-                >
-                  <span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>
-                </a>
-                @endcan
-                @can('delete-provider-prefix')
-                <a
-                  href=""
-                  class="delete"
-                  data-value="{{ $list->provider_prefix_id }}"
-                  data-version="{{ $list->version }}"
-                  data-toggle="modal"
-                  data-target=".modal-delete"
-                >
-                  <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span>
-                </a>
-                @endcan
-              </td>
-            </tr>
-            @endforeach
-          </tbody>
         </table>
       </div>
     </div>
@@ -279,7 +242,20 @@
 <script src="{{ asset('amadeo/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
 <script type="text/javascript">
-$('#dataTables').DataTable();
+// $('#dataTables').DataTable();
+$(function() {
+    $('#dataTables').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('provider-prefix.yajra.getDatas') }}",
+        columns: [
+            {data: 'slno', orderable: false, searchable: false},
+            {data: 'prefix',},
+            {data: 'provider_code'},
+            {data: 'action', orderable: false, searchable: false}
+        ]
+    });
+});
 
 function isNumber(evt) {
     evt = (evt) ? evt : window.event;
