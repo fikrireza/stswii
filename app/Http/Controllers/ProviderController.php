@@ -196,7 +196,11 @@ class ProviderController extends Controller{
     		])
     		->get();
 
+    	$start=1;
         return Datatables::of($getProviders)
+            ->addColumn('slno', function ($getProvider) use (&$start) {
+                return $start++;
+            })
             ->addColumn('action', function ($getProvider) {
             	$actionHtml = '';
             	if (Auth::user()->can('read-provider')) { // harusnya read provider prefix

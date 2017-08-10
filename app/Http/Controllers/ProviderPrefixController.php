@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Yajra\Datatables\Facades\Datatables;
 
 use App\Models\User;
 use App\Models\Provider;
@@ -156,5 +157,38 @@ class ProviderPrefixController extends Controller{
 		return redirect()->route('provider-prefix.index')
 			->with('alret', $alret)
 			->with('berhasil', $info);
+    }
+    public function yajraGetData(){
+
+    	$getProviderPrefixs = ProviderPrefix::select([
+	    		'provider_id',
+				'provider_prefix_id',
+				'prefix',
+				'version'
+    		])
+    		->get();
+
+    	$start=1;
+        return Datatables::of($getProviderPrefixs)
+            ->addColumn('slno', function ($getProviderPrefix) use (&$start) {
+                return $start++;
+            })
+            ->addColumn('provider_code', function ($getProviderPrefix){
+                return $getProviderPrefix->provider->provider_code;
+            })
+            ->addColumn('action', function ($getProviderPrefix) {
+            	$actionHtml = '';
+				if (Auth::user()->can('update-provider-prefix')) {
+					$actionHtml = $actionHtml." <a class='update' data-provider_id='".$getProviderPrefix->provider_id."' data-prefix_id='".$getProviderPrefix->provider_prefix_id."' data-prefix='".$getProviderPrefix->prefix."' data-version='".$getProviderPrefix->version."' data-toggle='modal' data-target='.modal-form-update'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Update'><i class='fa fa-pencil'></i></span></a>";
+				}
+				if (Auth::user()->can('delete-provider-prefix')) {
+					$actionHtml = $actionHtml."<a href='' class='delete' data-value='".$getProviderPrefix->provider_prefix_id."'data-version='".$getProviderPrefix->version."' data-toggle='modal' data-target='.modal-delete'><span class='btn btn-xs btn-danger btn-sm' data-toggle='tooltip' data-placement='top' title='Hapus'><i class='fa fa-remove'></i></span></a>";
+				}
+                return $actionHtml;
+            })
+            ->removeColumn('provider_id')
+            ->removeColumn('provider_prefix_id')
+            ->removeColumn('version')
+            ->make(true);
     }
 }

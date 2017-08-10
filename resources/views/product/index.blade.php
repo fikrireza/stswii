@@ -158,6 +158,7 @@
               <th>Action</th>
             </tr>
           </thead>
+          {{--
           <tbody>
             @php $count=1; @endphp
             @foreach ($index as $list)
@@ -190,6 +191,19 @@
             </tr>
             @endforeach
           </tbody>
+          --}}
+          <tfoot>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            @can('activate-product')
+            <td></td>
+            @endcan
+            <td></td>
+          </tfoot>
         </table>
       </div>
     </div>
@@ -206,27 +220,92 @@
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
 
+@if(isset($request))
 <script type="text/javascript">
-  $('#producttabel').DataTable();
-  $(function(){
-    $('#producttabel').on('click','a.unpublish', function(){
-      var a = $(this).data('value');
-      var b = $(this).data('version');
-      $('#setUnpublish').attr('href', "{{ url('/') }}/product/active/"+a+"?version="+b);
+$(function() {
+    $('#producttabel').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('product.yajra.getDatas') }}?f_provider={{ $request->f_provider }}",
+        columns: [
+            {data: 'slno', name: 'No', orderable: false, searchable: false},
+            {data: 'provider_code', name: 'Provider Code', orderable: false, searchable: false},
+            {data: 'product_code', name: 'Product Code'},
+            {data: 'product_name', name: 'Product Name'},
+            {data: 'nominal', name: 'Nominal'},
+            {data: 'type', name: 'Type Product'},
+            @can('activate-product')
+              {data: 'active', name: 'Status', orderable: false, searchable: false},
+            @endcan
+            {data: 'action', name: 'Action', orderable: false, searchable: false}
+        ],
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                var input = document.createElement("input");
+                $(input).appendTo($(column.footer()).empty())
+                .on('change', function () {
+                    column.search($(this).val(), false, false, true).draw();
+                });
+            });
+        }
     });
-  });
-  $(function(){
-    $('#producttabel').on('click', 'a.publish', function(){
-      var a = $(this).data('value');
-      var b = $(this).data('version');
-      $('#setPublish').attr('href', "{{ url('/') }}/product/active/"+a+"?version="+b);
+});
+</script>
+@else
+<script type="text/javascript">
+$(function() {
+    $('#producttabel').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('product.yajra.getDatas') }}",
+        columns: [
+            {data: 'slno', name: 'No', orderable: false, searchable: false},
+            {data: 'provider_code', name: 'Provider Code'},
+            {data: 'product_code', name: 'Product Code'},
+            {data: 'product_name', name: 'Product Name'},
+            {data: 'nominal', name: 'Nominal'},
+            {data: 'type', name: 'Type Product'},
+            @can('activate-product')
+              {data: 'active', name: 'Status', orderable: false, searchable: false},
+            @endcan
+            {data: 'action', name: 'Action', orderable: false, searchable: false}
+        ],
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                var input = document.createElement("input");
+                $(input).appendTo($(column.footer()).empty())
+                .on('change', function () {
+                    column.search($(this).val(), false, false, true).draw();
+                });
+            });
+        }
     });
+});
+</script>
+@endif
+
+<script type="text/javascript">
+$(function(){
+  $('#producttabel').on('click','a.unpublish', function(){
+    var a = $(this).data('value');
+    var b = $(this).data('version');
+    $('#setUnpublish').attr('href', "{{ url('/') }}/product/active/"+a+"?version="+b);
   });
-  $(function(){
-    $('#producttabel').on('click', 'a.delete', function(){
-      var a = $(this).data('value');
-      $('#setDelete').attr('href', "{{ url('/') }}/product/delete/"+a);
-    });
+});
+$(function(){
+  $('#producttabel').on('click', 'a.publish', function(){
+    var a = $(this).data('value');
+    var b = $(this).data('version');
+    $('#setPublish').attr('href', "{{ url('/') }}/product/active/"+a+"?version="+b);
   });
+});
+$(function(){
+  $('#producttabel').on('click', 'a.delete', function(){
+    var a = $(this).data('value');
+    $('#setDelete').attr('href', "{{ url('/') }}/product/delete/"+a);
+  });
+});
 </script>
 @endsection

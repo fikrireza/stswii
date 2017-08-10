@@ -44,6 +44,8 @@ Route::get('/home', 'HomeController@index')
 		->name('provider-prefix.update');
 	Route::get('/provider-prefix/delete/{id}/{version}', 'ProviderPrefixController@delete')
 		->name('provider-prefix.delete');
+	Route::get('/provider-prefix/yajra/getDatas', 'ProviderPrefixController@yajraGetData')
+		->name('provider-prefix.yajra.getDatas');
 // provider prefix
 
 // agent
@@ -158,6 +160,8 @@ Route::get('/home', 'HomeController@index')
 		->name('product.active');
 	Route::get('product/delete/{id}', 'ProductController@delete')
 		->name('product.delete');
+	Route::get('/product/yajra/getDatas/{request?}', 'ProductController@yajraGetData')
+		->name('product.yajra.getDatas');
 //----- PRODUCT -----//
 
 //----- PRODUCT SELL PRICE -----//
@@ -203,13 +207,14 @@ Route::get('/home', 'HomeController@index')
 //----- Management Account -----//
 
 //------- Deposit Agent -------//
-Route::get('deposit-agent-confirm', 'DepositAgentController@indexConfirm')->name('deposit-agent-confirm.index');
-Route::post('deposit-agent-confirm', 'DepositAgentController@getUniqueCode')->name('deposit-agent-confirm.getUniqueCode');
-Route::post('deposit-agent-proses-confirm', 'DepositAgentController@confirm')->name('deposit-agent.confirm');
-Route::get('getUnconfirmedUniqueCodes', 'DepositAgentController@getUnconfirmedUniqueCodes');
+	Route::get('deposit-agent-confirm', 'DepositAgentController@indexConfirm')->name('deposit-agent-confirm.index');
+	Route::post('deposit-agent-confirm', 'DepositAgentController@getUniqueCode')->name('deposit-agent-confirm.getUniqueCode');
+	Route::post('deposit-agent-proses-confirm', 'DepositAgentController@confirm')->name('deposit-agent.confirm');
+	Route::get('getUnconfirmedUniqueCodes', 'DepositAgentController@getUnconfirmedUniqueCodes');
 
 
-Route::get('deposit-agent-confirmed-top-up', 'DepositAgentController@indexConfirmTopUp')->name('deposit-agent-reversal.index');
-Route::post('deposit-agent-confirmed-top-up', 'DepositAgentController@getRangeDate')->name('deposit-agent-reversal.getRangeDate');
-Route::post('deposit-agent-proses-reversal', 'DepositAgentController@reversalTrx')->name('deposit-agent-reversal.reversalTrx');
-Route::get('getConfirmedTopUp', 'DepositAgentController@getConfirmedTopUp');
+	Route::get('deposit-agent-confirmed-top-up', 'DepositAgentController@indexConfirmTopUp')->name('deposit-agent-reversal.index');
+	Route::post('deposit-agent-confirmed-top-up', 'DepositAgentController@getRangeDate')->name('deposit-agent-reversal.getRangeDate');
+	Route::post('deposit-agent-proses-reversal', 'DepositAgentController@reversalTrx')->name('deposit-agent-reversal.reversalTrx');
+	Route::get('getConfirmedTopUp', 'DepositAgentController@getConfirmedTopUp');
+//------- Deposit Agent -------//
