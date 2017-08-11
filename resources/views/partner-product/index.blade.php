@@ -264,13 +264,13 @@ $(function(){
   $(document).on('click', 'a.publish', function(){
     var a = $(this).data('value');
     var b = $(this).data('version');
-    $('#setPublish').attr('href', "{{ url('/') }}/partner-product/actived/"+a+"/"+b+"/1");
+    $('#setPublish').attr('href', "{{ url('/') }}/partner-product/actived/"+a+"/"+b+"/Y");
   });
 
   $(document).on('click','a.unpublish', function(){
     var a = $(this).data('value');
     var b = $(this).data('version');
-    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-product/actived/"+a+"/"+b+"/0");
+    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-product/actived/"+a+"/"+b+"/N");
   });
   @endcan
 });

@@ -94,7 +94,7 @@ class ProductController extends Controller
 		$index->nominal      = $request->nominal;
 		$index->type = $request->type;
 
-		$index->active = isset($request->active) ? 1 : 0;
+		$index->active = isset($request->active) ? "Y" : "N";
 
 		if(isset($request->active))
 		{
@@ -166,7 +166,7 @@ class ProductController extends Controller
 		$index->nominal      = $request->nominal;
 		$index->type = $request->type;
 
-		$index->active = isset($request->active) ? 1 : 0;
+		$index->active = isset($request->active) ? "Y" : "N";
 
 		if(isset($request->active))
 		{
@@ -197,7 +197,7 @@ class ProductController extends Controller
 
 		if ($index->active) {
 
-			$index->active = 0;
+			$index->active = "N";
 			$index->non_active_datetime = date('YmdHis');
 
 			$index->version += 1;
@@ -209,7 +209,7 @@ class ProductController extends Controller
 			return redirect()->route('product.index')->with('berhasil', 'Successfully Nonactive');
 		}else{
 
-			$index->active = 1;
+			$index->active = "Y";
 			$index->active_datetime = date('YmdHis');
 
 			$index->version += 1;
@@ -252,7 +252,7 @@ class ProductController extends Controller
 		}
 
     	$getProducts = $getProducts->get();
-    	
+
     	$start=1;
         $Datatables = Datatables::of($getProducts)
             ->addColumn('slno', function ($getProduct) use (&$start) {
@@ -274,26 +274,26 @@ class ProductController extends Controller
 
 		if (Auth::user()->can('activate-product')) {
 			$Datatables = $Datatables->editColumn('active', function ($getProduct){
-				if($getProduct->active == 1){
+				if($getProduct->active == "Y"){
 					return "
-						<a 
-							href='' 
-							class='unpublish' 
-							data-value='".$getProduct->product_id."' 
-							data-version='".$getProduct->version."' 
-							data-toggle='modal' 
+						<a
+							href=''
+							class='unpublish'
+							data-value='".$getProduct->product_id."'
+							data-version='".$getProduct->version."'
+							data-toggle='modal'
 							data-target='.modal-nonactive'
 						><span class='label label-success' data-toggle='tooltip' data-placement='top' title='Active'>Active</span>
 						</a><br>";
 				}
 				else{
 					return "
-						<a 
-							href='' 
-							class='publish' 
-							data-value='".$getProduct->product_id."' 
-							data-version='".$getProduct->version."' 
-							data-toggle='modal' 
+						<a
+							href=''
+							class='publish'
+							data-value='".$getProduct->product_id."'
+							data-version='".$getProduct->version."'
+							data-toggle='modal'
 							data-target='.modal-active'
 						><span class='label label-danger' data-toggle='tooltip' data-placement='top' title='Non Active'>Non Active</span>
 						</a><br>";
