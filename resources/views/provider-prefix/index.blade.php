@@ -229,6 +229,12 @@
               <th>Aksi</th>
             </tr>
           </thead>
+          <tfoot>
+            <td></td>
+            <th></th>
+            <th></th>
+            <td></td>
+          </tfoot>
         </table>
       </div>
     </div>
@@ -242,7 +248,6 @@
 <script src="{{ asset('amadeo/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
 <script type="text/javascript">
-// $('#dataTables').DataTable();
 $(function() {
     $('#dataTables').DataTable({
         processing: true,
@@ -254,6 +259,23 @@ $(function() {
             {data: 'provider_code'},
             {data: 'action', orderable: false, searchable: false}
         ]
+    });
+
+    $('#dataTables tfoot th').each( function () {
+      var title = $(this).text();
+      $(this).html( '<input type="text" class="form-control" style="border:1px solid #ceeae8; width:100%" />' );
+    });
+
+    var table = $('#dataTables').DataTable();
+    table.columns().every( function () {
+        var that = this;
+        $( 'input', this.footer() ).on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+                that
+                .search( this.value )
+                .draw();
+            }
+        });
     });
 });
 

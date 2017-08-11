@@ -198,13 +198,13 @@
           <tfoot>
             <tr>
               <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
               @can('activate-partner-pulsa')
-              <td></td>
+              <th></th>
               @endcan
               <td></td>
             </tr>
@@ -238,17 +238,24 @@ $(function() {
               {data: 'active', orderable: false, searchable: false},
             @endcan
             {data: 'action', name: 'Action', orderable: false, searchable: false}
-        ],
-        initComplete: function () {
-            this.api().columns().every(function () {
-                var column = this;
-                var input = document.createElement("input");
-                $(input).appendTo($(column.footer()).empty())
-                .on('change', function () {
-                    column.search($(this).val(), false, false, true).draw();
-                });
-            });
-        }
+        ]
+    });
+
+    $('#dataTables tfoot th').each( function () {
+      var title = $(this).text();
+      $(this).html( '<input type="text" class="form-control" style="border:1px solid #ceeae8; width:100%" />' );
+    });
+
+    var table = $('#dataTables').DataTable();
+    table.columns().every( function () {
+        var that = this;
+        $( 'input', this.footer() ).on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+                that
+                .search( this.value )
+                .draw();
+            }
+        });
     });
 });
 

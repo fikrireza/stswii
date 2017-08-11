@@ -114,7 +114,7 @@
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
-        <table id="producttabel" class="table table-striped table-bordered no-footer" width="100%">
+        <table id="usertable" class="table table-striped table-bordered no-footer" width="100%">
           <thead>
             <tr role="row">
               <th>No</th>
@@ -161,6 +161,15 @@
             </tr>
             @endforeach
           </tbody>
+          <tfoot>
+            <td></td>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <td></td>
+            <td></td>
+          </tfoot>
         </table>
       </div>
     </div>
@@ -176,7 +185,24 @@
 <script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
 
 <script type="text/javascript">
-  $('#producttabel').DataTable();
+  $('#usertable').DataTable();
+
+  $('#usertable tfoot th').each( function () {
+    var title = $(this).text();
+    $(this).html( '<input type="text" class="form-control" style="border:1px solid #ceeae8; width:100%" />' );
+  });
+
+  var table = $('#usertable').DataTable();
+  table.columns().every( function () {
+      var that = this;
+      $( 'input', this.footer() ).on( 'keyup change', function () {
+          if ( that.search() !== this.value ) {
+              that
+              .search( this.value )
+              .draw();
+          }
+      });
+  });
 
   $(function(){
     @can('reset-user')

@@ -114,8 +114,8 @@
           <select name="f_provider" class="form-control" onchange="this.form.submit()">
             <option value="">Filter Provider</option>
             @foreach($provider as $list)
-                <option 
-                  value="{{$list->provider_id}}" 
+                <option
+                  value="{{$list->provider_id}}"
                   @if($request->f_provider == $list->provider_id) selected @endif
                 >
                   {{$list->provider_name}}
@@ -125,8 +125,8 @@
           <select name="f_partner" class="form-control" onchange="this.form.submit()">
             <option value="">Filter Partner</option>
             @foreach($partner as $list)
-                <option 
-                  value="{{$list->partner_pulsa_id}}" 
+                <option
+                  value="{{$list->partner_pulsa_id}}"
                   @if($request->f_partner == $list->partner_pulsa_id) selected @endif
                 >
                   {{$list->partner_pulsa_name."/".$list->partner_pulsa_code}}
@@ -160,15 +160,15 @@
           <tfoot>
             <tr>
               <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
               @can('activate-partner-product-purch-price')
-              <td></td>
+              <th></th>
               @endcan
               <td></td>
             </tr>
@@ -206,17 +206,24 @@ $(function() {
               {data: 'active', name: 'Status', orderable: false, searchable: false},
             @endcan
             {data: 'action', name: 'Action', orderable: false, searchable: false}
-        ],
-        initComplete: function () {
-            this.api().columns().every(function () {
-                var column = this;
-                var input = document.createElement("input");
-                $(input).appendTo($(column.footer()).empty())
-                .on('change', function () {
-                    column.search($(this).val(), false, false, true).draw();
-                });
-            });
-        }
+        ]
+    });
+
+    $('#dataTables tfoot th').each( function () {
+      var title = $(this).text();
+      $(this).html( '<input type="text" class="form-control" style="border:1px solid #ceeae8; width:100%" />' );
+    });
+
+    var table = $('#dataTables').DataTable();
+    table.columns().every( function () {
+        var that = this;
+        $( 'input', this.footer() ).on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+                that
+                .search( this.value )
+                .draw();
+            }
+        });
     });
 });
 </script>

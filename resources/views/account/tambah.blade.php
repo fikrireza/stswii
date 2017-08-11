@@ -42,7 +42,7 @@
         <div class="clearfix"></div>
       </div>
       <div class="x_content">
-        <form action="{{ route('account.store') }}" method="POST" class="form-horizontal form-label-left" novalidate>
+        <form action="{{ route('account.store') }}" method="POST" class="form-horizontal form-label-left" novalidate enctype="multipart/form-data">
           {{ csrf_field() }}
           <div class="item form-group {{ $errors->has('name') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Name <span class="required">*</span></label>
@@ -87,7 +87,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input type="checkbox" class="flat" name="active" value="1" />
+                <input type="checkbox" class="flat" name="active" value="1" {{ old('active') == '1' ? 'checked=""' : '' }} />
               </label>
             </div>
           </div>

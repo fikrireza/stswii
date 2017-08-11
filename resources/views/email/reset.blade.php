@@ -9,7 +9,7 @@
     </p>
 
     <p>
-      Anda telah didaftarkan sebagai pengelola web admin.
+      Akun anda telah direset.
       <br>Silahkan klik link berikut untuk aktifasi akun kamu :
       <br>
       <br>

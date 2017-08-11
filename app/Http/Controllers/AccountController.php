@@ -13,6 +13,7 @@ use Auth;
 use Validator;
 use Hash;
 use Image;
+use Mail;
 
 class AccountController extends Controller
 {
@@ -55,7 +56,7 @@ class AccountController extends Controller
 
         $validator = Validator::make($request->all(), [
           'name' => 'required',
-          'email' => 'required|email|unique:sw_users',
+          'email' => 'required|email|unique:wa_users',
           'avatar' => 'image|mimes:jpeg,bmp,png|max:1000'
         ], $message);
 
@@ -65,31 +66,38 @@ class AccountController extends Controller
         }
 
         DB::transaction(function() use($request){
+
+          if($request->file('avatar')){
+            $img_url = str_slug($request->file('avatar'),'-').'.' . $request->file('avatar')->getClientOriginalExtension();
+            Image::make($request->file('avatar'))->fit(250,250)->save('amadeo/images/profile/'. $img_url);
+          }else{
+            $img_url = 'user.png';
+          }
+
           $confirmation_code = str_random(30).time();
           $userSave = User::create([
             'name' => $request->name,
-            'avatar' => 'user.png',
+            'avatar' => $img_url,
             'email' => $request->email,
             'password' => Hash::make(12345678),
-            'confirmed' => 0,
+            'confirmed' => $request->active,
             'login_count' => 0,
             'confirmation_code' => $confirmation_code,
-            'api_token' => base64_encode(openssl_random_pseudo_bytes(60)),
+            'api_token' => rtrim(base64_encode(md5(microtime())),"="),
           ]);
 
           foreach ($request->role as $key) {
             $role = RoleUser::firstOrCreate(['user_id' => $userSave->id, 'role_id' => $key]);
           }
 
-          // $data = array([
-          //     'name' => $request->name,
-          //     'email' => $request->email,
-          //     'confirmation_code' => $confirmation_code
-          //   ]);
-          //
-          // Mail::send('email.confirm', ['data' => $data], function($message) use ($data) {
-          //   $message->to($data[0]['email'], $data[0]['name'])->subject('Aktifasi Akun Web Admin');
-          // });
+          $data = array([
+              'name' => $request->name,
+              'email' => $request->email,
+            ]);
+
+          Mail::send('email.confirm', ['data' => $data], function($message) use ($data) {
+            $message->to($data[0]['email'], $data[0]['name'])->subject('Aktifasi Akun Web Admin');
+          });
 
         });
 
@@ -122,7 +130,7 @@ class AccountController extends Controller
 
       $validator = Validator::make($request->all(), [
         'name' => 'required',
-        'email' => 'required|email|unique:sw_users,email,'.$request->id,
+        'email' => 'required|email|unique:wa_users,email,'.$request->id,
         'avatar' => 'image|mimes:jpeg,bmp,png|max:1000'
       ], $message);
 
@@ -178,17 +186,17 @@ class AccountController extends Controller
           auth()->logout();
       }
 
-      // $data = array([
-      //   'name' => $getUser->name,
-      //   'email' => $getUser->email,
-      //   'password' => 12345678
-      // ]);
-      //
-      // Mail::send('email.reset', ['data' => $data], function($message) use ($data) {
-      //   $message->from('administrator@amadeo.id', 'Administrator')
-      //           ->to($data[0]['email'], $data[0]['name'])
-      //           ->subject('Reset Password Akun Web Admin');
-      // });
+      $data = array([
+        'name' => $getUser->name,
+        'email' => $getUser->email,
+        'password' => 12345678
+      ]);
+
+      Mail::send('email.reset', ['data' => $data], function($message) use ($data) {
+        $message->from('administrator@amadeo.id', 'Administrator')
+                ->to($data[0]['email'], $data[0]['name'])
+                ->subject('Reset Password Akun Web Admin');
+      });
 
       return redirect()->route('account.index')->with('berhasil', 'Password user '.$getUser->name.' Has been reset');
     }

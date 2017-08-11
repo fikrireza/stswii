@@ -158,9 +158,10 @@
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
-        <table id="producttabel" class="table table-striped table-bordered no-footer" width="100%">
+        <table id="agenttable" class="table table-striped table-bordered no-footer" width="100%">
           <thead>
             <tr role="row">
+              <th>No</th>
               <th>Name</th>
               <th>Phone</th>
               <th>Address</th>
@@ -170,9 +171,10 @@
           </thead>
           <tfoot>
             <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
             <td></td>
           </tfoot>
         </table>
@@ -191,27 +193,35 @@
 
 <script type="text/javascript">
 $(function() {
-    $('#producttabel').DataTable({
+    $('#agenttable').DataTable({
         processing: true,
         serverSide: true,
         ajax: '{{route('agent.getDatas')}}',
         columns: [
+            {data: 'slno', name: 'No', orderable: false, searchable: false},
             {data: 'agent_name'},
             {data: 'phone_number'},
             {data: 'address'},
             {data: 'city'},
             {data: 'action', orderable: false, searchable: false },
-        ],
-        initComplete: function () {
-            this.api().columns().every(function () {
-                var column = this;
-                var input = document.createElement("input");
-                $(input).appendTo($(column.footer()).empty())
-                .on('change', function () {
-                    column.search($(this).val(), false, false, true).draw();
-                });
-            });
-        }
+        ]
+    });
+
+    $('#agenttable tfoot th').each( function () {
+      var title = $(this).text();
+      $(this).html( '<input type="text" class="form-control" style="border:1px solid #ceeae8; width:100%" />' );
+    });
+
+    var table = $('#agenttable').DataTable();
+    table.columns().every( function () {
+        var that = this;
+        $( 'input', this.footer() ).on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+                that
+                .search( this.value )
+                .draw();
+            }
+        });
     });
 
     $('#producttabel').on('click', '.update', function(e) {

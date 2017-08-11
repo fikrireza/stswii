@@ -20,7 +20,7 @@ class AgentController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
 
   	function index(){
   		$getData = Agent::get();
@@ -39,21 +39,25 @@ class AgentController extends Controller
         )
       ->get();
 
+      $start=1;
   		return Datatables::of($index)
-  				->addColumn('action', function($index) {
-  					$html = '';
-  					if (Auth::user()->can('update-agent')) {
-  						$html .=
-  						"
-  						<a class=\"update\" data-id='".$index->agent_id."' data-name='".$index->agent_name."' data-phone='".$index->phone_number."' data-address='".$index->address."' data-city='".$index->city."' data-version='".$index->version."' data-toggle='modal' data-target='.modal-form-update'>
-  							<span class=\"btn btn-xs btn-warning btn-sm\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Update\"><i class=\"fa fa-pencil\"></i></span>
-  						</a>
-  						";
-  					}
-  					return $html;
-                  })
-          ->removeColumn('version')
-  				->make(true);
+        ->addColumn('slno', function ($index) use (&$start) {
+            return $start++;
+        })
+				->addColumn('action', function($index) {
+					$html = '';
+					if (Auth::user()->can('update-agent')) {
+						$html .=
+						"
+						<a class=\"update\" data-id='".$index->agent_id."' data-name='".$index->agent_name."' data-phone='".$index->phone_number."' data-address='".$index->address."' data-city='".$index->city."' data-version='".$index->version."' data-toggle='modal' data-target='.modal-form-update'>
+							<span class=\"btn btn-xs btn-warning btn-sm\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Update\"><i class=\"fa fa-pencil\"></i></span>
+						</a>
+						";
+					}
+					return $html;
+                })
+        ->removeColumn('version')
+				->make(true);
   	}
 
   	function edit($id){
