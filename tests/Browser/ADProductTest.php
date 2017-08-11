@@ -10,11 +10,11 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class ADProductTest extends DuskTestCase
 {
     /**
-     * A Dusk test example.
+     * A Dusk skip example.
      *
      * @return void
      */
-    public function testReadProduct()
+    public function skipReadProduct()
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::first())
@@ -28,7 +28,7 @@ class ADProductTest extends DuskTestCase
         });
     }
 
-    public function testCreateProduct()
+    public function skipCreateProduct()
     {
         $product = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliet', 'Kilo', 'Lima', 'Mike', 'November', 'Oskar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'];
 
@@ -61,7 +61,7 @@ class ADProductTest extends DuskTestCase
         });
     }
 
-    public function testValidationProduct()
+    public function skipValidationProduct()
     {
         $product = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliet', 'Kilo', 'Lima', 'Mike', 'November', 'Oskar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'];
 
@@ -122,7 +122,7 @@ class ADProductTest extends DuskTestCase
         });
     }
 
-    public function testUpdateProduct()
+    public function skipUpdateProduct()
     {
         $product = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliet', 'Kilo', 'Lima', 'Mike', 'November', 'Oskar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'];
 
@@ -155,7 +155,7 @@ class ADProductTest extends DuskTestCase
         });
     }
 
-    public function testDeleteProduct()
+    public function skipDeleteProduct()
     {
 
         $this->browse(function ($browser){

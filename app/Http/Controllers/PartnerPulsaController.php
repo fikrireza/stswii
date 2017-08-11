@@ -64,21 +64,21 @@ class PartnerPulsaController extends Controller
 
     public function store(Request $request){
       $message = [
-  			'partner_pulsa_code.required' => 'mohon isi',
-  			'partner_pulsa_code.max' => 'Terlalu Panjang, Maks 25 Karakter',
-  			'partner_pulsa_code.unique' => 'Produk ini sudah ada',
-  			'partner_pulsa_name.required' => 'mohon isi',
-        'description.required' => 'mohon isi',
-        'type_top.required' => 'mohon isi',
-  			// 'payment_termin.required' => 'mohon isi',
+  			'partner_pulsa_code.required' => 'This field required',
+  			'partner_pulsa_code.max' => 'Maximum character 25',
+  			'partner_pulsa_code.unique' => 'Partner Pulsa Code already exist',
+  			'partner_pulsa_name.required' => 'This field required',
+        'description.required' => 'This field required',
+        'type_top.required' => 'This field required',
+  			'payment_termin.required_if' => 'This field required',
   		];
 
   		$validator = Validator::make($request->all(), [
-  			'partner_pulsa_code' => 'required|unique:sw_partner_pulsa',
+  			'partner_pulsa_code' => 'required|unique:sw_partner_pulsa|max:25',
   			'partner_pulsa_name' => 'required',
         'description' => 'required',
         'type_top' => 'required',
-  			// 'payment_termin' => 'required',
+  			'payment_termin' => 'required_if:type_top,TERMIN',
   		], $message);
 
   		if($validator->fails()){
@@ -89,37 +89,37 @@ class PartnerPulsaController extends Controller
   		DB::transaction(function () use($request) {
   			$save = new PartnerPulsa;
 
-  			$save->partner_pulsa_code  = $request->partner_pulsa_code;
+  			$save->partner_pulsa_code  = strtoupper($request->partner_pulsa_code);
   			$save->partner_pulsa_name  = $request->partner_pulsa_name;
         $save->description         = $request->description;
         $save->type_top            = $request->type_top;
-  			$save->payment_termin      = $request->type_top == 'TERMIN' ? 1 : 0;
-  			$save->active              = /*isset($request->active) ? */1/* : 0*/;
-  			$save->active_datetime     = Carbon::now()->format('YmdHis');
-  			$save->non_active_datetime = '';
+  			$save->payment_termin      = $request->type_top == 'TERMIN' ? $request->payment_termin : 0;
+  			$save->active              = isset($request->active) ? 1 : 0;
+  			$save->active_datetime     = isset($request->active) ? Carbon::now()->format('YmdHis') : '00000000000000';
+  			$save->non_active_datetime = !isset($request->active) ? Carbon::now()->format('YmdHis') : '00000000000000';
   			$save->version 		         = 0;
   			$save->create_user_id	     = Auth::user()->id;
         $save->create_datetime     = Carbon::now()->format('YmdHis');
-        $save->update_user_id      = 0;/*Auth::user()->id*/
-        $save->update_datetime     = '';
+        $save->update_user_id      = -99;
+        $save->update_datetime     = '00000000000000';
   			$save->save();
   		});
 
   		return redirect()->route('partner-pulsa.index')
         ->with('alret', 'alert-success')
-        ->with('berhasil', 'Berhasil Menambahkan Partner '.$request->partner_pulsa_name);
+        ->with('berhasil', 'Your data has been successfully saved. '.$request->partner_pulsa_name);
     }
 
     public function active($id, $version, $status){
       $getPartnerPulsa = PartnerPulsa::find($id);
 
       if($getPartnerPulsa == null){
-        $info = 'Status Partner gagal diubah! Tidak dapat menemukan Partner!';
+        $info = 'Failed to update partner pulsa not found';
         $alret = 'alert-danger';
       }
       else if($getPartnerPulsa->version != $version){
         $User = User::find($getPartnerPulsa->update_user_id);
-        $info = 'Status Partner gagal diubah! Data Partner telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
+        $info = 'Failed to update Partner Pulsa already updeted by '.$User->name.'. Harap periksa kembali!';
         $alret = 'alert-danger';
       }
       else{
@@ -149,13 +149,13 @@ class PartnerPulsaController extends Controller
 
       if($getPartnerPulsa == null){
         $retrun = 'index';
-        $info = 'Tidak dapat menemukan Partner!';
+        $info = 'partner pulsa not found';
         $alret = 'alert-danger';
       }
       else if($getPartnerPulsa->version != $version){
         $User = User::find($getPartnerPulsa->update_user_id);
         $retrun = 'index';
-        $info = 'Data Partner telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
+        $info = 'Partner Pulsa already updeted by '.$User->name.'. Harap periksa kembali!';
         $alret = 'alert-danger';
       }
       else{
@@ -174,17 +174,21 @@ class PartnerPulsaController extends Controller
 
     public function update($id, $version, Request $request){
       $message = [
-        'partner_pulsa_name.required' => 'mohon isi',
-        'description.required' => 'mohon isi',
-        'type_top.required' => 'mohon isi',
-        // 'payment_termin.required' => 'mohon isi',
+        'partner_pulsa_code.required' => 'This field required',
+        'partner_pulsa_code.max' => 'Maximum character 25',
+        'partner_pulsa_code.unique' => 'Partner Pulsa Code already exist',
+        'partner_pulsa_name.required' => 'This field required',
+        'description.required' => 'This field required',
+        'type_top.required' => 'This field required',
+        'payment_termin.required_if' => 'This field required',
       ];
 
       $validator = Validator::make($request->all(), [
+        'partner_pulsa_code' => 'required|max:25|unique:sw_partner_pulsa,partner_pulsa_code,'.$request->partner_pulsa_id.',partner_pulsa_id',
         'partner_pulsa_name' => 'required',
         'description' => 'required',
         'type_top' => 'required',
-        // 'payment_termin' => 'required',
+        'payment_termin' => 'required_if:type_top,TERMIN',
       ], $message);
 
   		if($validator->fails()){
@@ -197,23 +201,24 @@ class PartnerPulsaController extends Controller
       $update = PartnerPulsa::find($request->partner_pulsa_id);
 
       if($update == null){
-        $info = 'Data Partner gagal diubah! Tidak dapat menemukan Partner!';
+        $info = 'Data Partner Pulsa Not Found!';
         $alret = 'alert-danger';
       }
       else if($update->version != $request->version){
         $User = User::find($update->update_user_id);
-        $info = 'Data Partner gagal diubah! Data Partner telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
+        $info = 'Data Partner Pulsa already updated by '.$User->name.'. Please check again';
         $alret = 'alert-danger';
       }
       else{
-        $info = 'Berhasil Memperbarui Data Partner '.$update->partner_pulsa_name;
+        $info = 'Your data has been successfully saved. '.$update->partner_pulsa_name;
         $alret = 'alert-success';
         DB::transaction(function () use($update, $request) {
           $update->increment('version');
+          $update->partner_pulsa_code = strtoupper($request->partner_pulsa_code);
           $update->partner_pulsa_name = $request->partner_pulsa_name;
           $update->description        = $request->description;
           $update->type_top           = $request->type_top;
-          $update->payment_termin     = $request->type_top == 'TERMIN' ? 1 : 0;
+          $update->payment_termin     = $request->type_top == 'TERMIN' ? $request->payment_termin : 0;
           $update->update_user_id     = Auth::user()->id;
           $update->update_datetime    = Carbon::now()->format('YmdHis');
           $update->update();
@@ -228,16 +233,16 @@ class PartnerPulsaController extends Controller
       $getPartnerPulsa = PartnerPulsa::find($id);
 
       if($getPartnerPulsa == null){
-        $info = 'Data Partner gagal dihapus! Tidak dapat menemukan Partner!';
+        $info = 'Data Partner Pulsa Not Found!';
         $alret = 'alert-danger';
       }
       else if($getPartnerPulsa->version != $version){
         $User = User::find($getPartnerPulsa->update_user_id);
-        $info = 'Data Partner gagal dihapus! Data Partner telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
+        $info = 'Failed to delete Partner Pulsa already updeted by '.$User->name.'. Harap periksa kembali!';
         $alret = 'alert-danger';
       }
       else{
-        $info = 'Berhasil menghapus Partner Pulsa ';
+        $info = 'Successfully Deleted';
         $alret = 'alert-success';
         $getPartnerPulsa->delete();
       }

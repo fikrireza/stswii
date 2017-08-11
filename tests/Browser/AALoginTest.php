@@ -9,16 +9,16 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 use Tests\Browser\Pages\Login;
 
-class LoginTest extends DuskTestCase
+class AALoginTest extends DuskTestCase
 {
     // use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
+     * A Dusk skip example.
      *
      * @return void
      */
-    public function testLogin()
+    public function skipLogin()
     {
         $this->browse(function ($browser) {
             $browser->visit(new Login)

@@ -11,11 +11,11 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class ABProviderTest extends DuskTestCase
 {
     /**
-     * A Dusk test example.
+     * A Dusk skip example.
      *
      * @return void
      */
-    public function testReadProvider()
+    public function skipReadProvider()
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::first())
@@ -29,7 +29,7 @@ class ABProviderTest extends DuskTestCase
         });
     }
 
-    public function testCreateProvider()
+    public function skipCreateProvider()
     {
         $provider = ['Telkomsel', 'Indosat', 'XL', 'Axis', '3 Indonesia', 'BOLT!', 'Smartfren', 'PSN', 'Bakrie Telecom'];
 
@@ -51,7 +51,7 @@ class ABProviderTest extends DuskTestCase
         });
     }
 
-    public function testValidationProvider()
+    public function skipValidationProvider()
     {
         $provider = ['Telkomsel', 'Indosat', 'XL', 'Axis', '3 Indonesia', 'BOLT!', 'Smartfren', 'PSN', 'Bakrie Telecom'];
 
@@ -92,7 +92,7 @@ class ABProviderTest extends DuskTestCase
         });
     }
 
-    public function testUpdateProvider()
+    public function skipUpdateProvider()
     {
         $provider = ['Telkomsel', 'Indosat', 'XL', 'Axis', '3 Indonesia', 'BOLT!', 'Smartfren', 'PSN', 'Bakrie Telecom'];
 
@@ -118,7 +118,7 @@ class ABProviderTest extends DuskTestCase
         });
     }
 
-    public function testDeleteProvider()
+    public function skipDeleteProvider()
     {
         $this->browse(function ($browser){
             $browser->loginAs(User::first())
