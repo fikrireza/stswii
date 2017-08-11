@@ -27,7 +27,7 @@
 
           <div class="item form-group {{ $errors->has('partner_pulsa_code') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-              Partner Pulsa Code
+              Partner Pulsa Code <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input
@@ -35,9 +35,12 @@
                 class="form-control col-md-7 col-xs-12"
                 name="partner_pulsa_code"
                 type="text"
-                value="{{ $partner_pulsa_code }}"
-                readonly
+                value="{{  old('partner_pulsa_code') }}"
+                onchange="this.value = this.value.toUpperCase()"
               >
+              @if($errors->has('partner_pulsa_code'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('partner_pulsa_code')}}</span></code>
+              @endif
             </div>
           </div>
 
@@ -78,7 +81,7 @@
           </div>
 
           <div class="item form-group {{ $errors->has('type_top') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="flg_need_deposit">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="type_top">
               Type TOP <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -86,7 +89,7 @@
                 class="form-control select2_single"
                 name="type_top"
                 required="required"
-
+                id="type_top"
               >
                 <option value="">Pilih</option>
                 @php ($arrTT = array('DEPOSIT','DENOM','TERMIN'))
@@ -105,40 +108,27 @@
             </div>
           </div>
 
-          <?php
-          // <div class="item form-group {{ $errors->has('payment_termin') ? 'has-error' : ''}}" id="payment_termin">
-          //   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="payment_termin">
-          //     Payment Termin <span class="required">*</span>
-          //   </label>
-          //   <div class="col-md-6 col-sm-6 col-xs-12">
-          //     <input
-          //       id="payment_termin"
-          //       class="form-control"
-          //       name="payment_termin"
-          //       placeholder="E.g: 0"
-          //       required="required"
-          //       type="text"
-          //       value="{{ old('payment_termin') }}"
-          //       onkeypress="return isNumber(event)"
-          //       maxlength="9"
-          //     >
-          //     @if($errors->has('payment_termin'))
-          //       <code><span style="color:red; font-size:12px;">{{ $errors->first('payment_termin')}}</span></code>
-          //     @endif
-          //   </div>
-          // </div>
-          // <div class="ln_solid"></div>
-          // <div class="item form-group">
-          //   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-          //     Active
-          //   </label>
-          //   <div class="col-md-6 col-sm-6 col-xs-12">
-          //     <label>
-          //       <input type="checkbox" class="flat" name="active" />
-          //     </label>
-          //   </div>
-          // </div>
-          ?>
+          <div class="item form-group {{ $errors->has('payment_termin') ? 'has-error' : ''}} for-termin" {{ old('type_top') != 'TERMIN' ? 'style=display:none' : ''}}>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="payment_termin">Payment Termin <span class="required">*</span></label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <input id="payment_termin" class="form-control" name="payment_termin" placeholder="E.g: 10" required="required" type="text" value="{{ old('payment_termin') }}" onkeypress="return isNumber(event)" maxlength="9">
+              @if($errors->has('payment_termin'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('payment_termin')}}</span></code>
+              @endif
+            </div>
+          </div>
+
+          <div class="ln_solid"></div>
+
+          <div class="item form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="active">Active</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <label>
+                <input id="active" type="checkbox" class="flat" name="active" {{ old('active') ? 'checked' : '' }}/>
+              </label>
+            </div>
+          </div>
+
           <div class="ln_solid"></div>
           <div class="form-group">
             <div class="col-md-6 col-md-offset-3">
@@ -168,6 +158,18 @@
   $(".select2_single").select2({
     placeholder: "Choose",
     allowClear: true
+  });
+
+  $('select[name=type_top]').change(function() {
+    if($(this).val() == 'TERMIN')
+    {
+      $(".for-termin").show();
+    }
+    else
+    {
+      $(".for-termin").hide();
+    }
+    
   });
 
   function isNumber(evt) {

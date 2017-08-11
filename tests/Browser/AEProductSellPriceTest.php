@@ -10,11 +10,11 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class AEProductSellPriceTest extends DuskTestCase
 {
     /**
-     * A Dusk test example.
+     * A Dusk skip example.
      *
      * @return void
      */
-    public function testReadProductSellPrice()
+    public function skipReadProductSellPrice()
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::first())
@@ -28,7 +28,7 @@ class AEProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function testReadUploadProductSellPrice()
+    public function skipReadUploadProductSellPrice()
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::first())
@@ -40,7 +40,7 @@ class AEProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function testCreateProductSellPrice()
+    public function skipCreateProductSellPrice()
     {
         // disarankan untuk mengosongkan table produt sell price supaya bisa jalan dengan baik
         $nominal = rand(1,999) * 1000;
@@ -74,7 +74,7 @@ class AEProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function testValidationProductSellPrice()
+    public function skipValidationProductSellPrice()
     {
         // disarankan untuk mengosongkan table produt sell price supaya bisa jalan dengan baik
         $nominal = rand(1,999) * 1000;
@@ -150,7 +150,7 @@ class AEProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function testUpdateProductSellPrice()
+    public function skipUpdateProductSellPrice()
     {
         // disarankan untuk mengosongkan table produt sell price supaya bisa jalan dengan baik
         $nominal = rand(1,999) * 1000;
@@ -182,7 +182,7 @@ class AEProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function testDeleteProductSellPrice()
+    public function skipDeleteProductSellPrice()
     {
 
         $this->browse(function ($browser){
