@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-  <title>STS | Add Partner Product Purch Price</title>
+  <title>STS | Add Partner Product Purchase Price</title>
 @endsection
 
 @section('headscript')
@@ -14,17 +14,36 @@
 @if(Session::has('berhasil'))
 <script>
   window.setTimeout(function() {
-    $(".alert.alert-dismissible").fadeTo(700, 0).slideUp(700, function(){
+    $(".alert-success").fadeTo(700, 0).slideUp(700, function(){
         $(this).remove();
     });
   }, 5000);
 </script>
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
-    <div class="alert {{ Session::get('alret') }} alert-dismissible fade in" role="alert">
+    <div class="alert alert-success alert-dismissible fade in" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
       </button>
       <strong>{{ Session::get('berhasil') }}</strong>
+    </div>
+  </div>
+</div>
+@endif
+
+@if(Session::has('gagal'))
+<script>
+  window.setTimeout(function() {
+    $(".alert-danger").fadeTo(700, 0).slideUp(700, function(){
+        $(this).remove();
+    });
+  }, 15000);
+</script>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="alert alert-danger alert-dismissible fade in" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+      </button>
+      <strong>{{ Session::get('gagal') }}</strong>
     </div>
   </div>
 </div>
@@ -35,181 +54,91 @@
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Add Partner Product Purch Price<small></small></h2>
+        <h2>Add Partner Product Purchase Price<small></small></h2>
         <ul class="nav panel_toolbox">
-          <a href="{{ route('partner-product-purch-price.index') }}" class="btn btn-primary btn-sm">Back</a>
+          <a href="{{ route('partner-product-purch-price.index') }}" class="btn btn-primary btn-sm">Kembali</a>
         </ul>
         <div class="clearfix"></div>
       </div>
       <div class="x_content">
         <form action="{{ route('partner-product-purch-price.store') }}" method="POST" class="form-horizontal form-label-left" novalidate>
           {{ csrf_field() }}
-          <div class="item form-group {{ $errors->has('partner_pulsa_id') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_pulsa_id">
-              Partner Pulsa <span class="required">*</span>
-            </label>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <select
-                id="partner_pulsa_id"
-                name="partner_pulsa_id"
-                class="form-control select2_single call-product-partner"
-                required="required"
-              >
-                <option value="">Choose Partner Pulsa</option>
-                @foreach ($getPartner as $key)
-                <option
-                  value="{{ $key->partner_pulsa_id }}"
-                >
-                  {{ $key->partner_pulsa_name.'('.$key->partner_pulsa_code.')' }}
-                </option>
-                @endforeach
-              </select>
-              @if($errors->has('partner_pulsa_id'))
-                <code><span style="color:red; font-size:12px;">{{ $errors->first('partner_pulsa_id')}}</span></code>
-              @endif
-            </div>
-          </div>
 
-          <div class="item form-group {{ $errors->has('provider_id') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="provider_id">
-              Provider <span class="required">*</span>
-            </label>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <select
-                id="provider_id"
-                name="provider_id"
-                class="form-control select2_single call-product-partner"
-                required="required"
-              >
-                <option value="">Choose Provider</option>
-                @foreach ($getProvider as $key)
-                <option
-                  value="{{ $key->provider_id }}"
-                >
-                  {{ $key->provider_name.'('.$key->provider_code.')' }}
-                </option>
-                @endforeach
-              </select>
-              @if($errors->has('provider_id'))
-                <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_id')}}</span></code>
-              @endif
-            </div>
-          </div>
           <div class="item form-group {{ $errors->has('partner_product_id') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-              Partner Product <span class="required">*</span>
-            </label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_product_id">Partner Product <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <select
-                id="partner_product_id"
-                name="partner_product_id"
-                class="form-control select2_single"
-                required="required"
-              >
-                <option value="">Choose</option>
+              <select id="partner_product_id" name="partner_product_id" class="form-control select2_single" required="required">
+                <option value="">Pilih</option>
+                @foreach ($partnerProduct as $list)
+                  <option value="{{ $list->partner_product_id }}" {{ old('partner_product_id') == $list->partner_product_id ? 'selected' : '' }}>{{ $list->partner_product_name}} - {{ $list->partner_product_code}}</option>
+                @endforeach
               </select>
               @if($errors->has('partner_product_id'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('partner_product_id')}}</span></code>
               @endif
             </div>
           </div>
+
           <div class="item form-group {{ $errors->has('gross_purch_price') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-              Gross Purches Price <span class="required">*</span>
-            </label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="gross_purch_price">Gross Sell Price <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input
-                id="gross_purch_price"
-                class="form-control"
-                name="gross_purch_price"
-                placeholder="E.g: 50000"
-                required="required"
-                type="text"
-                value="{{ old('gross_purch_price') }}"
-                onkeypress="return isNumber(event)"
-                maxlength="9"
-              >
+              <input id="gross_purch_price" class="form-control" name="gross_purch_price" placeholder="E.g: 50000" required="required" type="text" value="{{ old('gross_purch_price') }}" onkeypress="return isNumber(event)" maxlength="9">
               @if($errors->has('gross_purch_price'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('gross_purch_price')}}</span></code>
               @endif
             </div>
           </div>
+
           <div class="item form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-              Tax
-            </label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="flg_tax">Tax</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input type="checkbox" name="flg_tax" id="flg_tax" value="1" {{ old('flg_tax') == 1 ? 'checked=""' : '' }}/>
+                <input type="checkbox" name="flg_tax" id="flg_tax" value="Y" {{ old('flg_tax') == "Y" ? 'checked' : '' }}/>
               </label>
             </div>
           </div>
-          <div class="item form-group {{ $errors->has('tax_percentage') ? 'has-error' : ''}}" id="tax_percentage" style="display:{{ $errors->has('tax_percentage') ? '' : 'none'}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Tax Percentage <span class="required">*</span></label>
+
+          <div class="item form-group {{ $errors->has('tax_percentage') ? 'has-error' : ''}}" id="tax_percentage" {{ old('flg_tax') == 1 ? '' : 'style=display:none'}}>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tax_percentage">Tax Percentage <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input
-                id="tax_percentage"
-                class="form-control"
-                name="tax_percentage"
-                placeholder="E.g: 50000"
-                required="required"
-                type="text"
-                value="{{ old('tax_percentage') }}"
-                onkeypress="return isNumber(event)"
-                maxlength="9"
-              >
+              <input id="tax_percentage" class="form-control" name="tax_percentage" placeholder="E.g: 10" required="required" type="text" value="{{ old('tax_percentage') }}" onkeypress="return isNumber(event)" maxlength="9">
               @if($errors->has('tax_percentage'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('tax_percentage')}}</span></code>
               @endif
             </div>
           </div>
+
           <div class="item form-group {{ $errors->has('datetime_start') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">
-              Date Start <span class="required">*</span>
-            </label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="datetime_start">Date Start <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input
-                id="datetime_start"
-                name="datetime_start"
-                class="date-picker form-control col-md-7 col-xs-12"
-                required="required"
-                type="text"
-                value="{{ old('datetime_start', date('Y-m-d h:i:s')) }}"
-              >
+              <input id="datetime_start" name="datetime_start" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_start', date('Y-m-d H:i:s')) }}">
               @if($errors->has('datetime_start'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('datetime_start')}}</span></code>
               @endif
             </div>
           </div>
+
           <div class="item form-group {{ $errors->has('datetime_end') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">
-              Date End <span class="required">*</span>
-            </label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="datetime_end">Date End <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input
-                id="datetime_end"
-                name="datetime_end"
-                class="date-picker form-control col-md-7 col-xs-12"
-                required="required"
-                type="text"
-                value="{{ old('datetime_end', date('Y-m-d h:i:s')) }}"
-              >
+              <input id="datetime_end" name="datetime_end" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_end', date('Y-m-d H:i:s')) }}">
               @if($errors->has('datetime_end'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('datetime_end')}}</span></code>
               @endif
             </div>
           </div>
-          <?php
-            // <div class="ln_solid"></div>
-            // <div class="item form-group">
-            //   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Active</label>
-            //   <div class="col-md-6 col-sm-6 col-xs-12">
-            //     <label>
-            //       <input type="checkbox" class="flat" name="active" value="1" {{ old('active') == 1 ? 'checked=""' : '' }}/>
-            //     </label>
-            //   </div>
-            // </div>
-          ?>
+
+          <div class="ln_solid"></div>
+
+          <div class="item form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="active">Active</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <label>
+                <input id="active" type="checkbox" class="flat" name="active" value="Y" {{ old('active') == "Y" ? 'checked' : '' }}/>
+              </label>
+            </div>
+          </div>
+
           <div class="ln_solid"></div>
           <div class="form-group">
             <div class="col-md-6 col-md-offset-3">
@@ -224,6 +153,7 @@
     </div>
   </div>
 </div>
+
 @endsection
 
 
@@ -235,84 +165,76 @@
 <script src="{{ asset('amadeo/vendors/switchery/dist/switchery.min.js')}}"></script>
 <script src="{{ asset('amadeo/js/moment/moment.min.js') }}"></script>
 <script src="{{ asset('amadeo/js/datepicker/daterangepicker.js') }}"></script>
-
-@if(Session::has('tax_percentage') or old('flg_tax') == 1)
-<script type="text/javascript">
-$(document).ready(function(){
-  $("#tax_percentage").show();
-});
-</script>
-@endif
+<script src="http://trentrichardson.com/examples/timepicker/jquery-ui-timepicker-addon.js"></script>
 
 <script>
-$(".select2_single").select2({
-  // placeholder: "Choose Partner Product",
-  allowClear: true
-});
+  $(".select2_single").select2({
+    placeholder: "Choose Partner Product",
+    allowClear: true
+  });
 
-$(document).ready(function(){
-  $('select#partner_product_id').prop("disabled", true);
-});
+  $('#datetime_start').daterangepicker({
+    "calender_style": "picker_3",
+    "singleDatePicker": true,
+    "format": 'YYYY-MM-DD H:m:s',
+    "showDropdowns": true,
+    "timePicker": true,
+    "timePicker24Hour": true,
+    "timePickerSeconds": true,
+    "timePickerIncrement": 1,
 
-$(document).on('change','select.call-product-partner', function(){
-  var partner = $('select#partner_pulsa_id').val();
-  var provider= $('select#provider_id').val();
+  });
 
-  if((partner == '') || (provider == '')){
-    $('select#partner_product_id').val('');
-    $("select#partner_product_id").select2("val", "");
-    $('select#partner_product_id').prop("disabled", true);
+  $('#datetime_end').daterangepicker({
+    "calender_style": "picker_3",
+    "singleDatePicker": true,
+    "format": 'YYYY-MM-DD H:m:s',
+    "showDropdowns": true,
+    "timePicker": true,
+    "timePicker24Hour": true,
+    "timePickerSeconds": true,
+    "timePickerIncrement": 1,
+  });
+
+  $('#flg_tax').click(function() {
+    $("#tax_percentage").toggle(this.checked);
+  });
+
+  function isNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
   }
-  else{
-    $('select#partner_product_id').val('');
-    $("select#partner_product_id").select2("val", "");
-    $('select#partner_product_id').prop("disabled", false);
-    $.getJSON({url: "{{ route('partner-product-purch-price.ajaxGetProductPartner') }}/" + partner + "/" + provider, success: function(result){
-        $('select#partner_product_id').empty();
-        $('select#partner_product_id').append("<option value=''>Select Product</option>");
-        console.log(result)
-        $.each(result, function(i, field){
-          $('#partner_product_id').append("<option value='"+ field.partner_product_id +"'>"+ field.partner_product_name + " (" + field.partner_product_code + ")" + "</option>");
-        });
-      }
-    });
+
+$(document).ready(function() {
+$('select[name="partner_product_id"]').on('change', function() {
+  var partner_product_id = $(this).val();
+  if(partner_product_id) {
+      $.ajax({
+          url: '{{ url('/') }}/partner-product-purch-price/product/'+partner_product_id,
+          type: "GET",
+          dataType: "json",
+
+          success:function(data) {
+            var nominal = data.nominal
+            var nominal = parseInt(nominal).toLocaleString(
+                undefined,
+                {
+                  minimumFractionDigits: 2
+                }
+              );
+
+            $('input[type="text"]#nominal').attr('value', 'Rp. '+nominal);
+
+          }
+      });
+  }else{
+      $('input[type="text"]#nominal').empty();
   }
 });
-
-$('#datetime_start').daterangepicker({
-  "calender_style": "picker_3",
-  "singleDatePicker": true,
-  "format": 'YYYY-MM-DD H:m:s',
-  "showDropdowns": true,
-  "timePicker": true,
-  "timePicker24Hour": true,
-  "timePickerSeconds": true,
-  "timePickerIncrement": 1,
 });
-
-$('#datetime_end').daterangepicker({
-  "calender_style": "picker_3",
-  "singleDatePicker": true,
-  "format": 'YYYY-MM-DD H:m:s',
-  "showDropdowns": true,
-  "timePicker": true,
-  "timePicker24Hour": true,
-  "timePickerSeconds": true,
-  "timePickerIncrement": 1,
-});
-
-$('#flg_tax').click(function() {
-  $("#tax_percentage").toggle(this.checked);
-});
-
-function isNumber(evt) {
-  evt = (evt) ? evt : window.event;
-  var charCode = (evt.which) ? evt.which : evt.keyCode;
-  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-    return false;
-  }
-  return true;
-}
-
 </script>
 @endsection

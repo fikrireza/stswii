@@ -154,8 +154,8 @@
 							</td>
 							<td>
 								<select class="form-control" name="active[{{$urut}}]">
-									<option value="1">Active</option>
-									<option value="0">Not Active</option>
+									<option value="Y">Active</option>
+									<option value="N">Not Active</option>
 								</select>
 							</td>
 						</tr>

@@ -517,7 +517,7 @@ class ProductSellPriceController extends Controller
 
 					$collect = collect($collect);
 
-					$getProduct = Product::where('active', '=', 1)->get();
+					$getProduct = Product::where('active', '=', 'Y')->get();
 
 					return view('product-sell-price.masal', compact('collect', 'getProduct'));
 				}
@@ -566,15 +566,15 @@ class ProductSellPriceController extends Controller
 				{
 					$arrData = ProductSellPrice::create(array(
 						"product_id"          => $product_id[$key],
-						"flg_tax"             => $gross_sell_price[$key] > 0 ? 0 : 1,
 						"gross_sell_price"    => $gross_sell_price[$key],
+						"flg_tax"             => $tax_percentage[$key] > 0 ? 'N' : 'Y',
 						"tax_percentage"      => $tax_percentage[$key],
 						"datetime_start"      => date('YmdHis', strtotime( $datetime_start[$key] )),
 						"datetime_end"        => date('YmdHis', strtotime( $datetime_end[$key] )),
 						"create_user_id"      => Auth::id(),
 						"active"              => $active[$key],
-						"active_datetime"     => $active[$key] == 1 ? date('YmdHis') : '00000000000000',
-						"non_active_datetime" => $active[$key] == 0 ? date('YmdHis') : '00000000000000',
+						"active_datetime"     => $active[$key] == 'Y' ? date('YmdHis') : '00000000000000',
+						"non_active_datetime" => $active[$key] == 'N' ? date('YmdHis') : '00000000000000',
 						"version"             => 0,
 						"create_datetime"     => date('YmdHis'),
 						"create_user_id"      => Auth::id(),

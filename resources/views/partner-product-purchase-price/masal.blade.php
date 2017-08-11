@@ -48,12 +48,12 @@
       <div class="x_title">
         <h2>Partner Product Purchase Price </h2>
         <ul class="nav panel_toolbox">
-          <a href="" class="btn btn-primary btn-sm"> Download Template</a>
+          <a href="{{ route('partner-product-purch-price.template') }}" class="btn btn-primary btn-sm"> Download Template</a>
         </ul>
         <div class="clearfix"></div>
       </div>
       <div class="x_content">
-        <form class="form-horizontal form-label-left" action="" enctype="multipart/form-data">
+        <form class="form-horizontal form-label-left" action="{{ route('partner-product-purch-price.prosesTemplate') }}" method="post" enctype="multipart/form-data">
           {{ csrf_field() }}
           <div class="item form-group {{ $errors->has('file') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">File Upload <span class="required">*</span></label>
@@ -76,6 +76,7 @@
   </div>
 </div>
 
+@if (isset($collect))
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
@@ -84,88 +85,69 @@
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
-        <form class="form-horizontal form-label-left" action="{{ route('product-sell-price.storeTemplate') }}" method="post">
+        <form class="form-horizontal form-label-left" action="{{ route('partner-product-purch-price.storeTemplate') }}" method="post">
         <table class="table table-striped table-bordered no-footer tablecheck" width="100%">
           <thead>
-            <th>Selection</th>
-            <th>Product</th>
+            <th>Delete</th>
+            <th>Partner Product</th>
             <th>Gross Sell Price</th>
             <th>Tax Percentage</th>
             <th>Datetime Start</th>
             <th>Datetime End</th>
+            <th>Active</th>
           </thead>
           {{ csrf_field() }}
           <tbody>
             @php
               $urut = 0;
-              $arrProvName = array(
-                '', 
-                'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 'Telkomsel', 
-                'Indosat', 'Indosat', 'Indosat', 'Indosat', 'Indosat', 
-                'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 'Ooredo', 
-                '3', '3', '3', '3', '3'
-              );
-              $arrPriceSell = array(
-                '', 
-                '5000', '10000', '20000', '50000', '100000', 
-                '5000', '10000', '20000', '50000', '100000', 
-                '5000', '10000', '20000', '50000', '100000', 
-                '5000', '10000', '20000', '50000', '100000'
-              );
-              $arrPriceSellCOFP = array(
-                '', 
-                '5', '10', '20', '50', '100', 
-                '5', '10', '20', '50', '100', 
-                '5', '10', '20', '50', '100', 
-                '5', '10', '20', '50', '100'
-              );
-              $arrProduct = array('');
-              for ($i=1; $i < 20 ; $i++){
-                $pro = 'PP.Cd.'.rand(10,99).'('.$arrPriceSellCOFP[$i].'-'.$arrProvName[$i].')';
-                array_push($arrProduct,$pro);
-              }
             @endphp
-            @for ($i=1; $i < 20; $i++)
+            @foreach ($collect as $key)
             <tr>
               <td>
-                <!-- <span class="label-hide">{{ $arrProduct[$i] }}</span> -->
-                <input type="button" name="delete" value="x" class="btn btn-danger btn-sm" onclick="DeleteRowFunction(this);">
+                {{ $urut + 1 }}
+                <input type="button" name="delete" value="x" class="btn btn-danger btn-sm btn-delete">
               </td>
               <td>
-                <select id="product_id" name="product_id[{{$urut}}]" class="form-control select2_single" required="required">
-                    <option value="">Pilih</option>
-                    @for($p=1; $p<=19; $p++)
-                  <option 
-                    value="{{ $arrProduct[$p] }}" 
-                    {{ $arrProduct[$i] == $arrProduct[$p] ? 'selected' : '' }}
-                  >
-                    {{ $arrProduct[$p] }}
-                  </option>
-                  @endfor
-                  </select>
+                @php $empty = 1; @endphp
+                @foreach($partnerProduct as $list)
+                  @if($list->partner_product_id == $key['partner_product_id'])
+                    {{$list->partner_product_name}} - {{ $list->partner_product_code }}
+                    <input type="hidden" name="partner_product_id[{{$urut}}]" value="{{$key['partner_product_id']}}">
+                    @php $empty = 0; @endphp
+                    @break
+                  @endif
+                @endforeach
+                @if($empty)
+                <input type="hidden" name="partner_product_id[{{$urut}}]" value="0">
+                @endif
               </td>
               <td>
-                <!-- <span class="label-hide">Rp. {{ number_format($arrPriceSell[$i],0) }}</span> -->
-                <!-- <span class="label-hide">{{ $arrProduct[$i] }}</span> -->
-                <input type="text" name="gross_sell_price[{{$urut}}]" class="form-control" value="{{ $arrPriceSell[$i] }}" onkeypress="return isNumber(event)">
+                Rp. {{ number_format($key['gross_purch_price']) }}
+                <input type="hidden" name="gross_purch_price[{{$urut}}]" value="{{ $key['gross_purch_price'] }}"/>
               </td>
               <td>
-                <!-- <span class="label-hide">3</span> -->
-                <input type="text" name="tax_percentage[{{$urut}}]" class="form-control" value="{{ '3' }}" onkeypress="return isNumber(event)" />
+                {{ $key['tax_percentage'] }} %
+                <input type="hidden" name="tax_percentage[{{$urut}}]" value="{{ $key['tax_percentage'] }}"/>
               </td>
               <td>
-                <input type="text" name="datetime_start[{{$urut}}]" class="datetime_start form-control" value="2017/01/01 00:00:01" />
+                {{ $key['datetime_start'] }}
+                <input type="hidden" name="datetime_start[{{$urut}}]" value="{{ $key['datetime_start'] }}"/>
               </td>
               <td>
-                <input type="text" name="datetime_end[{{$urut}}]" class="datetime_end form-control" value="2017/12/31 23:59:59" />
+                {{ $key['datetime_end'] }}
+                <input type="hidden" name="datetime_end[{{$urut}}]" value="{{ $key['datetime_end'] }}"/>
               </td>
-              {{-- <td><input type="checkbox" class="form-control" name="active[{{$urut}}]" value="1" {{ old('active', $key['active']) == 1 ? 'checked=""' : '' }}/></td>
-              <td><input type="number" class="form-control" name="version[{{$urut}}]" value="{{ $key['version'] }}" /></td> --}}
+              <td>
+                <select class="form-control" name="active[{{$urut}}]">
+                  <option value="Y">Active</option>
+                  <option value="N">Not Active</option>
+                </select>
+              </td>
             </tr>
             @php
               $urut++
             @endphp
-            @endfor
+            @endforeach
           </tbody>
         </table>
         <button type="submit" name="button" class="btn btn-success btn-bg">Upload</button>
@@ -174,6 +156,7 @@
     </div>
   </div>
 </div>
+@endif
 
 @endsection
 
@@ -191,40 +174,22 @@
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
 
 <script type="text/javascript">
-  function DeleteRowFunction(btndel) {
-    if (typeof(btndel) == "object") {
-      $(btndel).closest("tr").remove();
-    } else {
-      return false;
-    }
-  }
-  function isNumber(evt) {
-      evt = (evt) ? evt : window.event;
-      var charCode = (evt.which) ? evt.which : evt.keyCode;
-      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-          return false;
-      }
-      return true;
-  }
-  $('.datetime_start').daterangepicker({
-    singleDatePicker: true,
-    calender_style: "picker_2",
-    format: 'YYYY-MM-DD hh:mm:ss',
-    timePicker: true,
-    // minDate: new Date(),
-  });
-  $('.datetime_end').daterangepicker({
-    singleDatePicker: true,
-    calender_style: "picker_2",
-    format: 'YYYY-MM-DD hh:mm:ss',
-    timePicker: true,
-    // minDate: new Date(),
-  });
-
-  $('.tablecheck').DataTable({
+  var table = $('.tablecheck').DataTable({
     "aoColumnDefs": [
       { "bSearchable": false, "aTargets": [ 0, 1 ] }
     ]
   });
+
+  $('.tablecheck').on( 'click', '.btn-delete', function () {
+      table
+          .row( $(this).parents('tr') )
+          .remove()
+          .draw();
+  } );
+
+  $('.btn-submit').click( function() {
+        var data = table.$('input, select').serialize();
+        window.location = "{{ route('product-sell-price.storeTemplate') }}?"+data;
+    } );
 </script>
 @endsection

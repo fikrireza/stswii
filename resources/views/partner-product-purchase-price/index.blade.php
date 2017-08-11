@@ -19,10 +19,29 @@
 </script>
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
-    <div class="alert {{ Session::get('alret') }} alert-dismissible fade in" role="alert">
+    <div class="alert alert-success alert-dismissible fade in" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
       </button>
       <strong>{{ Session::get('berhasil') }}</strong>
+    </div>
+  </div>
+</div>
+@endif
+
+@if(Session::has('gagal'))
+<script>
+  window.setTimeout(function() {
+    $(".alert-danger").fadeTo(700, 0).slideUp(700, function(){
+        $(this).remove();
+    });
+  }, 15000);
+</script>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="alert alert-danger alert-dismissible fade in" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+      </button>
+      <strong>{{ Session::get('gagal') }}</strong>
     </div>
   </div>
 </div>
@@ -134,8 +153,8 @@
             @endforeach
           </select>
           <select name="f_active" class="form-control" onchange="this.form.submit()">
-            <option value="1" @if(isset($request->f_active) && $request->f_active == 1) selected @endif>Active</option>
-            <option value="0" @if(isset($request->f_active) && $request->f_active == 0) selected @endif>Not Active</option>
+            <option value="Y" @if(isset($request->f_active) && $request->f_active == 'Y') selected @endif>Active</option>
+            <option value="N" @if(isset($request->f_active) && $request->f_active == 'N') selected @endif>Not Active</option>
           </select>
         </form>
         <div class="ln_solid"></div>
