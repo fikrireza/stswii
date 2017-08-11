@@ -141,10 +141,10 @@
                   data-value="{{ $list->partner_pulsa_id }}"
                   data-version="{{ $list->version }}"
                   data-toggle="modal"
-                  @if($list->active == 1)
+                  @if($list->active == "Y")
                   class="unpublish"
                   data-target=".modal-nonactive"
-                  @elseif($list->active == 0)
+                  @elseif($list->active == "N")
                   class="publish"
                   data-target=".modal-active"
                   @endif
@@ -152,17 +152,17 @@
                   <span
                     data-toggle="tooltip"
                     data-placement="top"
-                    @if($list->active == 1)
+                    @if($list->active == "Y")
                     class="label label-success"
                     title="Active"
-                    @elseif($list->active == 0)
+                    @elseif($list->active == "N")
                     class="label label-danger"
                     title="Non Active"
                     @endif
                   >
-                    @if($list->active == 1)
+                    @if($list->active == "Y")
                     Active
-                    @elseif($list->active == 0)
+                    @elseif($list->active == "N")
                     Non Active
                     @endif
                   </span>
@@ -269,13 +269,13 @@ $(function(){
   $(document).on('click', 'a.publish', function(){
     var a = $(this).data('value');
     var b = $(this).data('version');
-    $('#setPublish').attr('href', "{{ url('/') }}/partner-pulsa/actived/"+a+"/"+b+"/1");
+    $('#setPublish').attr('href', "{{ url('/') }}/partner-pulsa/actived/"+a+"/"+b+"/Y");
   });
 
   $(document).on('click','a.unpublish', function(){
     var a = $(this).data('value');
     var b = $(this).data('version');
-    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-pulsa/actived/"+a+"/"+b+"/0");
+    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-pulsa/actived/"+a+"/"+b+"/N");
   });
 });
 

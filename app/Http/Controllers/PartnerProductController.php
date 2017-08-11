@@ -49,7 +49,7 @@ class PartnerProductController extends Controller
       }
 
     	return view('partner-product.index', compact(
-          'request', 
+          'request',
           'provider',
           'partner'
         ));
@@ -77,7 +77,6 @@ class PartnerProductController extends Controller
           'partner_pulsa_code',
           'partner_pulsa_name'
         )
-        // ->where('active', 1)
         ->get();
 
       $getProvider = Provider::select(
@@ -127,7 +126,7 @@ class PartnerProductController extends Controller
   			$save->provider_id          = $request->provider_id;
   			$save->product_id           = $request->product_id;
 
-  			$save->active               = /*isset($request->active) ? */1 /*: 0*/;
+  			$save->active               = "Y";
   			$save->active_datetime     = Carbon::now()->format('YmdHis');
         $save->non_active_datetime = '';
         $save->version             = 0;
@@ -164,7 +163,6 @@ class PartnerProductController extends Controller
             'partner_pulsa_code',
             'partner_pulsa_name'
           )
-          // ->where('active', 1)
           ->get();
 
         $getProvider = Provider::select(
@@ -343,7 +341,7 @@ class PartnerProductController extends Controller
         $getDatas->where('sw_partner_product.partner_pulsa_id', $f_partner);
       }
       $getDatas = $getDatas->get();
-      
+
       $start=1;
       $Datatables = Datatables::of($getDatas)
             ->addColumn('slno', function ($getData) use (&$start) {
@@ -361,29 +359,29 @@ class PartnerProductController extends Controller
             ->addColumn('action', function ($getData) {
               $actionHtml = '';
               if (Auth::user()->can('update-partner-product')) {
-                $actionHtml = $actionHtml." 
-                  <a 
+                $actionHtml = $actionHtml."
+                  <a
                     href='".route('partner-product.edit', ['id' => $getData->partner_product_id, 'version' => $getData->version ])."''
-                    class='btn btn-xs btn-warning btn-sm' 
+                    class='btn btn-xs btn-warning btn-sm'
                     data-toggle='tooltip'
-                    data-placement='top' 
+                    data-placement='top'
                     title='Ubah'
                   ><i class='fa fa-pencil'></i></a>";
               }
               if (Auth::user()->can('delete-partner-product')) {
-                $actionHtml = $actionHtml." 
-                  <a 
-                    href='' 
-                    class='delete' 
-                    data-value='".$getData->partner_product_id."' 
-                    data-version='".$getData->version."' 
-                    data-toggle='modal' 
+                $actionHtml = $actionHtml."
+                  <a
+                    href=''
+                    class='delete'
+                    data-value='".$getData->partner_product_id."'
+                    data-version='".$getData->version."'
+                    data-toggle='modal'
                     data-target='.modal-delete'
                   >
-                    <span 
-                      class='btn btn-xs btn-danger btn-sm' 
-                      data-toggle='tooltip' 
-                      data-placement='top' 
+                    <span
+                      class='btn btn-xs btn-danger btn-sm'
+                      data-toggle='tooltip'
+                      data-placement='top'
                       title='Hapus'
                     ><i class='fa fa-remove'></i></span>
                   </a>";
@@ -393,38 +391,38 @@ class PartnerProductController extends Controller
 
       if (Auth::user()->can('activate-product-sell-price')) {
         $Datatables = $Datatables->editColumn('active', function ($getData){
-          if($getData->active == 1){
+          if($getData->active == "Y"){
             return "
-              <a 
-                href='' 
-                class='unpublish' 
-                data-value='".$getData->partner_product_id."' 
-                data-version='".$getData->version."' 
-                data-toggle='modal' 
+              <a
+                href=''
+                class='unpublish'
+                data-value='".$getData->partner_product_id."'
+                data-version='".$getData->version."'
+                data-toggle='modal'
                 data-target='.modal-nonactive'
               >
-                <span 
-                  class='label label-success' 
-                  data-toggle='tooltip' 
-                  data-placement='top' 
+                <span
+                  class='label label-success'
+                  data-toggle='tooltip'
+                  data-placement='top'
                   title='Active'
                 >Active</span>
               </a><br>";
           }
-          else if($getData->active == 0){
+          else if($getData->active == "N"){
             return "
-              <a 
-                href='' 
-                class='publish' 
-                data-value='".$getData->partner_product_id."' 
-                data-version='".$getData->version."' 
-                data-toggle='modal' 
+              <a
+                href=''
+                class='publish'
+                data-value='".$getData->partner_product_id."'
+                data-version='".$getData->version."'
+                data-toggle='modal'
                 data-target='.modal-active'
               >
-                <span 
-                  class='label label-danger' 
-                  data-toggle='tooltip' 
-                  data-placement='top' 
+                <span
+                  class='label label-danger'
+                  data-toggle='tooltip'
+                  data-placement='top'
                   title='Non Active'
                 >Non Active</span>
               </a><br>";

@@ -94,7 +94,7 @@ class PartnerPulsaController extends Controller
         $save->description         = $request->description;
         $save->type_top            = $request->type_top;
   			$save->payment_termin      = $request->type_top == 'TERMIN' ? $request->payment_termin : 0;
-  			$save->active              = isset($request->active) ? 1 : 0;
+  			$save->active              = isset($request->active) ? "Y" : "N";
   			$save->active_datetime     = isset($request->active) ? Carbon::now()->format('YmdHis') : '00000000000000';
   			$save->non_active_datetime = !isset($request->active) ? Carbon::now()->format('YmdHis') : '00000000000000';
   			$save->version 		         = 0;
@@ -246,7 +246,7 @@ class PartnerPulsaController extends Controller
         $alret = 'alert-success';
         $getPartnerPulsa->delete();
       }
-      
+
       return redirect()->route('partner-pulsa.index')
         ->with('alret', $alret)
         ->with('berhasil', $info);
@@ -274,7 +274,7 @@ class PartnerPulsaController extends Controller
           ->addColumn('action', function ($getData) {
             $actionHtml = '';
             if (Auth::user()->can('update-partner-pulsa')) {
-              $actionHtml = $actionHtml." 
+              $actionHtml = $actionHtml."
                 <a
                 class='update'
                 href='".route('partner-pulsa.edit', ['id' => $getData->partner_pulsa_id, 'version' => $getData->version])."'
@@ -284,12 +284,12 @@ class PartnerPulsaController extends Controller
             }
             if (Auth::user()->can('delete-partner-pulsa')) {
               $actionHtml = $actionHtml."
-                <a 
-                  href='' 
-                  class='delete' 
+                <a
+                  href=''
+                  class='delete'
                   data-value='".$getData->partner_pulsa_id."'
-                  data-version='".$getData->version."' 
-                  data-toggle='modal' 
+                  data-version='".$getData->version."'
+                  data-toggle='modal'
                   data-target='.modal-delete'
                 >
                   <span class='btn btn-xs btn-danger btn-sm' data-toggle='tooltip' data-placement='top' title='Hapus'><i class='fa fa-remove'></i></span>
@@ -300,38 +300,38 @@ class PartnerPulsaController extends Controller
 
       if (Auth::user()->can('activate-partner-pulsa')) {
         $Datatables = $Datatables->editColumn('active', function ($getData){
-        if($getData->active == 1){
+        if($getData->active == "Y"){
           return "
-            <a 
-              href='' 
-              class='unpublish' 
-              data-value='".$getData->partner_pulsa_id."' 
-              data-version='".$getData->version."' 
-              data-toggle='modal' 
+            <a
+              href=''
+              class='unpublish'
+              data-value='".$getData->partner_pulsa_id."'
+              data-version='".$getData->version."'
+              data-toggle='modal'
               data-target='.modal-nonactive'
             >
-              <span 
-                class='label label-success' 
-                data-toggle='tooltip' 
-                data-placement='top' 
+              <span
+                class='label label-success'
+                data-toggle='tooltip'
+                data-placement='top'
                 title='Active'
               >Active</span>
             </a><br>";
         }
-        else if($getData->active == 0){
+        else if($getData->active == "N"){
           return "
-            <a 
-              href='' 
-              class='publish' 
-              data-value='".$getData->partner_pulsa_id."' 
-              data-version='".$getData->version."' 
-              data-toggle='modal' 
+            <a
+              href=''
+              class='publish'
+              data-value='".$getData->partner_pulsa_id."'
+              data-version='".$getData->version."'
+              data-toggle='modal'
               data-target='.modal-active'
             >
-              <span 
-                class='label label-danger' 
-                data-toggle='tooltip' 
-                data-placement='top' 
+              <span
+                class='label label-danger'
+                data-toggle='tooltip'
+                data-placement='top'
                 title='Non Active'
               >Non Active</span>
             </a><br>";
