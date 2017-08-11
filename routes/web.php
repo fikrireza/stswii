@@ -107,6 +107,9 @@ Route::get('/home', 'HomeController@index')
 
 	Route::get('/partner-product/ajaxGetProductList/{id?}', 'PartnerProductController@ajaxGetProductList')
 		->name('partner-product.ajaxGetProductList');
+
+	Route::get('/partner-product/yajra/getDatas/{request?}', 'PartnerProductController@yajraGetData')
+		->name('partner-product.yajra.getDatas');
 // partner product
 
 // partner product purch price
@@ -131,6 +134,9 @@ Route::get('/home', 'HomeController@index')
 
 	Route::get('/partner-product-purch-price/ajax-get-product-partner/{partner?}/{provider?}', 'PartnerProductPurchPriceController@ajaxGetProductPartner')
 		->name('partner-product-purch-price.ajaxGetProductPartner');
+
+	Route::get('/partner-product-purch-price/yajra/getDatas/{request?}', 'PartnerProductPurchPriceController@yajraGetData')
+		->name('partner-product-purch-price.yajra.getDatas');
 
 	Route::get('partner-product-purch-price/upload', 'PartnerProductPurchPriceController@upload')
 	  ->name('partner-product-purch-price.upload')->middleware('can:create-partner-product-purch-price');

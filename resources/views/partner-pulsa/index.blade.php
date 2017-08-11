@@ -123,6 +123,7 @@
               <th>Aksi</th>
             </tr>
           </thead>
+          {{--
           <tbody>
             @php ($no = 1)
             @foreach ($getPartner as $list)
@@ -193,6 +194,21 @@
             </tr>
             @endforeach
           </tbody>
+          --}}
+          <tfoot>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              @can('activate-partner-pulsa')
+              <td></td>
+              @endcan
+              <td></td>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>
@@ -206,7 +222,35 @@
 <script src="{{ asset('amadeo/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
 <script type="text/javascript">
-$('#dataTables').DataTable();
+$(function() {
+    $('#dataTables').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('partner-pulsa.yajra.getDatas') }}",
+        columns: [
+            {data: 'slno', name: 'No'},
+            {data: 'partner_pulsa_code'},
+            {data: 'partner_pulsa_name'},
+            {data: 'description'},
+            {data: 'type_top'},
+            {data: 'payment_termin'},
+            @can('activate-partner-pulsa')
+              {data: 'active', orderable: false, searchable: false},
+            @endcan
+            {data: 'action', name: 'Action', orderable: false, searchable: false}
+        ],
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                var input = document.createElement("input");
+                $(input).appendTo($(column.footer()).empty())
+                .on('change', function () {
+                    column.search($(this).val(), false, false, true).draw();
+                });
+            });
+        }
+    });
+});
 
 $(function(){
   $(document).on('click','a.delete', function(){

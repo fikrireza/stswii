@@ -108,6 +108,33 @@
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
+
+        <form class="form-inline text-center">
+          <select name="f_provider" class="form-control" onchange="this.form.submit()">
+            <option value="">Filter Provider</option>
+            @foreach($provider as $list)
+                <option 
+                  value="{{$list->provider_id}}" 
+                  @if($request->f_provider == $list->provider_id) selected @endif
+                >
+                  {{$list->provider_name}}
+                </option>
+            @endforeach
+          </select>
+          <select name="f_partner" class="form-control" onchange="this.form.submit()">
+            <option value="">Filter Partner</option>
+            @foreach($partner as $list)
+                <option 
+                  value="{{$list->partner_pulsa_id}}" 
+                  @if($request->f_partner == $list->partner_pulsa_id) selected @endif
+                >
+                  {{$list->partner_pulsa_name."/".$list->partner_pulsa_code}}
+                </option>
+            @endforeach
+          </select>
+        </form>
+        <div class="ln_solid"></div>
+
         <table id="dataTables" class="table table-striped table-bordered no-footer" width="100%">
           <thead>
             <tr role="row">
@@ -123,76 +150,20 @@
               <th>Aksi</th>
             </tr>
           </thead>
-          <tbody>
-            @php ($no = 1)
-            @foreach ($getPartnerProduct as $list)
+          <tfoot>
             <tr>
-              <td>{{ $no++ }}</td>
-              <td>{{ $list->partnerpulsa->partner_pulsa_code }}</td>
-              <td>{{ $list->provider->provider_code }}</td>
-              <td>{{ $list->product->product_code }}</td>
-              <td>{{ $list->partner_product_code }}</td>
-              <td>{{ $list->partner_product_name }}</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               @can('activate-partner-product')
-              <td class="text-center">
-                <a
-                  href=""
-                  data-value="{{ $list->partner_product_id }}"
-                  data-version="{{ $list->version }}"
-                  data-toggle="modal"
-                  @if($list->active == 1)
-                  class="unpublish"
-                  data-target=".modal-nonactive"
-                  @elseif($list->active == 0)
-                  class="publish"
-                  data-target=".modal-active"
-                  @endif
-                >
-                  <span
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    @if($list->active == 1)
-                    class="label label-success"
-                    title="Active"
-                    @elseif($list->active == 0)
-                    class="label label-danger"
-                    title="Non Active"
-                    @endif
-                  >
-                    @if($list->active == 1)
-                    Active
-                    @elseif($list->active == 0)
-                    Non Active
-                    @endif
-                  </span>
-                </a>
-              </td>
+              <td></td>
               @endcan
-              <td>
-                @can('update-partner-product')
-                <a
-                  class="update"
-                  href="{{ route('partner-product.edit', ['id' => $list->partner_product_id, 'version' => $list->version ]) }}"
-                >
-                  <span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>
-                </a>
-                @endcan
-                @can('delete-partner-product')
-                <a
-                  href=""
-                  class="delete"
-                  data-value="{{ $list->partner_product_id }}"
-                  data-version="{{ $list->version }}"
-                  data-toggle="modal"
-                  data-target=".modal-delete"
-                >
-                  <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span>
-                </a>
-                @endcan
-              </td>
+              <td></td>
             </tr>
-            @endforeach
-          </tbody>
+          </tfoot>
         </table>
       </div>
     </div>
@@ -205,9 +176,74 @@
 <script src="{{ asset('amadeo/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
-<script type="text/javascript">
-$('#dataTables').DataTable();
 
+@if(isset($request))
+<script type="text/javascript">
+$(function() {
+    $('#dataTables').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('partner-product.yajra.getDatas') }}?f_provider={{ $request->f_provider }}&f_partner={{ $request->f_partner }}",
+        columns: [
+            {data: 'slno', name: 'No', orderable: false, searchable: false},
+            {data: 'partner_pulsa_code'},
+            {data: 'provider_code'},
+            {data: 'product_code'},
+            {data: 'partner_product_code'},
+            {data: 'partner_product_name'},
+            @can('activate-partner-product')
+              {data: 'active', name: 'Status', orderable: false, searchable: false},
+            @endcan
+            {data: 'action', name: 'Action', orderable: false, searchable: false}
+        ],
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                var input = document.createElement("input");
+                $(input).appendTo($(column.footer()).empty())
+                .on('change', function () {
+                    column.search($(this).val(), false, false, true).draw();
+                });
+            });
+        }
+    });
+});
+</script>
+@else
+<script type="text/javascript">
+$(function() {
+    $('#dataTables').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('partner-product.yajra.getDatas') }}",
+        columns: [
+            {data: 'slno', name: 'No', orderable: false, searchable: false},
+            {data: 'partner_pulsa_code'},
+            {data: 'provider_code'},
+            {data: 'product_code'},
+            {data: 'partner_product_code'},
+            {data: 'partner_product_name'},
+            @can('activate-partner-product')
+              {data: 'active', name: 'Status', orderable: false, searchable: false},
+            @endcan
+            {data: 'action', name: 'Action', orderable: false, searchable: false}
+        ],
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                var input = document.createElement("input");
+                $(input).appendTo($(column.footer()).empty())
+                .on('change', function () {
+                    column.search($(this).val(), false, false, true).draw();
+                });
+            });
+        }
+    });
+});
+</script>
+@endif
+
+<script type="text/javascript">
 $(function(){
   @can('delete-partner-product')
   $(document).on('click','a.delete', function(){
