@@ -362,29 +362,29 @@ class ProductSellPriceController extends Controller
             ->addColumn('action', function ($getData) {
             	$actionHtml = '';
 				if (Auth::user()->can('update-product-sell-price')) {
-					$actionHtml = $actionHtml." 
-						<a 
+					$actionHtml = $actionHtml."
+						<a
 							href='".route('product-sell-price.ubah',$getData->product_sell_price_id)."''
-							class='btn btn-xs btn-warning btn-sm' 
+							class='btn btn-xs btn-warning btn-sm'
 							data-toggle='tooltip'
-							data-placement='top' 
+							data-placement='top'
 							title='Ubah'
 						><i class='fa fa-pencil'></i></a>";
 				}
 				if (Auth::user()->can('delete-product-sell-price')) {
-					$actionHtml = $actionHtml." 
-						<a 
-							href='' 
-							class='delete' 
-							data-value='".$getData->product_sell_price_id."' 
-							data-version='".$getData->version."' 
-							data-toggle='modal' 
+					$actionHtml = $actionHtml."
+						<a
+							href=''
+							class='delete'
+							data-value='".$getData->product_sell_price_id."'
+							data-version='".$getData->version."'
+							data-toggle='modal'
 							data-target='.modal-delete'
 						>
-							<span 
-								class='btn btn-xs btn-danger btn-sm' 
-								data-toggle='tooltip' 
-								data-placement='top' 
+							<span
+								class='btn btn-xs btn-danger btn-sm'
+								data-toggle='tooltip'
+								data-placement='top'
 								title='Hapus'
 							><i class='fa fa-remove'></i></span>
 						</a>";
@@ -396,36 +396,36 @@ class ProductSellPriceController extends Controller
 			$Datatables = $Datatables->editColumn('active', function ($getData){
 				if($getData->active == 1){
 					return "
-						<a 
-							href='' 
-							class='unpublish' 
-							data-value='".$getData->product_sell_price_id."' 
-							data-version='".$getData->version."' 
-							data-toggle='modal' 
+						<a
+							href=''
+							class='unpublish'
+							data-value='".$getData->product_sell_price_id."'
+							data-version='".$getData->version."'
+							data-toggle='modal'
 							data-target='.modal-nonactive'
 						>
-							<span 
-								class='label label-success' 
-								data-toggle='tooltip' 
-								data-placement='top' 
+							<span
+								class='label label-success'
+								data-toggle='tooltip'
+								data-placement='top'
 								title='Active'
 							>Active</span>
 						</a><br>";
 				}
 				else{
 					return "
-						<a 
-							href='' 
-							class='publish' 
-							data-value='".$getData->product_sell_price_id."' 
-							data-version='".$getData->version."' 
-							data-toggle='modal' 
+						<a
+							href=''
+							class='publish'
+							data-value='".$getData->product_sell_price_id."'
+							data-version='".$getData->version."'
+							data-toggle='modal'
 							data-target='.modal-active'
 						>
-							<span 
-								class='label label-danger' 
-								data-toggle='tooltip' 
-								data-placement='top' 
+							<span
+								class='label label-danger'
+								data-toggle='tooltip'
+								data-placement='top'
 								title='Non Active'
 							>Non Active</span>
 						</a><br>";
@@ -447,10 +447,12 @@ class ProductSellPriceController extends Controller
 
 	public function template()
 	{
-		$getProduct = Product::join('sw_provider', 'sw_provider.provider_id', '=', 'sw_product.provider_id')->where('sw_product.active', '=', 1)
-			->select('sw_product.product_id', 'sw_product.product_name', 'sw_product.nominal', 'sw_provider.provider_name')
-			->get()
-			->toArray();
+		$getProduct = Product::join('sw_provider', 'sw_provider.provider_id', '=', 'sw_product.provider_id')
+													->where('sw_product.active', '=', 'Y')
+													->select('sw_product.product_id', 'sw_product.product_name', 'sw_product.nominal', 'sw_provider.provider_name')
+													->orderBy('sw_provider.provider_name', 'asc')
+													->get()
+													->toArray();
 
 		return Excel::create('Template Import', function($excel) use($getProduct)
 		{
@@ -470,7 +472,6 @@ class ProductSellPriceController extends Controller
 				$sheet->row(1, array('Example'));
 				$sheet->mergeCells('A1:E1');
 				$sheet->row(2, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end'));
-				// $sheet->row(2, array('product_id', 'gross_sell_price','tax_percentage', 'datetime_start', 'datetime_end', 'active', 'version'));
 				$sheet->row(3, array('1', '45000', '10', '2017-07-01 12:00:00', '2017-07-31 12:00:00'));
 				$sheet->row(5, array('Data Product'));
 				$sheet->mergeCells('A5:C5');
