@@ -233,6 +233,39 @@
       </div>
       <div class="ln_solid"></div>
       <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Deposit Confirm</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-deposit-confirm]" {{ in_array('read-deposit-confirm',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[confirm-deposit-confirm]" {{ in_array('confirm-deposit-confirm',$can) ? 'checked="checked"' : '' }} value="true"/> Confirm
+          </label>
+        </div>
+      </div>
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Deposit Reversal</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-deposit-reversal]" {{ in_array('read-deposit-reversal',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[confirm-deposit-reversal]" {{ in_array('confirm-deposit-reversal',$can) ? 'checked="checked"' : '' }} value="true"/> Confirm
+          </label>
+        </div>
+      </div>
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Deposit Transaction</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-deposit-trx]" {{ in_array('read-deposit-trx',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label>
+        </div>
+      </div>
+      <div class="ln_solid"></div>
+      <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Users</label>
         <div class="col-md-6 col-sm-6 col-xs-12">
           <label>

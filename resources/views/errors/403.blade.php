@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-  <title>| Not Found</title>
+  <title>| 403 Unauthorized</title>
 @endsection
 
 @section('content')

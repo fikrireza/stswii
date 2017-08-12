@@ -38,7 +38,9 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->registerAgent();
 
-        $this->registerPalomaDepositTrx();
+        $this->registerDepositAgentConfirm();
+        $this->registerDepositAgentReversal();
+        $this->registerDepositTrx();
 
         $this->registerUsersPolicies();
     }
@@ -205,22 +207,30 @@ class AuthServiceProvider extends ServiceProvider
         });
     }
 
-    public function registerPalomaDepositTrx()
+    public function registerDepositAgentConfirm()
     {
-        Gate::define('read-paloma-deposit-trx', function($user){
-          return $user->hasAccess(['read-paloma-deposit-trx']);
+        Gate::define('read-deposit-confirm', function($user){
+          return $user->hasAccess(['read-deposit-confirm']);
         });
-        Gate::define('create-paloma-deposit-trx', function($user){
-          return $user->hasAccess(['create-paloma-deposit-trx']);
+        Gate::define('confirm-deposit-confirm', function($user){
+          return $user->hasAccess(['confirm-deposit-confirm']);
         });
-        Gate::define('update-paloma-deposit-trx', function($user){
-          return $user->hasAccess(['update-paloma-deposit-trx']);
+    }
+
+    public function registerDepositAgentReversal()
+    {
+        Gate::define('read-deposit-reversal', function($user){
+          return $user->hasAccess(['read-deposit-reversal']);
         });
-        Gate::define('activate-paloma-deposit-trx', function($user){
-          return $user->hasAccess(['activate-paloma-deposit-trx']);
+        Gate::define('confirm-deposit-reversal', function($user){
+          return $user->hasAccess(['confirm-deposit-reversal']);
         });
-        Gate::define('delete-paloma-deposit-trx', function($user){
-          return $user->hasAccess(['delete-paloma-deposit-trx']);
+    }
+
+    public function registerDepositTrx()
+    {
+        Gate::define('read-deposit-trx', function($user){
+          return $user->hasAccess(['read-deposit-trx']);
         });
     }
 

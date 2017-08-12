@@ -51,6 +51,7 @@
 </div>
 @endif
 
+@can('confirm-deposit-confirm')
 <div class="modal fade modal-form-confirm" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -100,6 +101,7 @@
     </div>
   </div>
 </div>
+@endcan
 
 <div class="row">
   <div class="col-md-8 col-md-offset-2">
@@ -155,7 +157,9 @@
                 <th>Name</th>
                 <th>Unique Code</th>
                 <th>Unique Code Date</th>
+                @can('confirm-deposit-confirm')
                 <th>Action</th>
+                @endcan
               </tr>
             </thead>
             <tbody>
@@ -167,7 +171,9 @@
                 <td>{{ $list->name }}</td>
                 <td>{{ $list->uniqueCode }}</td>
                 <td>{{ $list->uniqueCodeDate }}</td>
+                @can('confirm-deposit-confirm')
                 <td><a class="confirm" data-name="{{$list->name}}" data-clientid="{{$list->clientId}}" data-uniquecode="{{$list->uniqueCode}}" data-uniquecodedate="{{$list->uniqueCodeDate}}" data-toggle='modal' data-target='.modal-form-confirm'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Confirm'>Confirm</span></a></td>
+                @endcan
               @endforeach
             </tbody>
           </table>
@@ -190,6 +196,7 @@
 <script type="text/javascript">
   $('#deposit-agent').DataTable();
 
+  @can('confirm-deposit-confirm')
   $(function(){
     $(document).on('click', '.confirm', function(e) {
       var clientId        = $(this).data('clientid');
@@ -202,6 +209,7 @@
       $("#confirm_uniqueCodeDate").val(uniqueCodeDate);
     });
   });
+  @endcan
 
   function isNumber(evt) {
       evt = (evt) ? evt : window.event;
