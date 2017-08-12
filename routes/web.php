@@ -224,6 +224,9 @@ Route::get('/home', 'HomeController@index')
 	Route::post('account/role', 'AccountController@roleEdit')->name('account.roleEdit')->middleware('can:update-role');
 	Route::get('account/reset/{id}', 'AccountController@reset')->middleware('can:reset-user');
 	Route::get('account/actived/{id}', 'AccountController@activate')->middleware('can:activate-user');
+	Route::get('account/profile', 'AccountController@profile')->name('account.profile');
+	Route::post('account/profile', 'AccountController@postProfile')->name('account.postProfile');
+	Route::post('account/profile/password', 'AccountController@changePassword')->name('account.password');
 //----- Management Account -----//
 
 //------- Deposit Agent -------//
