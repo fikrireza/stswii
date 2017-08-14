@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use Yajra\Datatables\Facades\Datatables;
 
 use App\Models\Agent;
+use DB;
 use Auth;
 use Validator;
+use Carbon\Carbon;
 
 class AgentController extends Controller
 {
@@ -35,6 +37,7 @@ class AgentController extends Controller
           'phone_number',
           'address',
           'city',
+          'active',
           'version'
         )
       ->get();
@@ -65,7 +68,46 @@ class AgentController extends Controller
 					}
 					return $html;
                 })
+        ->addColumn('status', function($index) {
+          if($index->active == 'Y'){
+            return "
+              <a 
+                href='' 
+                class='unpublish' 
+                data-value='".$index->agent_id."' 
+                data-version='".$index->version."' 
+                data-toggle='modal' 
+                data-target='.modal-nonactive'
+              >
+                <span 
+                  class='label label-success' 
+                  data-toggle='tooltip' 
+                  data-placement='top' 
+                  title='Active'
+                >Active</span>
+              </a><br>";
+          }
+          else if($index->active == 'N'){
+            return "
+              <a 
+                href='' 
+                class='publish' 
+                data-value='".$index->agent_id."' 
+                data-version='".$index->version."' 
+                data-toggle='modal' 
+                data-target='.modal-active'
+              >
+                <span 
+                  class='label label-danger' 
+                  data-toggle='tooltip' 
+                  data-placement='top' 
+                  title='Non Active'
+                >Non Active</span>
+              </a><br>";
+          }
+        })
         ->removeColumn('version')
+        ->escapeColumns(['*'])
 				->make(true);
   	}
 
@@ -113,6 +155,40 @@ class AgentController extends Controller
 
   		return redirect()->route('agent.index')->with('berhasil', 'Your data has been successfully updated.');
   	}
+
+    public function active($id, $version, $status){
+      $call = Agent::find($id);
+
+      if($call == null){
+        $info = 'Failed to update';
+        $alret = 'alert-danger';
+      }
+      else if($call->version != $version){
+        $User = User::find($call->update_user_id);
+        $info = 'Failed to update already updeted by '.$User->name;
+        $alret = 'alert-danger';
+      }
+      else{
+        $info = 'Success '.$call->agent_name;
+        $alret = 'alert-success';
+        DB::transaction(function () use($call, $status) {
+          $call->increment('version');
+          $call->active         = $status;
+          $call->update_user_id = Auth::user()->id;
+          $call->update_datetime= Carbon::now()->format('YmdHis');
+          if($status == 'Y'){
+            $call->active_datetime  = Carbon::now()->format('YmdHis');
+          }
+          else if($status == 'N'){
+            $call->non_active_datetime  = Carbon::now()->format('YmdHis');
+          }
+          $call->update();
+        });
+      }
+      return redirect()->route('agent.index')
+        ->with('alret', $alret)
+        ->with('berhasil', $info);
+    }
 
   	// function seedTables(){
   	// 	$faker 		= Faker\Factory::create();

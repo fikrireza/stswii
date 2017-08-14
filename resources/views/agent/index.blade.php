@@ -16,14 +16,14 @@
 @if(Session::has('berhasil'))
 <script>
   window.setTimeout(function() {
-    $(".alert-success").fadeTo(700, 0).slideUp(700, function(){
+    $(".alert.alert-dismissible").fadeTo(700, 0).slideUp(700, function(){
         $(this).remove();
     });
   }, 5000);
 </script>
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
-    <div class="alert alert-success alert-dismissible fade in" role="alert">
+    <div class="alert {{ Session::get('alert') }} alert-dismissible fade in" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
       </button>
       <strong>{{ Session::get('berhasil') }}</strong>
@@ -156,6 +156,44 @@
 </div>
 @endcan
 
+<div class="modal fade modal-nonactive" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content alert-danger">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel2">Nonactive Agent</h4>
+      </div>
+      <div class="modal-body">
+        <h4>Sure ?</h4>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary" id="setUnpublish">Ya</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade modal-active" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel2">Activated Agent</h4>
+      </div>
+      <div class="modal-body">
+        <h4>Sure ?</h4>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary" id="setPublish">Ya</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="page-title">
   <div class="title_left">
     <h3>All Agent <small></small></h3>
@@ -179,11 +217,13 @@
               <th>Phone</th>
               <th>Address</th>
               <th>City</th>
+              <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
           <tfoot>
             <td></td>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>
@@ -216,6 +256,7 @@ $(function() {
             {data: 'phone_number'},
             {data: 'address'},
             {data: 'city'},
+            {data: 'status', orderable: false, searchable: false },
             {data: 'action', orderable: false, searchable: false },
         ]
     });
@@ -237,19 +278,31 @@ $(function() {
         });
     });
 
-    $('#agenttable').on('click', '.update', function(e) {
-      var agent_id     = $(this).data('id');
-      // var agent_name   = $(this).data('name');
-      // var phone_number = $(this).data('phone');
-      var address      = $(this).data('address');
-      var city         = $(this).data('city');
-      var version      = $(this).data('version');
-      $("#agent_id").val(agent_id);
-      // $("#agent_name").val(agent_name);
-      // $("#phone_number").val(phone_number);
-      $("#address").val(address);
-      $("#city").val(city);
-      $("#version").val(version);
+  $('#agenttable').on('click', '.update', function(e) {
+    var agent_id     = $(this).data('id');
+    // var agent_name   = $(this).data('name');
+    // var phone_number = $(this).data('phone');
+    var address      = $(this).data('address');
+    var city         = $(this).data('city');
+    var version      = $(this).data('version');
+    $("#agent_id").val(agent_id);
+    // $("#agent_name").val(agent_name);
+    // $("#phone_number").val(phone_number);
+    $("#address").val(address);
+    $("#city").val(city);
+    $("#version").val(version);
+  });
+
+  $(document).on('click', 'a.publish', function(){
+    var a = $(this).data('value');
+    var b = $(this).data('version');
+    $('#setPublish').attr('href', "{{ url('/') }}/agent/actived/"+a+"/"+b+"/Y");
+  });
+
+  $(document).on('click','a.unpublish', function(){
+    var a = $(this).data('value');
+    var b = $(this).data('version');
+    $('#setUnpublish').attr('href', "{{ url('/') }}/agent/actived/"+a+"/"+b+"/N");
   });
 });
 </script>

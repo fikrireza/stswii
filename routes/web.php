@@ -63,6 +63,9 @@ Route::get('/home', 'HomeController@index')
 				->name('agent.edit');
 	Route::post('/agent/update', 'AgentController@update')
 				->name('agent.update');
+	Route::get('/agent/actived/{id}/{version}/{status}', 'AgentController@active')
+				->name('agent.active');
+
 	Route::get('/agent/seed-db', 'AgentController@seedTables');
 // agent
 
