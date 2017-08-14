@@ -56,8 +56,9 @@ class ProductSellPriceController extends Controller
 		{
 			$index->where('sw_product.provider_id', $request->f_provider);
 		}
-
-		$index->where('sw_product_sell_price.active', isset($request->f_active) ? $request->f_active : 1);
+		if (isset($request->f_active) != false) {
+			$index->where('sw_product_sell_price.active', $request->f_active);
+		}
 
 		$index = $index->get();
 
