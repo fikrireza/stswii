@@ -121,6 +121,18 @@
       <div class="menu_section">
         <h3>Extra</h3>
         <ul class="nav side-menu">
+          <li class="{{ Route::is('report*') ? 'active' : '' }}">
+            <a>
+              <i class="fa fa-file-text-o"></i> Report <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="nav child_menu" style="{{ Route::is('report*') ? 'display: block;' : '' }}">
+              <li class="{{ Route::is('report.bySupplier') ? 'current-page' : '' }}"><a href="{{ route('report.bySupplier') }}">By Supplier</a></li>
+              <li class="{{ Route::is('report.byAgent') ? 'current-page' : '' }}"><a href="{{ route('report.byAgent') }}">By Agent</a></li>
+              <li class="{{ Route::is('report.byProvider') ? 'current-page' : '' }}"><a href="{{ route('report.byProvider') }}">By Provider</a></li>
+              <li class="{{ Route::is('report.byTopUpDepositPartner') ? 'current-page' : '' }}"><a href="{{ route('report.byTopUpDepositPartner') }}">By Top Up Deposit Partner</a></li>
+
+            </ul>
+          </li>
           @can('management-user')
           <li class="{{ Route::is('account*') ? 'active' : '' }}">
             <a>
@@ -138,7 +150,7 @@
       </div>
     </div>
 
-    <div class="sidebar-footer hidden-small">
+    {{-- <div class="sidebar-footer hidden-small">
       <a href="" data-toggle="tooltip" data-placement="top" title="Users">
         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
       </a>
@@ -151,7 +163,7 @@
       <a href="" data-toggle="tooltip" data-placement="top" title="Logout">
         <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
       </a>
-    </div>
+    </div> --}}
   </div>
 </div>
 

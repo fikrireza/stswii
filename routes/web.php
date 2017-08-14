@@ -283,3 +283,10 @@ Route::get('/home', 'HomeController@index')
 				->middleware('can:confirm-deposit-reversal');
 	Route::get('getConfirmedTopUp', 'DepositAgentController@getConfirmedTopUp');
 //------- Deposit Agent -------//
+
+
+//------- Report -------//
+	Route::get('report-supplier', 'ReportController@bySupplier')->name('report.bySupplier');
+	Route::get('report-agent', 'ReportController@byAgent')->name('report.byAgent');
+	Route::get('report-provider', 'ReportController@byProvider')->name('report.byProvider');
+	Route::get('report-topup-deposit-partner', 'ReportController@byTopUpDepositPartner')->name('report.byTopUpDepositPartner');
