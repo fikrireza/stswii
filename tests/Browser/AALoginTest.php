@@ -18,7 +18,7 @@ class AALoginTest extends DuskTestCase
      *
      * @return void
      */
-    public function skipLogin()
+    public function testLogin()
     {
         $this->browse(function ($browser) {
             $browser->visit(new Login)

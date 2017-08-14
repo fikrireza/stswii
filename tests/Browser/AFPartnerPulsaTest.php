@@ -14,10 +14,10 @@ class PartnerPulsaTest extends DuskTestCase
      *
      * @return void
      */
-    public function skipReadPartnerPulsa()
+    public function testReadPartnerPulsa()
     {
         $this->browse(function ($browser) {
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
                     ->visit('/home')
                     ->pause(2000)
                     ->clickLink('Manage Partner')
@@ -28,7 +28,7 @@ class PartnerPulsaTest extends DuskTestCase
         });
     }
 
-    public function skipCreatePartnerPulsa()
+    public function testCreatePartnerPulsa()
     {
         $code = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliet', 'Kilo', 'Lima', 'Mike', 'November', 'Oskar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'];
 
@@ -37,7 +37,7 @@ class PartnerPulsaTest extends DuskTestCase
         $faker = \Faker\Factory::create('id_ID');
 
         $this->browse(function ($browser) use ($random, $faker) {
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
                     ->visit('/partner-pulsa')
                     ->pause(2000)
                     ->clickLink('Add')
@@ -60,7 +60,7 @@ class PartnerPulsaTest extends DuskTestCase
         });
     }
 
-    public function skipValidationPartnerPulsa()
+    public function testValidationPartnerPulsa()
     {
         $code = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliet', 'Kilo', 'Lima', 'Mike', 'November', 'Oskar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'];
 
@@ -69,7 +69,7 @@ class PartnerPulsaTest extends DuskTestCase
         $faker = \Faker\Factory::create('id_ID');
 
         $this->browse(function ($browser) use ($random, $faker) {
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
                     ->visit('/partner-pulsa')
                     ->pause(2000)
                     ->clickLink('Add')
@@ -121,7 +121,7 @@ class PartnerPulsaTest extends DuskTestCase
         });
     }
 
-    public function skipUpdatePartnerPulsa()
+    public function testUpdatePartnerPulsa()
     {
         // disarankan untuk mengosongkan table produt sell price supaya bisa jalan dengan baik
         $code = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliet', 'Kilo', 'Lima', 'Mike', 'November', 'Oskar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'];
@@ -131,7 +131,7 @@ class PartnerPulsaTest extends DuskTestCase
         $faker = \Faker\Factory::create('id_ID');
 
         $this->browse(function ($browser) use ($random, $faker) {
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
                     ->visit('/partner-pulsa')
                     ->pause(2000)
                     ->click('#dataTables tbody tr:nth-child(1) td:nth-last-child(1) a:nth-child(1)')
@@ -159,7 +159,7 @@ class PartnerPulsaTest extends DuskTestCase
     {
 
         $this->browse(function ($browser) {
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
                     ->visit('/partner-pulsa')
                     ->pause(2000);
 
