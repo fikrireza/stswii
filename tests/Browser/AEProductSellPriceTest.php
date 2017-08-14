@@ -10,14 +10,15 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class AEProductSellPriceTest extends DuskTestCase
 {
     /**
-     * A Dusk skip example.
+     * A Dusk test example.
      *
      * @return void
      */
-    public function skipReadProductSellPrice()
+    public function testReadProductSellPrice()
     {
         $this->browse(function ($browser) {
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/home')
                     ->pause(2000)
                     ->clickLink('Manage Product')
@@ -28,10 +29,11 @@ class AEProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function skipReadUploadProductSellPrice()
+    public function testReadUploadProductSellPrice()
     {
         $this->browse(function ($browser) {
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/product-sell-price')
                     ->pause(2000)
                     ->clickLink('Upload')
@@ -40,7 +42,7 @@ class AEProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function skipCreateProductSellPrice()
+    public function testCreateProductSellPrice()
     {
         // disarankan untuk mengosongkan table produt sell price supaya bisa jalan dengan baik
         $nominal = rand(1,999) * 1000;
@@ -48,7 +50,8 @@ class AEProductSellPriceTest extends DuskTestCase
         $end_date = date('Y-m-d H:i:s', strtotime("+".rand(16,30)." days +".rand(4,6)." months +".rand(2,3)." years"));
 
         $this->browse(function ($browser) use ($nominal, $start_date, $end_date){
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/product-sell-price')
                     ->pause(2000)
                     ->clickLink('Add')
@@ -74,7 +77,7 @@ class AEProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function skipValidationProductSellPrice()
+    public function testValidationProductSellPrice()
     {
         // disarankan untuk mengosongkan table produt sell price supaya bisa jalan dengan baik
         $nominal = rand(1,999) * 1000;
@@ -82,7 +85,8 @@ class AEProductSellPriceTest extends DuskTestCase
         $end_date = date('Y-m-d H:i:s', strtotime("+".rand(16,30)." days +".rand(4,6)." months +".rand(2,3)." years"));
 
         $this->browse(function ($browser) use ($nominal, $start_date, $end_date){
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/product-sell-price')
                     ->pause(2000)
                     ->clickLink('Add')
@@ -150,7 +154,7 @@ class AEProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function skipUpdateProductSellPrice()
+    public function testUpdateProductSellPrice()
     {
         // disarankan untuk mengosongkan table produt sell price supaya bisa jalan dengan baik
         $nominal = rand(1,999) * 1000;
@@ -158,7 +162,8 @@ class AEProductSellPriceTest extends DuskTestCase
         $end_date = date('Y-m-d H:i:s', strtotime("+".rand(16,30)." days +".rand(4,6)." months +".rand(2,3)." years"));
 
         $this->browse(function ($browser) use ($nominal, $start_date, $end_date){
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/product-sell-price')
                     ->pause(2000)
                     ->click('#producttabel_wrapper tbody tr:nth-child(1) td:nth-last-child(1) a:nth-child(1)')
@@ -182,11 +187,12 @@ class AEProductSellPriceTest extends DuskTestCase
         });
     }
 
-    public function skipDeleteProductSellPrice()
+    public function testDeleteProductSellPrice()
     {
 
         $this->browse(function ($browser){
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/product-sell-price');
 
             $text = strtoupper($browser->pause(2000)->text('#producttabel_wrapper tbody tr:nth-child(1) td:nth-child(2)'));

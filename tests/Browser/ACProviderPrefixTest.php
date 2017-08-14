@@ -11,14 +11,15 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class ACProviderPrefixTest extends DuskTestCase
 {
     /**
-     * A Dusk skip example.
+     * A Dusk test example.
      *
      * @return void
      */
-    public function skipReadProviderPrefix()
+    public function testReadProviderPrefix()
     {
         $this->browse(function ($browser) {
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/home')
                     ->pause(2000)
                     ->clickLink('Manage Provider')
@@ -29,12 +30,13 @@ class ACProviderPrefixTest extends DuskTestCase
         });
     }
 
-    public function skipCreateProviderPrefix()
+    public function testCreateProviderPrefix()
     {
         $random = str_pad(rand(800, 999), 4, '0', STR_PAD_LEFT);
 
         $this->browse(function ($browser) use ($random) {
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider-prefix')
                     ->pause(2000)
                     ->clickLink('Add')
@@ -49,14 +51,15 @@ class ACProviderPrefixTest extends DuskTestCase
         });
     }
 
-    public function skipValidationProviderPrefix()
+    public function testValidationProviderPrefix()
     {
         $random = str_pad(rand(8000, 8999), 5, '0', STR_PAD_LEFT);
         $text = 'prefix number';
         $over = '012345678901234567890';
 
         $this->browse(function ($browser) use ($random, $text, $over) {
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider-prefix')
                     ->pause(2000)
                     ->clickLink('Add')
@@ -91,12 +94,13 @@ class ACProviderPrefixTest extends DuskTestCase
         });
     }
 
-    public function skipUpdateProviderPrefix()
+    public function testUpdateProviderPrefix()
     {
         $random = str_pad(rand(8000, 8999), 5, '0', STR_PAD_LEFT);
 
         $this->browse(function ($browser) use ($random){
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider-prefix')
                     ->waitFor('#dataTables')
                     ->click('#dataTables>tbody>tr:nth-child(1)>td:nth-last-child(1)>a:nth-child(1)')
@@ -111,10 +115,11 @@ class ACProviderPrefixTest extends DuskTestCase
         });
     }
 
-    public function skipDeleteProviderPrefix()
+    public function testDeleteProviderPrefix()
     {
         $this->browse(function ($browser){
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider-prefix')
                     ->waitFor('#dataTables');
 

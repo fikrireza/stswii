@@ -10,14 +10,15 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class ADProductTest extends DuskTestCase
 {
     /**
-     * A Dusk skip example.
+     * A Dusk test example.
      *
      * @return void
      */
-    public function skipReadProduct()
+    public function testReadProduct()
     {
         $this->browse(function ($browser) {
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/home')
                     ->pause(2000)
                     ->clickLink('Manage Product')
@@ -28,7 +29,7 @@ class ADProductTest extends DuskTestCase
         });
     }
 
-    public function skipCreateProduct()
+    public function testCreateProduct()
     {
         $product = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliet', 'Kilo', 'Lima', 'Mike', 'November', 'Oskar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'];
 
@@ -37,7 +38,8 @@ class ADProductTest extends DuskTestCase
         $random = $product[rand(0,25)];
 
         $this->browse(function ($browser) use ($random, $nominal, $type){
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/product')
                     ->pause(2000)
                     ->clickLink('Add')
@@ -61,7 +63,7 @@ class ADProductTest extends DuskTestCase
         });
     }
 
-    public function skipValidationProduct()
+    public function testValidationProduct()
     {
         $product = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliet', 'Kilo', 'Lima', 'Mike', 'November', 'Oskar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'];
 
@@ -70,7 +72,8 @@ class ADProductTest extends DuskTestCase
         $random = $product[rand(0,25)];
 
         $this->browse(function ($browser) use ($random, $nominal, $type){
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/product')
                     ->pause(2000);
 
@@ -122,7 +125,7 @@ class ADProductTest extends DuskTestCase
         });
     }
 
-    public function skipUpdateProduct()
+    public function testUpdateProduct()
     {
         $product = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliet', 'Kilo', 'Lima', 'Mike', 'November', 'Oskar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu'];
 
@@ -131,7 +134,8 @@ class ADProductTest extends DuskTestCase
         $random = $product[rand(0,25)];
 
         $this->browse(function ($browser) use ($random, $nominal, $type){
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/product')
                     ->pause(2000)
                     ->click('#producttabel tbody tr:nth-child(1) td:nth-last-child(1) a:nth-child(1)')
@@ -155,11 +159,12 @@ class ADProductTest extends DuskTestCase
         });
     }
 
-    public function skipDeleteProduct()
+    public function testDeleteProduct()
     {
 
         $this->browse(function ($browser){
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/product');
 
             $text = strtoupper($browser->pause(2000)->text('#producttabel tbody tr:nth-child(1) td:nth-child(3)'));

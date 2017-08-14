@@ -11,14 +11,15 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class ABProviderTest extends DuskTestCase
 {
     /**
-     * A Dusk skip example.
+     * A Dusk test example.
      *
      * @return void
      */
-    public function skipReadProvider()
+    public function testReadProvider()
     {
         $this->browse(function ($browser) {
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/home')
                     ->pause(2000)
                     ->clickLink('Manage Provider')
@@ -29,14 +30,15 @@ class ABProviderTest extends DuskTestCase
         });
     }
 
-    public function skipCreateProvider()
+    public function testCreateProvider()
     {
         $provider = ['Telkomsel', 'Indosat', 'XL', 'Axis', '3 Indonesia', 'BOLT!', 'Smartfren', 'PSN', 'Bakrie Telecom'];
 
         $random = $provider[rand(0,8)] . '-' . str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
 
         $this->browse(function ($browser) use ($random){
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider')
                     ->pause(2000)
                     ->clickLink('Add')
@@ -51,14 +53,15 @@ class ABProviderTest extends DuskTestCase
         });
     }
 
-    public function skipValidationProvider()
+    public function testValidationProvider()
     {
         $provider = ['Telkomsel', 'Indosat', 'XL', 'Axis', '3 Indonesia', 'BOLT!', 'Smartfren', 'PSN', 'Bakrie Telecom'];
 
         $random = $provider[rand(0,8)] . '-' . str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
 
         $this->browse(function ($browser) use ($random){
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider')
                     ->waitFor('#dataTables')
                     ->clickLink('Add')
@@ -92,14 +95,15 @@ class ABProviderTest extends DuskTestCase
         });
     }
 
-    public function skipUpdateProvider()
+    public function testUpdateProvider()
     {
         $provider = ['Telkomsel', 'Indosat', 'XL', 'Axis', '3 Indonesia', 'BOLT!', 'Smartfren', 'PSN', 'Bakrie Telecom'];
 
         $random = $provider[rand(0,8)] . '-' . str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
 
         $this->browse(function ($browser) use ($random) {
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider')
                     ->waitFor('#dataTables')
                     ->click('#dataTables>tbody>tr:nth-child(1)>td:nth-last-child(1)>a:nth-child(2)')
@@ -118,10 +122,11 @@ class ABProviderTest extends DuskTestCase
         });
     }
 
-    public function skipDeleteProvider()
+    public function testDeleteProvider()
     {
         $this->browse(function ($browser){
-            $browser->loginAs(User::first())
+            $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider')
                     ->waitFor('#dataTables');
 
