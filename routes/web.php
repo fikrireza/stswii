@@ -287,6 +287,10 @@ Route::get('/home', 'HomeController@index')
 
 //------- Report -------//
 	Route::get('report-supplier', 'ReportController@bySupplier')->name('report.bySupplier');
+	Route::post('report-supplier', 'ReportController@postBySupplier')->name('report.postBySupplier');
 	Route::get('report-agent', 'ReportController@byAgent')->name('report.byAgent');
+	Route::post('report-agent', 'ReportController@postByAgent')->name('report.postByAgent');
 	Route::get('report-provider', 'ReportController@byProvider')->name('report.byProvider');
+	Route::post('report-provider', 'ReportController@postByProvider')->name('report.postByProvider');
 	Route::get('report-topup-deposit-partner', 'ReportController@byTopUpDepositPartner')->name('report.byTopUpDepositPartner');
+	Route::post('report-topup-deposit-partner', 'ReportController@postByTopUpDepositPartner')->name('report.postByTopUpDepositPartner');
