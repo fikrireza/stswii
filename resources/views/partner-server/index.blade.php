@@ -55,7 +55,7 @@
               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Api Key<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input class="form-control col-md-7 col-xs-12" name="api_key" placeholder="Eg: Api Key" required="required" type="text" value="{{ old('api_key', base64_encode(openssl_random_pseudo_bytes(12))) }}">
+                <input class="form-control col-md-7 col-xs-12" name="api_key" placeholder="Eg: Api Key" required="required" type="text" value="{{ old('api_key') }}">
                 @if($errors->has('api_key'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('api_key')}}</span></code>
                 @endif
@@ -65,7 +65,7 @@
               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Api Secret<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input class="form-control col-md-7 col-xs-12" name="api_secret" placeholder="Eg: Api Secret" required="required" type="text" value="{{ old('api_secret', base64_encode(openssl_random_pseudo_bytes(32))) }}">
+                <input class="form-control col-md-7 col-xs-12" name="api_secret" placeholder="Eg: Api Secret" required="required" type="text" value="{{ old('api_secret') }}">
                 @if($errors->has('api_secret'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('api_secret')}}</span></code>
                 @endif

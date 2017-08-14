@@ -171,11 +171,6 @@
             <thead>
               <tr role="row">
                 <th>No</th>
-                <th>Client ID</th>
-                <th>Ref No</th>
-                <th>Biller Id</th>
-                <th>Doc Type Id</th>
-                <th>Acquirer Id</th>
                 <th>Name</th>
                 <th>Amount</th>
                 <th>Unique Code</th>
@@ -191,11 +186,6 @@
               @foreach ($proses->topupList as $list)
               <tr>
                 <td>{{ $count++ }}</td>
-                <td>{{ $list->clientId }}</td>
-                <td>{{ $list->refNo }}</td>
-                <td>{{ $list->billerId }}</td>
-                <td>{{ $list->docTypeId }}</td>
-                <td>{{ $list->acquirerId }}</td>
                 <td>{{ $list->name }}</td>
                 <td>{{ $list->amount }}</td>
                 <td>{{ $list->uniqueCode }}</td>
@@ -239,7 +229,7 @@
     });
   });
   @endcan
-  
+
   $('#startDate').daterangepicker({
     singleDatePicker: true,
     calender_style: "picker_3",

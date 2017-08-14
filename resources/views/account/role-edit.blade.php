@@ -245,7 +245,7 @@
       </div>
       <div class="ln_solid"></div>
       <div class="item form-group">
-        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Deposit Reversal</label>
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Deposit Void</label>
         <div class="col-md-6 col-sm-6 col-xs-12">
           <label>
             <input type="checkbox" class="flat" name="permissions[read-deposit-reversal]" {{ in_array('read-deposit-reversal',$can) ? 'checked="checked"' : '' }} value="true"/> Read
@@ -261,6 +261,24 @@
         <div class="col-md-6 col-sm-6 col-xs-12">
           <label>
             <input type="checkbox" class="flat" name="permissions[read-deposit-trx]" {{ in_array('read-deposit-trx',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label>
+        </div>
+      </div>
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Report</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-supplier]" {{ in_array('report-supplier',$can) ? 'checked="checked"' : '' }} value="true" /> Sales By Supplier
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-agent]" {{ in_array('report-agent',$can) ? 'checked="checked"' : '' }} value="true" /> Sales By Agent
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-provider]" {{ in_array('report-provider',$can) ? 'checked="checked"' : '' }} value="true" /> Sales By Provider
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-topup-deposit-partner]" {{ in_array('report-topup-deposit-partner',$can) ? 'checked="checked"' : '' }} value="true" /> Topup Deposit Partner
           </label>
         </div>
       </div>
