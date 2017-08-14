@@ -39,7 +39,7 @@
 								<option value="">Choose Partner Pulsa</option>
 				                @foreach ($getPartner as $key)
 								<option
-									value="{{ $key->partner_pulsa_id }}" {{ old('partner_pulsa_id') == $key->partner_pulsa_id ? 'selected=""' : ''}}
+									value="{{ $key->partner_pulsa_id }}" {{ old('partner_pulsa_id') == $key->partner_pulsa_id ? 'selected' : ''}}
 								>
 									{{ $key->partner_pulsa_name.'('.$key->partner_pulsa_code.')' }}
 								</option>
@@ -65,7 +65,7 @@
 								<option value="">Choose Provider</option>
                 				@foreach ($getProvider as $key)
 								<option
-									value="{{ $key->provider_id }}"
+									value="{{ $key->provider_id }}" {{ old('provider_id') == $key->provider_id ? 'selected' : ''}}
 								>
 									{{ $key->provider_name.'('.$key->provider_code.')' }}
 								</option>
@@ -98,7 +98,7 @@
 
 					<div class="item form-group {{ $errors->has('partner_product_code') ? 'has-error' : ''}}">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-							Partner Product Code
+							Partner Product Code<span class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 							<input
@@ -106,9 +106,12 @@
 								class="form-control col-md-7 col-xs-12"
 								name="partner_product_code"
 								type="text"
-								value="{{ $partner_product_code }}"
-								readonly
+								value=""
+								onchange="this.value = this.value.toUpperCase()"
 							>
+							@if($errors->has('partner_product_code'))
+								<code><span style="color:red; font-size:12px;">{{ $errors->first('partner_product_code')}}</span></code>
+							@endif
 						</div>
 					</div>
 
@@ -124,10 +127,22 @@
 								required="required"
 								type="text"
 								value="{{ old('partner_product_name') }}"
+								onchange="this.value = this.value.toUpperCase()"
 							>
 							@if($errors->has('partner_product_name'))
 								<code><span style="color:red; font-size:12px;">{{ $errors->first('partner_product_name')}}</span></code>
 							@endif
+						</div>
+					</div>
+
+					<div class="ln_solid"></div>
+					
+					<div class="item form-group">
+						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="active">Active</label>
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<label>
+								<input id="active" type="checkbox" class="flat" name="active" value="Y" {{ old('active') == 'Y' ? 'checked' : '' }}/>
+							</label>
 						</div>
 					</div>
 
@@ -163,25 +178,51 @@ $(".select2_single").select2({
 });
 
 $(document).ready(function(){
+	var old = {{ old('product_id') != '' ? old('product_id') : 0 }};
 	$('select#product_id').prop("disabled", true);
+	if($('select#provider_id').val() == ''){
+		$('select#product_id').val('').trigger('change');
+		$('select#product_id').prop("disabled", true);
+	}
+	else{
+		// $('select#product_id').val('').trigger('change');
+		$('select#product_id').prop("disabled", false);
+		$.getJSON({url: "{{ route('partner-product.ajaxGetProductList') }}/" + $('select#provider_id').val(), success: function(result){
+				$('select#product_id').empty();
+				$('select#product_id').append("<option value=''>Select Product</option>");
+				console.log(result)
+				$.each(result, function(i, field){
+					if (old == field.product_id) 
+					{
+						$('#product_id').append("<option value='"+ field.product_id +"' selected>"+ field.product_name +"("+field.product_code+")"+"</option>");
+						$('select#product_id').val(old).trigger('change');
+
+					}
+					else
+					{
+						$('#product_id').append("<option value='"+ field.product_id +"'>"+ field.product_name +"("+field.product_code+")"+"</option>");
+					}
+					
+				});
+			}
+		});
+	}
 });
 
 $(document).on('change','select#provider_id', function(){
 	if($(this).val() == ''){
-		$('select#product_id').val('');
-		$("select#product_id").select2("val", "");
+		$('select#product_id').val('').trigger('change');
 		$('select#product_id').prop("disabled", true);
 	}
 	else{
-		$('select#product_id').val('');
-		$("select#product_id").select2("val", "");
+		$('select#product_id').val('').trigger('change');
 		$('select#product_id').prop("disabled", false);
 		$.getJSON({url: "{{ route('partner-product.ajaxGetProductList') }}/" + $(this).val(), success: function(result){
 				$('select#product_id').empty();
 				$('select#product_id').append("<option value=''>Select Product</option>");
 				console.log(result)
 				$.each(result, function(i, field){
-					$('#product_id').append("<option value='"+ field.product_id +"'>"+ field.product_name +"</option>");
+					$('#product_id').append("<option value='"+ field.product_id +"'>"+ field.product_name +"("+field.product_code+")"+"</option>");
 				});
 			}
 		});
