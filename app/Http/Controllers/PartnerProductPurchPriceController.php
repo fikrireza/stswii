@@ -75,14 +75,14 @@ class PartnerProductPurchPriceController extends Controller
 			$info = 'Status Partner Produk Price gagal diubah! Data Partner Produk Price telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
 			$alret = 'alert-danger';
 		}
-		else if($status == 1){
+		else if($status == 'Y'){
 			if (date('YmdHis',strtotime($findData->datetime_end)) < Carbon::now()->format('YmdHis')) {
 				$info  = 'Status Partner Produk Price gagal diubah! Periode Telah Lewat Tidak Dapat Diaktifkan!';
 				$alret = 'alert-danger';
 			}
 			else{
 				$checkData = PartnerProductPurchPrice::where('partner_product_id',$findData->partner_product_id)
-					->where('active',1)
+					->where('active','Y')
 					->get();
 
 				if(count($checkData) != 0){
@@ -127,10 +127,10 @@ class PartnerProductPurchPriceController extends Controller
 				$findData->active         = $status;
 				$findData->update_user_id = Auth::id();
 				$findData->update_datetime= Carbon::now()->format('YmdHis');
-				if($status == 1){
+				if($status == 'Y'){
 					$findData->active_datetime  = Carbon::now()->format('YmdHis');
 				}
-				else if($status == 0){
+				else if($status == 'N'){
 					$findData->non_active_datetime  = Carbon::now()->format('YmdHis');
 				}
 				$findData->update();
