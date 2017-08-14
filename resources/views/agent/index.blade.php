@@ -44,6 +44,7 @@
         </div>
         <div class="modal-body">
             {{ csrf_field() }}
+            {{--
             <div class="item form-group {{ $errors->has('agent_name') ? 'has-error' : ''}}">
               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="agent_name">
                 Agent Name<span class="required">*</span>
@@ -93,7 +94,19 @@
                 @endif
               </div>
             </div>
-
+            --}}
+            <input
+              id="agent_id"
+              name="agent_id"
+              type="hidden"
+              value="{{ old('agent_id') }}"
+            >
+            <input
+              id="version"
+              name="version"
+              type="hidden"
+              value="{{ old('version') }}"
+            >
             <div class="item form-group {{ $errors->has('address') ? 'has-error' : ''}}">
               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="address">
                 Address <span class="required">*</span>
@@ -224,16 +237,16 @@ $(function() {
         });
     });
 
-    $('#producttabel').on('click', '.update', function(e) {
+    $('#agenttable').on('click', '.update', function(e) {
       var agent_id     = $(this).data('id');
-      var agent_name   = $(this).data('name');
-      var phone_number = $(this).data('phone');
+      // var agent_name   = $(this).data('name');
+      // var phone_number = $(this).data('phone');
       var address      = $(this).data('address');
       var city         = $(this).data('city');
       var version      = $(this).data('version');
       $("#agent_id").val(agent_id);
-      $("#agent_name").val(agent_name);
-      $("#phone_number").val(phone_number);
+      // $("#agent_name").val(agent_name);
+      // $("#phone_number").val(phone_number);
       $("#address").val(address);
       $("#city").val(city);
       $("#version").val(version);

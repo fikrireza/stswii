@@ -49,7 +49,16 @@ class AgentController extends Controller
 					if (Auth::user()->can('update-agent')) {
 						$html .=
 						"
-						<a class=\"update\" data-id='".$index->agent_id."' data-name='".$index->agent_name."' data-phone='".$index->phone_number."' data-address='".$index->address."' data-city='".$index->city."' data-version='".$index->version."' data-toggle='modal' data-target='.modal-form-update'>
+						<a 
+              class=\"update\" 
+              data-id='".$index->agent_id."' 
+              data-name='".$index->agent_name."' 
+              data-phone='".$index->phone_number."' 
+              data-address='".$index->address."' 
+              data-city='".$index->city."' 
+              data-version='".$index->version."' 
+              data-toggle='modal' data-target='.modal-form-update'
+            >
 							<span class=\"btn btn-xs btn-warning btn-sm\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Update\"><i class=\"fa fa-pencil\"></i></span>
 						</a>
 						";
@@ -66,22 +75,22 @@ class AgentController extends Controller
 
   	function update(Request $request){
   		$message = [
-  			'agent_name.required' => 'This field required',
-  			'phone_number.required' => 'This field required',
+  			// 'agent_name.required' => 'This field required',
+  			// 'phone_number.required' => 'This field required',
   			'address.required' => 'This field required',
   			'city.required' => 'This field required',
   		];
 
   		$validator = Validator::make($request->all(), [
-  			'agent_name' => 'required',
-  			'phone_number' => 'required',
+  			// 'agent_name' => 'required',
+  			// 'phone_number' => 'required',
   			'address' => 'required',
   			'city' => 'required',
   		], $message);
 
   		if($validator->fails())
   		{
-  			return redirect()->route('agent.edit', ['id' => $request->agent_id])->withErrors($validator)->withInput()->with('update-false', 'Something Errors');
+  			return redirect()->route('agent.index', ['id' => $request->agent_id])->withErrors($validator)->withInput()->with('update-false', 'Something Errors');
   		}
 
   		$index = Agent::where('agent_id', $request->agent_id)->first();
@@ -91,8 +100,8 @@ class AgentController extends Controller
   			return redirect()->route('agent.index')->with('update-false', 'Your data already updated by ' . $index->updatedBy->name . '.');
   		}
 
-  		$index->agent_name   = $request->agent_name;
-  		$index->phone_number = $request->phone_number;
+  		// $index->agent_name   = $request->agent_name;
+  		// $index->phone_number = $request->phone_number;
   		$index->address      = $request->address;
   		$index->city         = $request->city;
 
