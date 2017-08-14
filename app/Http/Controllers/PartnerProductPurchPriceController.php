@@ -34,20 +34,20 @@ class PartnerProductPurchPriceController extends Controller
 
 	public function index(Request $request)
 	{
+		// dd($request);
 		$provider = Provider::get();
 		$partner = PartnerPulsa::get();
 
 		$message = [
 			'f_provider.integer' => 'Invalid filter',
 			'f_partner.integer' => 'Invalid filter',
-			'f_active.integer' => 'Invalid filter',
 			'f_active.in' => 'Invalid filter',
 		];
 
 		$validator = Validator::make($request->all(), [
 			'f_provider' => 'integer|nullable',
 			'f_partner' => 'integer|nullable',
-			'f_active' => 'integer|nullable|in:0,1',
+			'f_active' => 'nullable|in:Y,N',
 		], $message);
 
 		if($validator->fails())

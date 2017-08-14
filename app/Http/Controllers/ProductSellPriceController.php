@@ -35,13 +35,12 @@ class ProductSellPriceController extends Controller
 
 		$message = [
 			'f_provider.integer' => 'Invalid filter',
-			'f_active.integer' => 'Invalid filter',
 			'f_active.in' => 'Invalid filter',
 		];
 
 		$validator = Validator::make($request->all(), [
 			'f_provider' => 'integer|nullable',
-			'f_active' => 'integer|nullable|in:0,1',
+			'f_active' => 'nullable|in:Y,N',
 		], $message);
 
 		if($validator->fails())
