@@ -164,8 +164,8 @@ class ProductSellPriceController extends Controller
 	{
 		$message = [
 			'product_id.required' => 'This field is required.',
-			'gross_sell_price.required' => 'This field is required.',
-			'gross_sell_price.numeric' => 'Numeric Only.',
+			// 'gross_sell_price.required' => 'This field is required.',
+			// 'gross_sell_price.numeric' => 'Numeric Only.',
 			'tax_percentage.required_if' => 'This field is required.',
 			'datetime_start.required' => 'This field is required.',
 			'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
@@ -174,7 +174,7 @@ class ProductSellPriceController extends Controller
 
 		$validator = Validator::make($request->all(), [
 			'product_id' => 'required',
-			'gross_sell_price' => 'required|numeric',
+			// 'gross_sell_price' => 'required|numeric',
 			'tax_percentage' => 'required_if:flg_tax,1',
 			'datetime_start' => 'required|before_or_equal:datetime_end',
 			'datetime_end' => 'required',
@@ -211,7 +211,7 @@ class ProductSellPriceController extends Controller
 		}
 
 		$index->product_id          = $request->product_id;
-		$index->gross_sell_price    = $request->gross_sell_price;
+		// $index->gross_sell_price    = $request->gross_sell_price;
 		$index->flg_tax             = isset($request->flg_tax) ? 1 : 0;
 		$index->tax_percentage      = isset($request->flg_tax) ? $request->tax_percentage : 0;
 		$index->datetime_start      = date('YmdHis', strtotime($request->datetime_start));
