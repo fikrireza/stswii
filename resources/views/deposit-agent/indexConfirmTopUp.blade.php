@@ -51,6 +51,7 @@
 </div>
 @endif
 
+@can('confirm-deposit-reversal')
 <div class="modal fade modal-form-confirm" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -88,6 +89,7 @@
     </div>
   </div>
 </div>
+@endcan
 
 <div class="row">
   <div class="col-md-8 col-md-offset-2">
@@ -179,7 +181,9 @@
                 <th>Unique Code</th>
                 <th>Unique Code Date</th>
                 <th>Confirm Date</th>
+                @can('confirm-deposit-reversal')
                 <th>Action</th>
+                @endcan
               </tr>
             </thead>
             <tbody>
@@ -197,7 +201,9 @@
                 <td>{{ $list->uniqueCode }}</td>
                 <td>{{ $list->uniqueCodeDate }}</td>
                 <td>{{ $list->confirmDate }}</td>
+                @can('confirm-deposit-reversal')
                 <td><a class="confirm" data-clientid="{{$list->clientId}}" data-uniquecode="{{$list->uniqueCode}}" data-uniquecodedate="{{$list->uniqueCodeDate}}" data-toggle='modal' data-target='.modal-form-confirm'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Reversal'>Reversal</span></a></td>
+                @endcan
               @endforeach
             </tbody>
           </table>
@@ -222,6 +228,7 @@
 <script type="text/javascript">
   $('#confirmed-agent').DataTable();
 
+  @can('confirm-deposit-reversal')
   $(function(){
     $(document).on('click', '.confirm', function(e) {
       var clientId        = $(this).data('clientid');
@@ -231,7 +238,8 @@
       $("#confirm_refno").val(uniqueCodeDate+uniqueCode);
     });
   });
-
+  @endcan
+  
   $('#startDate').daterangepicker({
     singleDatePicker: true,
     calender_style: "picker_3",

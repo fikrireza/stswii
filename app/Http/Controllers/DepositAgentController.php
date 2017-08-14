@@ -93,7 +93,7 @@ class DepositAgentController extends Controller
 
         ini_set('max_execution_time', 300);
         $client = new \GuzzleHttp\Client();
-        $res = $client->request('GET', 'http://localhost/getConfirmedTopUp'.$query)
+        $res = $client->request('GET', 'http://localhost/stswii/public/getConfirmedTopUp'.$query)
                       ->getbody();
 
         $proses = json_decode($res);
