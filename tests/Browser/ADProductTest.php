@@ -18,6 +18,7 @@ class ADProductTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/home')
                     ->pause(2000)
                     ->clickLink('Manage Product')
@@ -38,6 +39,7 @@ class ADProductTest extends DuskTestCase
 
         $this->browse(function ($browser) use ($random, $nominal, $type){
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/product')
                     ->pause(2000)
                     ->clickLink('Add')
@@ -71,6 +73,7 @@ class ADProductTest extends DuskTestCase
 
         $this->browse(function ($browser) use ($random, $nominal, $type){
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/product')
                     ->pause(2000);
 
@@ -132,6 +135,7 @@ class ADProductTest extends DuskTestCase
 
         $this->browse(function ($browser) use ($random, $nominal, $type){
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/product')
                     ->pause(2000)
                     ->click('#producttabel tbody tr:nth-child(1) td:nth-last-child(1) a:nth-child(1)')
@@ -160,6 +164,7 @@ class ADProductTest extends DuskTestCase
 
         $this->browse(function ($browser){
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/product');
 
             $text = strtoupper($browser->pause(2000)->text('#producttabel tbody tr:nth-child(1) td:nth-child(3)'));

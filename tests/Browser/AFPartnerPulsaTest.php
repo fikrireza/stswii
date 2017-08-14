@@ -18,6 +18,7 @@ class PartnerPulsaTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/home')
                     ->pause(2000)
                     ->clickLink('Manage Partner')
@@ -38,6 +39,7 @@ class PartnerPulsaTest extends DuskTestCase
 
         $this->browse(function ($browser) use ($random, $faker) {
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/partner-pulsa')
                     ->pause(2000)
                     ->clickLink('Add')
@@ -70,6 +72,7 @@ class PartnerPulsaTest extends DuskTestCase
 
         $this->browse(function ($browser) use ($random, $faker) {
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/partner-pulsa')
                     ->pause(2000)
                     ->clickLink('Add')
@@ -132,6 +135,7 @@ class PartnerPulsaTest extends DuskTestCase
 
         $this->browse(function ($browser) use ($random, $faker) {
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/partner-pulsa')
                     ->pause(2000)
                     ->click('#dataTables tbody tr:nth-child(1) td:nth-last-child(1) a:nth-child(1)')
@@ -160,6 +164,7 @@ class PartnerPulsaTest extends DuskTestCase
 
         $this->browse(function ($browser) {
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/partner-pulsa')
                     ->pause(2000);
 

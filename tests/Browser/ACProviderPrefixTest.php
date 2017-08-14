@@ -19,6 +19,7 @@ class ACProviderPrefixTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/home')
                     ->pause(2000)
                     ->clickLink('Manage Provider')
@@ -35,6 +36,7 @@ class ACProviderPrefixTest extends DuskTestCase
 
         $this->browse(function ($browser) use ($random) {
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider-prefix')
                     ->pause(2000)
                     ->clickLink('Add')
@@ -57,6 +59,7 @@ class ACProviderPrefixTest extends DuskTestCase
 
         $this->browse(function ($browser) use ($random, $text, $over) {
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider-prefix')
                     ->pause(2000)
                     ->clickLink('Add')
@@ -97,6 +100,7 @@ class ACProviderPrefixTest extends DuskTestCase
 
         $this->browse(function ($browser) use ($random){
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider-prefix')
                     ->waitFor('#dataTables')
                     ->click('#dataTables>tbody>tr:nth-child(1)>td:nth-last-child(1)>a:nth-child(1)')
@@ -115,6 +119,7 @@ class ACProviderPrefixTest extends DuskTestCase
     {
         $this->browse(function ($browser){
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider-prefix')
                     ->waitFor('#dataTables');
 

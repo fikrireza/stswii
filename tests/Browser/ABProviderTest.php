@@ -19,6 +19,7 @@ class ABProviderTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/home')
                     ->pause(2000)
                     ->clickLink('Manage Provider')
@@ -37,6 +38,7 @@ class ABProviderTest extends DuskTestCase
 
         $this->browse(function ($browser) use ($random){
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider')
                     ->pause(2000)
                     ->clickLink('Add')
@@ -59,6 +61,7 @@ class ABProviderTest extends DuskTestCase
 
         $this->browse(function ($browser) use ($random){
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider')
                     ->waitFor('#dataTables')
                     ->clickLink('Add')
@@ -100,6 +103,7 @@ class ABProviderTest extends DuskTestCase
 
         $this->browse(function ($browser) use ($random) {
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider')
                     ->waitFor('#dataTables')
                     ->click('#dataTables>tbody>tr:nth-child(1)>td:nth-last-child(1)>a:nth-child(2)')
@@ -122,6 +126,7 @@ class ABProviderTest extends DuskTestCase
     {
         $this->browse(function ($browser){
             $browser->loginAs(User::where('email', 'like', 'administrator%')->first())
+                    ->pause(2000)
                     ->visit('/provider')
                     ->waitFor('#dataTables');
 
