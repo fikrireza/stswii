@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use Yajra\Datatables\Facades\Datatables;
 
 use App\Models\Agent;
+use DB;
 use Auth;
 use Validator;
+use Carbon\Carbon;
 
 class AgentController extends Controller
 {
@@ -35,6 +37,7 @@ class AgentController extends Controller
           'phone_number',
           'address',
           'city',
+          'active',
           'version'
         )
       ->get();
@@ -49,14 +52,62 @@ class AgentController extends Controller
 					if (Auth::user()->can('update-agent')) {
 						$html .=
 						"
-						<a class=\"update\" data-id='".$index->agent_id."' data-name='".$index->agent_name."' data-phone='".$index->phone_number."' data-address='".$index->address."' data-city='".$index->city."' data-version='".$index->version."' data-toggle='modal' data-target='.modal-form-update'>
+						<a 
+              class=\"update\" 
+              data-id='".$index->agent_id."' 
+              data-name='".$index->agent_name."' 
+              data-phone='".$index->phone_number."' 
+              data-address='".$index->address."' 
+              data-city='".$index->city."' 
+              data-version='".$index->version."' 
+              data-toggle='modal' data-target='.modal-form-update'
+            >
 							<span class=\"btn btn-xs btn-warning btn-sm\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Update\"><i class=\"fa fa-pencil\"></i></span>
 						</a>
 						";
 					}
 					return $html;
                 })
+        ->addColumn('status', function($index) {
+          if($index->active == 'Y'){
+            return "
+              <a 
+                href='' 
+                class='unpublish' 
+                data-value='".$index->agent_id."' 
+                data-version='".$index->version."' 
+                data-toggle='modal' 
+                data-target='.modal-nonactive'
+              >
+                <span 
+                  class='label label-success' 
+                  data-toggle='tooltip' 
+                  data-placement='top' 
+                  title='Active'
+                >Active</span>
+              </a><br>";
+          }
+          else if($index->active == 'N'){
+            return "
+              <a 
+                href='' 
+                class='publish' 
+                data-value='".$index->agent_id."' 
+                data-version='".$index->version."' 
+                data-toggle='modal' 
+                data-target='.modal-active'
+              >
+                <span 
+                  class='label label-danger' 
+                  data-toggle='tooltip' 
+                  data-placement='top' 
+                  title='Non Active'
+                >Non Active</span>
+              </a><br>";
+          }
+        })
         ->removeColumn('version')
+        ->escapeColumns(['*'])
 				->make(true);
   	}
 
@@ -66,22 +117,22 @@ class AgentController extends Controller
 
   	function update(Request $request){
   		$message = [
-  			'agent_name.required' => 'This field required',
-  			'phone_number.required' => 'This field required',
+  			// 'agent_name.required' => 'This field required',
+  			// 'phone_number.required' => 'This field required',
   			'address.required' => 'This field required',
   			'city.required' => 'This field required',
   		];
 
   		$validator = Validator::make($request->all(), [
-  			'agent_name' => 'required',
-  			'phone_number' => 'required',
+  			// 'agent_name' => 'required',
+  			// 'phone_number' => 'required',
   			'address' => 'required',
   			'city' => 'required',
   		], $message);
 
   		if($validator->fails())
   		{
-  			return redirect()->route('agent.edit', ['id' => $request->agent_id])->withErrors($validator)->withInput()->with('update-false', 'Something Errors');
+  			return redirect()->route('agent.index', ['id' => $request->agent_id])->withErrors($validator)->withInput()->with('update-false', 'Something Errors');
   		}
 
   		$index = Agent::where('agent_id', $request->agent_id)->first();
@@ -91,8 +142,8 @@ class AgentController extends Controller
   			return redirect()->route('agent.index')->with('update-false', 'Your data already updated by ' . $index->updatedBy->name . '.');
   		}
 
-  		$index->agent_name   = $request->agent_name;
-  		$index->phone_number = $request->phone_number;
+  		// $index->agent_name   = $request->agent_name;
+  		// $index->phone_number = $request->phone_number;
   		$index->address      = $request->address;
   		$index->city         = $request->city;
 
@@ -104,6 +155,40 @@ class AgentController extends Controller
 
   		return redirect()->route('agent.index')->with('berhasil', 'Your data has been successfully updated.');
   	}
+
+    public function active($id, $version, $status){
+      $call = Agent::find($id);
+
+      if($call == null){
+        $info = 'Failed to update';
+        $alret = 'alert-danger';
+      }
+      else if($call->version != $version){
+        $User = User::find($call->update_user_id);
+        $info = 'Failed to update already updeted by '.$User->name;
+        $alret = 'alert-danger';
+      }
+      else{
+        $info = 'Success '.$call->agent_name;
+        $alret = 'alert-success';
+        DB::transaction(function () use($call, $status) {
+          $call->increment('version');
+          $call->active         = $status;
+          $call->update_user_id = Auth::user()->id;
+          $call->update_datetime= Carbon::now()->format('YmdHis');
+          if($status == 'Y'){
+            $call->active_datetime  = Carbon::now()->format('YmdHis');
+          }
+          else if($status == 'N'){
+            $call->non_active_datetime  = Carbon::now()->format('YmdHis');
+          }
+          $call->update();
+        });
+      }
+      return redirect()->route('agent.index')
+        ->with('alret', $alret)
+        ->with('berhasil', $info);
+    }
 
   	// function seedTables(){
   	// 	$faker 		= Faker\Factory::create();

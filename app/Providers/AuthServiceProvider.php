@@ -42,6 +42,8 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerDepositAgentReversal();
         $this->registerDepositTrx();
 
+        $this->registerReportPolicies();
+
         $this->registerUsersPolicies();
     }
 
@@ -264,4 +266,21 @@ class AuthServiceProvider extends ServiceProvider
           return $user->inRole('administrator');
         });
     }
+
+    public function registerReportPolicies()
+    {
+        Gate::define('report-supplier', function($user){
+          return $user->hasAccess(['report-supplier']);
+        });
+        Gate::define('report-agent', function($user){
+          return $user->hasAccess(['report-agent']);
+        });
+        Gate::define('report-provider', function($user){
+          return $user->hasAccess(['report-provider']);
+        });
+        Gate::define('report-topup-deposit-partner', function($user){
+          return $user->hasAccess(['report-topup-deposit-partner']);
+        });
+    }
+
 }

@@ -31,8 +31,8 @@ return array(
         */
         'settings' => [
 
-            'memoryCacheSize' => '32MB',
-            'cacheTime'       => 600
+            'memoryCacheSize' => '128MB',
+            'cacheTime'       => 6000
 
         ],
 
@@ -58,15 +58,15 @@ return array(
     ],
 
     'properties' => [
-        'creator'        => 'Maatwebsite',
-        'lastModifiedBy' => 'Maatwebsite',
-        'title'          => 'Spreadsheet',
-        'description'    => 'Default spreadsheet export',
+        'creator'        => 'Amadeo - FRA',
+        'lastModifiedBy' => 'Amadeo',
+        'title'          => 'Amadeo - Export',
+        'description'    => 'Amadeo Export',
         'subject'        => 'Spreadsheet export',
-        'keywords'       => 'maatwebsite, excel, export',
+        'keywords'       => 'amadeo, excel, export',
         'category'       => 'Excel',
-        'manager'        => 'Maatwebsite',
-        'company'        => 'Maatwebsite',
+        'manager'        => 'Fikri',
+        'company'        => 'Amadeo',
     ],
 
     /*
@@ -106,7 +106,7 @@ return array(
     |
     */
 
-    'creator'    => 'Maatwebsite',
+    'creator'    => 'Amadeo - FRA',
 
     'csv'        => [
         /*

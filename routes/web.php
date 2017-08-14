@@ -63,6 +63,9 @@ Route::get('/home', 'HomeController@index')
 				->name('agent.edit');
 	Route::post('/agent/update', 'AgentController@update')
 				->name('agent.update');
+	Route::get('/agent/actived/{id}/{version}/{status}', 'AgentController@active')
+				->name('agent.active');
+
 	Route::get('/agent/seed-db', 'AgentController@seedTables');
 // agent
 
@@ -199,7 +202,7 @@ Route::get('/home', 'HomeController@index')
 				->middleware('can:update-product');
 	Route::get('product/active/{id}', 'ProductController@active')
 				->name('product.active')
-				->middleware('can:activated-product');
+				->middleware('can:activate-product');
 	Route::get('product/delete/{id}', 'ProductController@delete')
 				->name('product.delete')
 				->middleware('can:delete-product');
@@ -286,7 +289,12 @@ Route::get('/home', 'HomeController@index')
 
 
 //------- Report -------//
-	Route::get('report-supplier', 'ReportController@bySupplier')->name('report.bySupplier');
-	Route::get('report-agent', 'ReportController@byAgent')->name('report.byAgent');
-	Route::get('report-provider', 'ReportController@byProvider')->name('report.byProvider');
-	Route::get('report-topup-deposit-partner', 'ReportController@byTopUpDepositPartner')->name('report.byTopUpDepositPartner');
+	Route::get('report-supplier', 'ReportController@bySupplier')->name('report.bySupplier')->middleware('can:report-supplier');
+	Route::post('report-supplier', 'ReportController@postBySupplier')->name('report.postBySupplier');
+	Route::get('report-agent', 'ReportController@byAgent')->name('report.byAgent')->middleware('can:report-agent');
+	Route::post('report-agent', 'ReportController@postByAgent')->name('report.postByAgent');
+	Route::get('report-provider', 'ReportController@byProvider')->name('report.byProvider')->middleware('can:report-provider');
+	Route::post('report-provider', 'ReportController@postByProvider')->name('report.postByProvider');
+	Route::get('report-topup-deposit-partner', 'ReportController@byTopUpDepositPartner')->name('report.byTopUpDepositPartner')->middleware('can:report-topup-deposit-partner');
+	Route::post('report-topup-deposit-partner', 'ReportController@postByTopUpDepositPartner')->name('report.postByTopUpDepositPartner');
+//------- Report -------//

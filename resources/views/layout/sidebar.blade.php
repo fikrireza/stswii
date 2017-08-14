@@ -106,7 +106,7 @@
               @endcan
               @can('read-deposit-reversal')
               <li class="{{ Route::is('deposit-agent-reversal*') ? 'current-page' : '' }}">
-                <a href="{{ route('deposit-agent-reversal.index') }}">Deposit Agent Reversal</a>
+                <a href="{{ route('deposit-agent-reversal.index') }}">Deposit Agent Void</a>
               </li>
               @endcan
               @can('read-deposit-trx')
@@ -126,11 +126,18 @@
               <i class="fa fa-file-text-o"></i> Report <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="{{ Route::is('report*') ? 'display: block;' : '' }}">
-              <li class="{{ Route::is('report.bySupplier') ? 'current-page' : '' }}"><a href="{{ route('report.bySupplier') }}">By Supplier</a></li>
-              <li class="{{ Route::is('report.byAgent') ? 'current-page' : '' }}"><a href="{{ route('report.byAgent') }}">By Agent</a></li>
-              <li class="{{ Route::is('report.byProvider') ? 'current-page' : '' }}"><a href="{{ route('report.byProvider') }}">By Provider</a></li>
-              <li class="{{ Route::is('report.byTopUpDepositPartner') ? 'current-page' : '' }}"><a href="{{ route('report.byTopUpDepositPartner') }}">By Top Up Deposit Partner</a></li>
-
+              @can('report-supplier')
+              <li class="{{ Route::is('report.bySupplier') ? 'current-page' : '' }}"><a href="{{ route('report.bySupplier') }}">Sales By Supplier</a></li>
+              @endcan
+              @can('report-agent')
+              <li class="{{ Route::is('report.byAgent') ? 'current-page' : '' }}"><a href="{{ route('report.byAgent') }}">Sales By Agent</a></li>
+              @endcan
+              @can('report-provider')
+              <li class="{{ Route::is('report.byProvider') ? 'current-page' : '' }}"><a href="{{ route('report.byProvider') }}">Sales By Provider</a></li>
+              @endcan
+              @can('report-topup-deposit-partner')
+              <li class="{{ Route::is('report.byTopUpDepositPartner') ? 'current-page' : '' }}"><a href="{{ route('report.byTopUpDepositPartner') }}">Top Up Deposit Partner</a></li>
+              @endcan
             </ul>
           </li>
           @can('management-user')

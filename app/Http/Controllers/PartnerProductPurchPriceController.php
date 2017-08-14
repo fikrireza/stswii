@@ -705,4 +705,5 @@ class PartnerProductPurchPriceController extends Controller
 
         return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Your data has been successfully uploaded.');
     }
+
 }

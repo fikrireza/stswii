@@ -85,7 +85,7 @@
           <div class="item form-group {{ $errors->has('gross_sell_price') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="gross_sell_price">Gross Sell Price <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="gross_sell_price" class="form-control" name="gross_sell_price" placeholder="E.g: 50000" required="required" type="text" value="{{ old('gross_sell_price', $index->gross_sell_price) }}" onkeypress="return isNumber(event)" maxlength="9">
+              <input id="gross_sell_price" class="form-control" name="gross_sell_price" placeholder="E.g: 50000" required="required" type="text" value="{{ old('gross_sell_price', $index->gross_sell_price) }}" onkeypress="return isNumber(event)" maxlength="9" readonly>
               @if($errors->has('gross_sell_price'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('gross_sell_price')}}</span></code>
               @endif
@@ -177,7 +177,6 @@
     "timePicker24Hour": true,
     "timePickerSeconds": true,
     "timePickerIncrement": 1,
-
   });
 
   $('#datetime_end').daterangepicker({
