@@ -34,7 +34,6 @@ class PartnerProductPurchPriceController extends Controller
 
 	public function index(Request $request)
 	{
-		// dd($request);
 		$provider = Provider::get();
 		$partner = PartnerPulsa::get();
 
