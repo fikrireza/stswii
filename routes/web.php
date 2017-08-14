@@ -63,6 +63,9 @@ Route::get('/home', 'HomeController@index')
 				->name('agent.edit');
 	Route::post('/agent/update', 'AgentController@update')
 				->name('agent.update');
+	Route::get('/agent/actived/{id}/{version}/{status}', 'AgentController@active')
+				->name('agent.active');
+
 	Route::get('/agent/seed-db', 'AgentController@seedTables');
 // agent
 
@@ -199,7 +202,7 @@ Route::get('/home', 'HomeController@index')
 				->middleware('can:update-product');
 	Route::get('product/active/{id}', 'ProductController@active')
 				->name('product.active')
-				->middleware('can:activated-product');
+				->middleware('can:activate-product');
 	Route::get('product/delete/{id}', 'ProductController@delete')
 				->name('product.delete')
 				->middleware('can:delete-product');

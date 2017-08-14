@@ -153,6 +153,7 @@
             @endforeach
           </select>
           <select name="f_active" class="form-control" onchange="this.form.submit()">
+            <option value="" @if(isset($request->f_active) == false) selected @endif>All</option>
             <option value="Y" @if(isset($request->f_active) && $request->f_active == 'Y') selected @endif>Active</option>
             <option value="N" @if(isset($request->f_active) && $request->f_active == 'N') selected @endif>Not Active</option>
           </select>
@@ -283,7 +284,6 @@ $(function() {
 @endif
 
 <script type="text/javascript">
-// $('#dataTables').DataTable();
 
 $(function(){
   @can('delete-partner-product-purch-price')
@@ -297,13 +297,13 @@ $(function(){
   $(document).on('click', 'a.publish', function(){
     var a = $(this).data('value');
     var b = $(this).data('version');
-    $('#setPublish').attr('href', "{{ url('/') }}/partner-product-purch-price/actived/"+a+"/"+b+"/1");
+    $('#setPublish').attr('href', "{{ url('/') }}/partner-product-purch-price/actived/"+a+"/"+b+"/Y");
   });
 
   $(document).on('click','a.unpublish', function(){
     var a = $(this).data('value');
     var b = $(this).data('version');
-    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-product-purch-price/actived/"+a+"/"+b+"/0");
+    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-product-purch-price/actived/"+a+"/"+b+"/N");
   });
   @endcan
 });
