@@ -161,7 +161,7 @@ Route::get('/home', 'HomeController@index')
 	Route::post('partner-product-purch-price/prosesTemplate', 'PartnerProductPurchPriceController@prosesTemplate')
 			  ->name('partner-product-purch-price.prosesTemplate')
 				->middleware('can:create-partner-product-purch-price');
-	Route::post('partner-product-purch-price/storeTemplate', 'PartnerProductPurchPriceController@storeTemplate')
+	Route::get('partner-product-purch-price/storeTemplate', 'PartnerProductPurchPriceController@storeTemplate')
 			  ->name('partner-product-purch-price.storeTemplate')
 				->middleware('can:create-partner-product-purch-price');
 // partner product purch price

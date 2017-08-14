@@ -80,7 +80,7 @@
 						<div class="col-md-6 col-md-offset-3">
 							<a href="{{ route('product-sell-price.index') }}" class="btn btn-primary">Cancel</a>
 							@can('create-product-sell-price')
-							<button id="send" type="submit" class="btn btn-success">Process</button>
+							<button id="send" type="submit" class="btn btn-success">Upload</button>
 							@endcan
 						</div>
 					</div>
@@ -103,13 +103,14 @@
 				{{ csrf_field() }}
 				<table class="table table-striped table-bordered no-footer tablecheck" width="100%" id="">
 					<thead>
-						<th>Delete</th>
-						<th>Product</th>
+						<th>No</th>
+						<th>Product Code</th>
 						<th>Gross Sell Price</th>
 						<th>Tax Percentage</th>
 						<th>Datetime Start</th>
 						<th>Datetime End</th>
 						<th>Active</th>
+						<th>Delete</th>
 					</thead>
 
 					<tbody>
@@ -120,21 +121,11 @@
 						<tr>
 							<td>
 								{{ $urut + 1 }}
-								<input type="button" name="delete" value="x" class="btn btn-danger btn-sm btn-delete">
+								
 							</td>
 							<td>
-								@php $empty = 1; @endphp
-								@foreach($getProduct as $list)
-									@if($list->product_id == $key['product_id'])
-										{{$list->product_name}} - Rp. {{ number_format($list->nominal) }}
-										<input type="hidden" name="product_id[{{$urut}}]" value="{{$key['product_id']}}">
-										@php $empty = 0; @endphp
-										@break
-									@endif
-								@endforeach
-								@if($empty)
-								<input type="hidden" name="product_id[{{$urut}}]" value="0">
-								@endif
+								{{$key['product_code']}}
+								<input type="hidden" name="product_code[{{$urut}}]" value="{{$key['product_code']}}">
 							</td>
 							<td>
 								Rp. {{ number_format($key['gross_sell_price']) }}
@@ -153,10 +144,148 @@
 								<input type="hidden" name="datetime_end[{{$urut}}]" value="{{ $key['datetime_end'] }}"/>
 							</td>
 							<td>
-								<select class="form-control" name="active[{{$urut}}]">
-									<option value="Y">Active</option>
-									<option value="N">Not Active</option>
-								</select>
+								{{ $key['active'] }}
+								<input type="hidden" name="active[{{$urut}}]" value="{{ $key['active'] }}"/>
+							</td>
+							<td>
+								<input type="button" name="delete" value="x" class="btn btn-danger btn-sm btn-delete">
+							</td>
+						</tr>
+						@php
+							$urut++
+						@endphp
+						@endforeach
+					</tbody>
+
+				</table>
+				<button name="button" class="btn btn-success btn-bg btn-submit" onclick="return false">Upload</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+@endif
+
+@if (isset($error))
+<div class="row">
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div class="x_panel">
+			<div class="x_title">
+				<h2 style="color: red;">Data Error</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="x_content table-responsive">
+				<form class="form-horizontal form-label-left" action="{{ route('product-sell-price.storeTemplate') }}" method="post">
+				{{ csrf_field() }}
+				<table class="table table-striped table-bordered no-footer tablecheck" width="100%" id="">
+					<thead>
+						<th>Row</th>
+						<th>Product Code</th>
+						<th>Gross Sell Price</th>
+						<th>Tax Percentage</th>
+						<th>Datetime Start</th>
+						<th>Datetime End</th>
+						<th>Active</th>
+						<th>Message</th>
+					</thead>
+
+					<tbody>
+						@foreach ($error as $key)
+						<tr>
+							<td>
+								{{$key['row'] + 1}}
+							</td>
+							<td>
+								{{$key['product_code']}}
+							</td>
+							<td>
+								Rp. {{ number_format($key['gross_sell_price']) }}
+							</td>
+							<td>
+								{{ $key['tax_percentage'] }} %
+							</td>
+							<td>
+								{{ $key['datetime_start'] }}
+							</td>
+							<td>
+								{{ $key['datetime_end'] }}
+							</td>
+							<td>
+								{{ $key['active'] }}
+							</td>
+							<td>
+								{{ $key['message'] }}
+							</td>
+						</tr>
+						@endforeach
+					</tbody>
+
+				</table>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+@endif
+
+@if (isset($pass) && $pass != '')
+<div class="row">
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div class="x_panel">
+			<div class="x_title">
+				<h2>Pass</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="x_content table-responsive">
+				<form class="form-horizontal form-label-left" action="{{ route('product-sell-price.storeTemplate') }}" method="post">
+				{{ csrf_field() }}
+				<table class="table table-striped table-bordered no-footer tablecheck" width="100%" id="">
+					<thead>
+						<th>No</th>
+						<th>Product Code</th>
+						<th>Gross Sell Price</th>
+						<th>Tax Percentage</th>
+						<th>Datetime Start</th>
+						<th>Datetime End</th>
+						<th>Active</th>
+						<th>Delete</th>
+					</thead>
+
+					<tbody>
+						@php
+							$urut = 0;
+						@endphp
+						@foreach ($pass as $key)
+						<tr>
+							<td>
+								{{$key['row'] + 1}}
+							</td>
+							<td>
+								{{$key['product_code']}}
+								<input type="hidden" name="product_code[{{$urut}}]" value="{{$key['product_code']}}">
+							</td>
+							<td>
+								Rp. {{ number_format($key['gross_sell_price']) }}
+								<input type="hidden" name="gross_sell_price[{{$urut}}]" value="{{ $key['gross_sell_price'] }}"/>
+							</td>
+							<td>
+								{{ $key['tax_percentage'] }} %
+								<input type="hidden" name="tax_percentage[{{$urut}}]" value="{{ $key['tax_percentage'] }}"/>
+							</td>
+							<td>
+								{{ $key['datetime_start'] }}
+								<input type="hidden" name="datetime_start[{{$urut}}]" value="{{ $key['datetime_start'] }}"/>
+							</td>
+							<td>
+								{{ $key['datetime_end'] }}
+								<input type="hidden" name="datetime_end[{{$urut}}]" value="{{ $key['datetime_end'] }}"/>
+							</td>
+							<td>
+								{{ $key['active'] }}
+								<input type="hidden" name="active[{{$urut}}]" value="{{ $key['active'] }}"/>
+							</td>
+							<td>
+								<input type="button" name="delete" value="x" class="btn btn-danger btn-sm btn-delete">
 							</td>
 						</tr>
 						@php

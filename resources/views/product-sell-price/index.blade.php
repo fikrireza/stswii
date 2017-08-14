@@ -142,8 +142,9 @@
             @endforeach
           </select>
           <select name="f_active" class="form-control" onchange="this.form.submit()">
-            <option value="1" @if(isset($request->f_active) && $request->f_active == 1) selected @endif>Active</option>
-            <option value="0" @if(isset($request->f_active) && $request->f_active == 0) selected @endif>Not Active</option>
+            <option value="" @if(isset($request->f_active) && $request->f_active == '') selected @endif>All Status</option>
+            <option value="Y" @if(isset($request->f_active) && $request->f_active == 'Y') selected @endif>Active</option>
+            <option value="N" @if(isset($request->f_active) && $request->f_active == 'N') selected @endif>Not Active</option>
           </select>
         </form>
         <div class="ln_solid"></div>

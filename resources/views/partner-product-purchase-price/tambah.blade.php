@@ -98,7 +98,7 @@
             </div>
           </div>
 
-          <div class="item form-group {{ $errors->has('tax_percentage') ? 'has-error' : ''}}" id="tax_percentage" {{ old('flg_tax') == 1 ? '' : 'style=display:none'}}>
+          <div class="item form-group {{ $errors->has('tax_percentage') ? 'has-error' : ''}}" id="tax_percentage" {{ old('flg_tax') == 'Y' ? '' : 'style=display:none'}}>
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tax_percentage">Tax Percentage <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input id="tax_percentage" class="form-control" name="tax_percentage" placeholder="E.g: 10" required="required" type="text" value="{{ old('tax_percentage') }}" onkeypress="return isNumber(event)" maxlength="9">

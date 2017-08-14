@@ -95,11 +95,11 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="flg_tax">Tax</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input type="checkbox" name="flg_tax" id="flg_tax" value="1" {{ old('flg_tax', $index->flg_tax) == 1 ? 'checked=""' : '' }}/>
+                <input type="checkbox" name="flg_tax" id="flg_tax" value="Y" {{ old('flg_tax', $index->flg_tax) == 'Y' ? 'checked=""' : '' }}/>
               </label>
             </div>
           </div>
-          <div class="item form-group {{ $errors->has('tax_percentage') ? 'has-error' : ''}}" id="tax_percentage" {{ old('flg_tax', $index->flg_tax) == 1 ? '' : 'style=display:none' }}>
+          <div class="item form-group {{ $errors->has('tax_percentage') ? 'has-error' : ''}}" id="tax_percentage" {{ old('flg_tax', $index->flg_tax) == 'Y' ? '' : 'style=display:none' }}>
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tax_percentage">Tax Percentage <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input id="tax_percentage" class="form-control" name="tax_percentage" placeholder="E.g: 10" required="required" type="text" value="{{ old('tax_percentage', $index->flg_tax ? $index->tax_percentage : '') }}" onkeypress="return isNumber(event)" maxlength="9">
@@ -131,7 +131,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="active">Active</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input id="active" type="checkbox" class="flat" name="active" value="1" {{ old('active', $index->active) == 1 ? 'checked=""' : '' }}/>
+                <input id="active" type="checkbox" class="flat" name="active" value="Y" {{ old('active', $index->active) == 'Y' ? 'checked=""' : '' }}/>
               </label>
             </div>
           </div>
@@ -169,17 +169,26 @@
   });
 
   $('#datetime_start').daterangepicker({
-    singleDatePicker: true,
-    calender_style: "picker_3",
-    format: 'YYYY-MM-DD 00:00:00',
-    minDate: new Date(),
+    "calender_style": "picker_3",
+    "singleDatePicker": true,
+    "format": 'YYYY-MM-DD H:m:s',
+    "showDropdowns": true,
+    "timePicker": true,
+    "timePicker24Hour": true,
+    "timePickerSeconds": true,
+    "timePickerIncrement": 1,
+
   });
 
   $('#datetime_end').daterangepicker({
-    singleDatePicker: true,
-    calender_style: "picker_3",
-    format: 'YYYY-MM-DD 23:59:59',
-    minDate: new Date(),
+    "calender_style": "picker_3",
+    "singleDatePicker": true,
+    "format": 'YYYY-MM-DD H:m:s',
+    "showDropdowns": true,
+    "timePicker": true,
+    "timePicker24Hour": true,
+    "timePickerSeconds": true,
+    "timePickerIncrement": 1,
   });
 
   $('#flg_tax').click(function() {

@@ -2,647 +2,707 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Yajra\Datatables\Facades\Datatables;
-
-use App\Models\User;
-use App\Models\PartnerProductPurchPrice;
 use App\Models\PartnerProduct;
+use App\Models\PartnerProductPurchPrice;
 use App\Models\PartnerPulsa;
 use App\Models\Provider;
-
+use App\Models\User;
 use Auth;
-use DB;
-use Validator;
 use Carbon\Carbon;
+use DB;
 use Excel;
+use Illuminate\Http\Request;
 use Input;
+use Validator;
+use Yajra\Datatables\Facades\Datatables;
 
 class PartnerProductPurchPriceController extends Controller
 {
 
-	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-			$this->middleware('auth');
-	}
-
-
-	public function index(Request $request)
-	{
-		$provider = Provider::get();
-		$partner = PartnerPulsa::get();
-
-		$message = [
-			'f_provider.integer' => 'Invalid filter',
-			'f_partner.integer' => 'Invalid filter',
-			'f_active.integer' => 'Invalid filter',
-			'f_active.in' => 'Invalid filter',
-		];
-
-		$validator = Validator::make($request->all(), [
-			'f_provider' => 'integer|nullable',
-			'f_partner' => 'integer|nullable',
-			'f_active' => 'integer|nullable|in:0,1',
-		], $message);
-
-		if($validator->fails())
-		{
-			return redirect()->route('partner-product-purch-price.index');
-		}
-
-		return view('partner-product-purchase-price.index', compact(
-			'request', 
-			'provider',
-			'partner'
-		));
-	}
-
-	public function active($id, $version, $status)
-	{
-		$findData = PartnerProductPurchPrice::find($id);
-
-		if($findData == null){
-			$info = 'Status Partner Produk Price gagal diubah! Tidak dapat menemukan Partner Produk Price!';
-			$alret = 'alert-danger';
-		}
-		else if($findData->version != $version){
-			$User = User::find($findData->update_user_id);
-			$info = 'Status Partner Produk Price gagal diubah! Data Partner Produk Price telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
-			$alret = 'alert-danger';
-		}
-		else if($status == 1){
-			if (date('YmdHis',strtotime($findData->datetime_end)) < Carbon::now()->format('YmdHis')) {
-				$info  = 'Status Partner Produk Price gagal diubah! Periode Telah Lewat Tidak Dapat Diaktifkan!';
-				$alret = 'alert-danger';
-			}
-			else{
-				$checkData = PartnerProductPurchPrice::where('partner_product_id',$findData->partner_product_id)
-					->where('active',1)
-					->get();
-
-				if(count($checkData) != 0){
-					foreach ($checkData as $list){
-						if(
-								date('YmdHis', strtotime($findData->datetime_start)) >= date('YmdHis', strtotime($list->datetime_start)) && 
-								date('YmdHis', strtotime($findData->datetime_start)) <= date('YmdHis', strtotime($list->datetime_end))
-							){ 
-							$retrun= 'update';
-							$info  = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
-							$alret = 'alert-danger';
-							break;
-						}
-						else if(
-							date('YmdHis', strtotime($findData->datetime_start)) <= date('YmdHis', strtotime($list->datetime_start)) && 
-							date('YmdHis', strtotime($findData->datetime_end))  >= date('YmdHis', strtotime($list->datetime_end))
-						){
-							$retrun= 'update';
-							$info  = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
-							$alret = 'alert-danger';
-							break;
-						}
-						else if(
-							date('YmdHis', strtotime($findData->datetime_end)) >= date('YmdHis', strtotime($list->datetime_start)) && 
-							date('YmdHis', strtotime($findData->datetime_end)) <= date('YmdHis', strtotime($list->datetime_end))
-						){
-							$retrun= 'update';
-							$info  = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
-							$alret = 'alert-danger';
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		if(!isset($alret)){
-			$alret = 'alert-success';
-			$info = 'Berhasil Memperbarui Status Partner Produk '.$findData->partner_product_name;
-			DB::transaction(function () use($findData, $status) {
-				$findData->increment('version');
-				$findData->active         = $status;
-				$findData->update_user_id = Auth::id();
-				$findData->update_datetime= Carbon::now()->format('YmdHis');
-				if($status == 1){
-					$findData->active_datetime  = Carbon::now()->format('YmdHis');
-				}
-				else if($status == 0){
-					$findData->non_active_datetime  = Carbon::now()->format('YmdHis');
-				}
-				$findData->update();
-			});
-		}
-		
-		return redirect()->route('partner-product-purch-price.index')
-		->with('alret', $alret)
-		->with('berhasil', $info);
-	}
-
-	public function delete($id, $version)
-	{
-		$findData = PartnerProductPurchPrice::find($id);
-
-		if($findData == null){
-			$info = 'Data Partner Produk Purchase Price gagal dihapus! Tidak dapat menemukan Partner Produk Purchase Price!';
-			$alret = 'alert-danger';
-		}
-		else if($findData->version != $version){
-			$User = User::find($findData->update_user_id);
-			$info = 'Data Partner Produk Purchase Price gagal dihapus! Data Partner telah diupdate Oleh '.$User->name.'. Harap periksa kembali!';
-			$alret = 'alert-danger';
-		}
-		else{
-			$info = 'Berhasil hapus Data Partner Produk Purchase Price';
-			$alret = 'alert-success';
-			$findData->delete();
-		}
-		return redirect()->route('partner-product-purch-price.index')
-			->with('alret', $alret)
-			->with('berhasil', $info);
-	}
-
-	public function tambah()
-	{
-		$partnerProduct = PartnerProduct::where('active', 'Y')->get();
-
-		return view('partner-product-purchase-price.tambah',compact('partnerProduct'));
-	}
-
-	public function store(Request $request)
-	{
-		$message = [
-			'partner_product_id.required' => 'This field is required.',
-			'gross_purch_price.required' => 'This field is required.',
-			'gross_purch_price.numeric' => 'Numeric Only.',
-			'tax_percentage.required_if' => 'This field is required.',
-			'datetime_start.required' => 'This field is required.',
-			'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
-			'datetime_end.required' => 'This field is required.',
-		];
-
-		$validator = Validator::make($request->all(), [
-			'partner_product_id' => 'required',
-			'gross_purch_price' => 'required|numeric',
-			'tax_percentage' => 'required_if:flg_tax,1',
-			'datetime_start' => 'required|before_or_equal:datetime_end',
-			'datetime_end' => 'required',
-		], $message);
-
-		if($validator->fails()){
-			return redirect()->route('partner-product-purch-price.tambah')->withErrors($validator)->withInput();
-		}
-
-		$checkData = PartnerProductPurchPrice::where('partner_product_id',$request->partner_product_id)
-			->where('active','Y')
-			->get();
-
-		foreach ($checkData as $list)
-		{
-			if($list->datetime_start <= date('YmdHis', strtotime($request->datetime_start)) && date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_end && isset($request->active))
-			{
-				return redirect()->route('partner-product-purch-price.tambah')->with('gagal', 'Data is still active.')->withInput();
-			}
-			if($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active))
-			{
-				return redirect()->route('partner-product-purch-price.tambah')->with('gagal', 'Data is still active.')->withInput();
-			}
-		}
-
-		$index = new PartnerProductPurchPrice;
-
-		$index->partner_product_id  = $request->partner_product_id;
-		$index->gross_purch_price   = $request->gross_purch_price;
-		$index->flg_tax             = isset($request->flg_tax) ? 'Y' : 'N';
-		$index->tax_percentage      = isset($request->flg_tax) ? $request->tax_percentage : 0;
-		$index->datetime_start      = date('YmdHis', strtotime($request->datetime_start));
-		$index->datetime_end        = date('YmdHis', strtotime($request->datetime_end));
-
-		$index->active              = isset($request->active) ? 'Y' : 'N';
-		if(isset($request->active))
-		{
-			$index->active_datetime     = date('YmdHis');
-			$index->non_active_datetime = 00000000000000;
-		}
-		else
-		{
-			$index->active_datetime     = 00000000000000;
-			$index->non_active_datetime = date('YmdHis');
-		}
-
-
-		$index->version             = 0;
-		$index->create_datetime     = date('YmdHis');
-		$index->create_user_id      = Auth::id();
-		$index->update_datetime     = 00000000000000;
-		$index->update_user_id      = 0;
-
-		$index->save();
-
-		return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Your data has been successfully saved.');
-	}
-
-	public function edit($id)
-	{
-		$index = PartnerProductPurchPrice::find($id);
-
-		if(!$index)
-		{
-			return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data Not Found');
-		}
-
-		$partnerProduct = PartnerProduct::where('active', 'Y')->get();
-
-		return view('partner-product-purchase-price.ubah', compact('index','partnerProduct'));
-	}
-
-	public function update(Request $request)
-	{
-		$message = [
-			'partner_product_id.required' => 'This field is required.',
-			'gross_purch_price.required' => 'This field is required.',
-			'gross_purch_price.numeric' => 'Numeric Only.',
-			'tax_percentage.required_if' => 'This field is required.',
-			'datetime_start.required' => 'This field is required.',
-			'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
-			'datetime_end.required' => 'This field is required.',
-		];
-
-		$validator = Validator::make($request->all(), [
-			'partner_product_id' => 'required',
-			'gross_purch_price' => 'required|numeric',
-			'tax_percentage' => 'required_if:flg_tax,1',
-			'datetime_start' => 'required|before_or_equal:datetime_end',
-			'datetime_end' => 'required',
-		], $message);
-
-		if($validator->fails()){
-			return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_sell_price_id])->withErrors($validator)->withInput();
-		}
-
-		$index = PartnerProductPurchPrice::find($request->partner_product_purch_price_id);
-
-		$checkData = PartnerProductPurchPrice::where('partner_product_id',$request->partner_product_id)
-			->where('active','Y')
-			->where('partner_product_purch_price_id','<>',$request->partner_product_purch_price_id)
-			->get();
-
-		foreach ($checkData as $list)
-		{
-			if($list->datetime_start <= date('YmdHis', strtotime($request->datetime_start)) && date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_end && isset($request->active));
-			{
-				return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
-			}
-			if($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active));
-			{
-				return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
-			}
-		}
-
-		if($index->version != $request->version)
-		{
-			return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_sell_price_id])->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
-		}
-
-		$index->partner_product_id  = $request->partner_product_id;
-		$index->gross_purch_price   = $request->gross_purch_price;
-		$index->flg_tax             = isset($request->flg_tax) ? 'Y' : 'N';
-		$index->tax_percentage      = isset($request->flg_tax) ? $request->tax_percentage : 0;
-		$index->datetime_start      = date('YmdHis', strtotime($request->datetime_start));
-		$index->datetime_end        = date('YmdHis', strtotime($request->datetime_end));
-
-		$index->active              = isset($request->active) ? 'Y' : 'N';
-		if(isset($request->active))
-		{
-			$index->active_datetime     = date('YmdHis');
-		}
-		else
-		{
-			$index->non_active_datetime = date('YmdHis');
-		}
-
-		$index->version             += 1;
-		$index->update_datetime     = date('YmdHis');
-		$index->update_user_id      = Auth::id();
-
-		$index->save();
-
-		return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Your data has been successfully updated.');
-	}
-
-	public function ajaxGetProductPartner($partner, $provider)
-	{
-		$getPartnerProduct = PartnerProduct::select(
-				'partner_product_id',
-				'partner_product_code',
-				'partner_product_name'
-			)
-			->where('partner_pulsa_id', $partner)
-			->where('provider_id', $provider)
-			->get();
-
-		return $getPartnerProduct;
-	}
-
-	public function yajraGetData(Request $request)
-	{
-
-		$f_provider = $request->query('f_provider');
-		$f_partner = $request->query('f_partner');
-		$f_active = $request->query('f_active');
-
-		$getDatas = PartnerProductPurchPrice::leftJoin(
-				'sw_partner_product', 
-				'sw_partner_product.partner_product_id',
-				'sw_partner_product_purch_price.partner_product_id'
-			)
-			->select([
-				'sw_partner_product.partner_product_code as partner_product_code',
-				'sw_partner_product.partner_product_name as partner_product_name',
-				'partner_product_purch_price_id',
-				'gross_purch_price',
-				'flg_tax',
-				'tax_percentage',
-				'datetime_start',
-				'datetime_end',
-				'sw_partner_product_purch_price.active as active',
-				'sw_partner_product_purch_price.version as version'
-			]);
-
-		if($f_provider != null){
-			$getDatas->where('sw_partner_product.provider_id', $f_provider);
-		}
-		if($f_partner != null){
-			$getDatas->where('sw_partner_product.partner_pulsa_id', $f_partner);
-		}
-		if($f_active != null){
-			$getDatas->where('sw_partner_product_purch_price.active', $f_active);
-		}
-		$getDatas = $getDatas->get();
-		
-		$start=1;
-		$Datatables = Datatables::of($getDatas)
-			->addColumn('slno', function ($getData) use (&$start) {
-					return $start++;
-			})
-			->editColumn('gross_purch_price',  function ($getData){
-							return 'Rp. '.number_format($getData->gross_purch_price, 2);
-					})
-			->editColumn('flg_tax',  function ($getData){
-				if($getData->flg_tax == 'Y'){
-					return "Y";
-				}
-				else{
-					return "N";
-				}
-			})
-			->editColumn('tax_percentage',  function ($getData){
-				if($getData->flg_tax == "Y"){
-					return $getData->tax_percentage."%";
-				}
-				else{
-					return "0%";
-				}
-			})
-			->editColumn('datetime_start',  function ($getData){
-					return date('d-m-Y H:i:s', strtotime($getData->datetime_start));
-			})
-			->editColumn('datetime_end',  function ($getData){
-					return date('d-m-Y H:i:s', strtotime($getData->datetime_end));
-			})
-			->addColumn('action', function ($getData) {
-				$actionHtml = '';
-				if (Auth::user()->can('update-partner-product-purch-price')) {
-					$actionHtml = $actionHtml." 
-						<a 
-							href='".route('partner-product-purch-price.edit', ['id' => $getData->partner_product_purch_price_id])."''
-							class='btn btn-xs btn-warning btn-sm' 
-							data-toggle='tooltip'
-							data-placement='top' 
-							title='Ubah'
-						><i class='fa fa-pencil'></i></a>";
-				}
-				if (Auth::user()->can('delete-partner-product-purch-price')) {
-					$actionHtml = $actionHtml." 
-						<a 
-							href='' 
-							class='delete' 
-							data-value='".$getData->partner_product_purch_price_id."' 
-							data-version='".$getData->version."' 
-							data-toggle='modal' 
-							data-target='.modal-delete'
-						>
-							<span 
-								class='btn btn-xs btn-danger btn-sm' 
-								data-toggle='tooltip' 
-								data-placement='top' 
-								title='Hapus'
-							><i class='fa fa-remove'></i></span>
-						</a>";
-				}
-					return $actionHtml;
-			});
-
-		if (Auth::user()->can('activate-partner-product-purch-price')) {
-			$Datatables = $Datatables->editColumn('active', function ($getData){
-				if($getData->active == 'Y'){
-					return "
-						<a 
-							href='' 
-							class='unpublish' 
-							data-value='".$getData->partner_product_purch_price_id."' 
-							data-version='".$getData->version."' 
-							data-toggle='modal' 
-							data-target='.modal-nonactive'
-						>
-							<span 
-								class='label label-success' 
-								data-toggle='tooltip' 
-								data-placement='top' 
-								title='Active'
-							>Active</span>
-						</a><br>";
-				}
-				else{
-					return "
-						<a 
-							href='' 
-							class='publish' 
-							data-value='".$getData->partner_product_purch_price_id."' 
-							data-version='".$getData->version."' 
-							data-toggle='modal' 
-							data-target='.modal-active'
-						>
-							<span 
-								class='label label-danger' 
-								data-toggle='tooltip' 
-								data-placement='top' 
-								title='Non Active'
-							>Non Active</span>
-						</a><br>";
-				}
-			});
-		}
-
-		$Datatables = $Datatables
-				->escapeColumns(['*'])
-				->make(true);
-
-		return $Datatables;
-	}
-
-	public function upload()
-	{
-
-		return view('partner-product-purchase-price.masal');
-	}
-
-	public function template()
-	{
-		$partnerProduct = PartnerProduct::where('active', '=', 'Y')
-			->select('partner_product_id', 'partner_product_name', 'partner_product_code')
-			->orderBy('partner_product_id', 'asc')
-			->get()
-			->toArray();
-													
-		return Excel::create('Template Partner Product Purch Price Import', function($excel) use($partnerProduct)
-		{
-			$excel->sheet('Data-Import', function($sheet){
-				$sheet->row(1, array('partner_product_id', 'gross_purch_price','tax_percentage', 'datetime_start', 'datetime_end'));
-				$sheet->setColumnFormat(array(
-					'A' => '@',
-					'B' => '0.00',
-					'C' => '0.00',
-					'D' => 'YYYY-MM-DD HH:mm:ss',
-					'E' => 'YYYY-MM-DD HH:mm:ss',
-				));
-			});
-
-			$excel->sheet('partner_product_id', function($sheet) use($partnerProduct){
-				$sheet->fromArray($partnerProduct, null, 'A6', true);
-				$sheet->row(1, array('Example'));
-				$sheet->mergeCells('A1:E1');
-				$sheet->row(2, array('partner_product_id', 'gross_purch_price','tax_percentage', 'datetime_start', 'datetime_end'));
-				$sheet->row(3, array('1', '45000', '10', '2017-07-01 12:00:00', '2017-07-31 12:00:00'));
-				$sheet->row(5, array('Data Product'));
-				$sheet->mergeCells('A5:C5');
-				$sheet->row(6, array('id','partner_product_name','partner_product_code'));
-				$sheet->setAllBorders('thin');
-				$sheet->setFreeze('A7');
-
-				$sheet->cells('A2:E3', function($cells){
-					$cells->setBackground('#5c92e8');
-					$cells->setFontColor('#000000');
-					$cells->setFontWeight('bold');
-				});
-
-				$sheet->cells('A6:C6', function($cells){
-					$cells->setBackground('#000000');
-					$cells->setFontColor('#ffffff');
-					$cells->setFontWeight('bold');
-				});
-			});
-
-		})->download('xls');
-	}
-
-	public function prosesTemplate(Request $request)
-	{
-		if($request->hasFile('file')){
-			$path = Input::file('file')->getRealPath();
-			$data = Excel::selectSheets('Data-Import')->load($path, function($reader) {
-			})->get();
-
-			if(!empty($data) && $data->count()){
-				foreach ($data as $key) {
-					$collect[] = [
-						'partner_product_id' => $key->partner_product_id,
-						'gross_purch_price'  => $key->gross_purch_price,
-						'tax_percentage'     => $key->tax_percentage,
-						'datetime_start'     => $key->datetime_start,
-						'datetime_end'       => $key->datetime_end,
-					];
-				}
-
-				if(!empty($collect)){
-
-					$collect = collect($collect);
-
-					$partnerProduct = PartnerProduct::where('active', '=', 'Y')->get();
-
-					return view('partner-product-purchase-price.masal', compact('collect', 'partnerProduct'));
-				}
-			}else{
-				return view('partner-product-purchase-price.masal')->with('gagal', 'Please Download Template');
-			}
-		}else{
-			return view('partner-product-purchase-price.masal')->with('gagal', 'Please Select Template');
-		}
-	}
-
-	public function storeTemplate(Request $request)
-	{
-		// return $request->all();
-
-		// dd($request->all());
-
-		$partner_product_id = $request->partner_product_id;
-		$gross_purch_price  = $request->gross_purch_price;
-		$tax_percentage     = $request->tax_percentage;
-		$datetime_start     = $request->datetime_start;
-		$datetime_end       = $request->datetime_end;
-		$active             = $request->active;
-
-
-
-		DB::transaction(function() use($partner_product_id, $gross_purch_price, $tax_percentage, $datetime_start, $datetime_end, $active){
-
-			foreach ($partner_product_id as $key => $n )
-			{
-			/*Load array */
-				$checkData = PartnerProductPurchPrice::where('partner_product_id',$partner_product_id[$key])
-					->where('active','Y')
-					->get();
-
-				$skip = 0;
-				foreach ($checkData as $list)
-				{
-					if($list->datetime_start <= date('YmdHis', strtotime($datetime_start[$key])) && date('YmdHis', strtotime($datetime_start[$key])) <= $list->datetime_end && $active[$key] == 1)
-					{
-						$skip = 1;
-					}
-					if($list->datetime_start <= date('YmdHis', strtotime($datetime_end[$key])) && date('YmdHis', strtotime($datetime_end[$key])) <= $list->datetime_end && $active[$key] == 1)
-					{
-						$skip = 1;
-					}
-				}
-
-				if(!$skip && $partner_product_id[$key] != 0)
-				{
-					$arrData = PartnerProductPurchPrice::create(array(
-						"partner_product_id"  => $partner_product_id[$key],
-						"gross_purch_price"   => $gross_purch_price[$key],
-						"flg_tax"             => $tax_percentage[$key] > 0 ? 'N' : 'Y',
-						"tax_percentage"      => $tax_percentage[$key],
-						"datetime_start"      => date('YmdHis', strtotime( $datetime_start[$key] )),
-						"datetime_end"        => date('YmdHis', strtotime( $datetime_end[$key] )),
-						"create_user_id"      => Auth::id(),
-						"active"              => $active[$key],
-						"active_datetime"     => $active[$key] == 'Y' ? date('YmdHis') : '00000000000000',
-						"non_active_datetime" => $active[$key] == 'N' ? date('YmdHis') : '00000000000000',
-						"version"             => 0,
-						"create_datetime"     => date('YmdHis'),
-						"create_user_id"      => Auth::id(),
-						"update_datetime"     => '00000000000000',
-						"update_user_id"      => 0,
-					));
-				}
-			}
-		});
-
-		return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Your data has been successfully uploaded.');
-	}
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    public function index(Request $request)
+    {
+        $provider = Provider::get();
+        $partner  = PartnerPulsa::get();
+
+        $message = [
+            'f_provider.integer' => 'Invalid filter',
+            'f_partner.integer'  => 'Invalid filter',
+            'f_active.in'        => 'Invalid filter',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'f_provider' => 'integer|nullable',
+            'f_partner'  => 'integer|nullable',
+            'f_active'   => 'nullable|in:Y,N',
+        ], $message);
+
+        if ($validator->fails()) {
+            return redirect()->route('partner-product-purch-price.index');
+        }
+
+        return view('partner-product-purchase-price.index', compact(
+            'request',
+            'provider',
+            'partner'
+        ));
+    }
+
+    public function active($id, $version, $status)
+    {
+        $findData = PartnerProductPurchPrice::find($id);
+
+        if ($findData == null) {
+            $info  = 'Status Partner Produk Price gagal diubah! Tidak dapat menemukan Partner Produk Price!';
+            $alret = 'alert-danger';
+        } else if ($findData->version != $version) {
+            $User  = User::find($findData->update_user_id);
+            $info  = 'Status Partner Produk Price gagal diubah! Data Partner Produk Price telah diupdate Oleh ' . $User->name . '. Harap periksa kembali!';
+            $alret = 'alert-danger';
+        } else if ($status == 1) {
+            if (date('YmdHis', strtotime($findData->datetime_end)) < Carbon::now()->format('YmdHis')) {
+                $info  = 'Status Partner Produk Price gagal diubah! Periode Telah Lewat Tidak Dapat Diaktifkan!';
+                $alret = 'alert-danger';
+            } else {
+                $checkData = PartnerProductPurchPrice::where('partner_product_id', $findData->partner_product_id)
+                    ->where('active', 'Y')
+                    ->get();
+
+                if (count($checkData) != 0) {
+                    foreach ($checkData as $list) {
+                        if (
+                            date('YmdHis', strtotime($findData->datetime_start)) >= date('YmdHis', strtotime($list->datetime_start)) &&
+                            date('YmdHis', strtotime($findData->datetime_start)) <= date('YmdHis', strtotime($list->datetime_end))
+                        ) {
+                            $retrun = 'update';
+                            $info   = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
+                            $alret  = 'alert-danger';
+                            break;
+                        } else if (
+                            date('YmdHis', strtotime($findData->datetime_start)) <= date('YmdHis', strtotime($list->datetime_start)) &&
+                            date('YmdHis', strtotime($findData->datetime_end)) >= date('YmdHis', strtotime($list->datetime_end))
+                        ) {
+                            $retrun = 'update';
+                            $info   = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
+                            $alret  = 'alert-danger';
+                            break;
+                        } else if (
+                            date('YmdHis', strtotime($findData->datetime_end)) >= date('YmdHis', strtotime($list->datetime_start)) &&
+                            date('YmdHis', strtotime($findData->datetime_end)) <= date('YmdHis', strtotime($list->datetime_end))
+                        ) {
+                            $retrun = 'update';
+                            $info   = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
+                            $alret  = 'alert-danger';
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!isset($alret)) {
+            $alret = 'alert-success';
+            $info  = 'Berhasil Memperbarui Status Partner Produk ' . $findData->partner_product_name;
+            DB::transaction(function () use ($findData, $status) {
+                $findData->increment('version');
+                $findData->active          = $status;
+                $findData->update_user_id  = Auth::id();
+                $findData->update_datetime = Carbon::now()->format('YmdHis');
+                if ($status == 1) {
+                    $findData->active_datetime = Carbon::now()->format('YmdHis');
+                } else if ($status == 0) {
+                    $findData->non_active_datetime = Carbon::now()->format('YmdHis');
+                }
+                $findData->update();
+            });
+        }
+
+        return redirect()->route('partner-product-purch-price.index')
+            ->with('alret', $alret)
+            ->with('berhasil', $info);
+    }
+
+    public function delete($id, $version)
+    {
+        $findData = PartnerProductPurchPrice::find($id);
+
+        if ($findData == null) {
+            $info  = 'Data Partner Produk Purchase Price gagal dihapus! Tidak dapat menemukan Partner Produk Purchase Price!';
+            $alret = 'alert-danger';
+        } else if ($findData->version != $version) {
+            $User  = User::find($findData->update_user_id);
+            $info  = 'Data Partner Produk Purchase Price gagal dihapus! Data Partner telah diupdate Oleh ' . $User->name . '. Harap periksa kembali!';
+            $alret = 'alert-danger';
+        } else {
+            $info  = 'Berhasil hapus Data Partner Produk Purchase Price';
+            $alret = 'alert-success';
+            $findData->delete();
+        }
+        return redirect()->route('partner-product-purch-price.index')
+            ->with('alret', $alret)
+            ->with('berhasil', $info);
+    }
+
+    public function tambah()
+    {
+        $partnerProduct = PartnerProduct::where('active', 'Y')->get();
+
+        return view('partner-product-purchase-price.tambah', compact('partnerProduct'));
+    }
+
+    public function store(Request $request)
+    {
+        $message = [
+            'partner_product_id.required'    => 'This field is required.',
+            'gross_purch_price.required'     => 'This field is required.',
+            'gross_purch_price.numeric'      => 'Numeric Only.',
+            'tax_percentage.required_if'     => 'This field is required.',
+            'datetime_start.required'        => 'This field is required.',
+            'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
+            'datetime_end.required'          => 'This field is required.',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'partner_product_id' => 'required',
+            'gross_purch_price'  => 'required|numeric',
+            'tax_percentage'     => 'required_if:flg_tax,Y',
+            'datetime_start'     => 'required|before_or_equal:datetime_end',
+            'datetime_end'       => 'required',
+        ], $message);
+
+        if ($validator->fails()) {
+            return redirect()->route('partner-product-purch-price.tambah')->withErrors($validator)->withInput();
+        }
+
+        $checkData = PartnerProductPurchPrice::where('partner_product_id', $request->partner_product_id)
+            ->where('active', 'Y')
+            ->get();
+
+        foreach ($checkData as $list) {
+            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_start)) && date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_end && isset($request->active)) {
+                return redirect()->route('partner-product-purch-price.tambah')->with('gagal', 'Data is still active.')->withInput();
+            }
+            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active)) {
+                return redirect()->route('partner-product-purch-price.tambah')->with('gagal', 'Data is still active.')->withInput();
+            }
+            if (date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($request->datetime_end)) && isset($request->active)) {
+                return redirect()->route('partner-product-purch-price.tambah')->with('gagal', 'Data is still active.')->withInput();
+            }
+        }
+
+        $index = new PartnerProductPurchPrice;
+
+        $index->partner_product_id = $request->partner_product_id;
+        $index->gross_purch_price  = $request->gross_purch_price;
+        $index->flg_tax            = isset($request->flg_tax) ? 'Y' : 'N';
+        $index->tax_percentage     = isset($request->flg_tax) ? $request->tax_percentage : 0;
+        $index->datetime_start     = date('YmdHis', strtotime($request->datetime_start));
+        $index->datetime_end       = date('YmdHis', strtotime($request->datetime_end));
+
+        $index->active = isset($request->active) ? 'Y' : 'N';
+        if (isset($request->active)) {
+            $index->active_datetime     = date('YmdHis');
+            $index->non_active_datetime = 00000000000000;
+        } else {
+            $index->active_datetime     = 00000000000000;
+            $index->non_active_datetime = date('YmdHis');
+        }
+
+        $index->version         = 0;
+        $index->create_datetime = date('YmdHis');
+        $index->create_user_id  = Auth::id();
+        $index->update_datetime = 00000000000000;
+        $index->update_user_id  = 0;
+
+        $index->save();
+
+        return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Your data has been successfully saved.');
+    }
+
+    public function edit($id)
+    {
+        $index = PartnerProductPurchPrice::find($id);
+
+        if (!$index) {
+            return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data Not Found');
+        }
+
+        $partnerProduct = PartnerProduct::where('active', 'Y')->get();
+
+        return view('partner-product-purchase-price.ubah', compact('index', 'partnerProduct'));
+    }
+
+    public function update(Request $request)
+    {
+        $message = [
+            'partner_product_id.required'    => 'This field is required.',
+            'gross_purch_price.required'     => 'This field is required.',
+            'gross_purch_price.numeric'      => 'Numeric Only.',
+            'tax_percentage.required_if'     => 'This field is required.',
+            'datetime_start.required'        => 'This field is required.',
+            'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
+            'datetime_end.required'          => 'This field is required.',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'partner_product_id' => 'required',
+            'gross_purch_price'  => 'required|numeric',
+            'tax_percentage'     => 'required_if:flg_tax,Y',
+            'datetime_start'     => 'required|before_or_equal:datetime_end',
+            'datetime_end'       => 'required',
+        ], $message);
+
+        if ($validator->fails()) {
+            return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_sell_price_id])->withErrors($validator)->withInput();
+        }
+
+        $index = PartnerProductPurchPrice::find($request->partner_product_purch_price_id);
+
+        $checkData = PartnerProductPurchPrice::where('partner_product_id', $request->partner_product_id)
+            ->where('active', 'Y')
+            ->where('partner_product_purch_price_id', '<>', $request->partner_product_purch_price_id)
+            ->get();
+
+        foreach ($checkData as $list) {
+            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_start)) && date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_end && isset($request->active));
+            {
+                return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
+            }
+            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active));
+            {
+                return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
+            }
+            if (date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($request->datetime_end)) && isset($request->active)) {
+                return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
+            }
+        }
+
+        if ($index->version != $request->version) {
+            return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_sell_price_id])->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+        }
+
+        $index->partner_product_id = $request->partner_product_id;
+        $index->gross_purch_price  = $request->gross_purch_price;
+        $index->flg_tax            = isset($request->flg_tax) ? 'Y' : 'N';
+        $index->tax_percentage     = isset($request->flg_tax) ? $request->tax_percentage : 0;
+        $index->datetime_start     = date('YmdHis', strtotime($request->datetime_start));
+        $index->datetime_end       = date('YmdHis', strtotime($request->datetime_end));
+
+        $index->active = isset($request->active) ? 'Y' : 'N';
+        if (isset($request->active)) {
+            $index->active_datetime = date('YmdHis');
+        } else {
+            $index->non_active_datetime = date('YmdHis');
+        }
+
+        $index->version += 1;
+        $index->update_datetime = date('YmdHis');
+        $index->update_user_id  = Auth::id();
+
+        $index->save();
+
+        return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Your data has been successfully updated.');
+    }
+
+    public function ajaxGetProductPartner($partner, $provider)
+    {
+        $getPartnerProduct = PartnerProduct::select(
+            'partner_product_id',
+            'partner_product_code',
+            'partner_product_name'
+        )
+            ->where('partner_pulsa_id', $partner)
+            ->where('provider_id', $provider)
+            ->get();
+
+        return $getPartnerProduct;
+    }
+
+    public function yajraGetData(Request $request)
+    {
+
+        $f_provider = $request->query('f_provider');
+        $f_partner  = $request->query('f_partner');
+        $f_active   = $request->query('f_active');
+
+        $getDatas = PartnerProductPurchPrice::leftJoin(
+            'sw_partner_product',
+            'sw_partner_product.partner_product_id',
+            'sw_partner_product_purch_price.partner_product_id'
+        )
+            ->select([
+                'sw_partner_product.partner_product_code as partner_product_code',
+                'sw_partner_product.partner_product_name as partner_product_name',
+                'partner_product_purch_price_id',
+                'gross_purch_price',
+                'flg_tax',
+                'tax_percentage',
+                'datetime_start',
+                'datetime_end',
+                'sw_partner_product_purch_price.active as active',
+                'sw_partner_product_purch_price.version as version',
+            ]);
+
+        if ($f_provider != null) {
+            $getDatas->where('sw_partner_product.provider_id', $f_provider);
+        }
+        if ($f_partner != null) {
+            $getDatas->where('sw_partner_product.partner_pulsa_id', $f_partner);
+        }
+        if ($f_active != null) {
+            $getDatas->where('sw_partner_product_purch_price.active', $f_active);
+        }
+        $getDatas = $getDatas->get();
+
+        $start      = 1;
+        $Datatables = Datatables::of($getDatas)
+            ->addColumn('slno', function ($getData) use (&$start) {
+                return $start++;
+            })
+            ->editColumn('gross_purch_price', function ($getData) {
+                return 'Rp. ' . number_format($getData->gross_purch_price, 2);
+            })
+            ->editColumn('flg_tax', function ($getData) {
+                if ($getData->flg_tax == 'Y') {
+                    return "Y";
+                } else {
+                    return "N";
+                }
+            })
+            ->editColumn('tax_percentage', function ($getData) {
+                if ($getData->flg_tax == "Y") {
+                    return $getData->tax_percentage . "%";
+                } else {
+                    return "0%";
+                }
+            })
+            ->editColumn('datetime_start', function ($getData) {
+                return date('d-m-Y H:i:s', strtotime($getData->datetime_start));
+            })
+            ->editColumn('datetime_end', function ($getData) {
+                return date('d-m-Y H:i:s', strtotime($getData->datetime_end));
+            })
+            ->addColumn('action', function ($getData) {
+                $actionHtml = '';
+                if (Auth::user()->can('update-partner-product-purch-price')) {
+                    $actionHtml = $actionHtml . "
+                        <a
+                            href='" . route('partner-product-purch-price.edit', ['id' => $getData->partner_product_purch_price_id]) . "''
+                            class='btn btn-xs btn-warning btn-sm'
+                            data-toggle='tooltip'
+                            data-placement='top'
+                            title='Ubah'
+                        ><i class='fa fa-pencil'></i></a>";
+                }
+                if (Auth::user()->can('delete-partner-product-purch-price')) {
+                    $actionHtml = $actionHtml . "
+                        <a
+                            href=''
+                            class='delete'
+                            data-value='" . $getData->partner_product_purch_price_id . "'
+                            data-version='" . $getData->version . "'
+                            data-toggle='modal'
+                            data-target='.modal-delete'
+                        >
+                            <span
+                                class='btn btn-xs btn-danger btn-sm'
+                                data-toggle='tooltip'
+                                data-placement='top'
+                                title='Hapus'
+                            ><i class='fa fa-remove'></i></span>
+                        </a>";
+                }
+                return $actionHtml;
+            });
+
+        if (Auth::user()->can('activate-partner-product-purch-price')) {
+            $Datatables = $Datatables->editColumn('active', function ($getData) {
+                if ($getData->active == 'Y') {
+                    return "
+                        <a
+                            href=''
+                            class='unpublish'
+                            data-value='" . $getData->partner_product_purch_price_id . "'
+                            data-version='" . $getData->version . "'
+                            data-toggle='modal'
+                            data-target='.modal-nonactive'
+                        >
+                            <span
+                                class='label label-success'
+                                data-toggle='tooltip'
+                                data-placement='top'
+                                title='Active'
+                            >Active</span>
+                        </a><br>";
+                } else {
+                    return "
+                        <a
+                            href=''
+                            class='publish'
+                            data-value='" . $getData->partner_product_purch_price_id . "'
+                            data-version='" . $getData->version . "'
+                            data-toggle='modal'
+                            data-target='.modal-active'
+                        >
+                            <span
+                                class='label label-danger'
+                                data-toggle='tooltip'
+                                data-placement='top'
+                                title='Non Active'
+                            >Non Active</span>
+                        </a><br>";
+                }
+            });
+        }
+
+        $Datatables = $Datatables
+            ->escapeColumns(['*'])
+            ->make(true);
+
+        return $Datatables;
+    }
+
+    public function upload()
+    {
+
+        return view('partner-product-purchase-price.masal');
+    }
+
+    public function template()
+    {
+        $partnerProduct = PartnerProduct::select('partner_product_code', 'partner_product_name', 'active')
+            ->orderBy('partner_product_id', 'asc')
+            ->get()
+            ->toArray();
+
+        return Excel::create('Template Partner Product Purch Price Import', function ($excel) use ($partnerProduct) {
+            $excel->sheet('Data-Import', function ($sheet) {
+                $sheet->row(1, array('partner_product_code', 'gross_purch_price', 'tax_percentage', 'datetime_start', 'datetime_end', 'active'));
+                $sheet->setColumnFormat(array(
+                    'A' => '',
+                    'B' => '0.00',
+                    'C' => '0.00',
+                    'D' => 'YYYY-MM-DD HH:mm:ss',
+                    'E' => 'YYYY-MM-DD HH:mm:ss',
+                    'F' => '',
+                ));
+            });
+
+            $excel->sheet('partner_product_id', function ($sheet) use ($partnerProduct) {
+                $sheet->fromArray($partnerProduct, null, 'A6', true);
+                $sheet->row(1, array('Example'));
+                $sheet->mergeCells('A1:E1');
+                $sheet->row(2, array('partner_product_code', 'gross_purch_price', 'tax_percentage', 'datetime_start', 'datetime_end', 'active'));
+                $sheet->row(3, array('PP1', '45000', '10', '2017-07-01 12:00:00', '2017-07-31 12:00:00', 'Y'));
+                $sheet->row(5, array('Data Partner Product'));
+                $sheet->mergeCells('A5:C5');
+                $sheet->row(6, array('partner_product_code', 'partner_product_name', 'active'));
+                $sheet->setAllBorders('thin');
+                $sheet->setFreeze('A7');
+
+                $sheet->cells('A2:F3', function ($cells) {
+                    $cells->setBackground('#5c92e8');
+                    $cells->setFontColor('#000000');
+                    $cells->setFontWeight('bold');
+                });
+
+                $sheet->cells('A6:C6', function ($cells) {
+                    $cells->setBackground('#000000');
+                    $cells->setFontColor('#ffffff');
+                    $cells->setFontWeight('bold');
+                });
+            });
+
+        })->download('xls');
+    }
+
+    public function prosesTemplate(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $path = Input::file('file')->getRealPath();
+            $data = Excel::selectSheets('Data-Import')->load($path, function ($reader) {
+            })->get();
+
+            if (!empty($data) && $data->count()) {
+                foreach ($data as $key) {
+                    $collect[] = [
+                        'partner_product_code' => $key->partner_product_code,
+                        'gross_purch_price'    => $key->gross_purch_price,
+                        'tax_percentage'       => $key->tax_percentage,
+                        'datetime_start'       => $key->datetime_start,
+                        'datetime_end'         => $key->datetime_end,
+                        'active'               => $key->active,
+                    ];
+                }
+
+                if (!empty($collect)) {
+
+                    $collect = collect($collect);
+
+                    return view('partner-product-purchase-price.masal', compact('collect'));
+                }
+            } else {
+                return view('partner-product-purchase-price.masal')->with('gagal', 'Please Download Template');
+            }
+        } else {
+            return view('partner-product-purchase-price.masal')->with('gagal', 'Please Select Template');
+        }
+    }
+
+    public function storeTemplate(Request $request)
+    {
+        // return $request->all();
+
+        $partner_product_code = $request->partner_product_code;
+        $gross_purch_price    = $request->gross_purch_price;
+        $tax_percentage       = $request->tax_percentage;
+        $datetime_start       = $request->datetime_start;
+        $datetime_end         = $request->datetime_end;
+        $active               = $request->active;
+
+        // DB::transaction(function () use ($partner_product_id, $gross_purch_price, $tax_percentage, $datetime_start, $datetime_end, $active) {
+
+        foreach ($partner_product_code as $key => $n) {
+            /*Load array */
+
+            $skip            = 0;
+            $partner_product = PartnerProduct::where('partner_product_code', strtoupper($partner_product_code[$key]))->first();
+
+            if ($partner_product) {
+                $checkData = PartnerProductPurchPrice::where('partner_product_id', $partner_product->partner_product_id)
+                    ->where('active', 'Y')
+                    ->get();
+            } else {
+                if (!$skip) {
+                    $message = 'Data Partner Product not found';
+                }
+                $skip = 1;
+            }
+
+            if ($gross_purch_price[$key] == '') {
+                if (!$skip) {
+                    $message = 'Gross Purchase Price is empty';
+                }
+                $skip = 1;
+            }
+
+            if ($tax_percentage[$key] == '') {
+                if (!$skip) {
+                    $message = 'Tax Percentage is empty';
+                }
+                $skip = 1;
+            }
+
+            if ($datetime_start[$key] == '') {
+                if (!$skip) {
+                    $message = 'Datetime Start is empty';
+                }
+                $skip = 1;
+            }
+
+            if ($datetime_end[$key] == '') {
+                if (!$skip) {
+                    $message = 'Datetime end is empty';
+                }
+                $skip = 1;
+            }
+
+            if (date('YmdHis', strtotime($datetime_start[$key])) > date('YmdHis', strtotime($datetime_end[$key]))) {
+                if (!$skip) {
+                    $message = 'Datetime start is bigger than Datetime end';
+                }
+                $skip = 1;
+            }
+
+            foreach ($checkData as $list) {
+                if ($list->datetime_start <= date('YmdHis', strtotime($datetime_start[$key])) && date('YmdHis', strtotime($datetime_start[$key])) <= $list->datetime_end && $active[$key] == 'Y') {
+                    if (!$skip) {
+                        $message = 'Data still active';
+                    }
+                    $skip = 1;
+                }
+                if ($list->datetime_start <= date('YmdHis', strtotime($datetime_end[$key])) && date('YmdHis', strtotime($datetime_end[$key])) <= $list->datetime_end && $active[$key] == 'Y') {
+                    if (!$skip) {
+                        $message = 'Data still active';
+                    }
+                    $skip = 1;
+                }
+                if (date('YmdHis', strtotime($datetime_start[$key])) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($datetime_end[$key])) && $active[$key] == 'Y') {
+                    if (!$skip) {
+                        $message = 'Data still active';
+                    }
+                    $skip = 1;
+                }
+            }
+
+            if (!$skip) {
+                $arrData[] = [
+                    "partner_product_id"  => $partner_product->partner_product_id,
+                    "gross_purch_price"   => $gross_purch_price[$key],
+                    "flg_tax"             => $tax_percentage[$key] > 0 ? 'Y' : 'N',
+                    "tax_percentage"      => $tax_percentage[$key],
+                    "datetime_start"      => date('YmdHis', strtotime($datetime_start[$key])),
+                    "datetime_end"        => date('YmdHis', strtotime($datetime_end[$key])),
+                    "create_user_id"      => Auth::id(),
+                    "active"              => $active[$key],
+                    "active_datetime"     => $active[$key] == 'Y' ? date('YmdHis') : '00000000000000',
+                    "non_active_datetime" => $active[$key] != 'Y' ? date('YmdHis') : '00000000000000',
+                    "version"             => 0,
+                    "create_datetime"     => date('YmdHis'),
+                    "create_user_id"      => Auth::id(),
+                    "update_datetime"     => '00000000000000',
+                    "update_user_id"      => 0,
+                ];
+
+                $pass[] = [
+                    'row'                  => $key,
+                    'partner_product_code' => $partner_product_code[$key],
+                    'gross_purch_price'    => $gross_purch_price[$key],
+                    'tax_percentage'       => $tax_percentage[$key],
+                    'datetime_start'       => $datetime_start[$key],
+                    'datetime_end'         => $datetime_end[$key],
+                    'active'               => $active[$key],
+                ];
+            } else {
+                $error[] = [
+                    'row'                  => $key,
+                    'partner_product_code' => $partner_product_code[$key],
+                    'gross_purch_price'    => $gross_purch_price[$key],
+                    'tax_percentage'       => $tax_percentage[$key],
+                    'datetime_start'       => $datetime_start[$key],
+                    'datetime_end'         => $datetime_end[$key],
+                    'active'               => $active[$key],
+                    'message'              => $message,
+                ];
+            }
+        }
+        // });
+
+        if (!empty($error)) {
+
+            $error = collect($error);
+
+            if (!empty($pass)) {
+                $pass = collect($pass);
+            } else {
+                $pass = '';
+            }
+
+            return view('partner-product-purchase-price.masal', compact('error', 'pass'));
+        } else {
+            // return $arrData;
+            PartnerProductPurchPrice::insert($arrData);
+        }
+
+        return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Your data has been successfully uploaded.');
+    }
 }
