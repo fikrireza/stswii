@@ -195,7 +195,7 @@ class ProductController extends Controller
 			return redirect()->route('product.index')->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
 		}
 
-		if ($index->active) {
+		if ($index->active == "Y") {
 
 			$index->active = "N";
 			$index->non_active_datetime = date('YmdHis');

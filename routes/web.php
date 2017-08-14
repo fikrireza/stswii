@@ -199,7 +199,7 @@ Route::get('/home', 'HomeController@index')
 				->middleware('can:update-product');
 	Route::get('product/active/{id}', 'ProductController@active')
 				->name('product.active')
-				->middleware('can:activated-product');
+				->middleware('can:activate-product');
 	Route::get('product/delete/{id}', 'ProductController@delete')
 				->name('product.delete')
 				->middleware('can:delete-product');
