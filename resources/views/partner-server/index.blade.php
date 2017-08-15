@@ -246,7 +246,7 @@
 $('#dataTables').DataTable();
 
 $(function(){
-    $('.update').click(function() {
+    $(document).on('click', '.update', function(){
         var dataId    = $(this).data('id');
         var dataVersion = $(this).data('version');
         var dataUrl  = $(this).data('url');
