@@ -59,7 +59,7 @@ class PartnerPulsaServerPropController extends Controller{
 		], $message);
 
 		if($validator->fails()){
-			return redirect()->route('partner-server.create')
+			return redirect()->route('partner-server.index')
 				->withErrors($validator)->withInput()->with('add-false', 'Something Errors');;
 		}
 
