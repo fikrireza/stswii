@@ -615,7 +615,7 @@ class ProductSellPriceController extends Controller
                         "datetime_start"      => date('YmdHis', strtotime($datetime_start[$key])),
                         "datetime_end"        => date('YmdHis', strtotime($datetime_end[$key])),
                         "create_user_id"      => Auth::id(),
-                        "active"              => $active[$key],
+                        "active"              => strtoupper($active[$key]),
                         "active_datetime"     => $active[$key] == 'Y' ? date('YmdHis') : '00000000000000',
                         "non_active_datetime" => $active[$key] != 'Y' ? date('YmdHis') : '00000000000000',
                         "version"             => 0,
