@@ -591,7 +591,8 @@ class ProductSellPriceController extends Controller
             }
 
             if (!$skip) {
-                $arrData[] = [
+                ProductSellPrice::insert(
+                [
                     "product_id"          => $product->product_id,
                     "gross_sell_price"    => $gross_sell_price[$key],
                     "flg_tax"             => $tax_percentage[$key] > 0 ? 'Y' : 'N',
@@ -607,7 +608,7 @@ class ProductSellPriceController extends Controller
                     "create_user_id"      => Auth::id(),
                     "update_datetime"     => '00000000000000',
                     "update_user_id"      => 0,
-                ];
+                ]);
 
                 $pass[] = [
                     'row'              => $key,
@@ -644,9 +645,6 @@ class ProductSellPriceController extends Controller
             }
 
             return view('product-sell-price.masal', compact('error', 'pass'));
-        } else {
-            // return $arrData;
-            ProductSellPrice::insert($arrData);
         }
 
         return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully uploaded.')->with(compact('error'));

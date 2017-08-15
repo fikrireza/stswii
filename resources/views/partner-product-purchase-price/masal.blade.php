@@ -216,7 +216,7 @@
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Pass</h2>
+        <h2 style="color: green">Successfully saved</h2>
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
@@ -231,13 +231,9 @@
             <th>Datetime Start</th>
             <th>Datetime End</th>
             <th>Active</th>
-            <th>Delete</th>
           </thead>
 
           <tbody>
-            @php
-              $urut = 0;
-            @endphp
             @foreach ($pass as $key)
             <tr>
               <td>
@@ -245,40 +241,27 @@
               </td>
               <td>
                 {{$key['partner_product_code']}}
-                <input type="hidden" name="partner_product_code[{{$urut}}]" value="{{$key['partner_product_code']}}">
               </td>
               <td>
                 Rp. {{ number_format($key['gross_purch_price']) }}
-                <input type="hidden" name="gross_purch_price[{{$urut}}]" value="{{ $key['gross_purch_price'] }}"/>
               </td>
               <td>
                 {{ $key['tax_percentage'] }} %
-                <input type="hidden" name="tax_percentage[{{$urut}}]" value="{{ $key['tax_percentage'] }}"/>
               </td>
               <td>
                 {{ $key['datetime_start'] }}
-                <input type="hidden" name="datetime_start[{{$urut}}]" value="{{ $key['datetime_start'] }}"/>
               </td>
               <td>
                 {{ $key['datetime_end'] }}
-                <input type="hidden" name="datetime_end[{{$urut}}]" value="{{ $key['datetime_end'] }}"/>
               </td>
               <td>
                 {{ $key['active'] }}
-                <input type="hidden" name="active[{{$urut}}]" value="{{ $key['active'] }}"/>
-              </td>
-              <td>
-                <input type="button" name="delete" value="x" class="btn btn-danger btn-sm btn-delete">
               </td>
             </tr>
-            @php
-              $urut++
-            @endphp
             @endforeach
           </tbody>
 
         </table>
-        <button name="button" class="btn btn-success btn-bg btn-submit" onclick="return false">Upload</button>
         </form>
       </div>
     </div>
