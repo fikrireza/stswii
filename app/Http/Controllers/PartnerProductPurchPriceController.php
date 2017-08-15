@@ -57,101 +57,6 @@ class PartnerProductPurchPriceController extends Controller
         ));
     }
 
-    public function active($id, $version, $status)
-    {
-        $findData = PartnerProductPurchPrice::find($id);
-
-        if ($findData == null) {
-            $info  = 'Status Partner Produk Price gagal diubah! Tidak dapat menemukan Partner Produk Price!';
-            $alret = 'alert-danger';
-        } else if ($findData->version != $version) {
-            $User  = User::find($findData->update_user_id);
-            $info  = 'Status Partner Produk Price gagal diubah! Data Partner Produk Price telah diupdate Oleh ' . $User->name . '. Harap periksa kembali!';
-            $alret = 'alert-danger';
-        } else if ($status == 1) {
-            if (date('YmdHis', strtotime($findData->datetime_end)) < Carbon::now()->format('YmdHis')) {
-                $info  = 'Status Partner Produk Price gagal diubah! Periode Telah Lewat Tidak Dapat Diaktifkan!';
-                $alret = 'alert-danger';
-            } else {
-                $checkData = PartnerProductPurchPrice::where('partner_product_id', $findData->partner_product_id)
-                    ->where('active', 'Y')
-                    ->get();
-
-                if (count($checkData) != 0) {
-                    foreach ($checkData as $list) {
-                        if (
-                            date('YmdHis', strtotime($findData->datetime_start)) >= date('YmdHis', strtotime($list->datetime_start)) &&
-                            date('YmdHis', strtotime($findData->datetime_start)) <= date('YmdHis', strtotime($list->datetime_end))
-                        ) {
-                            $retrun = 'update';
-                            $info   = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
-                            $alret  = 'alert-danger';
-                            break;
-                        } else if (
-                            date('YmdHis', strtotime($findData->datetime_start)) <= date('YmdHis', strtotime($list->datetime_start)) &&
-                            date('YmdHis', strtotime($findData->datetime_end)) >= date('YmdHis', strtotime($list->datetime_end))
-                        ) {
-                            $retrun = 'update';
-                            $info   = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
-                            $alret  = 'alert-danger';
-                            break;
-                        } else if (
-                            date('YmdHis', strtotime($findData->datetime_end)) >= date('YmdHis', strtotime($list->datetime_start)) &&
-                            date('YmdHis', strtotime($findData->datetime_end)) <= date('YmdHis', strtotime($list->datetime_end))
-                        ) {
-                            $retrun = 'update';
-                            $info   = 'Status Partner Produk Price gagal diubah! Bersinggungan dengan periode yang aktif!';
-                            $alret  = 'alert-danger';
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!isset($alret)) {
-            $alret = 'alert-success';
-            $info  = 'Berhasil Memperbarui Status Partner Produk ' . $findData->partner_product_name;
-            DB::transaction(function () use ($findData, $status) {
-                $findData->increment('version');
-                $findData->active          = $status;
-                $findData->update_user_id  = Auth::id();
-                $findData->update_datetime = Carbon::now()->format('YmdHis');
-                if ($status == 1) {
-                    $findData->active_datetime = Carbon::now()->format('YmdHis');
-                } else if ($status == 0) {
-                    $findData->non_active_datetime = Carbon::now()->format('YmdHis');
-                }
-                $findData->update();
-            });
-        }
-
-        return redirect()->route('partner-product-purch-price.index')
-            ->with('alret', $alret)
-            ->with('berhasil', $info);
-    }
-
-    public function delete($id, $version)
-    {
-        $findData = PartnerProductPurchPrice::find($id);
-
-        if ($findData == null) {
-            $info  = 'Data Partner Produk Purchase Price gagal dihapus! Tidak dapat menemukan Partner Produk Purchase Price!';
-            $alret = 'alert-danger';
-        } else if ($findData->version != $version) {
-            $User  = User::find($findData->update_user_id);
-            $info  = 'Data Partner Produk Purchase Price gagal dihapus! Data Partner telah diupdate Oleh ' . $User->name . '. Harap periksa kembali!';
-            $alret = 'alert-danger';
-        } else {
-            $info  = 'Berhasil hapus Data Partner Produk Purchase Price';
-            $alret = 'alert-success';
-            $findData->delete();
-        }
-        return redirect()->route('partner-product-purch-price.index')
-            ->with('alret', $alret)
-            ->with('berhasil', $info);
-    }
-
     public function tambah()
     {
         $partnerProduct = PartnerProduct::where('active', 'Y')->get();
@@ -262,7 +167,7 @@ class PartnerProductPurchPriceController extends Controller
         ], $message);
 
         if ($validator->fails()) {
-            return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_sell_price_id])->withErrors($validator)->withInput();
+            return redirect()->route('partner-product-purch-price.edit', ['id' => $request->partner_product_purch_price_id])->withErrors($validator)->withInput();
         }
 
         $index = PartnerProductPurchPrice::find($request->partner_product_purch_price_id);
@@ -273,21 +178,21 @@ class PartnerProductPurchPriceController extends Controller
             ->get();
 
         foreach ($checkData as $list) {
-            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_start)) && date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_end && isset($request->active));
+            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_start)) && date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_end && isset($request->active))
             {
-                return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
+                return redirect()->route('partner-product-purch-price.edit', ['id' => $request->partner_product_purch_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
-            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active));
+            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active))
             {
-                return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
+                return redirect()->route('partner-product-purch-price.edit', ['id' => $request->partner_product_purch_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
             if (date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($request->datetime_end)) && isset($request->active)) {
-                return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
+                return redirect()->route('partner-product-purch-price.edit', ['id' => $request->partner_product_purch_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
         }
 
         if ($index->version != $request->version) {
-            return redirect()->route('partner-product-purch-price.edit', ['id' => $request->product_sell_price_id])->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+            return redirect()->route('partner-product-purch-price.edit', ['id' => $request->partner_product_purch_price_id])->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
         }
 
         $index->partner_product_id = $request->partner_product_id;
@@ -311,6 +216,82 @@ class PartnerProductPurchPriceController extends Controller
         $index->save();
 
         return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Your data has been successfully updated.');
+    }
+
+    public function active($id, Request $request)
+    {
+        $index = PartnerProductPurchPrice::find($id);
+
+        if (!$index) {
+            return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data not exist.');
+        }
+
+        $checkData = PartnerProductPurchPrice::where('partner_product_id', $index->partner_product_id)
+            ->where('active', 'Y')
+            ->get();
+
+        foreach ($checkData as $list) {
+            if ($list->datetime_start <= date('YmdHis', strtotime($index->datetime_start)) && date('YmdHis', strtotime($index->datetime_start)) <= $list->datetime_end && $index->active != 'Y') {
+                return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data is still active.')->withInput();
+            }
+            if ($list->datetime_start <= date('YmdHis', strtotime($index->datetime_end)) && date('YmdHis', strtotime($index->datetime_end)) <= $list->datetime_end && $index->active != 'Y') {
+                return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data is still active.')->withInput();
+            }
+            if (date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($request->datetime_end)) && $index->active != 'Y') {
+                return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data is still active.')->withInput();
+            }
+        }
+
+        if ($index->version != $request->version) {
+            return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+        }
+
+        if (date('YmdHis', strtotime($index->datetime_end)) < Carbon::now()->format('YmdHis') && $index->active != 'Y') {
+            return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data is outdate, can\'t to active again.');
+        }
+
+        if ($index->active == 'Y') {
+
+            $index->active              = 'N';
+            $index->non_active_datetime = date('YmdHis');
+
+            $index->version += 1;
+            $index->update_datetime = date('YmdHis');
+            $index->update_user_id  = Auth::id();
+
+            $index->save();
+
+            return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Successfully Nonactive');
+        } else {
+
+            $index->active          = 'Y';
+            $index->active_datetime = date('YmdHis');
+
+            $index->version += 1;
+            $index->update_datetime = date('YmdHis');
+            $index->update_user_id  = Auth::id();
+
+            $index->save();
+
+            return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Successfully Activated ');
+        }
+    }
+
+    public function delete($id, Request $request)
+    {
+        $index = PartnerProductPurchPrice::find($id);
+
+        if (!$index) {
+            return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data not exist.');
+        }
+
+        if ($index->version != $request->version) {
+            return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+        }
+
+        $index->delete();
+
+        return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Successfully Deleted ');
     }
 
     public function ajaxGetProductPartner($partner, $provider)

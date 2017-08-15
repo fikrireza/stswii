@@ -43,20 +43,7 @@ class ProductSellPriceController extends Controller
             return redirect()->route('product-sell-price.index');
         }
 
-        $index = ProductSellPrice::join('sw_product', 'sw_product.product_id', '=', 'sw_product_sell_price.product_id')
-            ->select('sw_product_sell_price.*');
-
-        if (isset($request->f_provider) && $request->f_provider != '') {
-            $index->where('sw_product.provider_id', $request->f_provider);
-        }
-
-        if (isset($request->f_active) && $request->f_active != '') {
-            $index->where('sw_product_sell_price.active', $request->f_active);
-        }
-
-        $index = $index->get();
-
-        return view('product-sell-price.index', compact('index', 'request', 'provider'));
+        return view('product-sell-price.index', compact('request', 'provider'));
     }
 
     public function tambah()
@@ -125,16 +112,16 @@ class ProductSellPriceController extends Controller
         $index->active = isset($request->active) ? 'Y' : 'N';
         if (isset($request->active)) {
             $index->active_datetime     = date('YmdHis');
-            $index->non_active_datetime = 00000000000000;
+            $index->non_active_datetime = '00000000000000';
         } else {
-            $index->active_datetime     = 00000000000000;
+            $index->active_datetime     = '00000000000000';
             $index->non_active_datetime = date('YmdHis');
         }
 
         $index->version         = 0;
         $index->create_datetime = date('YmdHis');
         $index->create_user_id  = Auth::id();
-        $index->update_datetime = 00000000000000;
+        $index->update_datetime = '00000000000000';
         $index->update_user_id  = 0;
 
         $index->save();
@@ -145,6 +132,10 @@ class ProductSellPriceController extends Controller
     public function ubah($id)
     {
         $index = ProductSellPrice::find($id);
+
+        if (!$index) {
+            return redirect()->route('product-sell-price.index')->with('gagal', 'Data not exist.');
+        }
 
         $product = Product::get();
 
@@ -177,21 +168,26 @@ class ProductSellPriceController extends Controller
 
         $index = ProductSellPrice::find($request->product_sell_price_id);
 
+        if (!$index) {
+            return redirect()->route('product-sell-price.index')->with('gagal', 'Data not exist.');
+        }
+
         $checkData = ProductSellPrice::where('product_id', $request->product_id)
             ->where('active', 'Y')
             ->where('product_sell_price_id', '<>', $request->product_sell_price_id)
             ->get();
 
         foreach ($checkData as $list) {
-            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_start)) && date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_end && isset($request->active));
-            {
+
+            if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                 return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
-            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active));
-            {
+            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active)) {
+                return 2;
                 return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
             if (date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($request->datetime_end)) && isset($request->active)) {
+                return 3;
                 return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
         }
@@ -228,26 +224,37 @@ class ProductSellPriceController extends Controller
     {
         $index = ProductSellPrice::find($id);
 
+        if (!$index) {
+            return redirect()->route('product-sell-price.index')->with('gagal', 'Data not exist.');
+        }
+
         $checkData = ProductSellPrice::where('product_id', $index->product_id)
             ->where('active', 'Y')
             ->get();
 
         foreach ($checkData as $list) {
-            if ($list->datetime_start <= date('YmdHis', strtotime($index->datetime_start)) && date('YmdHis', strtotime($index->datetime_start)) <= $list->datetime_end && !$index->active) {
+            if ($list->datetime_start <= date('YmdHis', strtotime($index->datetime_start)) && date('YmdHis', strtotime($index->datetime_start)) <= $list->datetime_end && $index->active != 'Y') {
                 return redirect()->route('product-sell-price.index')->with('gagal', 'Data is still active.')->withInput();
             }
-            if ($list->datetime_start <= date('YmdHis', strtotime($index->datetime_end)) && date('YmdHis', strtotime($index->datetime_end)) <= $list->datetime_end && !$index->active) {
+            if ($list->datetime_start <= date('YmdHis', strtotime($index->datetime_end)) && date('YmdHis', strtotime($index->datetime_end)) <= $list->datetime_end && $index->active != 'Y') {
+                return redirect()->route('product-sell-price.index')->with('gagal', 'Data is still active.')->withInput();
+            }
+            if (date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($request->datetime_end)) && $index->active != 'Y') {
                 return redirect()->route('product-sell-price.index')->with('gagal', 'Data is still active.')->withInput();
             }
         }
 
         if ($index->version != $request->version) {
-            return redirect()->route('product.index')->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+            return redirect()->route('product-sell-price.index')->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
         }
 
-        if ($index->active) {
+        if (date('YmdHis', strtotime($index->datetime_end)) < date('YmdHis') && $index->active != 'Y') {
+            return redirect()->route('product-sell-price.index')->with('gagal', 'Data is outdate, can\'t to active again.');
+        }
 
-            $index->active              = 0;
+        if ($index->active == 'Y') {
+
+            $index->active              = 'N';
             $index->non_active_datetime = date('YmdHis');
 
             $index->version += 1;
@@ -259,7 +266,7 @@ class ProductSellPriceController extends Controller
             return redirect()->route('product-sell-price.index')->with('berhasil', 'Successfully Nonactive');
         } else {
 
-            $index->active          = 1;
+            $index->active          = 'Y';
             $index->active_datetime = date('YmdHis');
 
             $index->version += 1;
@@ -272,9 +279,17 @@ class ProductSellPriceController extends Controller
         }
     }
 
-    public function delete($id)
+    public function delete($id, Request $request)
     {
         $index = ProductSellPrice::find($id);
+
+        if (!$index) {
+            return redirect()->route('product-sell-price.index')->with('gagal', 'Data not exist.');
+        }
+
+        if ($index->version != $request->version) {
+            return redirect()->route('product-sell-price.index')->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+        }
 
         $index->delete();
 
@@ -344,31 +359,31 @@ class ProductSellPriceController extends Controller
                 $actionHtml = '';
                 if (Auth::user()->can('update-product-sell-price')) {
                     $actionHtml = $actionHtml . "
-						<a
-							href='" . route('product-sell-price.ubah', $getData->product_sell_price_id) . "''
-							class='btn btn-xs btn-warning btn-sm'
-							data-toggle='tooltip'
-							data-placement='top'
-							title='Ubah'
-						><i class='fa fa-pencil'></i></a>";
+                        <a
+                            href='" . route('product-sell-price.ubah', $getData->product_sell_price_id) . "''
+                            class='btn btn-xs btn-warning btn-sm'
+                            data-toggle='tooltip'
+                            data-placement='top'
+                            title='Ubah'
+                        ><i class='fa fa-pencil'></i></a>";
                 }
                 if (Auth::user()->can('delete-product-sell-price')) {
                     $actionHtml = $actionHtml . "
-						<a
-							href=''
-							class='delete'
-							data-value='" . $getData->product_sell_price_id . "'
-							data-version='" . $getData->version . "'
-							data-toggle='modal'
-							data-target='.modal-delete'
-						>
-							<span
-								class='btn btn-xs btn-danger btn-sm'
-								data-toggle='tooltip'
-								data-placement='top'
-								title='Hapus'
-							><i class='fa fa-remove'></i></span>
-						</a>";
+                        <a
+                            href=''
+                            class='delete'
+                            data-value='" . $getData->product_sell_price_id . "'
+                            data-version='" . $getData->version . "'
+                            data-toggle='modal'
+                            data-target='.modal-delete'
+                        >
+                            <span
+                                class='btn btn-xs btn-danger btn-sm'
+                                data-toggle='tooltip'
+                                data-placement='top'
+                                title='Hapus'
+                            ><i class='fa fa-remove'></i></span>
+                        </a>";
                 }
                 return $actionHtml;
             });
@@ -377,38 +392,38 @@ class ProductSellPriceController extends Controller
             $Datatables = $Datatables->editColumn('active', function ($getData) {
                 if ($getData->active == 'Y') {
                     return "
-						<a
-							href=''
-							class='unpublish'
-							data-value='" . $getData->product_sell_price_id . "'
-							data-version='" . $getData->version . "'
-							data-toggle='modal'
-							data-target='.modal-nonactive'
-						>
-							<span
-								class='label label-success'
-								data-toggle='tooltip'
-								data-placement='top'
-								title='Active'
-							>Active</span>
-						</a><br>";
+                        <a
+                            href=''
+                            class='unpublish'
+                            data-value='" . $getData->product_sell_price_id . "'
+                            data-version='" . $getData->version . "'
+                            data-toggle='modal'
+                            data-target='.modal-nonactive'
+                        >
+                            <span
+                                class='label label-success'
+                                data-toggle='tooltip'
+                                data-placement='top'
+                                title='Active'
+                            >Active</span>
+                        </a><br>";
                 } else {
                     return "
-						<a
-							href=''
-							class='publish'
-							data-value='" . $getData->product_sell_price_id . "'
-							data-version='" . $getData->version . "'
-							data-toggle='modal'
-							data-target='.modal-active'
-						>
-							<span
-								class='label label-danger'
-								data-toggle='tooltip'
-								data-placement='top'
-								title='Non Active'
-							>Non Active</span>
-						</a><br>";
+                        <a
+                            href=''
+                            class='publish'
+                            data-value='" . $getData->product_sell_price_id . "'
+                            data-version='" . $getData->version . "'
+                            data-toggle='modal'
+                            data-target='.modal-active'
+                        >
+                            <span
+                                class='label label-danger'
+                                data-toggle='tooltip'
+                                data-placement='top'
+                                title='Non Active'
+                            >Non Active</span>
+                        </a><br>";
                 }
             });
         }
@@ -592,23 +607,23 @@ class ProductSellPriceController extends Controller
 
             if (!$skip) {
                 ProductSellPrice::insert(
-                [
-                    "product_id"          => $product->product_id,
-                    "gross_sell_price"    => $gross_sell_price[$key],
-                    "flg_tax"             => $tax_percentage[$key] > 0 ? 'Y' : 'N',
-                    "tax_percentage"      => $tax_percentage[$key],
-                    "datetime_start"      => date('YmdHis', strtotime($datetime_start[$key])),
-                    "datetime_end"        => date('YmdHis', strtotime($datetime_end[$key])),
-                    "create_user_id"      => Auth::id(),
-                    "active"              => $active[$key],
-                    "active_datetime"     => $active[$key] == 'Y' ? date('YmdHis') : '00000000000000',
-                    "non_active_datetime" => $active[$key] != 'Y' ? date('YmdHis') : '00000000000000',
-                    "version"             => 0,
-                    "create_datetime"     => date('YmdHis'),
-                    "create_user_id"      => Auth::id(),
-                    "update_datetime"     => '00000000000000',
-                    "update_user_id"      => 0,
-                ]);
+                    [
+                        "product_id"          => $product->product_id,
+                        "gross_sell_price"    => $gross_sell_price[$key],
+                        "flg_tax"             => $tax_percentage[$key] > 0 ? 'Y' : 'N',
+                        "tax_percentage"      => $tax_percentage[$key],
+                        "datetime_start"      => date('YmdHis', strtotime($datetime_start[$key])),
+                        "datetime_end"        => date('YmdHis', strtotime($datetime_end[$key])),
+                        "create_user_id"      => Auth::id(),
+                        "active"              => $active[$key],
+                        "active_datetime"     => $active[$key] == 'Y' ? date('YmdHis') : '00000000000000',
+                        "non_active_datetime" => $active[$key] != 'Y' ? date('YmdHis') : '00000000000000',
+                        "version"             => 0,
+                        "create_datetime"     => date('YmdHis'),
+                        "create_user_id"      => Auth::id(),
+                        "update_datetime"     => '00000000000000',
+                        "update_user_id"      => 0,
+                    ]);
 
                 $pass[] = [
                     'row'              => $key,

@@ -133,10 +133,10 @@ Route::get('/home', 'HomeController@index')
 	Route::get('/partner-product-purch-price', 'PartnerProductPurchPriceController@index')
 				->name('partner-product-purch-price.index')
 				->middleware('can:read-partner-product-purch-price');
-	Route::get('/partner-product-purch-price/actived/{id}/{version}/{status}', 'PartnerProductPurchPriceController@active')
+	Route::get('/partner-product-purch-price/actived/{id}', 'PartnerProductPurchPriceController@active')
 				->name('partner-product-purch-price.active')
 				->middleware('can:activate-partner-product-purch-price');
-	Route::get('/partner-product-purch-price/delete/{id}/{version}', 'PartnerProductPurchPriceController@delete')
+	Route::get('/partner-product-purch-price/delete/{id}', 'PartnerProductPurchPriceController@delete')
 				->name('partner-product-purch-price.delete')
 				->middleware('can:delete-partner-product-purch-price');
 	Route::get('/partner-product-purch-price/add', 'PartnerProductPurchPriceController@tambah')

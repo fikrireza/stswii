@@ -290,20 +290,20 @@ $(function(){
   $(document).on('click','a.delete', function(){
     var a = $(this).data('value');
     var b = $(this).data('version');
-    $('#setDelete').attr('href', "{{ url('/') }}/partner-product-purch-price/delete/"+a+"/"+b);
+    $('#setDelete').attr('href', "{{ url('/') }}/partner-product-purch-price/delete/"+a+"?version="+b);
   });
   @endcan
   @can('activate-partner-product-purch-price')
   $(document).on('click', 'a.publish', function(){
     var a = $(this).data('value');
     var b = $(this).data('version');
-    $('#setPublish').attr('href', "{{ url('/') }}/partner-product-purch-price/actived/"+a+"/"+b+"/Y");
+    $('#setPublish').attr('href', "{{ url('/') }}/partner-product-purch-price/actived/"+a+"?version="+b);
   });
 
   $(document).on('click','a.unpublish', function(){
     var a = $(this).data('value');
     var b = $(this).data('version');
-    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-product-purch-price/actived/"+a+"/"+b+"/N");
+    $('#setUnpublish').attr('href', "{{ url('/') }}/partner-product-purch-price/actived/"+a+"?version="+b);
   });
   @endcan
 });

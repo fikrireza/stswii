@@ -165,49 +165,6 @@
               <th>Action</th>
             </tr>
           </thead>
-          {{--
-          <tbody>
-            @php
-              $count=1;
-            @endphp
-            @foreach ($index as $list)
-            <tr>
-              <td>{{ $count++ }}</td>
-              <td>{{ $list->product->product_name }} - Rp. {{ number_format($list->product->nominal) }}</td>
-              <td>Rp. {{ number_format($list->gross_sell_price) }}</td>
-              <td>{{ $list->flg_tax ? 'Y' : 'N' }}</td>
-              <td>{{ $list->tax_percentage }} %</td>
-              <td>{{ date('d-m-Y H:i:s', strtotime($list->datetime_start))   }}</td>
-              <td>{{ date('d-m-Y H:i:s', strtotime($list->datetime_end)) }}</td>
-              @can('activate-product-sell-price')
-              <td class="text-center">@if($list->active)
-                    <a
-                      href=""
-                      class="unpublish"
-                      data-value="{{ $list->product_sell_price_id }}"
-                      data-version="{{ $list->version }}"
-                      data-toggle="modal"
-                      data-target=".modal-nonactive"
-                    >
-                      <span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span>
-                    </a>
-                  @else
-                    <a href="" class="publish" data-value="{{ $list->product_sell_price_id }}" data-version="{{ $list->version }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
-                  @endif
-              </td>
-              @endcan
-              <td>
-                @can('update-product-sell-price')
-                <a href="{{ route('product-sell-price.ubah', $list->product_sell_price_id) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
-                @endcan
-                @can('delete-product-sell-price')
-                <a href="" class="delete" data-value="{{ $list->product_sell_price_id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
-                @endcan
-              </td>
-            </tr>
-            @endforeach
-          </tbody>
-          --}}
           <tfoot>
             <tr>
               <td></td>
@@ -332,7 +289,8 @@ $(function() {
   $(function(){
     $('#producttabel').on('click', 'a.delete', function(){
       var a = $(this).data('value');
-      $('#setDelete').attr('href', "{{ url('/') }}/product-sell-price/delete/"+a);
+      var b = $(this).data('version');
+      $('#setDelete').attr('href', "{{ url('/') }}/product-sell-price/delete/"+a+"?version="+b);
     });
   });
 </script>
