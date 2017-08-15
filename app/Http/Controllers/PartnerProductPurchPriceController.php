@@ -680,9 +680,6 @@ class PartnerProductPurchPriceController extends Controller
             }
 
             return view('partner-product-purchase-price.masal', compact('error', 'pass'));
-        } else {
-            // return $arrData;
-            PartnerProductPurchPrice::insert($arrData);
         }
 
         return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Your data has been successfully uploaded.');
