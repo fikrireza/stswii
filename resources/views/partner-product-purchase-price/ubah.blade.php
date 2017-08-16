@@ -56,7 +56,7 @@
       <div class="x_title">
         <h2>Edit Partner Product Purchase Price<small></small></h2>
         <ul class="nav panel_toolbox">
-          <a href="{{ route('partner-product-purch-price.index') }}" class="btn btn-primary btn-sm">Kembali</a>
+          <a href="{{ route('partner-product-purch-price.index') }}" class="btn btn-primary btn-sm">Back</a>
         </ul>
         <div class="clearfix"></div>
       </div>
