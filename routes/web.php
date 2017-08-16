@@ -70,9 +70,8 @@ Route::get('/home', 'HomeController@index')
 // agent
 
 // paloma deposit transaction
-	Route::get('/paloma-deposit/transaction', function(){
-		return view('paloma-transaction.index');
-	})->name('paloma.transaction.index');
+	Route::get('/paloma-deposit-transaction', 'PalomaDepositTrxController@index')->name('palomaDeposit.index');
+	Route::get('paloma-deposit-transaction/{id}', 'PalomaDepositTrxController@update');
 // paloma deposit transaction
 
 // partner pulsa
