@@ -183,11 +183,9 @@ class ProductSellPriceController extends Controller
                 return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
             if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active)) {
-                return 2;
                 return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
             if (date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($request->datetime_end)) && isset($request->active)) {
-                return 3;
                 return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
         }
