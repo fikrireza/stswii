@@ -71,6 +71,7 @@ class PartnerProductPurchPriceController extends Controller
             'gross_purch_price.required'     => 'This field is required.',
             'gross_purch_price.numeric'      => 'Numeric Only.',
             'tax_percentage.required_if'     => 'This field is required.',
+            'tax_percentage.numeric'         => 'Numeric Only.',
             'datetime_start.required'        => 'This field is required.',
             'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
             'datetime_end.required'          => 'This field is required.',
@@ -79,7 +80,7 @@ class PartnerProductPurchPriceController extends Controller
         $validator = Validator::make($request->all(), [
             'partner_product_id' => 'required',
             'gross_purch_price'  => 'required|numeric',
-            'tax_percentage'     => 'required_if:flg_tax,Y',
+            'tax_percentage'     => 'required_if:flg_tax,Y|numeric',
             'datetime_start'     => 'required|before_or_equal:datetime_end',
             'datetime_end'       => 'required',
         ], $message);
@@ -153,6 +154,7 @@ class PartnerProductPurchPriceController extends Controller
             'gross_purch_price.required'     => 'This field is required.',
             'gross_purch_price.numeric'      => 'Numeric Only.',
             'tax_percentage.required_if'     => 'This field is required.',
+            'tax_percentage.numeric'         => 'Numeric Only.',
             'datetime_start.required'        => 'This field is required.',
             'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
             'datetime_end.required'          => 'This field is required.',
@@ -161,7 +163,7 @@ class PartnerProductPurchPriceController extends Controller
         $validator = Validator::make($request->all(), [
             'partner_product_id' => 'required',
             'gross_purch_price'  => 'required|numeric',
-            'tax_percentage'     => 'required_if:flg_tax,Y',
+            'tax_percentage'     => 'required_if:flg_tax,Y|numeric',
             'datetime_start'     => 'required|before_or_equal:datetime_end',
             'datetime_end'       => 'required',
         ], $message);
