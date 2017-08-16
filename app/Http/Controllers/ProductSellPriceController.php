@@ -335,16 +335,16 @@ class ProductSellPriceController extends Controller
                 return 'Rp. ' . number_format($getData->gross_sell_price, 2);
             })
             ->editColumn('flg_tax', function ($getData) {
-                if ($getData->flg_tax == 1) {
+                if ($getData->flg_tax == 'Y') {
                     return "Y";
-                } else if ($getData->flg_tax == 0) {
+                } else {
                     return "N";
                 }
             })
             ->editColumn('tax_percentage', function ($getData) {
-                if ($getData->flg_tax == 1) {
+                if ($getData->flg_tax == 'Y') {
                     return $getData->tax_percentage . "%";
-                } else if ($getData->flg_tax == 0) {
+                } else {
                     return "0%";
                 }
             })
