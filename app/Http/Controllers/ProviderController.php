@@ -135,7 +135,8 @@ class ProviderController extends Controller{
 		];
 
 		$validator = Validator::make($request->all(), [
-			'provider_name' => 'required|max:25|unique:sw_provider',
+			'provider_name' => 'required|max:25|unique:sw_provider,provider_name,'.$request->provider_id,
+			'provider_code' => 'required|max:25|unique:sw_provider,provider_code,'.$request->provider_id,
 		], $message);
 
 		if($validator->fails()){

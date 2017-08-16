@@ -45,7 +45,7 @@
                 Provider Code<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input id="code" class="form-control col-md-7 col-xs-12" name="provider_code" placeholder="E.g: AXIATA" type="text" value="{{ old('provider_code')}}">
+                <input id="code" class="form-control col-md-7 col-xs-12" name="provider_code" placeholder="E.g: AXIATA" type="text" value="{{ old('provider_code')}}" onchange="this.value = this.value.toUpperCase()">
                 @if($errors->has('provider_code'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_code')}}</span></code>
                 @endif
@@ -56,7 +56,7 @@
                 Provider Name<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input id="name" class="form-control col-md-7 col-xs-12" name="provider_name" placeholder="E.g: Xl" required="required" type="text" value="{{ old('provider_name') }}">
+                <input id="name" class="form-control col-md-7 col-xs-12" name="provider_name" placeholder="E.g: Xl" required="required" type="text" value="{{ old('provider_name') }}" onchange="this.value = this.value.toUpperCase()">
                 @if($errors->has('provider_name'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_name')}}</span></code>
                 @endif
@@ -92,7 +92,10 @@
 
                 <input id="id_provider_update" name="provider_id" type="hidden" value="{{ old('provider_id') }}">
                 <input id="version_provider_update" name="version" type="hidden" value="{{ old('version') }}">
-                <input id="code_provider_update" class="form-control col-md-7 col-xs-12" name="provider_code" type="text" value="{{ old('provider_code') }}" readonly>
+                <input id="code_provider_update" class="form-control col-md-7 col-xs-12" name="provider_code" type="text" value="{{ old('provider_code') }}" onchange="this.value = this.value.toUpperCase()">
+                @if($errors->has('provider_code'))
+                  <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_code')}}</span></code>
+                @endif
               </div>
             </div>
             <div class="item form-group {{ $errors->has('provider_name') ? 'has-error' : ''}}">
@@ -100,7 +103,7 @@
                 Provider Name <span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input id="name_provider_update" class="form-control col-md-7 col-xs-12" name="provider_name" placeholder="E.g: XL" required="required" type="text" value="{{ old('provider_name') }}">
+                <input id="name_provider_update" class="form-control col-md-7 col-xs-12" name="provider_name" placeholder="E.g: XL" required="required" type="text" value="{{ old('provider_name') }}" onchange="this.value = this.value.toUpperCase()">
                 @if($errors->has('provider_name'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('provider_name')}}</span></code>
                 @endif
