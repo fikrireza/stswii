@@ -65,7 +65,7 @@
         <div class="item form-group {{ $errors->has('uniqueCode') ? 'has-error' : ''}}">
           <label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_code">Month</label>
           <div class="col-md-6 col-sm-6 col-xs-12">
-            <input type="text" class="form-control" name="bulan_shift" id="bulan_shift" value="" placeholder="yyyy-mm" required="">
+            <input type="text" class="form-control" name="tahun_bulan" id="tahun_bulan" value="" placeholder="yyyy-mm" required="">
           </div>
         </div>
         <div class="form-group">
@@ -89,7 +89,7 @@
 <script src="{{asset('amadeo/vendors/datepicker/bootstrap-datepicker.js')}}"></script>
 
 <script type="text/javascript">
-$('#bulan_shift').datepicker({
+$('#tahun_bulan').datepicker({
     autoclose: true,
     viewMode: 'years',
     changeMonth: true,

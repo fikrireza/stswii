@@ -37,14 +37,9 @@ class DepositPalomaController extends Controller
           'doc_date.required' => 'Wajib di isi',
           'partner_code.required' => 'Wajib di isi',
           'deposit_amount.required' => 'Wajib di isi',
-          // 'status.required' => 'Wajib di isi'
         ];
 
         $validator = Validator::make($request->all(),[
-          // 'tenant_id' => 'required|unique:sw_paloma_deposit_trx,tenant_id',
-          // 'ou_id' => 'required|unique:sw_paloma_deposit_trx,ou_id',
-          // 'doc_type_id' => 'required|unique:sw_paloma_deposit_trx,doc_type_id',
-          // 'doc_no' => 'required|unique:sw_paloma_deposit_trx,doc_no',
           'tenant_id' => 'required',
           'ou_id' => 'required',
           'doc_type_id' => 'required',
@@ -52,7 +47,6 @@ class DepositPalomaController extends Controller
           'doc_date' => 'required',
           'partner_code' => 'required',
           'deposit_amount' => 'required',
-          // 'status' => 'required'
         ], $message);
 
         if($validator->fails()){
@@ -68,14 +62,14 @@ class DepositPalomaController extends Controller
         $save->partner_code = $request->partner_code;
         $save->deposit_amount = $request->deposit_amount;
         $save->status = 'D';
-        $save->confirmed_user_id = '99';
+        $save->confirmed_user_id = '-99';
         $save->confirmed_datetime = 00000000000000;
 
         $save->version = 1;
         $save->create_datetime = 00000000000000;
-        $save->create_user_id = '99';
+        $save->create_user_id = '-99';
         $save->update_datetime = 00000000000000;
-        $save->update_user_id = '99';
+        $save->update_user_id = '-99';
         $save->save();
 
         $status = ['status' => 0];
