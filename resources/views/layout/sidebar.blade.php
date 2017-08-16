@@ -110,8 +110,8 @@
               </li>
               @endcan
               @can('read-deposit-trx')
-              <li class="{{ Route::is('paloma.transaction*') ? 'current-page' : '' }}">
-                <a href="{{ route('paloma.transaction.index') }}">Deposit Transaction</a>
+              <li class="{{ Route::is('palomaDeposit*') ? 'current-page' : '' }}">
+                <a href="{{ route('palomaDeposit.index') }}">Deposit Transaction</a>
               </li>
               @endcan
             </ul>
