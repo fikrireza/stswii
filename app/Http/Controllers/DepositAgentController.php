@@ -93,7 +93,7 @@ class DepositAgentController extends Controller
 
         ini_set('max_execution_time', 300);
         $client = new \GuzzleHttp\Client();
-        $res = $client->request('GET', 'http://localhost/stswii/public/getConfirmedTopUp'.$query)
+        $res = $client->request('GET', 'http://localhost/getConfirmedTopUp'.$query)
                       ->getbody();
 
         $proses = json_decode($res);
@@ -108,16 +108,19 @@ class DepositAgentController extends Controller
     public function reversalTrx(Request $request)
     {
         // Check Administrator Password
-        $password = Hash::make($request->password);
+        // $password = Hash::make($request->password);
         $checkPassword = Role::with('users')->where('slug', 'like', '%administrator%')->get();
 
+        $passwordHash = false;
         foreach ($checkPassword as $key) {
           foreach ($key->users as $user) {
-            $password = Hash::check($request->password,$user->password);
+            if($user->name == $request->name){
+              $passwordHash = Hash::check($request->password,$user->password);
+            }
           }
         }
 
-        if($password == false){
+        if($passwordHash == false){
           return redirect()->route('deposit-agent-reversal.index')->with('gagal', 'User did not authorize this action');
         }
         // Check Administrator Password
@@ -261,5 +264,6 @@ class DepositAgentController extends Controller
 
       return response()->json($json);
     }
+    // Just for localhost development
 
 }

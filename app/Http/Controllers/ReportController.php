@@ -63,7 +63,28 @@ class ReportController extends Controller
 
     public function postByAgent(Request $request)
     {
-      # code...
+        $tahun_bulan = date('Ym', strtotime($request->tahun_bulan));
+
+        $getData = Pos::leftjoin('sw_product', 'sw_product.product_id', '=', 'sw_pos.product_id')
+                        ->leftjoin('sw_agent', 'sw_agent.agent_id', '=', 'sw_pos.agent_id')
+                        ->select('sw_agent.agent_name', 'sw_product.product_code', DB::raw('COUNT(sw_pos.gross_sell_price) as qty'), DB::raw('SUM(sw_pos.gross_sell_price) as amount'))
+                        ->where('sw_pos.purchase_datetime', 'like', '%'.$tahun_bulan.'%')
+                        ->groupBy(['sw_agent.agent_name','sw_product.product_code'])
+                        ->get()
+                        ->toArray();
+
+        if(!$getData){
+          return redirect()->route('report.byAgent')->with('gagal', 'Data Not Found')->withInput();
+        }
+
+        return Excel::create('Report Sales By Agent - '.$request->tahun_bulan, function($excel) use($getData){
+          $excel->sheet('Sales By Agent', function($sheet) use ($getData)
+          {
+            $sheet->fromArray($getData, null, 'A1', true);
+          });
+        })->download('csv');
+
+        return redirect()->route('report.byAgent');
     }
 
 

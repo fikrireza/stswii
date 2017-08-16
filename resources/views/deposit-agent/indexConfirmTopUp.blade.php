@@ -75,6 +75,13 @@
             </div>
           </div>
           <div class="item form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Name <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <input class="form-control col-md-7 col-xs-12" name="name" type="text" value="" required="">
+            </div>
+          </div>
+          <div class="item form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Password <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -192,7 +199,7 @@
                 <td>{{ $list->uniqueCodeDate }}</td>
                 <td>{{ $list->confirmDate }}</td>
                 @can('confirm-deposit-reversal')
-                <td><a class="confirm" data-clientid="{{$list->clientId}}" data-uniquecode="{{$list->uniqueCode}}" data-uniquecodedate="{{$list->uniqueCodeDate}}" data-toggle='modal' data-target='.modal-form-confirm'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Reversal'>Reversal</span></a></td>
+                <td><a class="confirm" data-clientid="{{$list->clientId}}" data-uniquecode="{{$list->uniqueCode}}" data-uniquecodedate="{{$list->uniqueCodeDate}}" data-toggle='modal' data-target='.modal-form-confirm'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Reversal'>Void</span></a></td>
                 @endcan
               @endforeach
             </tbody>
