@@ -149,6 +149,7 @@ class ProductSellPriceController extends Controller
             'gross_sell_price.required'      => 'This field is required.',
             'gross_sell_price.numeric'       => 'Numeric Only.',
             'tax_percentage.required_if'     => 'This field is required.',
+            'tax_percentage.numeric'         => 'Numeric Only.',
             'datetime_start.required'        => 'This field is required.',
             'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
             'datetime_end.required'          => 'This field is required.',
@@ -157,7 +158,7 @@ class ProductSellPriceController extends Controller
         $validator = Validator::make($request->all(), [
             'product_id'       => 'required',
             'gross_sell_price' => 'required|numeric',
-            'tax_percentage'   => 'required_if:flg_tax,Y',
+            'tax_percentage'   => 'required_if:flg_tax,Y|numeric',
             'datetime_start'   => 'required|before_or_equal:datetime_end',
             'datetime_end'     => 'required',
         ], $message);
@@ -183,11 +184,9 @@ class ProductSellPriceController extends Controller
                 return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
             if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active)) {
-                return 2;
                 return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
             if (date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($request->datetime_end)) && isset($request->active)) {
-                return 3;
                 return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
         }
