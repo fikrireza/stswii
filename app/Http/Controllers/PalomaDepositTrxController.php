@@ -38,7 +38,14 @@ class PalomaDepositTrxController extends Controller
         }
 
         if ($getData->version != $request->version) {
-            return redirect()->route('palomaDeposit.index')->with('gagal', 'Your data already updated by ' . $getData->updatedBy->name . '.');
+
+            if(is_null($getData->updatedBy)){
+              $updatedBy = 'System';
+            }else{
+              $updatedBy = $getData->updatedBy->name;
+            }
+
+            return redirect()->route('palomaDeposit.index')->with('gagal', 'Your data already updated by '.$updatedBy);
         }
 
         $getData->status = 'R';
