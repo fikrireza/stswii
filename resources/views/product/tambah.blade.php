@@ -126,7 +126,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="active">Active</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input type="checkbox" class="flat" name="active" id="active" />
+                <input type="checkbox" class="flat" name="active" id="active" value="Y" {{old('active') == 'Y' ? 'checked' : ''}}/>
               </label>
             </div>
           </div>

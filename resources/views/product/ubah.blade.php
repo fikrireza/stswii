@@ -130,7 +130,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="active">Active</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <label>
-                <input id="active" type="checkbox" class="flat" name="active" @if($index->active) checked @endif/>
+                <input id="active" type="checkbox" class="flat" name="active" value="Y" {{ old('active', $index->active) == 'Y' ? 'checked' : '' }}/>
               </label>
             </div>
           </div>
