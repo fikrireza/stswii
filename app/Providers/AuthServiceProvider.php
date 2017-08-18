@@ -207,8 +207,8 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('update-agent', function($user){
           return $user->hasAccess(['update-agent']);
         });
-        Gate::define('active-agent', function($user){
-          return $user->hasAccess(['active-agent']);
+        Gate::define('activate-agent', function($user){
+          return $user->hasAccess(['activate-agent']);
         });
     }
 

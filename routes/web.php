@@ -64,7 +64,7 @@ Route::get('/home', 'HomeController@index')
 	Route::post('/agent/update', 'AgentController@update')
 				->name('agent.update')->middleware('can:update-agent');
 	Route::get('/agent/actived/{id}/{version}/{status}', 'AgentController@active')
-				->name('agent.active')->middleware('can:active-agent');
+				->name('agent.active')->middleware('can:activate-agent');
 
 	Route::get('/agent/seed-db', 'AgentController@seedTables');
 // agent
