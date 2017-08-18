@@ -56,15 +56,15 @@ Route::get('/home', 'HomeController@index')
 
 // agent
 	Route::get('/agent', 'AgentController@index')
-				->name('agent.index');
+				->name('agent.index')->middleware('can:read-agent');
 	Route::get('/agent/getDatas', 'AgentController@getDataTables')
 				->name('agent.getDatas');
 	Route::get('/agent/edit/{id}', 'AgentController@edit')
-				->name('agent.edit');
+				->name('agent.edit')->middleware('can:update-agent');
 	Route::post('/agent/update', 'AgentController@update')
-				->name('agent.update');
+				->name('agent.update')->middleware('can:update-agent');
 	Route::get('/agent/actived/{id}/{version}/{status}', 'AgentController@active')
-				->name('agent.active');
+				->name('agent.active')->middleware('can:active-agent');
 
 	Route::get('/agent/seed-db', 'AgentController@seedTables');
 // agent

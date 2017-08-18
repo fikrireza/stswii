@@ -32,7 +32,7 @@
 </div>
 @endif
 
-@can('update-provider')
+@can('update-agent')
 <div class="modal fade modal-form-update" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -44,57 +44,6 @@
         </div>
         <div class="modal-body">
             {{ csrf_field() }}
-            {{--
-            <div class="item form-group {{ $errors->has('agent_name') ? 'has-error' : ''}}">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="agent_name">
-                Agent Name<span class="required">*</span>
-              </label>
-              <div class="col-md-6 col-sm-6 col-xs-12">
-                <input
-                  id="agent_name"
-                  class="form-control col-md-7 col-xs-12"
-                  name="agent_name"
-                  type="text"
-                  value="{{ old('agent_name') }}"
-                >
-                <input
-                  id="agent_id"
-                  name="agent_id"
-                  type="hidden"
-                  value="{{ old('agent_id') }}"
-                >
-                <input
-                  id="version"
-                  name="version"
-                  type="hidden"
-                  value="{{ old('version') }}"
-                >
-                @if($errors->has('agent_name'))
-                  <code><span style="color:red; font-size:12px;">{{ $errors->first('agent_name')}}</span></code>
-                @endif
-              </div>
-            </div>
-
-            <div class="item form-group {{ $errors->has('phone_number') ? 'has-error' : ''}}">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="phone_number">
-                Phone Number <span class="required">*</span>
-              </label>
-              <div class="col-md-6 col-sm-6 col-xs-12">
-                <input
-                  id="phone_number"
-                  class="form-control col-md-7 col-xs-12"
-                  name="phone_number"
-                  placeholder="Example: 0812123456789"
-                  required="required"
-                  type="text"
-                  value="{{ old('phone_number') }}"
-                >
-                @if($errors->has('phone_number'))
-                  <code><span style="color:red; font-size:12px;">{{ $errors->first('phone_number')}}</span></code>
-                @endif
-              </div>
-            </div>
-            --}}
             <input
               id="agent_id"
               name="agent_id"
@@ -156,6 +105,7 @@
 </div>
 @endcan
 
+@can('activate-agent')
 <div class="modal fade modal-nonactive" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
@@ -193,6 +143,7 @@
     </div>
   </div>
 </div>
+@endcan
 
 <div class="page-title">
   <div class="title_left">
@@ -217,7 +168,9 @@
               <th>Phone</th>
               <th>Address</th>
               <th>City</th>
+              @can('activate-agent')
               <th>Status</th>
+              @endcan
               <th>Action</th>
             </tr>
           </thead>
@@ -227,7 +180,9 @@
             <th></th>
             <th></th>
             <th></th>
+            @can('activate-agent')
             <th></th>
+            @endcan
             <td></td>
           </tfoot>
         </table>
@@ -278,32 +233,36 @@ $(function() {
         });
     });
 
-  $('#agenttable').on('click', '.update', function(e) {
-    var agent_id     = $(this).data('id');
-    // var agent_name   = $(this).data('name');
-    // var phone_number = $(this).data('phone');
-    var address      = $(this).data('address');
-    var city         = $(this).data('city');
-    var version      = $(this).data('version');
-    $("#agent_id").val(agent_id);
-    // $("#agent_name").val(agent_name);
-    // $("#phone_number").val(phone_number);
-    $("#address").val(address);
-    $("#city").val(city);
-    $("#version").val(version);
-  });
+    @can('update-agent')
+    $('#agenttable').on('click', '.update', function(e) {
+      var agent_id     = $(this).data('id');
+      // var agent_name   = $(this).data('name');
+      // var phone_number = $(this).data('phone');
+      var address      = $(this).data('address');
+      var city         = $(this).data('city');
+      var version      = $(this).data('version');
+      $("#agent_id").val(agent_id);
+      // $("#agent_name").val(agent_name);
+      // $("#phone_number").val(phone_number);
+      $("#address").val(address);
+      $("#city").val(city);
+      $("#version").val(version);
+    });
+    @endcan
 
-  $(document).on('click', 'a.publish', function(){
-    var a = $(this).data('value');
-    var b = $(this).data('version');
-    $('#setPublish').attr('href', "{{ url('/') }}/agent/actived/"+a+"/"+b+"/Y");
-  });
+    @can('activate-agent')
+    $(document).on('click', 'a.publish', function(){
+      var a = $(this).data('value');
+      var b = $(this).data('version');
+      $('#setPublish').attr('href', "{{ url('/') }}/agent/actived/"+a+"/"+b+"/Y");
+    });
 
-  $(document).on('click','a.unpublish', function(){
-    var a = $(this).data('value');
-    var b = $(this).data('version');
-    $('#setUnpublish').attr('href', "{{ url('/') }}/agent/actived/"+a+"/"+b+"/N");
-  });
+    $(document).on('click','a.unpublish', function(){
+      var a = $(this).data('value');
+      var b = $(this).data('version');
+      $('#setUnpublish').attr('href', "{{ url('/') }}/agent/actived/"+a+"/"+b+"/N");
+    });
+    @endcan
 });
 </script>
 

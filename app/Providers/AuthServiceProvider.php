@@ -207,6 +207,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('update-agent', function($user){
           return $user->hasAccess(['update-agent']);
         });
+        Gate::define('active-agent', function($user){
+          return $user->hasAccess(['active-agent']);
+        });
     }
 
     public function registerDepositAgentConfirm()
