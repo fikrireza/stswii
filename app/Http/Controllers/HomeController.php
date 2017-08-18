@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\ProductSellPrice;
+use App\Models\Provider;
+use App\Models\ProviderPrefix;
+use App\Models\Product;
+use App\Models\PartnerPulsa;
+use App\Models\PartnerProduct;
+use App\Models\Agent;
 
 use Auth;
 use DB;
@@ -25,9 +30,14 @@ class HomeController extends Controller
 
 		public function index()
 		{
-			$ProductSellPrice = ProductSellPrice::get();
+			$provider = Provider::get();
+			$providerPrefix = ProviderPrefix::get();
+			$product = Product::get();
+			$partnerPulsa = PartnerPulsa::get();
+			$partnerProduct = PartnerProduct::get();
+			$agent = Agent::get();
 
-    	return view('home.index', compact('ProductSellPrice'));
+    	return view('home.index', compact('provider','providerPrefix','product','partnerPulsa','partnerProduct','agent'));
 
 	  }
 }
