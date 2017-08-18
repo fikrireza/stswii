@@ -211,7 +211,9 @@ $(function() {
             {data: 'phone_number'},
             {data: 'address'},
             {data: 'city'},
-            {data: 'status', orderable: false, searchable: false },
+            @can('activate-agent')
+            {data: 'active', orderable: false, searchable: false },
+            @endcan
             {data: 'action', orderable: false, searchable: false },
         ]
     });
