@@ -124,8 +124,22 @@ class ReportController extends Controller
         return view('report.depositPartner');
     }
 
-    public function postByTopUpDepositPartner(Request $request)
+    public function postByTopUpDepositPartner()
     {
-      # code...
+
+        $getData = [];
+
+        if(!$getData){
+          return redirect()->route('report.byTopUpDepositPartner')->with('gagal', 'Data Not Found')->withInput();
+        }
+
+        return Excel::create('Report Topup Deposit Partner', function($excel) use($getData){
+          $excel->sheet('Report Topup Deposit Partner', function($sheet) use ($getData)
+          {
+            $sheet->fromArray($getData, null, 'A1', true);
+          });
+        })->download('csv');
+
+        return redirect()->route('report.byTopUpDepositPartner');
     }
 }

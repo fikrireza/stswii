@@ -136,7 +136,7 @@
               <li class="{{ Route::is('report.byProvider') ? 'current-page' : '' }}"><a href="{{ route('report.byProvider') }}">Sales By Provider</a></li>
               @endcan
               @can('report-topup-deposit-partner')
-              <li class="{{ Route::is('report.byTopUpDepositPartner') ? 'current-page' : '' }}"><a href="{{ route('report.byTopUpDepositPartner') }}">Top Up Deposit Partner</a></li>
+              <li class="{{ Route::is('report.byTopUpDepositPartner') ? 'current-page' : '' }}"><a href="{{ route('report.byTopUpDepositPartner') }}">Topup Deposit Partner</a></li>
               @endcan
             </ul>
           </li>

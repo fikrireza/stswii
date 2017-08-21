@@ -57,24 +57,15 @@
   <div class="col-md-8 col-md-offset-2">
     <div class="x_panel">
       <div class="x_title">
-        <p>Filter Top Up Deposit Partner</p>
+        <p>Topup Deposit Partner</p>
       </div>
-      <form action="" method="POST" class="form-horizontal form-label-left">
-      {{ csrf_field() }}
       <div class="x_content">
-        <div class="item form-group {{ $errors->has('uniqueCode') ? 'has-error' : ''}}">
-          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_code">Month</label>
-          <div class="col-md-6 col-sm-6 col-xs-12">
-            <input type="text" class="form-control" name="tahun_bulan" id="tahun_bulan" value="" placeholder="yyyy-mm" required="">
-          </div>
-        </div>
         <div class="form-group">
-          <div class="col-md-6 col-md-offset-3">
-            <button id="send" type="submit" class="btn btn-success">Export</button>
+          <div class="col-md-6 col-md-offset-5">
+            <a href="{{ route('report.postByTopUpDepositPartner') }}" class="btn btn-success">Generate Report</a>
           </div>
         </div>
       </div>
-      </form>
     </div>
   </div>
 </div>
@@ -87,17 +78,4 @@
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
 <script src="{{ asset('amadeo/js/moment/moment.min.js') }}"></script>
 <script src="{{asset('amadeo/vendors/datepicker/bootstrap-datepicker.js')}}"></script>
-
-<script type="text/javascript">
-$('#bulan_shift').datepicker({
-    autoclose: true,
-    viewMode: 'years',
-    changeMonth: true,
-    changeYear: true,
-    showButtonPanel: true,
-    format: "yyyy-mm",
-    viewMode: "months",
-    minViewMode: "months"
-  });
-</script>
 @endsection

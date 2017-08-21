@@ -295,5 +295,5 @@ Route::get('/home', 'HomeController@index')
 	Route::get('report-provider', 'ReportController@byProvider')->name('report.byProvider')->middleware('can:report-provider');
 	Route::post('report-provider', 'ReportController@postByProvider')->name('report.postByProvider');
 	Route::get('report-topup-deposit-partner', 'ReportController@byTopUpDepositPartner')->name('report.byTopUpDepositPartner')->middleware('can:report-topup-deposit-partner');
-	Route::post('report-topup-deposit-partner', 'ReportController@postByTopUpDepositPartner')->name('report.postByTopUpDepositPartner');
+	Route::get('report-topup-deposit-partner/generate', 'ReportController@postByTopUpDepositPartner')->name('report.postByTopUpDepositPartner');
 //------- Report -------//

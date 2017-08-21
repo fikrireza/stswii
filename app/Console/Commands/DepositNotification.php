@@ -58,5 +58,5 @@ class DepositNotification extends Command
         $this->info('Agent List Deposit Has Been Sent to Email!');
     }
 
-    // exceute cronjob with ->        * * * * * php /path/to/artisan schedule:run >> /dev/null 2>&1
+    // exceute cronjob with ->        * * * * * php /path/to/artisan notification:deposit >> /dev/null 2>&1
 }
