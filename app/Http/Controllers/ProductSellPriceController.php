@@ -534,9 +534,10 @@ class ProductSellPriceController extends Controller
 
         foreach ($product_code as $key => $n) {
             /*Load array */
+
+            $skip    = 0;
             $product = Product::where('product_code', strtoupper($product_code[$key]))->first();
 
-            $skip = 0;
             if ($product) {
                 $checkData = ProductSellPrice::where('product_id', $product->product_id)
                     ->where('active', 'Y')
@@ -584,19 +585,19 @@ class ProductSellPriceController extends Controller
             }
 
             foreach ($checkData as $list) {
-                if ($list->datetime_start <= date('YmdHis', strtotime($datetime_start[$key])) && date('YmdHis', strtotime($datetime_start[$key])) <= $list->datetime_end && $active[$key] == 'Y') {
+                if ($list->datetime_start <= date('YmdHis', strtotime($datetime_start[$key])) && date('YmdHis', strtotime($datetime_start[$key])) <= $list->datetime_end && strtoupper($active[$key]) == 'Y') {
                     if (!$skip) {
                         $message = 'Data still active';
                     }
                     $skip = 1;
                 }
-                if ($list->datetime_start <= date('YmdHis', strtotime($datetime_end[$key])) && date('YmdHis', strtotime($datetime_end[$key])) <= $list->datetime_end && $active[$key] == 'Y') {
+                if ($list->datetime_start <= date('YmdHis', strtotime($datetime_end[$key])) && date('YmdHis', strtotime($datetime_end[$key])) <= $list->datetime_end && strtoupper($active[$key]) == 'Y') {
                     if (!$skip) {
                         $message = 'Data still active';
                     }
                     $skip = 1;
                 }
-                if (date('YmdHis', strtotime($datetime_start[$key])) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($datetime_end[$key])) && $active[$key] == 'Y') {
+                if (date('YmdHis', strtotime($datetime_start[$key])) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($datetime_end[$key])) && strtoupper($active[$key]) == 'Y') {
                     if (!$skip) {
                         $message = 'Data still active';
                     }
@@ -615,8 +616,8 @@ class ProductSellPriceController extends Controller
                         "datetime_end"        => date('YmdHis', strtotime($datetime_end[$key])),
                         "create_user_id"      => Auth::id(),
                         "active"              => strtoupper($active[$key]),
-                        "active_datetime"     => $active[$key] == 'Y' ? date('YmdHis') : '00000000000000',
-                        "non_active_datetime" => $active[$key] != 'Y' ? date('YmdHis') : '00000000000000',
+                        "active_datetime"     => strtoupper($active[$key]) == 'Y' ? date('YmdHis') : '00000000000000',
+                        "non_active_datetime" => strtoupper($active[$key]) != 'Y' ? date('YmdHis') : '00000000000000',
                         "version"             => 0,
                         "create_datetime"     => date('YmdHis'),
                         "create_user_id"      => Auth::id(),
