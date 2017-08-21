@@ -43,7 +43,7 @@ class AgentController extends Controller
       ->get();
 
       $start=1;
-  		return Datatables::of($index)
+  		$Datatables = Datatables::of($index)
         ->addColumn('slno', function ($index) use (&$start) {
             return $start++;
         })
@@ -67,48 +67,54 @@ class AgentController extends Controller
 						";
 					}
 					return $html;
-                })
-        ->addColumn('status', function($index) {
-          if($index->active == 'Y'){
-            return "
-              <a 
-                href='' 
-                class='unpublish' 
-                data-value='".$index->agent_id."' 
-                data-version='".$index->version."' 
-                data-toggle='modal' 
-                data-target='.modal-nonactive'
-              >
-                <span 
-                  class='label label-success' 
-                  data-toggle='tooltip' 
-                  data-placement='top' 
-                  title='Active'
-                >Active</span>
-              </a><br>";
-          }
-          else if($index->active == 'N'){
-            return "
-              <a 
-                href='' 
-                class='publish' 
-                data-value='".$index->agent_id."' 
-                data-version='".$index->version."' 
-                data-toggle='modal' 
-                data-target='.modal-active'
-              >
-                <span 
-                  class='label label-danger' 
-                  data-toggle='tooltip' 
-                  data-placement='top' 
-                  title='Non Active'
-                >Non Active</span>
-              </a><br>";
-          }
-        })
-        ->removeColumn('version')
+        });
+
+        if (Auth::user()->can('activate-agent')) {
+          $Datatables = $Datatables->editColumn('active', function($index) {
+            if($index->active == 'Y'){
+              return "
+                <a 
+                  href='' 
+                  class='unpublish' 
+                  data-value='".$index->agent_id."' 
+                  data-version='".$index->version."' 
+                  data-toggle='modal' 
+                  data-target='.modal-nonactive'
+                >
+                  <span 
+                    class='label label-success' 
+                    data-toggle='tooltip' 
+                    data-placement='top' 
+                    title='Active'
+                  >Active</span>
+                </a><br>";
+            }
+            else if($index->active == 'N'){
+              return "
+                <a 
+                  href='' 
+                  class='publish' 
+                  data-value='".$index->agent_id."' 
+                  data-version='".$index->version."' 
+                  data-toggle='modal' 
+                  data-target='.modal-active'
+                >
+                  <span 
+                    class='label label-danger' 
+                    data-toggle='tooltip' 
+                    data-placement='top' 
+                    title='Non Active'
+                  >Non Active</span>
+                </a><br>";
+            }
+          });
+        }
+
+        $Datatables = $Datatables->removeColumn('version')
         ->escapeColumns(['*'])
 				->make(true);
+
+        return $Datatables;
   	}
 
   	function edit($id){

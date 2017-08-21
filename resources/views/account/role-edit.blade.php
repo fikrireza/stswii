@@ -229,6 +229,10 @@
           <label>
             <input type="checkbox" class="flat" name="permissions[update-agent]" {{ in_array('update-agent',$can) ? 'checked="checked"' : '' }} value="true"/> Update
           </label>
+          <br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[activate-agent]" {{ in_array('activate-agent',$can) ? 'checked="checked"' : '' }} value="true"/> Status
+          </label>
         </div>
       </div>
       <div class="ln_solid"></div>
