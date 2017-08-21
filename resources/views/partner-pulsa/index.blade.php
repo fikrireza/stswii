@@ -123,78 +123,6 @@
               <th>Aksi</th>
             </tr>
           </thead>
-          {{--
-          <tbody>
-            @php ($no = 1)
-            @foreach ($getPartner as $list)
-            <tr>
-              <td>{{ $no++ }}</td>
-              <td>{{ $list->partner_pulsa_code or '-' }}</td>
-              <td>{{ $list->partner_pulsa_name or '-' }}</td>
-              <td>{{ $list->description or '-' }}</td>
-              <td>{{ $list->type_top or '-' }}</td>
-              <td>{{ $list->payment_termin or '-' }}</td>
-              @can('activate-partner-pulsa')
-              <td class="text-center">
-                <a
-                  href=""
-                  data-value="{{ $list->partner_pulsa_id }}"
-                  data-version="{{ $list->version }}"
-                  data-toggle="modal"
-                  @if($list->active == "Y")
-                  class="unpublish"
-                  data-target=".modal-nonactive"
-                  @elseif($list->active == "N")
-                  class="publish"
-                  data-target=".modal-active"
-                  @endif
-                >
-                  <span
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    @if($list->active == "Y")
-                    class="label label-success"
-                    title="Active"
-                    @elseif($list->active == "N")
-                    class="label label-danger"
-                    title="Non Active"
-                    @endif
-                  >
-                    @if($list->active == "Y")
-                    Active
-                    @elseif($list->active == "N")
-                    Non Active
-                    @endif
-                  </span>
-                </a>
-              </td>
-              @endcan
-              <td>
-                @can('update-partner-pulsa')
-                <a
-                  class="update"
-                  href="{{ route('partner-pulsa.edit', ['id' => $list->partner_pulsa_id, 'version' => $list->version])}}"
-                >
-                  <span class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-pencil"></i></span>
-                </a>
-                @endcan
-                @can('delete-partner-pulsa')
-                <a
-                  href=""
-                  class="delete"
-                  data-value="{{ $list->partner_pulsa_id }}"
-                  data-version="{{ $list->version }}"
-                  data-toggle="modal"
-                  data-target=".modal-delete"
-                >
-                  <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span>
-                </a>
-                @endcan
-              </td>
-            </tr>
-            @endforeach
-          </tbody>
-          --}}
           <tfoot>
             <tr>
               <td></td>
@@ -241,22 +169,22 @@ $(function() {
         ]
     });
 
-    $('#dataTables tfoot th').each( function () {
-      var title = $(this).text();
-      $(this).html( '<input type="text" class="form-control" style="border:1px solid #ceeae8; width:100%" />' );
-    });
-
-    var table = $('#dataTables').DataTable();
-    table.columns().every( function () {
-        var that = this;
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-            if ( that.search() !== this.value ) {
-                that
-                .search( this.value )
-                .draw();
-            }
-        });
-    });
+    // $('#dataTables tfoot th').each( function () {
+    //   var title = $(this).text();
+    //   $(this).html( '<input type="text" class="form-control" style="border:1px solid #ceeae8; width:100%" />' );
+    // });
+    //
+    // var table = $('#dataTables').DataTable();
+    // table.columns().every( function () {
+    //     var that = this;
+    //     $( 'input', this.footer() ).on( 'keyup change', function () {
+    //         if ( that.search() !== this.value ) {
+    //             that
+    //             .search( this.value )
+    //             .draw();
+    //         }
+    //     });
+    // });
 });
 
 $(function(){

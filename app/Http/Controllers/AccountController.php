@@ -96,7 +96,7 @@ class AccountController extends Controller
             ]);
 
           Mail::send('email.confirm', ['data' => $data], function($message) use ($data) {
-            $message->to($data[0]['email'], $data[0]['name'])->subject('Aktifasi Akun Web Admin');
+            $message->to($data[0]['email'], $data[0]['name'])->subject('Aktivasi Akun Web Admin');
           });
 
         });

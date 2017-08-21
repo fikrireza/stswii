@@ -158,40 +158,6 @@
               <th>Action</th>
             </tr>
           </thead>
-          {{--
-          <tbody>
-            @php $count=1; @endphp
-            @foreach ($index as $list)
-            <tr>
-              <td>{{ $count++ }}</td>
-              <td>{{ $list->provider->provider_code or '-'}}</td>
-              <td>{{ $list->product_code }}</td>
-              <td>{{ $list->product_name }}</td>
-              <td>Rp. {{ number_format($list->nominal, 2) }}</td>
-              <td>{{ $list->type }}</td>
-              @can('activate-product')
-              <td class="text-center">
-                  @if ($list->active)
-                    <a href="" class="unpublish" data-value="{{ $list->product_id }}" data-version="{{ $list->version }}" data-toggle="modal" data-target=".modal-nonactive"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Active</span></a>
-                    <br>
-                  @else
-                    <a href="" class="publish" data-value="{{ $list->product_id }}" data-version="{{ $list->version }}" data-toggle="modal" data-target=".modal-active"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="NonActive">Not Active</span></a>
-                    <br>
-                  @endif
-              </td>
-              @endcan
-              <td>
-                @can('update-product')
-                <a href="{{ route('product.ubah',$list->product_code) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
-                @endcan
-                @can('delete-product')
-                <a href="" class="delete" data-value="{{ $list->product_id }}" data-toggle="modal" data-target=".modal-delete"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span></a>
-                @endcan
-              </td>
-            </tr>
-            @endforeach
-          </tbody>
-          --}}
           <tfoot>
             <td></td>
             <th></th>
@@ -241,22 +207,22 @@ $(function() {
         ]
     });
 
-    $('#producttabel tfoot th').each( function () {
-      var title = $(this).text();
-      $(this).html( '<input type="text" class="form-control" style="border:1px solid #ceeae8; width:100%" />' );
-    });
-
-    var table = $('#producttabel').DataTable();
-    table.columns().every( function () {
-        var that = this;
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-            if ( that.search() !== this.value ) {
-                that
-                .search( this.value )
-                .draw();
-            }
-        });
-    });
+    // $('#producttabel tfoot th').each( function () {
+    //   var title = $(this).text();
+    //   $(this).html( '<input type="text" class="form-control" style="border:1px solid #ceeae8; width:100%" />' );
+    // });
+    //
+    // var table = $('#producttabel').DataTable();
+    // table.columns().every( function () {
+    //     var that = this;
+    //     $( 'input', this.footer() ).on( 'keyup change', function () {
+    //         if ( that.search() !== this.value ) {
+    //             that
+    //             .search( this.value )
+    //             .draw();
+    //         }
+    //     });
+    // });
 });
 </script>
 @else
