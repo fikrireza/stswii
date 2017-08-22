@@ -38,7 +38,7 @@ class ProductSellPriceController extends Controller
         $validator = Validator::make($request->all(), [
             'f_provider' => 'integer|nullable',
             'f_active'   => 'nullable|in:Y,N',
-            'f_date'   => 'date',
+            'f_date'   => 'nullable|date',
         ], $message);
 
         if ($validator->fails()) {
