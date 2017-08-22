@@ -94,13 +94,13 @@ class PartnerProductPurchPriceController extends Controller
             ->get();
 
         foreach ($checkData as $list) {
-            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_start)) && date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_end && isset($request->active)) {
+            if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && isset($request->active)) {
                 return redirect()->route('partner-product-purch-price.tambah')->with('gagal', 'Data is still active.')->withInput();
             }
-            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active)) {
+            if (strtotime($list->datetime_start) <= strtotime($datetime_end[$key]) && strtotime($datetime_end[$key]) <= strtotime($list->datetime_end) && isset($request->active)) {
                 return redirect()->route('partner-product-purch-price.tambah')->with('gagal', 'Data is still active.')->withInput();
             }
-            if (date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($request->datetime_end)) && isset($request->active)) {
+            if (strtotime($datetime_start[$key]) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($datetime_end[$key]) && isset($request->active)) {
                 return redirect()->route('partner-product-purch-price.tambah')->with('gagal', 'Data is still active.')->withInput();
             }
         }
@@ -179,15 +179,13 @@ class PartnerProductPurchPriceController extends Controller
             ->get();
 
         foreach ($checkData as $list) {
-            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_start)) && date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_end && isset($request->active))
-            {
+            if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && isset($request->active)) {
                 return redirect()->route('partner-product-purch-price.edit', ['id' => $request->partner_product_purch_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
-            if ($list->datetime_start <= date('YmdHis', strtotime($request->datetime_end)) && date('YmdHis', strtotime($request->datetime_end)) <= $list->datetime_end && isset($request->active))
-            {
+            if (strtotime($list->datetime_start) <= strtotime($datetime_end[$key]) && strtotime($datetime_end[$key]) <= strtotime($list->datetime_end) && isset($request->active)) {
                 return redirect()->route('partner-product-purch-price.edit', ['id' => $request->partner_product_purch_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
-            if (date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($request->datetime_end)) && isset($request->active)) {
+            if (strtotime($datetime_start[$key]) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($datetime_end[$key]) && isset($request->active)) {
                 return redirect()->route('partner-product-purch-price.edit', ['id' => $request->partner_product_purch_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
         }
@@ -232,13 +230,13 @@ class PartnerProductPurchPriceController extends Controller
             ->get();
 
         foreach ($checkData as $list) {
-            if ($list->datetime_start <= date('YmdHis', strtotime($index->datetime_start)) && date('YmdHis', strtotime($index->datetime_start)) <= $list->datetime_end && $index->active != 'Y') {
+            if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && $index->active != 'Y') {
                 return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data is still active.')->withInput();
             }
-            if ($list->datetime_start <= date('YmdHis', strtotime($index->datetime_end)) && date('YmdHis', strtotime($index->datetime_end)) <= $list->datetime_end && $index->active != 'Y') {
+            if (strtotime($list->datetime_start) <= strtotime($datetime_end[$key]) && strtotime($datetime_end[$key]) <= strtotime($list->datetime_end) && $index->active != 'Y') {
                 return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data is still active.')->withInput();
             }
-            if (date('YmdHis', strtotime($request->datetime_start)) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($request->datetime_end)) && $index->active != 'Y') {
+            if (strtotime($datetime_start[$key]) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($datetime_end[$key]) && $index->active != 'Y') {
                 return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data is still active.')->withInput();
             }
         }
@@ -572,6 +570,8 @@ class PartnerProductPurchPriceController extends Controller
             /*Load array */
 
             $skip            = 0;
+            $update          = 0;
+            $update_id       = 0;
             $partner_product = PartnerProduct::where('partner_product_code', strtoupper($partner_product_code[$key]))->first();
 
             if ($partner_product) {
@@ -613,32 +613,54 @@ class PartnerProductPurchPriceController extends Controller
                 $skip = 1;
             }
 
-            if (date('YmdHis', strtotime($datetime_start[$key])) > date('YmdHis', strtotime($datetime_end[$key]))) {
+            if (strtotime($datetime_start[$key]) > strtotime($datetime_end[$key])) {
                 if (!$skip) {
                     $message = '<h4><span class="label label-danger">Datetime start is bigger than Datetime end</span></h4>';
                 }
                 $skip = 1;
             }
 
+            // foreach ($checkData as $list) {
+            //     if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
+            //         if (!$skip) {
+            //             $message = '<h4><span class="label label-danger">Data still active</span></h4>';
+            //         }
+            //         $skip = 1;
+            //     }
+            //     if (strtotime($list->datetime_start) <= strtotime($datetime_end[$key]) && strtotime($datetime_end[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
+            //         if (!$skip) {
+            //             $message = '<h4><span class="label label-danger">Data still active</span></h4>';
+            //         }
+            //         $skip = 1;
+            //     }
+            //     if (strtotime($datetime_start[$key]) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($datetime_end[$key]) && strtoupper($active[$key]) == 'Y') {
+            //         if (!$skip) {
+            //             $message = '<h4><span class="label label-danger">Data still active</span></h4>';
+            //         }
+            //         $skip = 1;
+            //     }
+            // }
+
             foreach ($checkData as $list) {
-                if ($list->datetime_start <= date('YmdHis', strtotime($datetime_start[$key])) && date('YmdHis', strtotime($datetime_start[$key])) <= $list->datetime_end && strtoupper($active[$key]) == 'Y') {
+                if (strtotime($list->datetime_start) >= strtotime($datetime_start[$key]) && strtoupper($active[$key]) == 'Y') {
                     if (!$skip) {
-                        $message = '<h4><span class="label label-danger">Data still active</span></h4>';
+                        $message = '<h4><span class="label label-danger">Expired Date</span></h4>';
                     }
                     $skip = 1;
                 }
-                if ($list->datetime_start <= date('YmdHis', strtotime($datetime_end[$key])) && date('YmdHis', strtotime($datetime_end[$key])) <= $list->datetime_end && strtoupper($active[$key]) == 'Y') {
-                    if (!$skip) {
-                        $message = '<h4><span class="label label-danger">Data still active</span></h4>';
-                    }
-                    $skip = 1;
+                if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
+                    $update_id = $list->partner_product_purch_price_id;
+                    $update    = 1;
                 }
-                if (date('YmdHis', strtotime($datetime_start[$key])) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($datetime_end[$key])) && strtoupper($active[$key]) == 'Y') {
-                    if (!$skip) {
-                        $message = '<h4><span class="label label-danger">Data still active</span></h4>';
-                    }
-                    $skip = 1;
-                }
+            }
+
+            if($update && !$skip)
+            {
+                $index = PartnerProductPurchPrice::find($update);
+
+                $index->datetime_end = date('YmdHis', strtotime($datetime_start[$key].' -1 second'));
+
+                $index->save();
             }
 
             if (!$skip) {
