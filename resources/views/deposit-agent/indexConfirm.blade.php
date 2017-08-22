@@ -90,7 +90,7 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Amount <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input class="form-control col-md-7 col-xs-12" name="amount" type="text" value="" onkeypress="return isNumber(event)" required="">
+              <input class="form-control col-md-7 col-xs-12" name="amount" type="text" value="" onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);" required="">
             </div>
           </div>
         </div>
@@ -192,6 +192,8 @@
 <script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
+<script src="{{ asset('amadeo/js/formatNumber.js') }}"></script>
+
 
 <script type="text/javascript">
   $('#deposit-agent').DataTable();
