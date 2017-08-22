@@ -166,6 +166,7 @@
           <thead>
             <tr role="row">
               <th>No</th>
+              <th>Supplier Code</th>
               <th>Supplier Product Code</th>
               <th>Supplier Product Name</th>
               <th>Gross Purches Price</th>
@@ -182,6 +183,7 @@
           <tfoot>
             <tr>
               <td></td>
+              <th></th>
               <th></th>
               <th></th>
               <th></th>
@@ -221,6 +223,7 @@ $(function() {
         ajax: "{{ route('partner-product-purch-price.yajra.getDatas') }}?f_provider={{ $request->f_provider }}&f_partner={{ $request->f_partner }}&f_active={{$request->f_active}}",
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},
+            {data: 'partner_pulsa_code'},
             {data: 'partner_product_code'},
             {data: 'partner_product_name'},
             {data: 'gross_purch_price'},

@@ -318,8 +318,9 @@ class PartnerProductPurchPriceController extends Controller
             'sw_partner_product',
             'sw_partner_product.partner_product_id',
             'sw_partner_product_purch_price.partner_product_id'
-        )
+        )->leftJoin('sw_partner_pulsa', 'sw_partner_pulsa.partner_pulsa_id', 'sw_partner_product.partner_pulsa_id')
             ->select([
+                'sw_partner_pulsa.partner_pulsa_code as partner_pulsa_code',
                 'sw_partner_product.partner_product_code as partner_product_code',
                 'sw_partner_product.partner_product_name as partner_product_name',
                 'partner_product_purch_price_id',
