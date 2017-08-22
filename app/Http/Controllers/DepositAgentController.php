@@ -84,8 +84,8 @@ class DepositAgentController extends Controller
 
     public function getRangeDate(Request $request)
     {
-        $startDate = $request->startDate;
-        $endDate = $request->endDate;
+        $startDate = date('Ymd', strtotime($request->startDate));
+        $endDate = date('Ymd', strtotime($request->endDate));
         $limit = $request->limit;
         $offset = $request->offset;
 

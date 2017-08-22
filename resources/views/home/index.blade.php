@@ -16,7 +16,7 @@
       <div class="count blue">{{ count($provider) }}</div>
     </div>
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-      <span class="count_top"><i class="fa fa-phone"></i> Total Provider Prefix</span>
+      <span class="count_top"><i class="fa fa-phone"></i> Total Prefix</span>
       <div class="count red">{{ count($providerPrefix) }}</div>
     </div>
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
