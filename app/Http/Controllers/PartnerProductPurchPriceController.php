@@ -45,7 +45,7 @@ class PartnerProductPurchPriceController extends Controller
             'f_provider' => 'integer|nullable',
             'f_partner'  => 'integer|nullable',
             'f_active'   => 'nullable|in:Y,N',
-            'f_date'   => 'date',
+            'f_date'   => 'nullable|date',
         ], $message);
 
         if ($validator->fails()) {
@@ -657,10 +657,8 @@ class PartnerProductPurchPriceController extends Controller
 
             if($update && !$skip)
             {
-                $index = PartnerProductPurchPrice::find($update);
-
+                $index = PartnerProductPurchPrice::find($update_id);
                 $index->datetime_end = date('YmdHis', strtotime($datetime_start[$key].' -1 second'));
-
                 $index->save();
             }
 
