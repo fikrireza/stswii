@@ -69,9 +69,7 @@ class PartnerProductPurchPriceController extends Controller
         $message = [
             'partner_product_id.required'    => 'This field is required.',
             'gross_purch_price.required'     => 'This field is required.',
-            'gross_purch_price.numeric'      => 'Numeric Only.',
             'tax_percentage.required_if'     => 'This field is required.',
-            'tax_percentage.numeric'         => 'Numeric Only.',
             'datetime_start.required'        => 'This field is required.',
             'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
             'datetime_end.required'          => 'This field is required.',
@@ -79,8 +77,8 @@ class PartnerProductPurchPriceController extends Controller
 
         $validator = Validator::make($request->all(), [
             'partner_product_id' => 'required',
-            'gross_purch_price'  => 'required|numeric',
-            'tax_percentage'     => 'required_if:flg_tax,Y|numeric',
+            'gross_purch_price'  => 'required',
+            'tax_percentage'     => 'required_if:flg_tax,Y',
             'datetime_start'     => 'required|before_or_equal:datetime_end',
             'datetime_end'       => 'required',
         ], $message);
@@ -108,7 +106,7 @@ class PartnerProductPurchPriceController extends Controller
         $index = new PartnerProductPurchPrice;
 
         $index->partner_product_id = $request->partner_product_id;
-        $index->gross_purch_price  = $request->gross_purch_price;
+        $index->gross_purch_price  = str_replace('.', '',$request->gross_purch_price);
         $index->flg_tax            = isset($request->flg_tax) ? 'Y' : 'N';
         $index->tax_percentage     = isset($request->flg_tax) ? $request->tax_percentage : 0;
         $index->datetime_start     = date('YmdHis', strtotime($request->datetime_start));
@@ -152,7 +150,6 @@ class PartnerProductPurchPriceController extends Controller
         $message = [
             'partner_product_id.required'    => 'This field is required.',
             'gross_purch_price.required'     => 'This field is required.',
-            'gross_purch_price.numeric'      => 'Numeric Only.',
             'tax_percentage.required_if'     => 'This field is required.',
             'tax_percentage.numeric'         => 'Numeric Only.',
             'datetime_start.required'        => 'This field is required.',
@@ -162,7 +159,7 @@ class PartnerProductPurchPriceController extends Controller
 
         $validator = Validator::make($request->all(), [
             'partner_product_id' => 'required',
-            'gross_purch_price'  => 'required|numeric',
+            'gross_purch_price'  => 'required',
             'tax_percentage'     => 'required_if:flg_tax,Y|numeric',
             'datetime_start'     => 'required|before_or_equal:datetime_end',
             'datetime_end'       => 'required',
@@ -198,7 +195,7 @@ class PartnerProductPurchPriceController extends Controller
         }
 
         $index->partner_product_id = $request->partner_product_id;
-        $index->gross_purch_price  = $request->gross_purch_price;
+        $index->gross_purch_price  = str_replace('.', '',$request->gross_purch_price);
         $index->flg_tax            = isset($request->flg_tax) ? 'Y' : 'N';
         $index->tax_percentage     = isset($request->flg_tax) ? $request->tax_percentage : 0;
         $index->datetime_start     = date('YmdHis', strtotime($request->datetime_start));
@@ -369,10 +366,10 @@ class PartnerProductPurchPriceController extends Controller
                 }
             })
             ->editColumn('datetime_start', function ($getData) {
-                return date('d-m-Y H:i:s', strtotime($getData->datetime_start));
+                return date('Y-m-d H:i:s', strtotime($getData->datetime_start));
             })
             ->editColumn('datetime_end', function ($getData) {
-                return date('d-m-Y H:i:s', strtotime($getData->datetime_end));
+                return date('Y-m-d H:i:s', strtotime($getData->datetime_end));
             })
             ->addColumn('action', function ($getData) {
                 $actionHtml = '';

@@ -57,27 +57,27 @@
           </li>
           <li class="{{ Route::is('partner-product*') ? 'active' : '' }}{{ Route::is('partner-pulsa*') ? 'active' : '' }}{{ Route::is('partner-server*') ? 'active' : '' }}">
             <a>
-              <i class="fa fa-anchor"></i> Manage Partner <span class="fa fa-chevron-down"></span>
+              <i class="fa fa-anchor"></i> Manage Supplier <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="{{ Route::is('partner-product*') ? 'display: block;' : '' }}{{ Route::is('partner-pulsa*') ? 'display: block;' : '' }}">
               @can('read-partner-pulsa')
               <li class="{{ Route::is('partner-pulsa*') ? 'current-page' : '' }}">
-                <a href="{{ route('partner-pulsa.index') }}">Partner Pulsa</a>
+                <a href="{{ route('partner-pulsa.index') }}">Supplier Pulsa</a>
               </li>
               @endcan
               @can('read-partner-product')
               <li class="{{ Route::is('partner-product.*') ? 'current-page' : '' }}">
-                <a href="{{ route('partner-product.index') }}">Partner Product</a>
+                <a href="{{ route('partner-product.index') }}">Supplier Product</a>
               </li>
               @endcan
               @can('read-partner-product-purch-price')
               <li class="{{ Route::is('partner-product-purch-price*') ? 'current-page' : '' }}">
-                <a href="{{ route('partner-product-purch-price.index') }}">Partner Product Purch Price</a>
+                <a href="{{ route('partner-product-purch-price.index') }}">Supplier Product Purch Price</a>
               </li>
               @endcan
               @can('read-partner-server')
               <li class="{{ Route::is('partner-server*') ? 'current-page' : '' }}">
-                <a href="{{ route('partner-server.index') }}">Partner Server</a>
+                <a href="{{ route('partner-server.index') }}">Supplier Server</a>
               </li>
               @endcan
             </ul>
@@ -94,9 +94,9 @@
               @endcan
             </ul>
           </li>
-          <li class="{{ Route::is('paloma*') ? 'active' : '' }}{{ Route::is('deposit-agent*') ? 'active' : '' }}">
+          <li class="{{ Route::is('deposit-agent*') ? 'active' : '' }}">
             <a>
-              <i class="fa fa-money"></i> Paloma Deposit <span class="fa fa-chevron-down"></span>
+              <i class="fa fa-money"></i> Agent Deposit <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="">
               @can('read-deposit-confirm')
@@ -109,10 +109,17 @@
                 <a href="{{ route('deposit-agent-reversal.index') }}">Deposit Agent Void</a>
               </li>
               @endcan
+            </ul>
+          </li>
+          <li class="{{ Route::is('paloma*') ? 'active' : '' }}">
+            <a>
+              <i class="fa fa-money"></i>Paloma Deposit <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="nav child_menu" style="">
               @can('read-deposit-trx')
-              <li class="{{ Route::is('palomaDeposit*') ? 'current-page' : '' }}">
-                <a href="{{ route('palomaDeposit.index') }}">Deposit Transaction</a>
-              </li>
+                <li class="{{ Route::is('palomaDeposit*') ? 'current-page' : '' }}">
+                  <a href="{{ route('palomaDeposit.index') }}">Deposit Transaction</a>
+                </li>
               @endcan
             </ul>
           </li>

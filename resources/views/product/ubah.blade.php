@@ -106,7 +106,7 @@
           <div class="item form-group {{ $errors->has('nominal') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nominal <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="name" class="form-control" name="nominal" placeholder="E.g: 50000" required="required" type="text" value="{{ old('nominal', $index->nominal) }}" onkeypress="return isNumber(event)" maxlength="9">
+              <input id="name" class="form-control" name="nominal" placeholder="E.g: 50000" required="required" type="text" value="{{ old('nominal', $index->nominal) }}"  onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);"  maxlength="9">
               @if($errors->has('nominal'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('nominal')}}</span></code>
               @endif
@@ -160,6 +160,8 @@
 <script src="{{ asset('amadeo/vendors/select2/dist/js/select2.full.min.js')}}"></script>
 <script src="{{ asset('amadeo/vendors/iCheck/icheck.min.js')}}"></script>
 <script src="{{ asset('amadeo/vendors/switchery/dist/switchery.min.js')}}"></script>
+<script src="{{ asset('amadeo/js/formatNumber.js') }}"></script>
+
 
 <script>
   $(".select2_single").select2({

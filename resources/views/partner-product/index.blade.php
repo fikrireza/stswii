@@ -1,11 +1,12 @@
 @extends('layout.master')
 
 @section('title')
-  <title> | Partner Product</title>
+  <title> | Supplier Product</title>
 @endsection
 
 @section('headscript')
 <link href="{{ asset('amadeo/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ asset('amadeo/vendors/select2/dist/css/select2.min.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -36,7 +37,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Delete Partner Product</h4>
+        <h4 class="modal-title" id="myModalLabel2">Delete Supplier Product</h4>
       </div>
       <div class="modal-body">
         <h4>Sure ?</h4>
@@ -57,7 +58,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Nonactive Partner Product</h4>
+        <h4 class="modal-title" id="myModalLabel2">Nonactive Supplier Product</h4>
       </div>
       <div class="modal-body">
         <h4>Sure ?</h4>
@@ -76,7 +77,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Activated Partner Product</h4>
+        <h4 class="modal-title" id="myModalLabel2">Activated Supplier Product</h4>
       </div>
       <div class="modal-body">
         <h4>Sure ?</h4>
@@ -91,7 +92,7 @@
 
 <div class="page-title">
   <div class="title_left">
-    <h3>All Partner Product <small></small></h3>
+    <h3>All Supplier Product <small></small></h3>
   </div>
 </div>
 <div class="clearfix"></div>
@@ -99,7 +100,7 @@
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Partner Product </h2>
+        <h2>Supplier Product </h2>
         <ul class="nav panel_toolbox">
           @can('create-partner-product')
           <a class="btn btn-success btn-sm publish" href="{{ route('partner-product.create') }}"><i class="fa fa-plus"></i> Add</a>
@@ -110,7 +111,7 @@
       <div class="x_content table-responsive">
 
         <form class="form-inline text-center">
-          <select name="f_provider" class="form-control" onchange="this.form.submit()">
+          <select name="f_provider" class="form-control select_provider" onchange="this.form.submit()">
             <option value="">Filter Provider</option>
             @foreach($provider as $list)
                 <option
@@ -121,8 +122,8 @@
                 </option>
             @endforeach
           </select>
-          <select name="f_partner" class="form-control" onchange="this.form.submit()">
-            <option value="">Filter Partner</option>
+          <select name="f_partner" class="form-control select_partner" onchange="this.form.submit()">
+            <option value="">Filter Supplier</option>
             @foreach($partner as $list)
                 <option
                   value="{{$list->partner_pulsa_id}}"
@@ -139,11 +140,11 @@
           <thead>
             <tr role="row">
               <th>No</th>
-              <th>Partner Pulsa Code</th>
+              <th>Supplier Pulsa Code</th>
               <th>Provider Code</th>
               <th>Product Code</th>
-              <th>Partner Product Code</th>
-              <th>Partner Product Name</th>
+              <th>Supplier Product Code</th>
+              <th>Supplier Product Name</th>
               @can('activate-partner-product')
               <th>Status</th>
               @endcan
@@ -172,6 +173,7 @@
 @endsection
 
 @section('script')
+<script src="{{ asset('amadeo/vendors/select2/dist/js/select2.full.min.js')}}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
@@ -197,23 +199,6 @@ $(function() {
             {data: 'action', name: 'Action', orderable: false, searchable: false}
         ]
     });
-
-    // $('#dataTables tfoot th').each( function () {
-    //   var title = $(this).text();
-    //   $(this).html( '<input type="text" class="form-control" style="border:1px solid #ceeae8; width:100%" />' );
-    // });
-    //
-    // var table = $('#dataTables').DataTable();
-    // table.columns().every( function () {
-    //     var that = this;
-    //     $( 'input', this.footer() ).on( 'keyup change', function () {
-    //         if ( that.search() !== this.value ) {
-    //             that
-    //             .search( this.value )
-    //             .draw();
-    //         }
-    //     });
-    // });
 });
 </script>
 @else
@@ -251,6 +236,16 @@ $(function() {
 @endif
 
 <script type="text/javascript">
+$(".select_provider").select2({
+  placeholder: "Filter Provider",
+  allowClear: true
+});
+
+$(".select_partner").select2({
+  placeholder: "Filter Status",
+  allowClear: true
+});
+
 $(function(){
   @can('delete-partner-product')
   $(document).on('click','a.delete', function(){

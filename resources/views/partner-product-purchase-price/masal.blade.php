@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-  <title>STS | Upload Partner Product Purchase Price</title>
+  <title>STS | Upload Supplier Product Purchase Price</title>
 @endsection
 
 @section('headscript')
@@ -37,7 +37,7 @@
 
 <div class="page-title">
   <div class="title_left">
-    <h3>Partner Product Purchase Price <small></small></h3>
+    <h3>Supplier Product Purchase Price <small></small></h3>
   </div>
 </div>
 
@@ -46,8 +46,9 @@
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Partner Product Purchase Price </h2>
+        <h2>Supplier Product Purchase Price </h2>
         <ul class="nav panel_toolbox">
+          <a href="{{ route('partner-product-purch-price.index') }}" class="btn btn-primary btn-sm">Back</a>
           <a href="{{ route('partner-product-purch-price.template') }}" class="btn btn-primary btn-sm"> Download Template</a>
         </ul>
         <div class="clearfix"></div>
@@ -89,7 +90,7 @@
         <table class="table table-striped table-bordered no-footer tablecheck" width="100%">
           <thead>
             <th>No</th>
-            <th>Partner Product Code</th>
+            <th>Supplier Product Code</th>
             <th>Gross Purchase Price</th>
             <th>Tax Percentage</th>
             <th>Datetime Start</th>
@@ -163,7 +164,7 @@
         <table class="table table-striped table-bordered no-footer tablecheck" width="100%" id="">
           <thead>
             <th>Row</th>
-            <th>Partner Product Code</th>
+            <th>Supplier Product Code</th>
             <th>Gross Purchase Price</th>
             <th>Tax Percentage</th>
             <th>Datetime Start</th>
@@ -225,7 +226,7 @@
         <table class="table table-striped table-bordered no-footer tablecheck" width="100%" id="">
           <thead>
             <th>No</th>
-            <th>Partner Product Code</th>
+            <th>Supplier Product Code</th>
             <th>Gross Purchase Price</th>
             <th>Tax Percentage</th>
             <th>Datetime Start</th>

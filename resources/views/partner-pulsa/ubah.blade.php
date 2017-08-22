@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-  <title>STS | Edit Partner Pulsa</title>
+  <title>STS | Edit Supplier Pulsa</title>
 @endsection
 
 @section('headscript')
@@ -35,7 +35,7 @@
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Edit Partner Pulsa<small></small></h2>
+        <h2>Edit Supplier Pulsa<small></small></h2>
         <ul class="nav panel_toolbox">
           <a href="{{ route('partner-pulsa.index') }}" class="btn btn-primary btn-sm">Back</a>
         </ul>
@@ -47,7 +47,7 @@
 
           <div class="item form-group {{ $errors->has('partner_pulsa_code') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-              Partner Pulsa Code <span class="required">*</span>
+              Supplier Pulsa Code <span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input
@@ -82,7 +82,7 @@
 
           <div class="item form-group {{ $errors->has('partner_pulsa_name') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_pulsa_name">
-              Partner Pulsa Name<span class="required">*</span>
+              Supplier Pulsa Name<span class="required">*</span>
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input
@@ -205,7 +205,7 @@
     {
       $(".for-termin").hide();
     }
-    
+
   });
 
   function isNumber(evt) {

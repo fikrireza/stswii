@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-  <title> | Partner Pulsa</title>
+  <title> | Supplier Pulsa</title>
 @endsection
 
 @section('headscript')
@@ -36,7 +36,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Hapus Partner Pulsa</h4>
+        <h4 class="modal-title" id="myModalLabel2">Hapus Supplier Pulsa</h4>
       </div>
       <div class="modal-body">
         <h4>Yakin ?</h4>
@@ -57,7 +57,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Nonactive Partner Pulsa</h4>
+        <h4 class="modal-title" id="myModalLabel2">Nonactive Supplier Pulsa</h4>
       </div>
       <div class="modal-body">
         <h4>Sure ?</h4>
@@ -76,7 +76,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Activated Partner Pulsa</h4>
+        <h4 class="modal-title" id="myModalLabel2">Activated Supplier Pulsa</h4>
       </div>
       <div class="modal-body">
         <h4>Sure ?</h4>
@@ -91,7 +91,7 @@
 
 <div class="page-title">
   <div class="title_left">
-    <h3>All Partner Pulsa <small></small></h3>
+    <h3>All Supplier Pulsa <small></small></h3>
   </div>
 </div>
 <div class="clearfix"></div>
@@ -99,7 +99,7 @@
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Partner Pulsa </h2>
+        <h2>Supplier Pulsa </h2>
         <ul class="nav panel_toolbox">
           @can('create-partner-pulsa')
           <a class="btn btn-success btn-sm publish" href="{{ route('partner-pulsa.create') }}"><i class="fa fa-plus"></i> Add</a>
@@ -112,8 +112,8 @@
           <thead>
             <tr role="row">
               <th>No</th>
-              <th>Partner Code</th>
-              <th>Partner Name</th>
+              <th>Supplier Code</th>
+              <th>Supplier Name</th>
               <th>Description</th>
               <th>Type TOP</th>
               <th>Payment Termin</th>

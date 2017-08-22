@@ -7,6 +7,7 @@
 @section('headscript')
 <link href="{{ asset('amadeo/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
 <link href="{{ asset('amadeo/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ asset('amadeo/vendors/select2/dist/css/select2.min.css') }}" rel="stylesheet">
 <link href="{{ asset('amadeo/vendors/pnotify/dist/pnotify.css') }}" rel="stylesheet">
 <link href="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.css') }}" rel="stylesheet">
 @endsection
@@ -134,7 +135,7 @@
       </div>
       <div class="x_content table-responsive">
         <form class="form-inline text-center">
-          <select name="f_provider" class="form-control" onchange="this.form.submit()">
+          <select name="f_provider" class="form-control select_provider" onchange="this.form.submit()">
             <option value="">Filter Provider</option>
             @foreach($provider as $list)
                 <option value="{{$list->provider_id}}" @if($request->f_provider == $list->provider_id) selected @endif>{{$list->provider_name}}</option>
@@ -179,6 +180,7 @@
 @endsection
 
 @section('script')
+<script src="{{ asset('amadeo/vendors/select2/dist/js/select2.full.min.js')}}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
@@ -206,23 +208,6 @@ $(function() {
             {data: 'action', name: 'Action', orderable: false, searchable: false}
         ]
     });
-
-    // $('#producttabel tfoot th').each( function () {
-    //   var title = $(this).text();
-    //   $(this).html( '<input type="text" class="form-control" style="border:1px solid #ceeae8; width:100%" />' );
-    // });
-    //
-    // var table = $('#producttabel').DataTable();
-    // table.columns().every( function () {
-    //     var that = this;
-    //     $( 'input', this.footer() ).on( 'keyup change', function () {
-    //         if ( that.search() !== this.value ) {
-    //             that
-    //             .search( this.value )
-    //             .draw();
-    //         }
-    //     });
-    // });
 });
 </script>
 @else
@@ -260,6 +245,11 @@ $(function() {
 @endif
 
 <script type="text/javascript">
+$(".select_provider").select2({
+  placeholder: "Filter Provider",
+  allowClear: true
+});
+
 $(function(){
   $('#producttabel').on('click','a.unpublish', function(){
     var a = $(this).data('value');

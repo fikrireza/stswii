@@ -58,6 +58,7 @@
 			<div class="x_title">
 				<h2>Product Sell Price </h2>
 				<ul class="nav panel_toolbox">
+					<a href="{{ route('product-sell-price.index') }}" class="btn btn-primary btn-sm">Back</a>
 					@can('create-product-sell-price')
 					<a href="{{ route('product-sell-price.template') }}" class="btn btn-primary btn-sm"> Download Template</a>
 					@endcan
@@ -121,7 +122,7 @@
 						<tr>
 							<td>
 								{{ $urut + 1 }}
-								
+
 							</td>
 							<td>
 								{{$key['product_code']}}

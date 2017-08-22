@@ -82,7 +82,7 @@
           <div class="item form-group {{ $errors->has('product_code') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_code">Product Code</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="product_code" class="form-control col-md-7 col-xs-12" name="product_code" type="text" value="{{ old('product_code') }}" onchange="this.value = this.value.toUpperCase()">
+              <input id="product_code" class="form-control col-md-7 col-xs-12" name="product_code" type="text" value="{{ old('product_code') }}" placeholder="E.g: " onchange="this.value = this.value.toUpperCase()">
               @if($errors->has('product_code'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('product_code')}}</span></code>
               @endif
@@ -102,7 +102,7 @@
           <div class="item form-group {{ $errors->has('nominal') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nominal">Nominal <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="nominal" class="form-control" name="nominal" placeholder="E.g: 50000" required="required" type="text" value="{{ old('nominal') }}" onkeypress="return isNumber(event)" maxlength="9">
+              <input id="nominal" class="form-control" name="nominal" placeholder="E.g: 50000" required="required" type="text" value="{{ old('nominal') }}" onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);" maxlength="9">
               @if($errors->has('nominal'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('nominal')}}</span></code>
               @endif
@@ -157,20 +157,13 @@
 <script src="{{ asset('amadeo/vendors/select2/dist/js/select2.full.min.js')}}"></script>
 <script src="{{ asset('amadeo/vendors/iCheck/icheck.min.js')}}"></script>
 <script src="{{ asset('amadeo/vendors/switchery/dist/switchery.min.js')}}"></script>
+<script src="{{ asset('amadeo/js/formatNumber.js') }}"></script>
+
 
 <script>
   $(".select2_single").select2({
     placeholder: "Choose Provider",
     allowClear: true
   });
-
-  function isNumber(evt) {
-    evt = (evt) ? evt : window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
-  }
 </script>
 @endsection

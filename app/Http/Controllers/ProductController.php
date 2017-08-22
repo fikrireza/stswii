@@ -69,7 +69,6 @@ class ProductController extends Controller
 			'product_name.required' => 'This field required',
 			'provider_id.required' => 'This field required',
 			'nominal.required' => 'This field required',
-			'nominal.numeric' => 'Fill Numeric',
 			'type.required' => 'This field required',
 		];
 
@@ -77,7 +76,7 @@ class ProductController extends Controller
 			'product_code' => 'required|unique:sw_product',
 			'product_name' => 'required',
 			'provider_id' => 'required',
-			'nominal' => 'required|numeric',
+			'nominal' => 'required',
 			'type' => 'required',
 		], $message);
 
@@ -91,7 +90,7 @@ class ProductController extends Controller
 		$index->product_code = $request->product_code;
 		$index->product_name = $request->product_name;
 		$index->provider_id  = $request->provider_id;
-		$index->nominal      = $request->nominal;
+		$index->nominal      = str_replace('.','',$request->nominal);
 		$index->type = $request->type;
 
 		$index->active = isset($request->active) ? "Y" : "N";
@@ -136,7 +135,6 @@ class ProductController extends Controller
 			'product_code.unique' => 'This code has already taken',
 			'product_name.required' => 'This field required',
 			'nominal.required' => 'This field required',
-			'nominal.numeric' => 'Fill Numeric',
 			'type.required' => 'This field required',
 		];
 
@@ -144,7 +142,7 @@ class ProductController extends Controller
 			'product_code' => 'required|unique:sw_product,product_code,'.$request->product_id.',product_id',
 			'product_name' => 'required',
 			'provider_id' => 'required',
-			'nominal' => 'required|numeric',
+			'nominal' => 'required',
 			'type' => 'required',
 		], $message);
 
@@ -163,7 +161,7 @@ class ProductController extends Controller
 		$index->product_code = $request->product_code;
 		$index->product_name = $request->product_name;
 		$index->provider_id  = $request->provider_id;
-		$index->nominal      = $request->nominal;
+		$index->nominal      = str_replace('.', '',$request->nominal);
 		$index->type = $request->type;
 
 		$index->active = isset($request->active) ? "Y" : "N";

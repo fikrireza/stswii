@@ -82,7 +82,7 @@
           <div class="item form-group {{ $errors->has('gross_sell_price') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="gross_sell_price">Gross Sell Price <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="gross_sell_price" class="form-control" name="gross_sell_price" placeholder="E.g: 50000" required="required" type="text" value="{{ old('gross_sell_price') }}" onkeypress="return isNumber(event)" maxlength="9">
+              <input id="gross_sell_price" class="form-control" name="gross_sell_price" placeholder="E.g: 50000" required="required" type="text" value="{{ old('gross_sell_price') }}" onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);" maxlength="9">
               @if($errors->has('gross_sell_price'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('gross_sell_price')}}</span></code>
               @endif
@@ -165,7 +165,7 @@
 <script src="{{ asset('amadeo/vendors/switchery/dist/switchery.min.js')}}"></script>
 <script src="{{ asset('amadeo/js/moment/moment.min.js') }}"></script>
 <script src="{{ asset('amadeo/js/datepicker/daterangepicker.js') }}"></script>
-<script src="http://trentrichardson.com/examples/timepicker/jquery-ui-timepicker-addon.js"></script>
+<script src="{{ asset('amadeo/js/formatNumber.js') }}"></script>
 
 <script>
   $(".select2_single").select2({
@@ -174,7 +174,7 @@
   });
 
   $('#datetime_start').daterangepicker({
-    "calender_style": "picker_3",
+    "calender_style": "picker_2",
     "singleDatePicker": true,
     "format": 'YYYY-MM-DD H:m:s',
     "showDropdowns": true,
@@ -186,7 +186,7 @@
   });
 
   $('#datetime_end').daterangepicker({
-    "calender_style": "picker_3",
+    "calender_style": "picker_2",
     "singleDatePicker": true,
     "format": 'YYYY-MM-DD H:m:s',
     "showDropdowns": true,
@@ -201,13 +201,14 @@
   });
 
   function isNumber(evt) {
-    evt = (evt) ? evt : window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
+  	evt = (evt) ? evt : window.event;
+  	var charCode = (evt.which) ? evt.which : evt.keyCode;
+  	if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+  		return false;
+  	}
+  	return true;
   }
+
 
 $(document).ready(function() {
 $('select[name="product_id"]').on('change', function() {

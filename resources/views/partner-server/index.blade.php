@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-  <title> | Provider</title>
+  <title> | Supplier Server</title>
 @endsection
 
 @section('headscript')
@@ -37,7 +37,7 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
           </button>
-          <h4 class="modal-title" id="myModalLabel2">Add Partner Server</h4>
+          <h4 class="modal-title" id="myModalLabel2">Add Supplier Server</h4>
         </div>
         <div class="modal-body">
             {{ csrf_field() }}
@@ -90,7 +90,7 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
           </button>
-          <h4 class="modal-title" id="myModalLabel2">Update Partner Server</h4>
+          <h4 class="modal-title" id="myModalLabel2">Update Supplier Server</h4>
         </div>
         <div class="modal-body">
             {{ csrf_field() }}
@@ -144,7 +144,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Delete Partner Server</h4>
+        <h4 class="modal-title" id="myModalLabel2">Delete Supplier Server</h4>
       </div>
       <div class="modal-body">
         <h4>Sure ?</h4>
@@ -160,7 +160,7 @@
 
 <div class="page-title">
   <div class="title_left">
-    <h3>All Partner Server <small></small></h3>
+    <h3>All Supplier Server <small></small></h3>
   </div>
 </div>
 <div class="clearfix"></div>
@@ -168,7 +168,7 @@
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Partner Server </h2>
+        <h2>Supplier Server </h2>
         <ul class="nav panel_toolbox">
           @can('create-partner-server')
           <a class="btn btn-success btn-sm publish" data-toggle="modal" data-target=".modal-form-add" ><i class="fa fa-plus"></i> Add</a>

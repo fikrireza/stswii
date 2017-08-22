@@ -86,7 +86,7 @@ class DepositAgentController extends Controller
     {
         $startDate = date('Ymd', strtotime($request->startDate));
         $endDate = date('Ymd', strtotime($request->endDate));
-        $limit = $request->limit;
+        $limit = 100;
         $offset = $request->offset;
 
         $query = '?startDate='.$startDate.'&endDate='.$endDate.'&limit='.$limit.'&offset='.$offset;

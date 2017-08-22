@@ -6,9 +6,7 @@
 
 @section('headscript')
 <link href="{{ asset('amadeo/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
-<link href="{{ asset('amadeo/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
-<link href="{{ asset('amadeo/vendors/pnotify/dist/pnotify.css') }}" rel="stylesheet">
-<link href="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.css') }}" rel="stylesheet">
+<link href="{{ asset('amadeo/vendors/select2/dist/css/select2.min.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -135,17 +133,18 @@
       </div>
       <div class="x_content table-responsive">
         <form class="form-inline text-center">
-          <select name="f_provider" class="form-control" onchange="this.form.submit()">
+          <select name="f_provider" class="form-control select_provider" onchange="this.form.submit()">
             <option value="">Filter Provider</option>
             @foreach($provider as $list)
                 <option value="{{$list->provider_id}}" @if($request->f_provider == $list->provider_id) selected @endif>{{$list->provider_name}}</option>
             @endforeach
           </select>
-          <select name="f_active" class="form-control" onchange="this.form.submit()">
+          <select name="f_active" class="form-control select_status" onchange="this.form.submit()">
             <option value="" @if(isset($request->f_active) && $request->f_active == '') selected @endif>All Status</option>
             <option value="Y" @if(isset($request->f_active) && $request->f_active == 'Y') selected @endif>Active</option>
             <option value="N" @if(isset($request->f_active) && $request->f_active == 'N') selected @endif>Not Active</option>
           </select>
+          <input id="f_date" name="f_date" class="f_date form-control" type="text" value="{{ old('f_date') }}" placeholder="Filter Tanggal">
         </form>
         <div class="ln_solid"></div>
 
@@ -190,11 +189,14 @@
 
 @section('script')
 <script src="{{ asset('amadeo/vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('amadeo/vendors/select2/dist/js/select2.full.min.js')}}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
+<script src="{{ asset('amadeo/js/moment/moment.min.js') }}"></script>
+<script src="{{ asset('amadeo/js/datepicker/daterangepicker.js') }}"></script>
 
 @if(isset($request))
 <script type="text/javascript">
@@ -272,6 +274,23 @@ $(function() {
 @endif
 
 <script type="text/javascript">
+  $(".select_provider").select2({
+    placeholder: "Filter Provider",
+    allowClear: true
+  });
+
+  $(".select_status").select2({
+    placeholder: "Filter Status",
+    allowClear: true
+  });
+
+  $('#f_date').daterangepicker({
+    "calender_style": "picker_2",
+    "singleDatePicker": true,
+    "format": 'YYYY-MM-DD',
+    "showDropdowns": true,
+  });
+
   $(function(){
     $('#producttabel').on('click','a.unpublish', function(){
       var a = $(this).data('value');

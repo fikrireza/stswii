@@ -127,7 +127,7 @@
             @endif
           </div>
         </div>
-        <div class="item form-group {{ $errors->has('limit') ? 'has-error' : ''}}">
+        {{-- <div class="item form-group {{ $errors->has('limit') ? 'has-error' : ''}}">
           <label class="control-label col-md-3 col-sm-3 col-xs-12" for="product_code">Limit</label>
           <div class="col-md-6 col-sm-6 col-xs-12">
             @if (isset($proses))
@@ -146,7 +146,7 @@
               <input name="offset" class="form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('offset') }}" onkeypress="return isNumber(event)">
             @endif
           </div>
-        </div>
+        </div> --}}
         <div class="form-group">
           <div class="col-md-6 col-md-offset-3">
             <button id="send" type="submit" class="btn btn-success">Check</button>
@@ -197,7 +197,7 @@
                 <td>{{ $list->amount }}</td>
                 <td>{{ $list->uniqueCode }}</td>
                 <td>{{ $list->uniqueCodeDate }}</td>
-                <td>{{ $list->confirmDate }}</td>
+                <td>{{ date('Y-m-d', strtotime($list->confirmDate)) }}</td>
                 @can('confirm-deposit-reversal')
                 <td><a class="confirm" data-clientid="{{$list->clientId}}" data-uniquecode="{{$list->uniqueCode}}" data-uniquecodedate="{{$list->uniqueCodeDate}}" data-toggle='modal' data-target='.modal-form-confirm'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Reversal'>Void</span></a></td>
                 @endcan
