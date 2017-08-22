@@ -520,12 +520,13 @@ class PartnerProductPurchPriceController extends Controller
 
     public function prosesTemplate(Request $request)
     {
+        $getPartner = PartnerPulsa::where('active', 'Y')->get();
+
         if ($request->hasFile('file')) {
           $path = Input::file('file')->getRealPath();
           $data = Excel::selectSheets('Data-Import')->load($path, function ($reader) {
           })->get();
 
-          $getPartner = PartnerPulsa::where('active', 'Y')->get();
 
           if (!empty($data) && $data->count()) {
               foreach ($data as $key) {
@@ -546,10 +547,10 @@ class PartnerProductPurchPriceController extends Controller
                   return view('partner-product-purchase-price.masal', compact('collect','getPartner'));
               }
           } else {
-              return view('partner-product-purchase-price.masal')->with('gagal', 'Please Download Template');
+              return view('partner-product-purchase-price.masal', compact('getPartner'))->with('gagal', 'Please Download Template');
           }
         } else {
-            return view('partner-product-purchase-price.masal')->with('gagal', 'Please Select Template');
+            return view('partner-product-purchase-price.masal', compact('getPartner'))->with('gagal', 'Please Select Template');
         }
     }
 
