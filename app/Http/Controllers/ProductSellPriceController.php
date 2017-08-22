@@ -610,17 +610,15 @@ class ProductSellPriceController extends Controller
                     $skip = 1;
                 }
                 if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
-                    $update_id = $list->partner_product_purch_price_id;
+                    $update_id = $list->product_sell_price_id;
                     $update    = 1;
                 }
             }
 
             if($update && !$skip)
             {
-                $index = PartnerProductPurchPrice::find($update);
-
+                $index = ProductSellPrice::find($update_id);
                 $index->datetime_end = date('YmdHis', strtotime($datetime_start[$key].' -1 second'));
-
                 $index->save();
             }
 

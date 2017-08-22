@@ -648,10 +648,8 @@ class PartnerProductPurchPriceController extends Controller
 
             if($update && !$skip)
             {
-                $index = PartnerProductPurchPrice::find($update);
-
+                $index = PartnerProductPurchPrice::find($update_id);
                 $index->datetime_end = date('YmdHis', strtotime($datetime_start[$key].' -1 second'));
-
                 $index->save();
             }
 
