@@ -214,7 +214,7 @@ $(function() {
     $('#producttabel').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('product-sell-price.yajra.getDatas') }}?f_provider={{ $request->f_provider }}&f_active={{ $request->f_active }}",
+        ajax: "{{ route('product-sell-price.yajra.getDatas') }}?f_provider={{ $request->f_provider }}&f_active={{ $request->f_active }}&f_date={{ $request->f_date }}",
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},
             {data: 'product_name'},
