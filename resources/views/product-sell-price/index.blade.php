@@ -144,7 +144,17 @@
             <option value="Y" @if(isset($request->f_active) && $request->f_active == 'Y') selected @endif>Active</option>
             <option value="N" @if(isset($request->f_active) && $request->f_active == 'N') selected @endif>Not Active</option>
           </select>
-          <input id="f_date" name="f_date" class="f_date form-control" type="text" value="{{ old('f_date') }}" placeholder="Filter Tanggal">
+          <input 
+            id="f_date" 
+            name="f_date" 
+            class="f_date form-control" 
+            type="text" 
+            placeholder="Filter Tanggal"
+            onchange="this.form.submit()"
+            @if(isset($request->f_date))
+            value="{{ $request->f_date }}" 
+            @endif
+          >
         </form>
         <div class="ln_solid"></div>
 
@@ -204,7 +214,7 @@ $(function() {
     $('#producttabel').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('product-sell-price.yajra.getDatas') }}?f_provider={{ $request->f_provider }}&f_active={{ $request->f_active }}",
+        ajax: "{{ route('product-sell-price.yajra.getDatas') }}?f_provider={{ $request->f_provider }}&f_active={{ $request->f_active }}&f_date={{ $request->f_date }}",
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},
             {data: 'product_name'},
