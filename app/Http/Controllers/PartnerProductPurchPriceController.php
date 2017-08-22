@@ -38,12 +38,14 @@ class PartnerProductPurchPriceController extends Controller
             'f_provider.integer' => 'Invalid filter',
             'f_partner.integer'  => 'Invalid filter',
             'f_active.in'        => 'Invalid filter',
+            'f_date.date'        => 'Invalid filter',
         ];
 
         $validator = Validator::make($request->all(), [
             'f_provider' => 'integer|nullable',
             'f_partner'  => 'integer|nullable',
             'f_active'   => 'nullable|in:Y,N',
+            'f_date'   => 'date',
         ], $message);
 
         if ($validator->fails()) {
@@ -342,7 +344,13 @@ class PartnerProductPurchPriceController extends Controller
         if ($f_active != null) {
             $getDatas->where('sw_partner_product_purch_price.active', $f_active);
         }
+        if ($request->f_date != null) {
+            $f_date     = date('YmdHis', strtotime($request->f_date.' 23:59:59'));
+            $getDatas->where('datetime_start', '<=', $f_date)
+                ->where('datetime_end', '>=', $f_date);
+        }
         $getDatas = $getDatas->get();
+        // dd($getDatas);
 
         $start      = 1;
         $Datatables = Datatables::of($getDatas)

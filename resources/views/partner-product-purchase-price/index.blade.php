@@ -158,7 +158,17 @@
             <option value="Y" @if(isset($request->f_active) && $request->f_active == 'Y') selected @endif>Active</option>
             <option value="N" @if(isset($request->f_active) && $request->f_active == 'N') selected @endif>Not Active</option>
           </select>
-          <input id="f_date" name="f_date" class="f_date form-control" type="text" value="{{ old('f_date') }}" placeholder="Filter Tanggal">
+          <input 
+            id="f_date" 
+            name="f_date" 
+            class="f_date form-control" 
+            type="text" 
+            placeholder="Filter Tanggal" 
+            onchange="this.form.submit()"
+            @if(isset($request->f_date))
+            value="{{ $request->f_date }}" 
+            @endif
+          >
         </form>
         <div class="ln_solid"></div>
 
