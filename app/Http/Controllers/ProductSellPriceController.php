@@ -542,42 +542,42 @@ class ProductSellPriceController extends Controller
                     ->get();
             } else {
                 if (!$skip) {
-                    $message = 'Data Product not found';
+                    $message = '<h4><span class="label label-danger">Data Product not found</span></h4>';
                 }
                 $skip = 1;
             }
 
             if ($gross_sell_price[$key] == '') {
                 if (!$skip) {
-                    $message = 'Gross Sell Price is empty';
+                    $message = '<h4><span class="label label-danger">Gross Sell Price is empty</span></h4>';
                 }
                 $skip = 1;
             }
 
             if ($tax_percentage[$key] == '') {
                 if (!$skip) {
-                    $message = 'Tax Percentage is empty';
+                    $message = '<h4><span class="label label-danger">Tax Percentage is empty</span></h4>';
                 }
                 $skip = 1;
             }
 
             if ($datetime_start[$key] == '') {
                 if (!$skip) {
-                    $message = 'Datetime Start is empty';
+                    $message = '<h4><span class="label label-danger">Datetime Start is empty</span></h4>';
                 }
                 $skip = 1;
             }
 
             if ($datetime_end[$key] == '') {
                 if (!$skip) {
-                    $message = 'Datetime end is empty';
+                    $message = '<h4><span class="label label-danger">Datetime end is empty</span></h4>';
                 }
                 $skip = 1;
             }
 
             if (date('YmdHis', strtotime($datetime_start[$key])) > date('YmdHis', strtotime($datetime_end[$key]))) {
                 if (!$skip) {
-                    $message = 'Datetime start is bigger than Datetime end';
+                    $message = '<h4><span class="label label-danger">Datetime start is bigger than Datetime end</span></h4>';
                 }
                 $skip = 1;
             }
@@ -585,19 +585,19 @@ class ProductSellPriceController extends Controller
             foreach ($checkData as $list) {
                 if ($list->datetime_start <= date('YmdHis', strtotime($datetime_start[$key])) && date('YmdHis', strtotime($datetime_start[$key])) <= $list->datetime_end && strtoupper($active[$key]) == 'Y') {
                     if (!$skip) {
-                        $message = 'Data still active';
+                        $message = '<h4><span class="label label-danger">Data still active</span></h4>';
                     }
                     $skip = 1;
                 }
                 if ($list->datetime_start <= date('YmdHis', strtotime($datetime_end[$key])) && date('YmdHis', strtotime($datetime_end[$key])) <= $list->datetime_end && strtoupper($active[$key]) == 'Y') {
                     if (!$skip) {
-                        $message = 'Data still active';
+                        $message = '<h4><span class="label label-danger">Data still active</span></h4>';
                     }
                     $skip = 1;
                 }
                 if (date('YmdHis', strtotime($datetime_start[$key])) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($datetime_end[$key])) && strtoupper($active[$key]) == 'Y') {
                     if (!$skip) {
-                        $message = 'Data still active';
+                        $message = '<h4><span class="label label-danger">Data still active</span></h4>';
                     }
                     $skip = 1;
                 }

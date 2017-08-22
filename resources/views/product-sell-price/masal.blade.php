@@ -215,7 +215,7 @@
 								{{ $key['active'] }}
 							</td>
 							<td>
-								{{ $key['message'] }}
+								{!! $key['message'] !!}
 							</td>
 						</tr>
 						@endforeach

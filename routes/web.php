@@ -157,7 +157,7 @@ Route::get('/home', 'HomeController@index')
 	Route::get('partner-product-purch-price/upload', 'PartnerProductPurchPriceController@upload')
 			  ->name('partner-product-purch-price.upload')
 				->middleware('can:create-partner-product-purch-price');
-	Route::get('partner-product-purch-price/template', 'PartnerProductPurchPriceController@template')
+	Route::post('partner-product-purch-price/template', 'PartnerProductPurchPriceController@template')
 			  ->name('partner-product-purch-price.template')
 				->middleware('can:create-partner-product-purch-price');
 	Route::post('partner-product-purch-price/prosesTemplate', 'PartnerProductPurchPriceController@prosesTemplate')

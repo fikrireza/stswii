@@ -453,54 +453,60 @@ class PartnerProductPurchPriceController extends Controller
 
     public function upload()
     {
+        $getPartner = PartnerPulsa::where('active', 'Y')->get();
 
-        return view('partner-product-purchase-price.masal');
+        return view('partner-product-purchase-price.masal', compact('getPartner'));
     }
 
-    public function template()
+    public function template(Request $request)
     {
         $partnerProduct = PartnerProduct::select('partner_product_code', 'partner_product_name', 'active')
-            ->orderBy('partner_product_id', 'asc')
+            ->orderBy('partner_product_code', 'desc')
+            ->where('partner_pulsa_id', $request->partner_pulsa_id)
             ->get()
             ->toArray();
 
+        if(!$partnerProduct){
+          return redirect()->route('partner-product-purch-price.upload')->with('gagal', 'Supplier does not have a product.')->withInput();
+        }
+
         return Excel::create('Template Partner Product Purch Price Import', function ($excel) use ($partnerProduct) {
-            $excel->sheet('Data-Import', function ($sheet) {
-                $sheet->row(1, array('partner_product_code', 'gross_purch_price', 'tax_percentage', 'datetime_start', 'datetime_end', 'active'));
-                $sheet->setColumnFormat(array(
-                    'A' => '',
-                    'B' => '0.00',
-                    'C' => '0.00',
-                    'D' => 'YYYY-MM-DD HH:mm:ss',
-                    'E' => 'YYYY-MM-DD HH:mm:ss',
-                    'F' => '',
-                ));
-            });
+          $excel->sheet('Data-Import', function ($sheet) {
+              $sheet->row(1, array('partner_product_code', 'gross_purch_price', 'tax_percentage', 'datetime_start', 'datetime_end', 'active'));
+              $sheet->setColumnFormat(array(
+                  'A' => '',
+                  'B' => '0',
+                  'C' => '0.00',
+                  'D' => 'YYYY-MM-DD HH:mm:ss',
+                  'E' => 'YYYY-MM-DD HH:mm:ss',
+                  'F' => '',
+              ));
+          });
 
-            $excel->sheet('partner_product_id', function ($sheet) use ($partnerProduct) {
-                $sheet->fromArray($partnerProduct, null, 'A6', true);
-                $sheet->row(1, array('Example'));
-                $sheet->mergeCells('A1:E1');
-                $sheet->row(2, array('partner_product_code', 'gross_purch_price', 'tax_percentage', 'datetime_start', 'datetime_end', 'active'));
-                $sheet->row(3, array('PP1', '45000', '10', '2017-07-01 12:00:00', '2017-07-31 12:00:00', 'Y'));
-                $sheet->row(5, array('Data Partner Product'));
-                $sheet->mergeCells('A5:C5');
-                $sheet->row(6, array('partner_product_code', 'partner_product_name', 'active'));
-                $sheet->setAllBorders('thin');
-                $sheet->setFreeze('A7');
+          $excel->sheet('partner_product_id', function ($sheet) use ($partnerProduct) {
+              $sheet->fromArray($partnerProduct, null, 'A6', true);
+              $sheet->row(1, array('Example'));
+              $sheet->mergeCells('A1:E1');
+              $sheet->row(2, array('partner_product_code', 'gross_purch_price', 'tax_percentage', 'datetime_start', 'datetime_end', 'active'));
+              $sheet->row(3, array('PP1', '45000', '10', '2017-07-01 12:00:00', '2017-07-31 12:00:00', 'Y'));
+              $sheet->row(5, array('Data Partner Product'));
+              $sheet->mergeCells('A5:C5');
+              $sheet->row(6, array('partner_product_code', 'partner_product_name', 'active'));
+              $sheet->setAllBorders('thin');
+              $sheet->setFreeze('A7');
 
-                $sheet->cells('A2:F3', function ($cells) {
-                    $cells->setBackground('#5c92e8');
-                    $cells->setFontColor('#000000');
-                    $cells->setFontWeight('bold');
-                });
+              $sheet->cells('A2:F3', function ($cells) {
+                  $cells->setBackground('#5c92e8');
+                  $cells->setFontColor('#000000');
+                  $cells->setFontWeight('bold');
+              });
 
-                $sheet->cells('A6:C6', function ($cells) {
-                    $cells->setBackground('#000000');
-                    $cells->setFontColor('#ffffff');
-                    $cells->setFontWeight('bold');
-                });
-            });
+              $sheet->cells('A6:C6', function ($cells) {
+                  $cells->setBackground('#000000');
+                  $cells->setFontColor('#ffffff');
+                  $cells->setFontWeight('bold');
+              });
+          });
 
         })->download('xls');
     }
@@ -508,31 +514,33 @@ class PartnerProductPurchPriceController extends Controller
     public function prosesTemplate(Request $request)
     {
         if ($request->hasFile('file')) {
-            $path = Input::file('file')->getRealPath();
-            $data = Excel::selectSheets('Data-Import')->load($path, function ($reader) {
-            })->get();
+          $path = Input::file('file')->getRealPath();
+          $data = Excel::selectSheets('Data-Import')->load($path, function ($reader) {
+          })->get();
 
-            if (!empty($data) && $data->count()) {
-                foreach ($data as $key) {
-                    $collect[] = [
-                        'partner_product_code' => $key->partner_product_code,
-                        'gross_purch_price'    => $key->gross_purch_price,
-                        'tax_percentage'       => $key->tax_percentage,
-                        'datetime_start'       => $key->datetime_start,
-                        'datetime_end'         => $key->datetime_end,
-                        'active'               => $key->active,
-                    ];
-                }
+          $getPartner = PartnerPulsa::where('active', 'Y')->get();
 
-                if (!empty($collect)) {
+          if (!empty($data) && $data->count()) {
+              foreach ($data as $key) {
+                  $collect[] = [
+                      'partner_product_code' => $key->partner_product_code,
+                      'gross_purch_price'    => $key->gross_purch_price,
+                      'tax_percentage'       => $key->tax_percentage,
+                      'datetime_start'       => $key->datetime_start,
+                      'datetime_end'         => $key->datetime_end,
+                      'active'               => $key->active,
+                  ];
+              }
 
-                    $collect = collect($collect);
+              if (!empty($collect)) {
 
-                    return view('partner-product-purchase-price.masal', compact('collect'));
-                }
-            } else {
-                return view('partner-product-purchase-price.masal')->with('gagal', 'Please Download Template');
-            }
+                  $collect = collect($collect);
+
+                  return view('partner-product-purchase-price.masal', compact('collect','getPartner'));
+              }
+          } else {
+              return view('partner-product-purchase-price.masal')->with('gagal', 'Please Download Template');
+          }
         } else {
             return view('partner-product-purchase-price.masal')->with('gagal', 'Please Select Template');
         }
@@ -563,42 +571,42 @@ class PartnerProductPurchPriceController extends Controller
                     ->get();
             } else {
                 if (!$skip) {
-                    $message = 'Data Partner Product not found';
+                    $message = '<h4><span class="label label-danger">Data Partner Product not found</span></h4>';
                 }
                 $skip = 1;
             }
 
             if ($gross_purch_price[$key] == '') {
                 if (!$skip) {
-                    $message = 'Gross Purchase Price is empty';
+                    $message = '<h4><span class="label label-danger">Gross Purchase Price is empty</span></h4>';
                 }
                 $skip = 1;
             }
 
             if ($tax_percentage[$key] == '') {
                 if (!$skip) {
-                    $message = 'Tax Percentage is empty';
+                    $message = '<h4><span class="label label-danger">Tax Percentage is empty</span></h4>';
                 }
                 $skip = 1;
             }
 
             if ($datetime_start[$key] == '') {
                 if (!$skip) {
-                    $message = 'Datetime Start is empty';
+                    $message = '<h4><span class="label label-danger">Datetime Start is empty</span></h4>';
                 }
                 $skip = 1;
             }
 
             if ($datetime_end[$key] == '') {
                 if (!$skip) {
-                    $message = 'Datetime end is empty';
+                    $message = '<h4><span class="label label-danger">Datetime end is empty</span></h4>';
                 }
                 $skip = 1;
             }
 
             if (date('YmdHis', strtotime($datetime_start[$key])) > date('YmdHis', strtotime($datetime_end[$key]))) {
                 if (!$skip) {
-                    $message = 'Datetime start is bigger than Datetime end';
+                    $message = '<h4><span class="label label-danger">Datetime start is bigger than Datetime end</span></h4>';
                 }
                 $skip = 1;
             }
@@ -606,19 +614,19 @@ class PartnerProductPurchPriceController extends Controller
             foreach ($checkData as $list) {
                 if ($list->datetime_start <= date('YmdHis', strtotime($datetime_start[$key])) && date('YmdHis', strtotime($datetime_start[$key])) <= $list->datetime_end && strtoupper($active[$key]) == 'Y') {
                     if (!$skip) {
-                        $message = 'Data still active';
+                        $message = '<h4><span class="label label-danger">Data still active</span></h4>';
                     }
                     $skip = 1;
                 }
                 if ($list->datetime_start <= date('YmdHis', strtotime($datetime_end[$key])) && date('YmdHis', strtotime($datetime_end[$key])) <= $list->datetime_end && strtoupper($active[$key]) == 'Y') {
                     if (!$skip) {
-                        $message = 'Data still active';
+                        $message = '<h4><span class="label label-danger">Data still active</span></h4>';
                     }
                     $skip = 1;
                 }
                 if (date('YmdHis', strtotime($datetime_start[$key])) <= $list->datetime_start && $list->datetime_end <= date('YmdHis', strtotime($datetime_end[$key])) && strtoupper($active[$key]) == 'Y') {
                     if (!$skip) {
-                        $message = 'Data still active';
+                        $message = '<h4><span class="label label-danger">Data still active</span></h4>';
                     }
                     $skip = 1;
                 }
@@ -668,6 +676,8 @@ class PartnerProductPurchPriceController extends Controller
         }
         // });
 
+        $getPartner = PartnerPulsa::where('active', 'Y')->get();
+
         if (!empty($error)) {
 
             $error = collect($error);
@@ -678,7 +688,7 @@ class PartnerProductPurchPriceController extends Controller
                 $pass = '';
             }
 
-            return view('partner-product-purchase-price.masal', compact('error', 'pass'));
+            return view('partner-product-purchase-price.masal', compact('error', 'pass','getPartner'));
         }
 
         return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Your data has been successfully uploaded.');

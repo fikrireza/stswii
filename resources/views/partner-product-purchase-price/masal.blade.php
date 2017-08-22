@@ -35,6 +35,25 @@
 </div>
 @endif
 
+@if(Session::has('gagal'))
+<script>
+  window.setTimeout(function() {
+    $(".alert-danger").fadeTo(700, 0).slideUp(700, function(){
+        $(this).remove();
+    });
+  }, 5000);
+</script>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="alert alert-danger alert-dismissible fade in" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+      </button>
+      <strong>{{ Session::get('gagal') }}</strong>
+    </div>
+  </div>
+</div>
+@endif
+
 <div class="page-title">
   <div class="title_left">
     <h3>Supplier Product Purchase Price <small></small></h3>
@@ -49,13 +68,50 @@
         <h2>Supplier Product Purchase Price </h2>
         <ul class="nav panel_toolbox">
           <a href="{{ route('partner-product-purch-price.index') }}" class="btn btn-primary btn-sm">Back</a>
-          <a href="{{ route('partner-product-purch-price.template') }}" class="btn btn-primary btn-sm"> Download Template</a>
+          {{-- <a href="{{ route('partner-product-purch-price.template') }}" class="btn btn-primary btn-sm"> Download Template</a> --}}
         </ul>
         <div class="clearfix"></div>
       </div>
       <div class="x_content">
+        <form class="form-horizontal form-label-left" action="{{ route('partner-product-purch-price.template') }}" method="post">
+          {{ csrf_field() }}
+          <div class="item form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <h6>Download template before upload mass</h6>
+            </div>
+          </div>
+          <div class="item form-group {{ $errors->has('partner_pulsa_id') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Supplier <span class="required">*</span></label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <select id="partner_pulsa_id" name="partner_pulsa_id" class="form-control select2_single" required="required">
+                <option value="">Pilih</option>
+                @foreach ($getPartner as $list)
+                  <option value="{{ $list->partner_pulsa_id }}" {{ old('partner_pulsa_id') == $list->partner_pulsa_id ? 'selected' : '' }}>{{ $list->partner_pulsa_code }} - {{ $list->partner_pulsa_name}}</option>
+                @endforeach
+              </select>
+              @if($errors->has('file'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('file')}}</span></code>
+              @endif
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-6 col-md-offset-3">
+              <button id="send" type="submit" class="btn btn-primary btn-sm">Download Template</button>
+            </div>
+          </div>
+        </form>
+
+        <div class="ln_solid"></div>
+
         <form class="form-horizontal form-label-left" action="{{ route('partner-product-purch-price.prosesTemplate') }}" method="post" enctype="multipart/form-data">
           {{ csrf_field() }}
+          <div class="item form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <h6>Upload file template to system</h6>
+            </div>
+          </div>
           <div class="item form-group {{ $errors->has('file') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">File Upload <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -142,7 +198,7 @@
             @endforeach
           </tbody>
         </table>
-        <button type="submit" name="button" class="btn btn-success btn-bg btn-submit" onclick="return false">Upload</button>
+        <button type="submit" name="button" class="btn btn-success btn-bg btn-submit" onclick="return false">Process</button>
         </form>
       </div>
     </div>
@@ -158,7 +214,7 @@
         <h2 style="color: red;">Data Error</h2>
         <div class="clearfix"></div>
       </div>
-      <div class="x_content table-responsive">
+      <div class="x_content">
         <form class="form-horizontal form-label-left" action="{{ route('product-sell-price.storeTemplate') }}" method="post">
         {{ csrf_field() }}
         <table class="table table-striped table-bordered no-footer tablecheck" width="100%" id="">
@@ -198,7 +254,7 @@
                 {{ $key['active'] }}
               </td>
               <td>
-                {{ $key['message'] }}
+                {!! $key['message'] !!}
               </td>
             </tr>
             @endforeach
@@ -220,7 +276,7 @@
         <h2 style="color: green">Successfully saved</h2>
         <div class="clearfix"></div>
       </div>
-      <div class="x_content table-responsive">
+      <div class="x_content">
         <form class="form-horizontal form-label-left" action="{{ route('product-sell-price.storeTemplate') }}" method="post">
         {{ csrf_field() }}
         <table class="table table-striped table-bordered no-footer tablecheck" width="100%" id="">
@@ -286,6 +342,11 @@
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
 
 <script type="text/javascript">
+  $(".select2_single").select2({
+    placeholder: "Choose Supplier",
+    allowClear: true
+  });
+
   var table = $('.tablecheck').DataTable({
     "aoColumnDefs": [
       { "bSearchable": false, "aTargets": [ 0, 1 ] }
