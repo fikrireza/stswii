@@ -50,7 +50,7 @@ class DepositAgentController extends Controller
                               'clientId' => $request->clientId,
                               'uniqueCode'  => $request->uniqueCode,
                               'uniqueCodeDate'  => $request->uniqueCodeDate,
-                              'amount'  => $request->amount,
+                              'amount'  => str_replace('.','',$request->amount),
                             ]
                           ])->getbody();
 
