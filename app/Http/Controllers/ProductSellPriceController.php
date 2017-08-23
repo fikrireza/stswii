@@ -89,16 +89,28 @@ class ProductSellPriceController extends Controller
             ->where('active', 'Y')
             ->get();
 
-        foreach ($checkData as $list) {
-            if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
-                return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
+
+        $update_id = 0;
+        $update    = 0;
+        if(!empty($checkData))
+        {
+            foreach ($checkData as $list) {
+                if (strtotime($list->datetime_start) >= strtotime($request->datetime_start) && isset($request->active)) {
+                    return redirect()->route('product-sell-price.tambah')->with('gagal', 'Datetime Start is Expired.')->withInput();
+                }
+                if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
+                    $update_id = $list->product_sell_price_id;
+                    $update    = 1;
+                    break;
+                }
             }
-            if (strtotime($list->datetime_start) <= strtotime($request->datetime_end) && strtotime($request->datetime_end) <= strtotime($list->datetime_end) && isset($request->active)) {
-               return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
-            }
-            if (strtotime($request->datetime_start) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($request->datetime_end) && isset($request->active)) {
-                return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
-            }
+        }
+
+        if($update)
+        {
+            $index2 = ProductSellPrice::find($update_id);
+            $index2->datetime_end = date('YmdHis', strtotime($request->datetime_start.' -1 second'));
+            $index2->save();
         }
 
         $index = new ProductSellPrice;
@@ -178,20 +190,31 @@ class ProductSellPriceController extends Controller
             ->where('product_sell_price_id', '<>', $request->product_sell_price_id)
             ->get();
 
-        foreach ($checkData as $list) {
-            if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
-                return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
-            }
-            if (strtotime($list->datetime_start) <= strtotime($request->datetime_end) && strtotime($request->datetime_end) <= strtotime($list->datetime_end) && isset($request->active)) {
-               return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
-            }
-            if (strtotime($request->datetime_start) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($request->datetime_end) && isset($request->active)) {
-                return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
+        $update_id = 0;
+        $update    = 0;
+        if(!empty($checkData))
+        {
+            foreach ($checkData as $list) {
+                if (strtotime($list->datetime_start) >= strtotime($request->datetime_start) && isset($request->active)) {
+                    return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Datetime Start is Expired.')->withInput();
+                }
+                if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
+                    $update_id = $list->product_sell_price_id;
+                    $update    = 1;
+                    break;
+                }
             }
         }
 
         if ($index->version != $request->version) {
             return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+        }
+
+        if($update)
+        {
+            $index2 = ProductSellPrice::find($update_id);
+            $index2->datetime_end = date('YmdHis', strtotime($request->datetime_start.' -1 second'));
+            $index2->save();
         }
 
         $index->product_id       = $request->product_id;
@@ -230,15 +253,19 @@ class ProductSellPriceController extends Controller
             ->where('active', 'Y')
             ->get();
 
-        foreach ($checkData as $list) {
-            if (strtotime($list->datetime_start) <= strtotime($index->datetime_start) && strtotime($index->datetime_start) <= strtotime($list->datetime_end) && $index->active != 'Y') {
-                return redirect()->route('product-sell-price.index')->with('gagal', 'Data is still active.')->withInput();
-            }
-            if (strtotime($list->datetime_start) <= strtotime($index->datetime_end) && strtotime($index->datetime_end) <= strtotime($list->datetime_end) && $index->active != 'Y') {
-                return redirect()->route('product-sell-price.index')->with('gagal', 'Data is still active.')->withInput();
-            }
-            if (strtotime($index->datetime_start) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($index->datetime_end) && $index->active != 'Y') {
-                return redirect()->route('product-sell-price.index')->with('gagal', 'Data is still active.')->withInput();
+        $update_id = 0;
+        $update    = 0;
+        if(!empty($checkData))
+        {
+            foreach ($checkData as $list) {
+                if (strtotime($list->datetime_start) >= strtotime($index->datetime_start) && $index->active != 'Y') {
+                    return redirect()->route('product-sell-price.index')->with('gagal', 'Datetime Start is Expired.')->withInput();
+                }
+                if (strtotime($list->datetime_start) <= strtotime($index->datetime_start) && strtotime($index->datetime_start) <= strtotime($list->datetime_end) && $index->active != 'Y') {
+                    $update_id = $list->product_sell_price_id;
+                    $update    = 1;
+                    break;
+                }
             }
         }
 
@@ -248,6 +275,13 @@ class ProductSellPriceController extends Controller
 
         if (date('YmdHis', strtotime($index->datetime_end)) < date('YmdHis') && $index->active != 'Y') {
             return redirect()->route('product-sell-price.index')->with('gagal', 'Data is outdate, can\'t to active again.');
+        }
+
+        if($update)
+        {
+            $index2 = ProductSellPrice::find($update_id);
+            $index2->datetime_end = date('YmdHis', strtotime($index->datetime_start.' -1 second'));
+            $index2->save();
         }
 
         if ($index->active == 'Y') {
@@ -615,13 +649,14 @@ class ProductSellPriceController extends Controller
                 foreach ($checkData as $list) {
                     if (strtotime($list->datetime_start) >= strtotime($datetime_start[$key]) && strtoupper($active[$key]) == 'Y') {
                         if (!$skip) {
-                            $message = '<h4><span class="label label-danger">Expired Date</span></h4>';
+                            $message = '<h4><span class="label label-danger">Datetime Start is Expired</span></h4>';
                         }
                         $skip = 1;
                     }
                     if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
                         $update_id = $list->product_sell_price_id;
                         $update    = 1;
+                        break;
                     }
                 }
             }
