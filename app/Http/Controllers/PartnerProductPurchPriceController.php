@@ -257,7 +257,7 @@ class PartnerProductPurchPriceController extends Controller
         {
             foreach ($checkData as $list) {
                 if (strtotime($list->datetime_start) >= strtotime($index->datetime_start) && $index->active != 'Y') {
-                    return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data is still active.')->withInput();
+                    return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Datetime Start is Expired.')->withInput();
                 }
                 if (strtotime($list->datetime_start) <= strtotime($index->datetime_start) && strtotime($index->datetime_start) <= strtotime($list->datetime_end) && $index->active != 'Y') {
                     $update_id = $list->partner_product_purch_price_id;
