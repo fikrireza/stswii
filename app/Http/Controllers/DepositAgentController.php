@@ -66,8 +66,10 @@ class DepositAgentController extends Controller
           $response = 'Unique Code Tidak Valid';
         }
 
-      } catch (Exception $e) {
+      } catch (\Exception $e) {
+			$response = 'Status Server '.$e->getResponse()->getStatusCode();
 
+			return redirect()->route('deposit-agent-confirm.index')->with('gagal', $response);
       }
 
 
