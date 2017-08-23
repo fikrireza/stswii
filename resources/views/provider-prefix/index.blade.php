@@ -46,18 +46,10 @@
                 Provider <span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <select
-                  id="provider_id"
-                  name="provider_id"
-                  class="form-control select2_single"
-                  required="required"
-                >
+                <select id="provider_id" name="provider_id" class="form-control select2_single" required="required">
                   <option value="">Pilih</option>
                   @foreach($getProvider as $list)
-                  <option
-                    value="{{ $list->provider_id }}"
-                    {{ old('provider_id') == $list->provider_id ? 'selected' : '' }}
-                  >
+                  <option value="{{ $list->provider_id }}" {{ old('provider_id') == $list->provider_id ? 'selected' : '' }}>
                     {{ $list->provider_code.' ('.$list->provider_name.')' }}
                   </option>
                   @endforeach
@@ -72,16 +64,7 @@
                 Provider Prefix<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input
-                  id="prefix"
-                  class="form-control col-md-7 col-xs-12"
-                  name="prefix"
-                  placeholder="Contoh: Provider Prefix"
-                  required="required"
-                  type="text"
-                  onkeypress="return isNumber(event)"
-                  value="{{ old('prefix') }}"
-                >
+                <input id="prefix" class="form-control col-md-7 col-xs-12" name="prefix" placeholder="Contoh: Provider Prefix" required="required" type="text" onkeypress="return isNumber(event)" value="{{ old('prefix') }}">
                 @if($errors->has('prefix'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('prefix')}}</span></code>
                 @endif
@@ -115,30 +98,12 @@
                 Provider <span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input
-                  id="prefix_id_update"
-                  name="provider_prefix_id"
-                  type="hidden"
-                  value="{{ old('provider_prefix_id') }}"
-                >
-                <input
-                  id="version_update"
-                  name="version"
-                  type="hidden"
-                  value="{{ old('version') }}"
-                >
-                <select
-                  id="provider_id_update"
-                  name="provider_id"
-                  class="form-control select2_single"
-                  required="required"
-                >
+                <input id="prefix_id_update" name="provider_prefix_id" type="hidden" value="{{ old('provider_prefix_id') }}">
+                <input id="version_update" name="version" type="hidden" value="{{ old('version') }}">
+                <select id="provider_id_update" name="provider_id" class="form-control select2_single" required="required">
                   <option value="">Pilih</option>
                   @foreach($getProvider as $list)
-                  <option
-                    value="{{ $list->provider_id }}"
-                    {{ old('provider_id') == $list->provider_id ? 'selected' : '' }}
-                  >
+                  <option value="{{ $list->provider_id }}" {{ old('provider_id') == $list->provider_id ? 'selected' : '' }}>
                     {{ $list->provider_code.' ('.$list->provider_name.')' }}
                   </option>
                   @endforeach
@@ -153,16 +118,7 @@
                 Provider Prefix<span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input
-                  id="prefix_update"
-                  class="form-control col-md-7 col-xs-12"
-                  name="prefix"
-                  placeholder="Contoh: Provider Prefix"
-                  required="required"
-                  type="text"
-                  onkeypress="return isNumber(event)"
-                  value="{{ old('prefix') }}"
-                >
+                <input id="prefix_update" class="form-control col-md-7 col-xs-12" name="prefix" placeholder="Contoh: Provider Prefix" required="required" type="text" onkeypress="return isNumber(event)" value="{{ old('prefix') }}">
                 @if($errors->has('prefix'))
                   <code><span style="color:red; font-size:12px;">{{ $errors->first('prefix')}}</span></code>
                 @endif
@@ -186,13 +142,13 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel2">Hapus Provider Prefix</h4>
+        <h4 class="modal-title" id="myModalLabel2">Delete Provider Prefix</h4>
       </div>
       <div class="modal-body">
-        <h4>Yakin ?</h4>
+        <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setDelete">Ya</a>
+        <a class="btn btn-primary" id="setDelete">Yes</a>
       </div>
 
     </div>

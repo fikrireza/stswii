@@ -63,7 +63,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setUnpublish">Ya</a>
+        <a class="btn btn-primary" id="setUnpublish">Yes</a>
       </div>
     </div>
   </div>
@@ -82,7 +82,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setPublish">Ya</a>
+        <a class="btn btn-primary" id="setPublish">Yes</a>
       </div>
     </div>
   </div>
@@ -144,17 +144,7 @@
             <option value="Y" @if(isset($request->f_active) && $request->f_active == 'Y') selected @endif>Active</option>
             <option value="N" @if(isset($request->f_active) && $request->f_active == 'N') selected @endif>Not Active</option>
           </select>
-          <input 
-            id="f_date" 
-            name="f_date" 
-            class="f_date form-control" 
-            type="text" 
-            placeholder="Filter Tanggal"
-            onchange="this.form.submit()"
-            @if(isset($request->f_date))
-            value="{{ $request->f_date }}" 
-            @endif
-          >
+          <input id="f_date" name="f_date" class="f_date form-control" type="text" placeholder="Filter Tanggal" onchange="this.form.submit()" @if(isset($request->f_date)) value="{{ $request->f_date }}" @endif >
         </form>
         <div class="ln_solid"></div>
 

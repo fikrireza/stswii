@@ -63,7 +63,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setUnpublish">Ya</a>
+        <a class="btn btn-primary" id="setUnpublish">Yes</a>
       </div>
     </div>
   </div>
@@ -82,7 +82,7 @@
         <h4>Sure ?</h4>
       </div>
       <div class="modal-footer">
-        <a class="btn btn-primary" id="setPublish">Ya</a>
+        <a class="btn btn-primary" id="setPublish">Yes</a>
       </div>
     </div>
   </div>
