@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-	<title>STS | Add Partner Product</title>
+	<title>STS | Add Supplier Product</title>
 @endsection
 
 @section('headscript')
@@ -15,7 +15,7 @@
 	<div class="col-md-12 col-sm-12 col-xs-12">
 		<div class="x_panel">
 			<div class="x_title">
-				<h2>Add Partner Product<small></small></h2>
+				<h2>Add Supplier Product<small></small></h2>
 				<ul class="nav panel_toolbox">
 					<a href="{{ route('partner-product.index') }}" class="btn btn-primary btn-sm">Back</a>
 				</ul>
@@ -27,7 +27,7 @@
 
 					<div class="item form-group {{ $errors->has('partner_pulsa_id') ? 'has-error' : ''}}">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_pulsa_id">
-							Partner Pulsa <span class="required">*</span>
+							Supplier Pulsa <span class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 							<select
@@ -36,7 +36,7 @@
 								class="form-control select2_single"
 								required="required"
 							>
-								<option value="">Choose Partner Pulsa</option>
+								<option value="">Choose Supplier Pulsa</option>
 				                @foreach ($getPartner as $key)
 								<option
 									value="{{ $key->partner_pulsa_id }}" {{ old('partner_pulsa_id') == $key->partner_pulsa_id ? 'selected' : ''}}
@@ -88,7 +88,7 @@
 								class="form-control select2_single"
 								required="required"
 							>
-								<option value="">Choose Product Partner</option>
+								<option value="">Choose Product Supplier</option>
 							</select>
 							@if($errors->has('product_id'))
 								<code><span style="color:red; font-size:12px;">{{ $errors->first('product_id')}}</span></code>
@@ -98,7 +98,7 @@
 
 					<div class="item form-group {{ $errors->has('partner_product_code') ? 'has-error' : ''}}">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-							Partner Product Code<span class="required">*</span>
+							Supplier Product Code<span class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 							<input
@@ -117,7 +117,7 @@
 
 					<div class="item form-group {{ $errors->has('partner_product_name') ? 'has-error' : ''}}">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_product_name">
-							Partner Product Name<span class="required">*</span>
+							Supplier Product Name<span class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 							<input

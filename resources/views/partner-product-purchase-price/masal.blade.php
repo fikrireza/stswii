@@ -157,7 +157,7 @@
       </div>
       <div class="x_content table-responsive">
         <form class="form-horizontal form-label-left" action="{{ route('partner-product-purch-price.storeTemplate') }}" method="post">
-        <input type="hidden" name="partner_pulsa_id" value="{{ $getName->partner_pulsa_id }}">
+        
         <table class="table table-striped table-bordered no-footer tablecheck" width="100%">
           <thead>
             <th>No</th>
@@ -178,6 +178,7 @@
             <tr>
               <td>
                 {{ $urut + 1 }}
+                <input type="hidden" name="partner_pulsa_id" value="{{ $getName->partner_pulsa_id }}">
               </td>
               <td>
                 {{$key['partner_product_code']}}
@@ -377,6 +378,7 @@
 
   $('.btn-submit').click( function() {
         var data = table.$('input, select').serialize();
+        {{-- console.log("{{ route('partner-product-purch-price.storeTemplate') }}?"+data); --}}
         window.location = "{{ route('partner-product-purch-price.storeTemplate') }}?"+data;
     } );
 </script>

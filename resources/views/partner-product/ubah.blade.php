@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-	<title>STS | Edit Partner Product</title>
+	<title>STS | Edit Supplier Product</title>
 @endsection
 
 @section('headscript')
@@ -15,7 +15,7 @@
 	<div class="col-md-12 col-sm-12 col-xs-12">
 		<div class="x_panel">
 			<div class="x_title">
-				<h2>Edit Partner Product<small></small></h2>
+				<h2>Edit Supplier Product<small></small></h2>
 				<ul class="nav panel_toolbox">
 					<a href="{{ route('partner-product.index') }}" class="btn btn-primary btn-sm">Back</a>
 				</ul>
@@ -27,7 +27,7 @@
 
 					<div class="item form-group {{ $errors->has('partner_pulsa_id') ? 'has-error' : ''}}">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_pulsa_id">
-							Partner Pulsa <span class="required">*</span>
+							Supplier Pulsa <span class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 							<input
@@ -52,7 +52,7 @@
 								class="form-control select2_single"
 								required="required"
 							>
-								<option value="">Choose Partner Pulsa</option>
+								<option value="">Choose Supplier Pulsa</option>
 				                @foreach ($getPartner as $key)
 								<option
 									value="{{ $key->partner_pulsa_id }}"
@@ -106,7 +106,7 @@
 								class="form-control select2_single"
 								required="required"
 							>
-								<option value="">Choose Product Partner</option>
+								<option value="">Choose Product Supplier</option>
 								@foreach ($getProduct as $key)
 								<option
 									value="{{ $key->product_id }}"
@@ -124,7 +124,7 @@
 
 					<div class="item form-group {{ $errors->has('partner_product_code') ? 'has-error' : ''}}">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-							Partner Product Code<span class="required">*</span>
+							Supplier Product Code<span class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 							<input
@@ -143,7 +143,7 @@
 
 					<div class="item form-group {{ $errors->has('partner_product_name') ? 'has-error' : ''}}">
 						<label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_product_name">
-							Partner Product Name<span class="required">*</span>
+							Supplier Product Name<span class="required">*</span>
 						</label>
 						<div class="col-md-6 col-sm-6 col-xs-12">
 							<input
@@ -205,24 +205,23 @@ $(".select2_single").select2({
 });
 
 $(document).ready(function(){
-	var old = {{ old('product_id') != '' ? old('product_id') : 0 }};
-	$('select#product_id').prop("disabled", true);
+	var old_provider = {{ old('provider_id') != '' ? 1 : 0 }};
+	var old_product  = {{ old('product_id') != '' ? old('product_id') : 0 }};
 	if($('select#provider_id').val() == ''){
 		$('select#product_id').val('').trigger('change');
 		$('select#product_id').prop("disabled", true);
 	}
-	else{
-		// $('select#product_id').val('').trigger('change');
+	else if(old_provider == 1){
 		$('select#product_id').prop("disabled", false);
 		$.getJSON({url: "{{ route('partner-product.ajaxGetProductList') }}/" + $('select#provider_id').val(), success: function(result){
 				$('select#product_id').empty();
 				$('select#product_id').append("<option value=''>Select Product</option>");
 				console.log(result)
 				$.each(result, function(i, field){
-					if (old == field.product_id) 
+					if (old_product == field.product_id) 
 					{
 						$('#product_id').append("<option value='"+ field.product_id +"' selected>"+ field.product_name +"("+field.product_code+")"+"</option>");
-						$('select#product_id').val(old).trigger('change');
+						$('select#product_id').val(old_product).trigger('change');
 
 					}
 					else

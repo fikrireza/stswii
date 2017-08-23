@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-  <title>STS | Add Partner Product Purchase Price</title>
+  <title>STS | Add Supplier Product Purchase Price</title>
 @endsection
 
 @section('headscript')
@@ -54,7 +54,7 @@
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Add Partner Product Purchase Price<small></small></h2>
+        <h2>Add Supplier Product Purchase Price<small></small></h2>
         <ul class="nav panel_toolbox">
           <a href="{{ route('partner-product-purch-price.index') }}" class="btn btn-primary btn-sm">Back</a>
         </ul>
@@ -65,12 +65,12 @@
           {{ csrf_field() }}
 
           <div class="item form-group {{ $errors->has('partner_product_id') ? 'has-error' : ''}}">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_product_id">Partner Product <span class="required">*</span></label>
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_product_id">Supplier Product <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <select id="partner_product_id" name="partner_product_id" class="form-control select2_single" required="required">
                 <option value="">Pilih</option>
                 @foreach ($partnerProduct as $list)
-                  <option value="{{ $list->partner_product_id }}" {{ old('partner_product_id') == $list->partner_product_id ? 'selected' : '' }}>{{ $list->partner_product_name}} - {{ $list->partner_product_code}}</option>
+                  <option value="{{ $list->partner_product_id }}" {{ old('partner_product_id') == $list->partner_product_id ? 'selected' : '' }}>({{ $list->partnerpulsa->partner_pulsa_name or '-' }}) {{ $list->partner_product_name }} - {{ $list->partner_product_code }}</option>
                 @endforeach
               </select>
               @if($errors->has('partner_product_id'))
@@ -169,7 +169,7 @@
 
 <script>
   $(".select2_single").select2({
-    placeholder: "Choose Partner Product",
+    placeholder: "Choose Supplier Product",
     allowClear: true
   });
 

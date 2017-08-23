@@ -90,13 +90,13 @@ class ProductSellPriceController extends Controller
             ->get();
 
         foreach ($checkData as $list) {
-            if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && isset($request->active)) {
+            if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                 return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
             }
-            if (strtotime($list->datetime_start) <= strtotime($datetime_end[$key]) && strtotime($datetime_end[$key]) <= strtotime($list->datetime_end) && isset($request->active)) {
+            if (strtotime($list->datetime_start) <= strtotime($request->datetime_end) && strtotime($request->datetime_end) <= strtotime($list->datetime_end) && isset($request->active)) {
                return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
             }
-            if (strtotime($datetime_start[$key]) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($datetime_end[$key]) && isset($request->active)) {
+            if (strtotime($request->datetime_start) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($request->datetime_end) && isset($request->active)) {
                 return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
             }
         }
@@ -179,13 +179,13 @@ class ProductSellPriceController extends Controller
             ->get();
 
         foreach ($checkData as $list) {
-            if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && isset($request->active)) {
+            if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                 return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
-            if (strtotime($list->datetime_start) <= strtotime($datetime_end[$key]) && strtotime($datetime_end[$key]) <= strtotime($list->datetime_end) && isset($request->active)) {
+            if (strtotime($list->datetime_start) <= strtotime($request->datetime_end) && strtotime($request->datetime_end) <= strtotime($list->datetime_end) && isset($request->active)) {
                return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
-            if (strtotime($datetime_start[$key]) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($datetime_end[$key]) && isset($request->active)) {
+            if (strtotime($request->datetime_start) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($request->datetime_end) && isset($request->active)) {
                 return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
         }
@@ -231,13 +231,13 @@ class ProductSellPriceController extends Controller
             ->get();
 
         foreach ($checkData as $list) {
-            if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && isset($request->active)) {
+            if (strtotime($list->datetime_start) <= strtotime($index->datetime_start) && strtotime($index->datetime_start) <= strtotime($list->datetime_end) && $index->active != 'Y') {
                 return redirect()->route('product-sell-price.index')->with('gagal', 'Data is still active.')->withInput();
             }
-            if (strtotime($list->datetime_start) <= strtotime($datetime_end[$key]) && strtotime($datetime_end[$key]) <= strtotime($list->datetime_end) && isset($request->active)) {
+            if (strtotime($list->datetime_start) <= strtotime($index->datetime_end) && strtotime($index->datetime_end) <= strtotime($list->datetime_end) && $index->active != 'Y') {
                 return redirect()->route('product-sell-price.index')->with('gagal', 'Data is still active.')->withInput();
             }
-            if (strtotime($datetime_start[$key]) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($datetime_end[$key]) && isset($request->active)) {
+            if (strtotime($index->datetime_start) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($index->datetime_end) && $index->active != 'Y') {
                 return redirect()->route('product-sell-price.index')->with('gagal', 'Data is still active.')->withInput();
             }
         }
@@ -540,6 +540,7 @@ class ProductSellPriceController extends Controller
             /*Load array */
 
             $skip    = 0;
+            $update  = 0;
             $product = Product::where('product_code', strtoupper($product_code[$key]))->first();
 
             if ($product) {
@@ -609,18 +610,22 @@ class ProductSellPriceController extends Controller
             //     }
             // }
 
-            foreach ($checkData as $list) {
-                if (strtotime($list->datetime_start) >= strtotime($datetime_start[$key]) && strtoupper($active[$key]) == 'Y') {
-                    if (!$skip) {
-                        $message = '<h4><span class="label label-danger">Expired Date</span></h4>';
+            if(!empty($checkData))
+            {
+                foreach ($checkData as $list) {
+                    if (strtotime($list->datetime_start) >= strtotime($datetime_start[$key]) && strtoupper($active[$key]) == 'Y') {
+                        if (!$skip) {
+                            $message = '<h4><span class="label label-danger">Expired Date</span></h4>';
+                        }
+                        $skip = 1;
                     }
-                    $skip = 1;
-                }
-                if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
-                    $update_id = $list->product_sell_price_id;
-                    $update    = 1;
+                    if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
+                        $update_id = $list->product_sell_price_id;
+                        $update    = 1;
+                    }
                 }
             }
+                
 
             if($update && !$skip)
             {

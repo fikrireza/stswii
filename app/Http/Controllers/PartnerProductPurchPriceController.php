@@ -61,7 +61,7 @@ class PartnerProductPurchPriceController extends Controller
 
     public function tambah()
     {
-        $partnerProduct = PartnerProduct::where('active', 'Y')->get();
+        $partnerProduct = PartnerProduct::where('active', 'Y')->orderBy('partner_pulsa_id', 'ASC')->get();
 
         return view('partner-product-purchase-price.tambah', compact('partnerProduct'));
     }
@@ -94,13 +94,13 @@ class PartnerProductPurchPriceController extends Controller
             ->get();
 
         foreach ($checkData as $list) {
-            if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && isset($request->active)) {
+            if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                 return redirect()->route('partner-product-purch-price.tambah')->with('gagal', 'Data is still active.')->withInput();
             }
-            if (strtotime($list->datetime_start) <= strtotime($datetime_end[$key]) && strtotime($datetime_end[$key]) <= strtotime($list->datetime_end) && isset($request->active)) {
+            if (strtotime($list->datetime_start) <= strtotime($request->datetime_end) && strtotime($request->datetime_end) <= strtotime($list->datetime_end) && isset($request->active)) {
                 return redirect()->route('partner-product-purch-price.tambah')->with('gagal', 'Data is still active.')->withInput();
             }
-            if (strtotime($datetime_start[$key]) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($datetime_end[$key]) && isset($request->active)) {
+            if (strtotime($request->datetime_start) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($request->datetime_end) && isset($request->active)) {
                 return redirect()->route('partner-product-purch-price.tambah')->with('gagal', 'Data is still active.')->withInput();
             }
         }
@@ -142,7 +142,7 @@ class PartnerProductPurchPriceController extends Controller
             return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data Not Found');
         }
 
-        $partnerProduct = PartnerProduct::where('active', 'Y')->get();
+        $partnerProduct = PartnerProduct::where('active', 'Y')->orderBy('partner_pulsa_id', 'ASC')->get();
 
         return view('partner-product-purchase-price.ubah', compact('index', 'partnerProduct'));
     }
@@ -179,13 +179,13 @@ class PartnerProductPurchPriceController extends Controller
             ->get();
 
         foreach ($checkData as $list) {
-            if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && isset($request->active)) {
+            if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                 return redirect()->route('partner-product-purch-price.edit', ['id' => $request->partner_product_purch_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
-            if (strtotime($list->datetime_start) <= strtotime($datetime_end[$key]) && strtotime($datetime_end[$key]) <= strtotime($list->datetime_end) && isset($request->active)) {
+            if (strtotime($list->datetime_start) <= strtotime($request->datetime_end) && strtotime($request->datetime_end) <= strtotime($list->datetime_end) && isset($request->active)) {
                 return redirect()->route('partner-product-purch-price.edit', ['id' => $request->partner_product_purch_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
-            if (strtotime($datetime_start[$key]) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($datetime_end[$key]) && isset($request->active)) {
+            if (strtotime($request->datetime_start) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($request->datetime_end) && isset($request->active)) {
                 return redirect()->route('partner-product-purch-price.edit', ['id' => $request->partner_product_purch_price_id])->with('gagal', 'Data is still active.')->withInput();
             }
         }
@@ -230,13 +230,13 @@ class PartnerProductPurchPriceController extends Controller
             ->get();
 
         foreach ($checkData as $list) {
-            if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && $index->active != 'Y') {
+            if (strtotime($list->datetime_start) <= strtotime($index->datetime_start) && strtotime($index->datetime_start) <= strtotime($list->datetime_end) && $index->active != 'Y') {
                 return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data is still active.')->withInput();
             }
-            if (strtotime($list->datetime_start) <= strtotime($datetime_end[$key]) && strtotime($datetime_end[$key]) <= strtotime($list->datetime_end) && $index->active != 'Y') {
+            if (strtotime($list->datetime_start) <= strtotime($index->datetime_end) && strtotime($index->datetime_end) <= strtotime($list->datetime_end) && $index->active != 'Y') {
                 return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data is still active.')->withInput();
             }
-            if (strtotime($datetime_start[$key]) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($datetime_end[$key]) && $index->active != 'Y') {
+            if (strtotime($index->datetime_start) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($index->datetime_end) && $index->active != 'Y') {
                 return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data is still active.')->withInput();
             }
         }
