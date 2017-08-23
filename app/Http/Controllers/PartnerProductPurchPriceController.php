@@ -527,6 +527,8 @@ class PartnerProductPurchPriceController extends Controller
 
           $getPartner = PartnerPulsa::where('active', 'Y')->get();
 
+          $getName = PartnerPulsa::where('partner_pulsa_id', $request->partner_pulsa_id)->first();
+
           if (!empty($data) && $data->count()) {
               foreach ($data as $key) {
                   $collect[] = [
@@ -543,7 +545,7 @@ class PartnerProductPurchPriceController extends Controller
 
                   $collect = collect($collect);
 
-                  return view('partner-product-purchase-price.masal', compact('collect','getPartner'));
+                  return view('partner-product-purchase-price.masal', compact('collect','getPartner','getName'));
               }
           } else {
               return view('partner-product-purchase-price.masal')->with('gagal', 'Please Download Template');
@@ -572,7 +574,9 @@ class PartnerProductPurchPriceController extends Controller
             $skip            = 0;
             $update          = 0;
             $update_id       = 0;
-            $partner_product = PartnerProduct::where('partner_product_code', strtoupper($partner_product_code[$key]))->first();
+            $partner_product = PartnerProduct::where('partner_product_code', strtoupper($partner_product_code[$key]))->where('partner_pulsa_id', $request->partner_pulsa_id)->first();
+
+            // return $partner_product;
 
             if ($partner_product) {
                 $checkData = PartnerProductPurchPrice::where('partner_product_id', $partner_product->partner_product_id)
@@ -641,18 +645,22 @@ class PartnerProductPurchPriceController extends Controller
             //     }
             // }
 
-            foreach ($checkData as $list) {
-                if (strtotime($list->datetime_start) >= strtotime($datetime_start[$key]) && strtoupper($active[$key]) == 'Y') {
-                    if (!$skip) {
-                        $message = '<h4><span class="label label-danger">Expired Date</span></h4>';
+            if(!empty($checkData))
+            {
+                foreach ($checkData as $list) {
+                    if (strtotime($list->datetime_start) >= strtotime($datetime_start[$key]) && strtoupper($active[$key]) == 'Y') {
+                        if (!$skip) {
+                            $message = '<h4><span class="label label-danger">Expired Date</span></h4>';
+                        }
+                        $skip = 1;
                     }
-                    $skip = 1;
-                }
-                if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
-                    $update_id = $list->partner_product_purch_price_id;
-                    $update    = 1;
+                    if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
+                        $update_id = $list->partner_product_purch_price_id;
+                        $update    = 1;
+                    }
                 }
             }
+                
 
             if($update && !$skip)
             {

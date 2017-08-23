@@ -112,6 +112,20 @@
               <h6>Upload file template to system</h6>
             </div>
           </div>
+          <div class="item form-group {{ $errors->has('partner_pulsa_id') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="partner_pulsa_id">Supplier <span class="required">*</span></label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <select id="partner_pulsa_id" name="partner_pulsa_id" class="form-control select2_single" required="required">
+                <option value="">Pilih</option>
+                @foreach ($getPartner as $list)
+                  <option value="{{ $list->partner_pulsa_id }}" {{ old('partner_pulsa_id') == $list->partner_pulsa_id ? 'selected' : '' }}>{{ $list->partner_pulsa_code }} - {{ $list->partner_pulsa_name}}</option>
+                @endforeach
+              </select>
+              @if($errors->has('file'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('file')}}</span></code>
+              @endif
+            </div>
+          </div>
           <div class="item form-group {{ $errors->has('file') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">File Upload <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -138,11 +152,12 @@
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Check</h2>
+        <h2>Check - {{ $getName->partner_pulsa_name }}</h2>
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
         <form class="form-horizontal form-label-left" action="{{ route('partner-product-purch-price.storeTemplate') }}" method="post">
+        <input type="hidden" name="partner_pulsa_id" value="{{ $getName->partner_pulsa_id }}">
         <table class="table table-striped table-bordered no-footer tablecheck" width="100%">
           <thead>
             <th>No</th>
