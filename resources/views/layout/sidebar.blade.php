@@ -109,8 +109,8 @@
                 <a href="{{ route('deposit-agent-reversal.index') }}">Deposit Agent Void</a>
               </li>
               @endcan
-              <li>
-                <a href="#">Unconfirmed Unique Code</a>
+              <li class="{{ Route::is('deposit-agent-unconfirm*') ? 'current-page' : '' }}">
+                <a href="{{ route('deposit-agent-unconfirm.index') }}">Unconfirmed Unique Code</a>
               </li>
             </ul>
           </li>

@@ -161,6 +161,63 @@ class DepositAgentController extends Controller
         return redirect()->route('deposit-agent-reversal.index')->with('hasil', $response);
     }
 
+    public function indexUnconfirm()
+    {
+        ini_set('max_execution_time', 300);
+        $client = new \GuzzleHttp\Client();
+        $res = $client->request('GET', 'http://localhost/stswii/public/getUnconfirmedUniqueCodes')
+                      ->getbody();
+
+        $prosesUniqueCode = json_decode($res);
+
+        if($prosesUniqueCode->status != 0){
+          abort(404);
+        }
+
+        return view('deposit-agent.indexUnconfirm', compact('prosesUniqueCode'));
+    }
+
+    public function postUnconfirm(Request $request)
+    {
+        try {
+          ini_set('max_execution_time', 300);
+          $client = new \GuzzleHttp\Client([
+                                            'headers' => [
+                                                'Accept' => 'application/json',
+                                                'Content-Type' => 'application/json',
+                                            ],
+                                          ]);
+
+          $res = $client->request('POST','http://localhost/walletTopupWithCode', [
+                              'json' => [
+                                'clientId' => $request->clientId,
+                                'uniqueCode'  => $request->uniqueCode,
+                                'uniqueCodeDate'  => $request->uniqueCodeDate,
+                                'amount'  => str_replace('.','',$request->amount),
+                              ]
+                            ])->getbody();
+
+          $result = json_decode($res);
+
+          if($result->status == 0){
+            $response = 'Sukses Confirm '.$request->uniqueCode;
+          }elseif($result->status == 1){
+            $response = 'Client Id Tidak ditemukan';
+          }elseif($result->status == 2){
+            $response = 'Amount Tidak Valid';
+          }else{
+            $response = 'Unique Code Tidak Valid';
+          }
+
+        } catch (\Exception $e) {
+            $response = 'Status Server '.$e->getResponse()->getStatusCode();
+
+            return redirect()->route('deposit-agent-unconfirm.index')->with('gagal', $response);
+        }
+
+        return redirect()->route('deposit-agent-unconfirm.index')->with('hasil', $response);
+    }
+
 
 
     // Just for localhost development

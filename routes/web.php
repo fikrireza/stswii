@@ -284,6 +284,12 @@ Route::get('/home', 'HomeController@index')
 				->name('deposit-agent-reversal.reversalTrx')
 				->middleware('can:confirm-deposit-reversal');
 	Route::get('getConfirmedTopUp', 'DepositAgentController@getConfirmedTopUp');
+
+
+	Route::get('deposit-agent-unconfirm', 'DepositAgentController@indexUnconfirm')
+				->name('deposit-agent-unconfirm.index');
+	Route::post('deposit-agent-proses-unconfirm', 'DepositAgentController@postUnconfirm')
+				->name('deposit-agent-unconfirm.postUnconfirm');
 //------- Deposit Agent -------//
 
 
