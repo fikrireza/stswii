@@ -108,19 +108,21 @@ class PartnerProductController extends Controller
 		$message = [
 			'partner_product_code.required' => 'This field required',
 			'partner_product_code.max'      => 'Maximum character 25',
-			'partner_product_code.unique'   => 'Produk ini sudah ada',
+			// 'partner_product_code.unique'   => 'Produk ini sudah ada',
 			'partner_product_name.required' => 'This field required',
 			'partner_pulsa_id.required'     => 'This field required',
 			'provider_id.required'          => 'This field required',
 			'product_id.required'           => 'This field required',
+			'product_id.unique'							=> 'This product already exist',
 		];
 
 		$validator = Validator::make($request->all(), [
-			'partner_product_code' => 'required|unique:sw_partner_product|max:25',
+			// 'partner_product_code' => 'required|unique:sw_partner_product|max:25',
+			'partner_product_code' => 'required|max:25',
 			'partner_product_name' => 'required',
-			'product_id'           => 'required',
 			'provider_id'          => 'required',
 			'partner_pulsa_id'     => 'required',
+			'product_id'           => 'required|unique:sw_partner_product,product_id,NULL,partner_product_id,partner_pulsa_id,'.$request->partner_pulsa_id,
 		], $message);
 
 		if ($validator->fails()) {
@@ -149,8 +151,8 @@ class PartnerProductController extends Controller
 		});
 
 		return redirect()->route('partner-product.index')
-			->with('alret', 'alert-success')
-			->with('berhasil', 'Your data has been successfully saved. ' . $request->partner_product_name);
+											->with('alret', 'alert-success')
+											->with('berhasil', 'Your data has been successfully saved. ' . $request->partner_product_name);
 	}
 
 	public function edit($id, $version)
@@ -168,12 +170,7 @@ class PartnerProductController extends Controller
 			$alret  = 'alert-danger';
 		} else {
 			$retrun     = 'update';
-			$getPartner = PartnerPulsa::select(
-				'partner_pulsa_id',
-				'partner_pulsa_code',
-				'partner_pulsa_name'
-			)
-				->get();
+			$getPartner = PartnerPulsa::select('partner_pulsa_id','partner_pulsa_code','partner_pulsa_name')->get();
 
 			// Ambil semua provider
 
@@ -186,34 +183,26 @@ class PartnerProductController extends Controller
 
 			// Ambil semua provider bila ada product
 
-			$getProvider = Provider::join('sw_product', 'sw_product.provider_id', '=', 'sw_provider.provider_id')->select(
-				'sw_provider.provider_id',
-				'provider_code',
-				'provider_name'
-			)
-				->distinct()
-				->get();
+			$getProvider = Provider::join('sw_product', 'sw_product.provider_id', '=', 'sw_provider.provider_id')
+													->select('sw_provider.provider_id','provider_code','provider_name')
+													->distinct()
+													->get();
 
-			$getProduct = Product::select(
-				'product_id',
-				'product_code',
-				'product_name'
-			)
-				->where('provider_id', $getPartnerProduct->provider_id)
-				->get();
+			$getProduct = Product::select('product_id','product_code','product_name')
+																		->where('provider_id', $getPartnerProduct->provider_id)
+																		->get();
 		}
 
 		if ($retrun == 'index') {
 			return redirect()->route('partner-product.index')
-				->with('alret', $alret)
-				->with('berhasil', $info);
+												->with('alret', $alret)
+												->with('berhasil', $info);
 		} else if ($retrun == 'update') {
-			return view('partner-product.ubah', compact(
-				'getPartnerProduct',
-				'getPartner',
-				'getProvider',
-				'getProduct'
-			));
+			return view('partner-product.ubah', compact('getPartnerProduct',
+																									'getPartner',
+																									'getProvider',
+																									'getProduct'
+																								));
 		}
 	}
 
@@ -226,14 +215,17 @@ class PartnerProductController extends Controller
 			'partner_pulsa_id.required'     => 'This field required',
 			'provider_id.required'          => 'This field required',
 			'product_id.required'           => 'This field required',
+			'product_id.unique'							=> 'This product already exist',
 		];
 
 		$validator = Validator::make($request->all(), [
-			'partner_product_code' => 'required|max:25|unique:sw_partner_product,partner_product_code,' . $request->partner_product_id . ',partner_product_id',
+			// 'partner_product_code' => 'required|max:25|unique:sw_partner_product,partner_product_code,' . $request->partner_product_id . ',partner_product_id',
+			'partner_product_code' => 'required|max:25',
 			'partner_product_name' => 'required',
 			'partner_pulsa_id'     => 'required',
 			'provider_id'          => 'required',
-			'product_id'           => 'required',
+			'product_id'           => 'required|unique:sw_partner_product,partner_product_id,'.$request->partner_product_id.',product_id,partner_pulsa_id,'.$request->partner_pulsa_id,
+
 		], $message);
 
 		if ($validator->fails()) {
@@ -416,7 +408,7 @@ class PartnerProductController extends Controller
 		if (Auth::user()->can('activate-product-sell-price')) {
 			$Datatables = $Datatables->editColumn('active', function ($getData) {
 				if ($getData->active == "Y") {
-					return 
+					return
 					"
 						<a
 							href=''
@@ -435,7 +427,7 @@ class PartnerProductController extends Controller
 						</a><br>
 					";
 				} else if ($getData->active == "N") {
-					return 
+					return
 					"
 						<a
 							href=''

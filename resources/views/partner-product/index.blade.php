@@ -242,7 +242,7 @@ $(".select_provider").select2({
 });
 
 $(".select_partner").select2({
-  placeholder: "Filter Status",
+  placeholder: "Filter Supplier",
   allowClear: true
 });
 

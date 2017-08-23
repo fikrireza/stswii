@@ -27,7 +27,7 @@ class ProviderPrefixController extends Controller{
     {
         $this->middleware('auth');
     }
-    
+
 
     public function index(){
 		$getProvider = Provider::select(
@@ -51,7 +51,7 @@ class ProviderPrefixController extends Controller{
 		));
     }
     public function delete($id, $version){
-    	
+
 		$delete = ProviderPrefix::find($id);
 		if($delete == null){
 			$info = 'Prefix gagal dihapus! Tidak dapat menemukan Prefix!';
@@ -73,11 +73,11 @@ class ProviderPrefixController extends Controller{
     }
     public function store(Request $request){
 		$message = [
-			'provider_id.required' => 'mohon isi',
-			'prefix.required' => 'mohon isi',
-			'prefix.unique' => 'Prefix ini sudah ada',
-			'prefix.numeric' => 'Prefix harus nomer',
-			'prefix.digits_between' => 'Prefix harus 1 sampai 18 digit',
+			'provider_id.required' => 'This field required',
+			'prefix.required' => 'This field required',
+			'prefix.unique' => 'Prefix already exist',
+			'prefix.numeric' => 'Prefix must numeric',
+			'prefix.digits_between' => 'Prefix between 1 to 18 digits',
 		];
 
 		$validator = Validator::make($request->all(), [
@@ -113,11 +113,11 @@ class ProviderPrefixController extends Controller{
     }
     public function update(Request $request){
 		$message = [
-			'provider_id.required' => 'mohon isi',
-			'prefix.required' => 'mohon isi',
-			'prefix.unique' => 'Prefix ini sudah ada',
-			'prefix.numeric' => 'Prefix harus nomer',
-			'prefix.digits_between' => 'Prefix harus 3 sampai 5 digit',
+			'provider_id.required' => 'This field required',
+			'prefix.required' => 'This field required',
+			'prefix.unique' => 'Prefix already exist',
+			'prefix.numeric' => 'Prefix must numeric',
+			'prefix.digits_between' => 'Prefix between 3 to 5 digits',
 		];
 
 		$validator = Validator::make($request->all(), [
@@ -135,7 +135,7 @@ class ProviderPrefixController extends Controller{
 		}
 
 		$update = ProviderPrefix::find($request->provider_prefix_id);
-		
+
 		if($update == null){
 			$info = 'Prefix gagal diupdate! Tidak dapat menemukan Prefix!';
 			$alret = 'alert-danger';

@@ -109,6 +109,9 @@
                 <a href="{{ route('deposit-agent-reversal.index') }}">Deposit Agent Void</a>
               </li>
               @endcan
+              <li>
+                <a href="#">Unconfirmed Unique Code</a>
+              </li>
             </ul>
           </li>
           <li class="{{ Route::is('paloma*') ? 'active' : '' }}">
