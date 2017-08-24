@@ -220,6 +220,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('confirm-deposit-confirm', function($user){
           return $user->hasAccess(['confirm-deposit-confirm']);
         });
+        Gate::define('read-deposit-unconfirm', function($user){
+          return $user->hasAccess(['read-deposit-unconfirm']);
+        });
     }
 
     public function registerDepositAgentReversal()
@@ -258,6 +261,9 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('read-role', function($user){
           return $user->hasAccess(['read-role']);
+        });
+        Gate::define('create-role', function($user){
+          return $user->hasAccess(['create-role']);
         });
         Gate::define('update-role', function($user){
           return $user->hasAccess(['update-role']);

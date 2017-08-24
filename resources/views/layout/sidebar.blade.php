@@ -25,6 +25,7 @@
           <li class="{{ Route::is('home*') ? 'active' : '' }}">
             <a href="{{ route('home.index') }}"><i class="fa fa-home"></i> Home </a>
           </li>
+          @if (Auth::user()->can('read-provider') || Auth::user()->can('read-provider-prefix'))
           <li class="{{ Route::is('provider*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-phone"></i> Manage Provider <span class="fa fa-chevron-down"></span>
@@ -42,6 +43,8 @@
               @endcan
             </ul>
           </li>
+          @endif
+          @if (Auth::user()->can('read-product') || Auth::user()->can('read-product-sell-price'))
           <li class="{{ Route::is('product.*') ? 'active' : '' }}{{ Route::is('product-*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-beer"></i> Manage Product <span class="fa fa-chevron-down"></span>
@@ -55,6 +58,8 @@
               @endcan
             </ul>
           </li>
+          @endif
+          @if(Auth::user()->can('read-partner-pulsa') || Auth::user()->can('read-partner-product') || Auth::user()->can('read-partner-product-purch-price') || Auth::user()->can('read-partner-server'))
           <li class="{{ Route::is('partner-product*') ? 'active' : '' }}{{ Route::is('partner-pulsa*') ? 'active' : '' }}{{ Route::is('partner-server*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-anchor"></i> Manage Supplier <span class="fa fa-chevron-down"></span>
@@ -82,6 +87,8 @@
               @endcan
             </ul>
           </li>
+          @endif
+          @if (Auth::user()->can('read-agent'))
           <li class="{{ Route::is('agent*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-suitcase"></i> Manage Agent <span class="fa fa-chevron-down"></span>
@@ -94,6 +101,8 @@
               @endcan
             </ul>
           </li>
+          @endif
+          @if (Auth::user()->can('read-deposit-confirm') || Auth::user()->can('read-deposit-reversal') || Auth::user()->can('read-deposit-unconfirm'))
           <li class="{{ Route::is('deposit-agent*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-money"></i> Agent Deposit <span class="fa fa-chevron-down"></span>
@@ -109,11 +118,15 @@
                 <a href="{{ route('deposit-agent-reversal.index') }}">Deposit Agent Void</a>
               </li>
               @endcan
+              @can('read-deposit-unconfirm')
               <li class="{{ Route::is('deposit-agent-unconfirm*') ? 'current-page' : '' }}">
                 <a href="{{ route('deposit-agent-unconfirm.index') }}">Unconfirmed Unique Code</a>
               </li>
+              @endcan
             </ul>
           </li>
+          @endif
+          @if (Auth::user()->can('read-deposit-trx'))
           <li class="{{ Route::is('palomaDeposit*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-money"></i>Paloma Deposit <span class="fa fa-chevron-down"></span>
@@ -126,11 +139,13 @@
               @endcan
             </ul>
           </li>
+          @endif
         </ul>
       </div>
       <div class="menu_section">
         <h3>Extra</h3>
         <ul class="nav side-menu">
+          @if (Auth::user()->can('report-supplier') || Auth::user()->can('report-agent') || Auth::user()->can('report-provider') || Auth::user()->can('report-topup-deposit-partner'))
           <li class="{{ Route::is('report*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-file-text-o"></i> Report <span class="fa fa-chevron-down"></span>
@@ -150,6 +165,7 @@
               @endcan
             </ul>
           </li>
+          @endif
           @can('management-user')
           <li class="{{ Route::is('account*') ? 'active' : '' }}">
             <a>

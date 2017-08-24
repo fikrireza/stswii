@@ -4,11 +4,6 @@
   <title>STS | Account</title>
 @endsection
 
-@section('headscript')
-<link href="{{ asset('amadeo/vendors/select2/dist/css/select2.min.css') }}" rel="stylesheet">
-<link href="{{ asset('amadeo/vendors/iCheck/skins/flat/green.css')}}" rel="stylesheet">
-<link href="{{ asset('amadeo/vendors/switchery/dist/switchery.min.css') }}" rel="stylesheet">
-@endsection
 
 @section('content')
 
@@ -44,10 +39,15 @@
     <div class="x_panel">
       <div class="x_title">
         <h2>Access Role</h2>
+        <ul class="nav panel_toolbox">
+          @can('create-role')
+          <a href="{{ route('account.roleCreate') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add</a>
+          @endcan
+        </ul>
         <div class="clearfix"></div>
       </div>
       <div class="x_content table-responsive">
-        <table id="producttabel" class="table table-striped table-bordered no-footer" width="100%">
+        <table class="table table-striped table-bordered no-footer" width="100%">
           <thead>
             <tr role="row">
               <th>No</th>
@@ -64,11 +64,15 @@
             <tr>
               <td>{{ $no++ }}</td>
               <td>{{ strtoupper($key->name) }}</td>
-              <td>@foreach ($key->permissions as $task => $value)
+              @php
+                $permissions = $key->permissions;
+                ksort($permissions);
+              @endphp
+              <td>@foreach ($permissions as $task => $value)
                 {{ strtoupper($task) }}<br>
               @endforeach</td>
               <td>
-                <a href="{{ route('account.roleUbah', ['id' => $key->id ]) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
+                <a href="{{ route('account.roleUbah', ['slug' => $key->slug ]) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
               </td>
             </tr>
             @endforeach
@@ -82,15 +86,5 @@
 @endsection
 
 @section('script')
-<script src="{{ asset('amadeo/vendors/validator/validator.min.js') }}"></script>
-<script src="{{ asset('amadeo/vendors/select2/dist/js/select2.full.min.js')}}"></script>
-<script src="{{ asset('amadeo/vendors/iCheck/icheck.min.js')}}"></script>
-<script src="{{ asset('amadeo/vendors/switchery/dist/switchery.min.js')}}"></script>
 
-<script type="text/javascript">
-  $("#role").select2({
-    placeholder: "Choose Role",
-    allowClear: true
-  });
-</script>
 @endsection
