@@ -279,12 +279,12 @@ Route::get('/home', 'HomeController@index')
 	Route::get('getUnconfirmedUniqueCodes', 'DepositAgentController@getUnconfirmedUniqueCodes');
 
 
-	Route::get('deposit-agent-confirmed-top-up', 'DepositAgentController@indexConfirmTopUp')
+	Route::get('deposit-agent-void', 'DepositAgentController@void')
 				->name('deposit-agent-reversal.index')
 				->middleware('can:read-deposit-reversal');
-	Route::post('deposit-agent-confirmed-top-up', 'DepositAgentController@getRangeDate')
+	Route::post('deposit-agent-void', 'DepositAgentController@getRangeDate')
 				->name('deposit-agent-reversal.getRangeDate');
-	Route::post('deposit-agent-proses-reversal', 'DepositAgentController@reversalTrx')
+	Route::post('deposit-agent-void/reversal', 'DepositAgentController@reversalTrx')
 				->name('deposit-agent-reversal.reversalTrx')
 				->middleware('can:confirm-deposit-reversal');
 	Route::get('getConfirmedTopUp', 'DepositAgentController@getConfirmedTopUp');

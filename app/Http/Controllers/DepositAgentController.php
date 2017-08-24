@@ -5,33 +5,43 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Role;
+use App\Models\User;
 use Hash;
 
 class DepositAgentController extends Controller
 {
 
+    //----------- Start Agent Confirm ---------//
     public function indexConfirm()
     {
 
-        return view('deposit-agent.indexConfirm');
+        return view('deposit-agent.getUniqueCode');
     }
 
     public function getUniqueCode(Request $request)
     {
         $uniqueCode = $request->uniqueCode;
 
-        ini_set('max_execution_time', 300);
-        $client = new \GuzzleHttp\Client();
-        $res = $client->request('GET', 'http://localhost/getUnconfirmedUniqueCodes?uniqueCode='.$uniqueCode)
-                      ->getbody();
+        try {
+          ini_set('max_execution_time', 300);
+          $client = new \GuzzleHttp\Client();
+          $res = $client->request('GET', 'http://localhost/getUnconfirmedUniqueCodes?uniqueCode='.$uniqueCode)
+          ->getbody();
 
-        $prosesUniqueCode = json_decode($res);
+          $prosesUniqueCode = json_decode($res);
 
-        if($prosesUniqueCode->status != 0){
-          abort(404);
+          if($prosesUniqueCode->status != 0){
+            $response = 'Failed Grab Data';
+          }
+
+        } catch (\Exception $e) {
+          $response = 'Status Server '.$e->getResponse()->getStatusCode();
+
+          return redirect()->route('deposit-agent-confirm.index')->with('gagal', $response);
         }
 
-        return view('deposit-agent.indexConfirm', compact('prosesUniqueCode', 'uniqueCode'));
+
+        return view('deposit-agent.getUniqueCode', compact('prosesUniqueCode', 'uniqueCode'));
     }
 
     public function confirm(Request $request)
@@ -59,15 +69,15 @@ class DepositAgentController extends Controller
         if($result->status == 0){
           $response = 'Sukses';
         }elseif($result->status == 1){
-          $response = 'Client Id Tidak ditemukan';
+          $response = 'Client Id Not Found';
         }elseif($result->status == 2){
-          $response = 'Amount Tidak Valid';
+          $response = 'Amount Not Valid';
         }else{
-          $response = 'Unique Code Tidak Valid';
+          $response = 'Unique Code Not Valid';
         }
 
       } catch (\Exception $e) {
-  			$response = 'Status Server '.$e->getResponse()->getStatusCode();
+  			$response = 'Oooppsss..... Status Server '.$e->getResponse()->getStatusCode();
 
   			return redirect()->route('deposit-agent-confirm.index')->with('gagal', $response);
       }
@@ -76,12 +86,13 @@ class DepositAgentController extends Controller
       return redirect()->route('deposit-agent-confirm.index')->with('hasil', $response);
 
     }
+    //----------- End Agent Confirm ---------//
 
-
-    public function indexConfirmTopUp()
+    //----------- Start Agent Void ----------//
+    public function void()
     {
 
-        return view('deposit-agent.indexConfirmTopUp');
+        return view('deposit-agent.void');
     }
 
     public function getRangeDate(Request $request)
@@ -89,37 +100,46 @@ class DepositAgentController extends Controller
         $startDate = date('Ymd', strtotime($request->startDate));
         $endDate = date('Ymd', strtotime($request->endDate));
         $limit = (int)100;
-        $offset = $request->offset;
+        $offset = (int)0;
 
         $query = '?startDate='.$startDate.'&endDate='.$endDate.'&limit='.$limit.'&offset='.$offset;
 
-        ini_set('max_execution_time', 300);
-        $client = new \GuzzleHttp\Client();
-        $res = $client->request('GET', 'http://localhost/getConfirmedTopUp'.$query)
-                      ->getbody();
+        try {
+          ini_set('max_execution_time', 300);
+          $client = new \GuzzleHttp\Client();
+          $res = $client->request('GET', 'http://localhost/getConfirmedTopUp'.$query)
+                        ->getbody();
 
-        $proses = json_decode($res);
+          $proses = json_decode($res);
 
-        if($proses->status != 0){
-          abort(404);
+          if($proses->status == 0){
+            $response = 'Sukses';
+          }else{
+            $response = 'Error';
+          }
+        }
+        catch (\Exception $e)
+        {
+    			$response = 'Oooppsss..... Status Server '.$e->getResponse()->getStatusCode();
+
+    			return redirect()->route('deposit-agent-reversal.index')->with('gagal', $response);
         }
 
-        return view('deposit-agent.indexConfirmTopUp', compact('proses', 'startDate', 'endDate', 'limit', 'offset'));
+        return view('deposit-agent.void', compact('proses', 'startDate', 'endDate'));
     }
 
     public function reversalTrx(Request $request)
     {
         // Check Administrator Password
-        // $password = Hash::make($request->password);
-        $checkPassword = Role::with('users')->where('slug', 'like', '%administrator%')->get();
+        $checkPassword = User::where('name', $request->name)->first();
+
+        if(!$checkPassword){
+          return redirect()->route('deposit-agent-reversal.index')->with('gagal', 'User did not authorize this action');
+        }
 
         $passwordHash = false;
-        foreach ($checkPassword as $key) {
-          foreach ($key->users as $user) {
-            if($user->name == $request->name){
-              $passwordHash = Hash::check($request->password,$user->password);
-            }
-          }
+        if($checkPassword->can('confirm-deposit-reversal')){
+          $passwordHash = Hash::check($request->password,$checkPassword->password);
         }
 
         if($passwordHash == false){
@@ -156,7 +176,7 @@ class DepositAgentController extends Controller
           }
 
         } catch (\Exception $e) {
-            $response = 'Status Server '.$e->getResponse()->getStatusCode();
+            $response = 'Oooppsss..... Status Server '.$e->getResponse()->getStatusCode();
 
             return redirect()->route('deposit-agent-reversal.index')->with('gagal', $response);
         }
@@ -165,17 +185,25 @@ class DepositAgentController extends Controller
         return redirect()->route('deposit-agent-reversal.index')->with('hasil', $response);
     }
 
+
+    //----------- Start Agent All Unconfirm ---------//
     public function indexUnconfirm()
     {
-        ini_set('max_execution_time', 300);
-        $client = new \GuzzleHttp\Client();
-        $res = $client->request('GET', 'http://localhost/stswii/public/getUnconfirmedUniqueCodes')
-                      ->getbody();
+        try{
+          ini_set('max_execution_time', 300);
+          $client = new \GuzzleHttp\Client();
+          $res = $client->request('GET', 'http://localhost/getUnconfirmedUniqueCodes')
+          ->getbody();
 
-        $prosesUniqueCode = json_decode($res);
+          $prosesUniqueCode = json_decode($res);
 
-        if($prosesUniqueCode->status != 0){
-          abort(404);
+          if($prosesUniqueCode->status != 0){
+            $response = 'Tidak ada data';
+          }
+        }
+        catch (\Exception $e)
+        {
+          abort(503);
         }
 
         return view('deposit-agent.indexUnconfirm', compact('prosesUniqueCode'));
@@ -221,6 +249,7 @@ class DepositAgentController extends Controller
 
         return redirect()->route('deposit-agent-unconfirm.index')->with('hasil', $response);
     }
+    //----------- End Agent All Unconfirm ---------//
 
 
 

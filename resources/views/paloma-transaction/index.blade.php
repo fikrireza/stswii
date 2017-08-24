@@ -96,7 +96,7 @@
               <th>Document Date</th>
               <th>Partner Code</th>
               <th>Deposit Amount</th>
-              <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>

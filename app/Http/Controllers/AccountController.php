@@ -95,13 +95,17 @@ class AccountController extends Controller
               'email' => $request->email,
             ]);
 
-          Mail::send('email.confirm', ['data' => $data], function($message) use ($data) {
-            $message->to($data[0]['email'], $data[0]['name'])->subject('Aktivasi Akun Web Admin');
-          });
+          try {
+            Mail::send('email.confirm', ['data' => $data], function($message) use ($data) {
+              $message->to($data[0]['email'], $data[0]['name'])->subject('Aktivasi Akun Web Admin');
+            });
+          } catch (\Exception $e) {
+            return redirect()->route('account.index')->with('berhasil', 'New Account has been created, email '.$request->email.' cannot reached');
+          }
 
         });
 
-        return redirect()->route('account.index')->with('berhasil', 'Akun baru sudah dibuat, cek '.$request->email.' untuk verifiakasi');
+        return redirect()->route('account.index')->with('berhasil', 'New Account has been created, check '.$request->email.' for verification');
     }
 
     public function ubah($id)

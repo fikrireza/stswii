@@ -17,28 +17,28 @@
 
   <body class="login">
     <div>
-    @if(Session::has('filedLogin'))
-      <script>
-      window.setTimeout(function() {
-        $(".alert-danger").fadeTo(700, 0).slideUp(700, function(){
-          $(this).remove();
-        });
-      }, 5000);
-      </script>
-      <div class="row">
-        <div class="col-md-4 col-sm-4 col-xs-12 col-md-offset-4">
-          <div class="alert alert-danger alert-dismissible fade in" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
-            </button>
-            <strong>{{ Session::get('filedLogin') }}</strong>
-          </div>
-        </div>
-      </div>
-    @endif
 
       <div class="login_wrapper">
         <div class="animate form login_form">
           <section class="login_content">
+            @if(Session::has('status'))
+              <script>
+              window.setTimeout(function() {
+                $(".alert-danger").fadeTo(700, 0).slideUp(700, function(){
+                  $(this).remove();
+                });
+              }, 5000);
+              </script>
+              <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+                    </button>
+                    <strong>{{ Session::get('status') }}</strong>
+                  </div>
+                </div>
+              </div>
+            @endif
             <form action="{{ route('login') }}" method="POST">
               <h1>Login Form</h1>
               {{ csrf_field() }}
