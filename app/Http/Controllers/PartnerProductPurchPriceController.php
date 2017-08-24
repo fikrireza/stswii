@@ -85,7 +85,7 @@ class PartnerProductPurchPriceController extends Controller
             return redirect()->route('partner-product-purch-price.tambah')->withErrors($validator)->withInput();
         }
 
-        if (strtotime('+30 seconds') >= strtotime($request->datetime_start) && isset($request->active)) {
+        if (strtotime('-1 day') >= strtotime($request->datetime_start) && isset($request->active)) {
             return redirect()->route('partner-product-purch-price.tambah')->with('gagal', 'Datetime Start is Expired.')->withInput();
         }
 
@@ -98,7 +98,6 @@ class PartnerProductPurchPriceController extends Controller
         if(!empty($checkData))
         {
             foreach ($checkData as $list) {
-                
                 if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                     $update_id = $list->partner_product_purch_price_id;
                     $update    = 1;
@@ -182,7 +181,7 @@ class PartnerProductPurchPriceController extends Controller
 
         $index = PartnerProductPurchPrice::find($request->partner_product_purch_price_id);
 
-        if (strtotime('+30 seconds') >= strtotime($request->datetime_start) && isset($request->active)) {
+        if (strtotime('-1 day') >= strtotime($request->datetime_start) && isset($request->active)) {
             return redirect()->route('partner-product-purch-price.edit', ['id' => $request->partner_product_purch_price_id])->with('gagal', 'Datetime Start is Expired.')->withInput();
         }
 
@@ -247,7 +246,7 @@ class PartnerProductPurchPriceController extends Controller
             return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data not exist.');
         }
 
-        if (strtotime('+30 seconds') >= strtotime($index->datetime_start) && $index->active != 'Y') {
+        if (strtotime('-1 day') >= strtotime($index->datetime_start) && $index->active != 'Y') {
             return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Datetime Start is Expired.')->withInput();
         }
 
@@ -592,7 +591,7 @@ class PartnerProductPurchPriceController extends Controller
         $datetime_end         = $request->datetime_end;
         $active               = $request->active;
 
-        $time_commit = strtotime('+30 seconds');
+        $time_commit = strtotime('-1 day');
 
         // DB::transaction(function () use ($partner_product_id, $gross_purch_price, $tax_percentage, $datetime_start, $datetime_end, $active) {
 
