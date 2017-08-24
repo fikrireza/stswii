@@ -32,6 +32,25 @@
 </div>
 @endif
 
+@if(Session::has('gagal'))
+<script>
+  window.setTimeout(function() {
+    $(".alert-danger").fadeTo(700, 0).slideUp(700, function(){
+        $(this).remove();
+    });
+  }, 5000);
+</script>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="alert alert-danger alert-dismissible fade in" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+      </button>
+      <strong>{{ Session::get('gagal') }}</strong>
+    </div>
+  </div>
+</div>
+@endif
+
 
 <div class="page-title">
   <div class="title_left">
@@ -51,7 +70,7 @@
       <form action="{{route('account.roleEdit')}}" method="post" class="form-horizontal form-label-left" novalidate>
         {{ csrf_field() }}
       <div class="item form-group {{ $errors->has('name') ? 'has-error' : ''}}">
-        <input type="hidden" name="id" value="{{ $getRole->id }}">
+        <input type="hidden" name="slug" value="{{ $getRole->slug }}">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Role Name <span class="required">*</span></label>
         <div class="col-md-9 col-sm-9 col-xs-12">
           <input type="text" name="name" class="form-control" value="{{ $getRole->name }}" readonly>
@@ -140,7 +159,7 @@
       </div>
       <div class="ln_solid"></div>
       <div class="item form-group">
-        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Partner Pulsa</label>
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Supplier Pulsa</label>
         <div class="col-md-6 col-sm-6 col-xs-12">
           <label>
             <input type="checkbox" class="flat" name="permissions[read-partner-pulsa]" {{ in_array('read-partner-pulsa',$can) ? 'checked="checked"' : '' }} value="true"/> Read
@@ -161,7 +180,7 @@
       </div>
       <div class="ln_solid"></div>
       <div class="item form-group">
-        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Partner Product</label>
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Supplier Product</label>
         <div class="col-md-6 col-sm-6 col-xs-12">
           <label>
             <input type="checkbox" class="flat" name="permissions[read-partner-product]" {{ in_array('read-partner-product',$can) ? 'checked="checked"' : '' }} value="true"/> Read
@@ -182,7 +201,7 @@
       </div>
       <div class="ln_solid"></div>
       <div class="item form-group">
-        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Partner Product Purch Price</label>
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Supplier Product Purch Price</label>
         <div class="col-md-6 col-sm-6 col-xs-12">
           <label>
             <input type="checkbox" class="flat" name="permissions[read-partner-product-purch-price]" {{ in_array('read-partner-product-purch-price',$can) ? 'checked="checked"' : '' }} value="true"/> Read
@@ -203,7 +222,7 @@
       </div>
       <div class="ln_solid"></div>
       <div class="item form-group">
-        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Partner Server</label>
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Supplier Server</label>
         <div class="col-md-6 col-sm-6 col-xs-12">
           <label>
             <input type="checkbox" class="flat" name="permissions[read-partner-server]" {{ in_array('read-partner-server',$can) ? 'checked="checked"' : '' }} value="true"/> Read
@@ -244,6 +263,9 @@
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[confirm-deposit-confirm]" {{ in_array('confirm-deposit-confirm',$can) ? 'checked="checked"' : '' }} value="true"/> Confirm
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-deposit-unconfirm]" {{ in_array('read-deposit-unconfirm',$can) ? 'checked="checked"' : '' }} value="true"/> All Unconfirmed Unique Code
           </label>
         </div>
       </div>
@@ -313,6 +335,9 @@
         <div class="col-md-6 col-sm-6 col-xs-12">
           <label>
             <input type="checkbox" class="flat" name="permissions[read-role]" {{ in_array('read-role',$can) ? 'checked="checked"' : '' }} value="true" /> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[create-role]" {{ in_array('create-role',$can) ? 'checked="checked"' : '' }} value="true" /> Create
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[update-role]" {{ in_array('update-role',$can) ? 'checked="checked"' : '' }} value="true" /> Update

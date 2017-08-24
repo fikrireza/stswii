@@ -208,9 +208,42 @@ class AccountController extends Controller
         return view('account.role', compact('getRole'));
     }
 
-    public function roleUbah($id)
+    public function roleCreate()
     {
-        $getRole = Role::find($id);
+        return view('account.role-tambah');
+    }
+
+    public function rolePost(Request $request)
+    {
+        $message = [
+          'name.required' => 'This field is required',
+          'name.unique' => 'Role has already taken',
+          'permissions.required' => 'This field is required',
+        ];
+
+        $validator = Validator::make($request->all(),[
+          'name' => 'required|unique:wa_roles',
+          'permissions' => 'required',
+        ],$message);
+
+
+        if($validator->fails())
+        {
+          return redirect()->route('account.roleCreate')->withErrors($validator)->withInput();
+        }
+
+        $new = new Role;
+        $new->name = $request->name;
+        $new->slug = str_slug($request->name);
+        $new->permissions = $request->input('permissions');
+        $new->save();
+
+        return redirect()->route('account.role')->with('berhasil', 'Data Role has been successfully create');
+    }
+
+    public function roleUbah($slug)
+    {
+        $getRole = Role::where('slug', $slug)->first();
 
         if(!$getRole){
           return view('errors.404');
@@ -226,19 +259,26 @@ class AccountController extends Controller
 
     public function roleEdit(Request $request)
     {
+        $message = [
+          'permissions.required' => 'This field is required',
+        ];
 
-      $task = "{";
-      foreach ($request->permissions as $key => $value) {
-        $task .= "\"".$key."\": ".$value.", ";
-      }
+        $validator = Validator::make($request->all(),[
+          'permissions' => 'required',
+        ],$message);
 
-      $task = strrev(substr(strrev($task), 2))."}";
 
-      $query = 'UPDATE wa_roles SET permissions = \''.$task.'\' WHERE id = '.$request->id;
+        if($validator->fails())
+        {
+          return redirect()->route('account.roleUbah', ['slug' => $request->slug])->withErrors($validator)->withInput()->with('gagal', 'Please at least give one access');
+        }
 
-      DB::statement($query);
 
-      return redirect()->route('account.role')->with('berhasil', 'Data Role has been successfully updated');
+        $update = Role::find($request->id);
+        $update->permissions = $request->input('permissions');
+        $update->update();
+
+        return redirect()->route('account.role')->with('berhasil', 'Data Role has been successfully updated');
     }
 
     public function profile()

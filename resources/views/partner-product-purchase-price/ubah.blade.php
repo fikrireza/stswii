@@ -185,7 +185,7 @@
     "timePicker24Hour": true,
     "timePickerSeconds": true,
     "timePickerIncrement": 1,
-
+    "minDate": new Date(),
   });
 
   $('#datetime_end').daterangepicker({
@@ -197,6 +197,7 @@
     "timePicker24Hour": true,
     "timePickerSeconds": true,
     "timePickerIncrement": 1,
+    "minDate": new Date(),
   });
 
   $('#flg_tax').click(function() {
