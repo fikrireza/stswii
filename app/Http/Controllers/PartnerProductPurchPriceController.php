@@ -85,6 +85,10 @@ class PartnerProductPurchPriceController extends Controller
             return redirect()->route('partner-product-purch-price.tambah')->withErrors($validator)->withInput();
         }
 
+        if (strtotime('+30 seconds') >= strtotime($request->datetime_start) && isset($request->active)) {
+            return redirect()->route('partner-product-purch-price.tambah')->with('gagal', 'Datetime Start is Expired.')->withInput();
+        }
+
         $checkData = PartnerProductPurchPrice::where('partner_product_id', $request->partner_product_id)
             ->where('active', 'Y')
             ->get();
@@ -94,9 +98,7 @@ class PartnerProductPurchPriceController extends Controller
         if(!empty($checkData))
         {
             foreach ($checkData as $list) {
-                if (strtotime($list->datetime_start) >= strtotime($request->datetime_start) && isset($request->active)) {
-                    return redirect()->route('partner-product-purch-price.tambah')->with('gagal', 'Datetime Start is Expired.')->withInput();
-                }
+                
                 if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                     $update_id = $list->partner_product_purch_price_id;
                     $update    = 1;
@@ -180,6 +182,10 @@ class PartnerProductPurchPriceController extends Controller
 
         $index = PartnerProductPurchPrice::find($request->partner_product_purch_price_id);
 
+        if (strtotime('+30 seconds') >= strtotime($request->datetime_start) && isset($request->active)) {
+            return redirect()->route('partner-product-purch-price.edit', ['id' => $request->partner_product_purch_price_id])->with('gagal', 'Datetime Start is Expired.')->withInput();
+        }
+
         $checkData = PartnerProductPurchPrice::where('partner_product_id', $request->partner_product_id)
             ->where('active', 'Y')
             ->where('partner_product_purch_price_id', '<>', $request->partner_product_purch_price_id)
@@ -190,9 +196,7 @@ class PartnerProductPurchPriceController extends Controller
         if(!empty($checkData))
         {
             foreach ($checkData as $list) {
-                if (strtotime($list->datetime_start) >= strtotime($request->datetime_start) && isset($request->active)) {
-                    return redirect()->route('partner-product-purch-price.edit', ['id' => $request->partner_product_purch_price_id])->with('gagal', 'Datetime Start is Expired.')->withInput();
-                }
+                
                 if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                     $update_id = $list->partner_product_purch_price_id;
                     $update    = 1;
@@ -243,6 +247,10 @@ class PartnerProductPurchPriceController extends Controller
             return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data not exist.');
         }
 
+        if (strtotime('+30 seconds') >= strtotime($index->datetime_start) && $index->active != 'Y') {
+            return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Datetime Start is Expired.')->withInput();
+        }
+
         $checkData = PartnerProductPurchPrice::where('partner_product_id', $index->partner_product_id)
             ->where('active', 'Y')
             ->get();
@@ -252,9 +260,7 @@ class PartnerProductPurchPriceController extends Controller
         if(!empty($checkData))
         {
             foreach ($checkData as $list) {
-                if (strtotime($list->datetime_start) >= strtotime($index->datetime_start) && $index->active != 'Y') {
-                    return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Datetime Start is Expired.')->withInput();
-                }
+                
                 if (strtotime($list->datetime_start) <= strtotime($index->datetime_start) && strtotime($index->datetime_start) <= strtotime($list->datetime_end) && $index->active != 'Y') {
                     $update_id = $list->partner_product_purch_price_id;
                     $update    = 1;
@@ -586,6 +592,8 @@ class PartnerProductPurchPriceController extends Controller
         $datetime_end         = $request->datetime_end;
         $active               = $request->active;
 
+        $time_commit = strtotime('+30 seconds');
+
         // DB::transaction(function () use ($partner_product_id, $gross_purch_price, $tax_percentage, $datetime_start, $datetime_end, $active) {
 
         foreach ($partner_product_code as $key => $n) {
@@ -665,15 +673,17 @@ class PartnerProductPurchPriceController extends Controller
             //     }
             // }
 
+            if ($time_commit >= strtotime($datetime_start[$key]) && strtoupper($active[$key]) == 'Y') {
+                if (!$skip) {
+                    $message = '<h4><span class="label label-danger">Datetime Start is Expired</span></h4>';
+                }
+                $skip = 1;
+            }
+
             if(!empty($checkData))
             {
                 foreach ($checkData as $list) {
-                    if (strtotime($list->datetime_start) >= strtotime($datetime_start[$key]) && strtoupper($active[$key]) == 'Y') {
-                        if (!$skip) {
-                            $message = '<h4><span class="label label-danger">Datetime Start is Expired</span></h4>';
-                        }
-                        $skip = 1;
-                    }
+                    
                     if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
                         $update_id = $list->partner_product_purch_price_id;
                         $update    = 1;
