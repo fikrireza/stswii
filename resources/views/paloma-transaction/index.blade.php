@@ -107,7 +107,7 @@
             <tr>
               <td>{{ $no++ }}</td>
               <td>{{ $key->doc_no }}</td>
-              <td>{{ $key->doc_date }}</td>
+              <td>{{ date('Y-m-d H:i:s', strtotime($key->doc_date)) }}</td>
               <td>{{ $key->partner_code }}</td>
               <td style="text-align:right;">Rp. {{ number_format($key->deposit_amount,'0','.','.') }},-</td>
               <td class="text-center">
