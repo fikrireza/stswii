@@ -220,7 +220,7 @@
                   data-toggle="modal"
                   data-target=".modal-delete"
                 >
-                  <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-remove"></i></span>
+                  <span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></span>
                 </a>
                 @endcan
               </td>

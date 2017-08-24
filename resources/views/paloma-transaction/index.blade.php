@@ -107,15 +107,14 @@
             <tr>
               <td>{{ $no++ }}</td>
               <td>{{ $key->doc_no }}</td>
-              <td>{{ $key->doc_date }}</td>
+              <td>{{ date('Y-m-d H:i:s', strtotime($key->doc_date)) }}</td>
               <td>{{ $key->partner_code }}</td>
               <td style="text-align:right;">Rp. {{ number_format($key->deposit_amount,'0','.','.') }},-</td>
               <td class="text-center">
                   @if($key->status == 'R')
-                    <a href="#"><span class="label label-success" data-toggle="tooltip" data-placement="top" title="Active">Sudah Confirmed</span></a>
-                    <br>
+                    <span class="btn btn-success">Confirmed</span>
                   @elseif($key->status == 'D')
-                    <a href="" class="draft" data-value="{{ $key->paloma_deposit_trx_id }}" data-version="{{ $key->version }}" data-toggle="modal" data-target=".modal-draft"><span class="label label-danger" data-toggle="tooltip" data-placement="top" title="Draft">Draft</span></a>
+                    <a href="" class="draft" data-value="{{ $key->paloma_deposit_trx_id }}" data-version="{{ $key->version }}" data-toggle="modal" data-target=".modal-draft"><span class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Draft">Draft</span></a>
                     <br>
                   @endif
               </td>

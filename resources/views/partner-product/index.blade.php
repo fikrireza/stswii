@@ -133,6 +133,11 @@
                 </option>
             @endforeach
           </select>
+          <select name="f_active" class="form-control select_status" onchange="this.form.submit()">
+            <option value="" @if(isset($request->f_active) && $request->f_active == '') selected @endif>All Status</option>
+            <option value="Y" @if(isset($request->f_active) && $request->f_active == 'Y') selected @endif>Active</option>
+            <option value="N" @if(isset($request->f_active) && $request->f_active == 'N') selected @endif>Not Active</option>
+          </select>
         </form>
         <div class="ln_solid"></div>
 
@@ -185,7 +190,7 @@ $(function() {
     $('#dataTables').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('partner-product.yajra.getDatas') }}?f_provider={{ $request->f_provider }}&f_partner={{ $request->f_partner }}",
+        ajax: "{{ route('partner-product.yajra.getDatas') }}?f_provider={{ $request->f_provider }}&f_partner={{ $request->f_partner }}&f_active={{ $request->f_active }}",
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},
             {data: 'partner_pulsa_code'},
@@ -238,6 +243,11 @@ $(function() {
 <script type="text/javascript">
 $(".select_provider").select2({
   placeholder: "Filter Provider",
+  allowClear: true
+});
+
+$(".select_status").select2({
+  placeholder: "Filter Status",
   allowClear: true
 });
 

@@ -170,7 +170,7 @@
                 <td>{{ $list->clientId }}</td>
                 <td>{{ $list->name }}</td>
                 <td>{{ $list->uniqueCode }}</td>
-                <td>{{ $list->uniqueCodeDate }}</td>
+                <td>{{ date('Y-m-d', strtotime($list->uniqueCodeDate)) }}</td>
                 @can('confirm-deposit-confirm')
                 <td><a class="confirm" data-name="{{$list->name}}" data-clientid="{{$list->clientId}}" data-uniquecode="{{$list->uniqueCode}}" data-uniquecodedate="{{$list->uniqueCodeDate}}" data-toggle='modal' data-target='.modal-form-confirm'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Confirm'>Confirm</span></a></td>
                 @endcan

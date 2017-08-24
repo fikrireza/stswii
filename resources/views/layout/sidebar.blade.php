@@ -98,7 +98,7 @@
             <a>
               <i class="fa fa-money"></i> Agent Deposit <span class="fa fa-chevron-down"></span>
             </a>
-            <ul class="nav child_menu" style="">
+            <ul class="nav child_menu" style="{{ Route::is('deposit-agent*') ? 'display: block;' : '' }}">
               @can('read-deposit-confirm')
               <li class="{{ Route::is('deposit-agent-confirm*') ? 'current-page' : '' }}">
                 <a href="{{ route('deposit-agent-confirm.index') }}">Deposit Agent Confirm</a>
@@ -114,11 +114,11 @@
               </li>
             </ul>
           </li>
-          <li class="{{ Route::is('paloma*') ? 'active' : '' }}">
+          <li class="{{ Route::is('palomaDeposit*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-money"></i>Paloma Deposit <span class="fa fa-chevron-down"></span>
             </a>
-            <ul class="nav child_menu" style="">
+            <ul class="nav child_menu" style="{{ Route::is('palomaDeposit*') ? 'display: block;' : '' }}">
               @can('read-deposit-trx')
                 <li class="{{ Route::is('palomaDeposit*') ? 'current-page' : '' }}">
                   <a href="{{ route('palomaDeposit.index') }}">Deposit Transaction</a>

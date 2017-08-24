@@ -90,8 +90,8 @@ class ProductSellPriceController extends Controller
         }
 
         $checkData = ProductSellPrice::where('product_id', $request->product_id)
-            ->where('active', 'Y')
-            ->get();
+                                        ->where('active', 'Y')
+                                        ->get();
 
 
         $update_id = 0;
@@ -399,30 +399,19 @@ class ProductSellPriceController extends Controller
                 $actionHtml = '';
                 if (Auth::user()->can('update-product-sell-price')) {
                     $actionHtml = $actionHtml . "
-                        <a
-                            href='" . route('product-sell-price.ubah', $getData->product_sell_price_id) . "''
-                            class='btn btn-xs btn-warning btn-sm'
-                            data-toggle='tooltip'
-                            data-placement='top'
-                            title='Ubah'
-                        ><i class='fa fa-pencil'></i></a>";
+                        <a href='" . route('product-sell-price.ubah', $getData->product_sell_price_id) . "'' class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Update'><i class='fa fa-pencil'></i></a>";
+                }
+                if (Auth::user()->can('activate-product-sell-price')) {
+                  if ($getData->active == 'Y') {
+                    $actionHtml = $actionHtml."<a href='' class='unpublish' data-value='" . $getData->product_sell_price_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-nonactive'><span class='btn btn-dark btn-xs' data-toggle='tooltip' data-placement='top' title='Non Active'><i class='fa fa-times'></i></span></a>";
+                  }else{
+                    $actionHtml = $actionHtml."<a href='' class='publish' data-value='" . $getData->product_sell_price_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-active'><span class='btn btn-success btn-xs' data-toggle='tooltip' data-placement='top' title='Active'><i class='fa fa-check'></i></span></a>";
+                  }
+
                 }
                 if (Auth::user()->can('delete-product-sell-price')) {
-                    $actionHtml = $actionHtml . "
-                        <a
-                            href=''
-                            class='delete'
-                            data-value='" . $getData->product_sell_price_id . "'
-                            data-version='" . $getData->version . "'
-                            data-toggle='modal'
-                            data-target='.modal-delete'
-                        >
-                            <span
-                                class='btn btn-xs btn-danger btn-sm'
-                                data-toggle='tooltip'
-                                data-placement='top'
-                                title='Hapus'
-                            ><i class='fa fa-remove'></i></span>
+                    $actionHtml = $actionHtml . "<a href='' class='delete' data-value='" . $getData->product_sell_price_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-delete'>
+                            <span class='btn btn-xs btn-danger btn-sm' data-toggle='tooltip' data-placement='top' title='Delete'><i class='fa fa-trash'></i></span>
                         </a>";
                 }
                 return $actionHtml;
@@ -667,7 +656,7 @@ class ProductSellPriceController extends Controller
                     }
                 }
             }
-                
+
 
             if($update && !$skip)
             {

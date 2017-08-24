@@ -52,11 +52,7 @@ class PartnerProductPurchPriceController extends Controller
             return redirect()->route('partner-product-purch-price.index');
         }
 
-        return view('partner-product-purchase-price.index', compact(
-            'request',
-            'provider',
-            'partner'
-        ));
+        return view('partner-product-purchase-price.index', compact('request','provider','partner'));
     }
 
     public function tambah()
@@ -387,7 +383,6 @@ class PartnerProductPurchPriceController extends Controller
                 ->where('datetime_end', '>=', $f_date);
         }
         $getDatas = $getDatas->get();
-        // dd($getDatas);
 
         $start      = 1;
         $Datatables = Datatables::of($getDatas)
@@ -420,32 +415,23 @@ class PartnerProductPurchPriceController extends Controller
             ->addColumn('action', function ($getData) {
                 $actionHtml = '';
                 if (Auth::user()->can('update-partner-product-purch-price')) {
-                    $actionHtml = $actionHtml . "
-                        <a
-                            href='" . route('partner-product-purch-price.edit', ['id' => $getData->partner_product_purch_price_id]) . "''
-                            class='btn btn-xs btn-warning btn-sm'
-                            data-toggle='tooltip'
-                            data-placement='top'
-                            title='Ubah'
-                        ><i class='fa fa-pencil'></i></a>";
+                    $actionHtml = $actionHtml."
+                        <a href='" . route('partner-product-purch-price.edit', ['id' => $getData->partner_product_purch_price_id]) . "'' class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Update'><i class='fa fa-pencil'></i></a>";
                 }
+
+                if (Auth::user()->can('activate-partner-product-purch-price')) {
+                  if ($getData->active == 'Y') {
+                    $actionHtml = $actionHtml."<a href='' class='unpublish' data-value='" . $getData->partner_product_purch_price_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-nonactive'><span class='btn btn-dark btn-xs' data-toggle='tooltip' data-placement='top' title='Non Active'><i class='fa fa-times'></i></span></a>";
+                  }
+                  else
+                  {
+                    $actionHtml = $actionHtml."<a href='' class='publish' data-value='" . $getData->partner_product_purch_price_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-active'> <span class='btn btn-success btn-xs' data-toggle='tooltip' data-placement='top' title='Active'><i class='fa fa-check'></i></span></a>";
+                  }
+
+                }
+
                 if (Auth::user()->can('delete-partner-product-purch-price')) {
-                    $actionHtml = $actionHtml . "
-                        <a
-                            href=''
-                            class='delete'
-                            data-value='" . $getData->partner_product_purch_price_id . "'
-                            data-version='" . $getData->version . "'
-                            data-toggle='modal'
-                            data-target='.modal-delete'
-                        >
-                            <span
-                                class='btn btn-xs btn-danger btn-sm'
-                                data-toggle='tooltip'
-                                data-placement='top'
-                                title='Hapus'
-                            ><i class='fa fa-remove'></i></span>
-                        </a>";
+                    $actionHtml = $actionHtml."<a href='' class='delete' data-value='" . $getData->partner_product_purch_price_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-delete'> <span class='btn btn-xs btn-danger btn-sm' data-toggle='tooltip' data-placement='top' title='Delete'><i class='fa fa-trash'></i></span></a>";
                 }
                 return $actionHtml;
             });
@@ -705,7 +691,7 @@ class PartnerProductPurchPriceController extends Controller
                     }
                 }
             }
-                
+
 
             if($update && !$skip)
             {

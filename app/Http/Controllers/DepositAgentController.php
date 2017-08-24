@@ -66,8 +66,10 @@ class DepositAgentController extends Controller
           $response = 'Unique Code Tidak Valid';
         }
 
-      } catch (Exception $e) {
+      } catch (\Exception $e) {
+  			$response = 'Status Server '.$e->getResponse()->getStatusCode();
 
+  			return redirect()->route('deposit-agent-confirm.index')->with('gagal', $response);
       }
 
 
@@ -86,7 +88,7 @@ class DepositAgentController extends Controller
     {
         $startDate = date('Ymd', strtotime($request->startDate));
         $endDate = date('Ymd', strtotime($request->endDate));
-        $limit = 100;
+        $limit = (int)100;
         $offset = $request->offset;
 
         $query = '?startDate='.$startDate.'&endDate='.$endDate.'&limit='.$limit.'&offset='.$offset;
@@ -135,13 +137,13 @@ class DepositAgentController extends Controller
                                             ],
                                           ]);
 
-          $res = $client->request('POST','http://localhost/reversalTrx', [
+          $res = $client->request('POST','http://localhost/reversal-trx', [
                               'json' => [
-                                'clientId' => $request->clientId,
-                                'refNo'  => $request->refNo,
-                                'billerId'  => '-99',
-                                'docTypeId'  => '-99',
-                                'acquirerId'  => '-99',
+                                'clientId' => (int)$request->clientId,
+                                'refDocNo'  => $request->refNo,
+                                'billerId'  => -99,
+                                'docTypeId'  => -99,
+                                'acquirerId'  => -99,
                               ]
                             ])->getbody();
 
@@ -153,8 +155,10 @@ class DepositAgentController extends Controller
             $response = '';
           }
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
+            $response = 'Status Server '.$e->getResponse()->getStatusCode();
 
+            return redirect()->route('deposit-agent-reversal.index')->with('gagal', $response);
         }
 
 

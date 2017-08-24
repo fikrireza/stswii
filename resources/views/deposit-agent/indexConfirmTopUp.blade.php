@@ -71,7 +71,7 @@
           <div class="item form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Ref No</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="confirm_refno" class="form-control col-md-7 col-xs-12" name="name" type="text" value="" readonly="">
+              <input id="confirm_refno" class="form-control col-md-7 col-xs-12" name="refNo" type="text" value="" readonly="">
             </div>
           </div>
           <div class="item form-group">
@@ -194,9 +194,9 @@
               <tr>
                 <td>{{ $count++ }}</td>
                 <td>{{ $list->name }}</td>
-                <td>{{ $list->amount }}</td>
+                <td>{{ number_format($list->amount, 2) }}</td>
                 <td>{{ $list->uniqueCode }}</td>
-                <td>{{ $list->uniqueCodeDate }}</td>
+                <td>{{ date('Y-m-d', strtotime($list->uniqueCodeDate)) }}</td>
                 <td>{{ date('Y-m-d', strtotime($list->confirmDate)) }}</td>
                 @can('confirm-deposit-reversal')
                 <td><a class="confirm" data-clientid="{{$list->clientId}}" data-uniquecode="{{$list->uniqueCode}}" data-uniquecodedate="{{$list->uniqueCodeDate}}" data-toggle='modal' data-target='.modal-form-confirm'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Reversal'>Void</span></a></td>
