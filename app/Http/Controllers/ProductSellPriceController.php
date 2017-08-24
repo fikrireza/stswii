@@ -85,6 +85,10 @@ class ProductSellPriceController extends Controller
             return redirect()->route('product-sell-price.tambah')->withErrors($validator)->withInput();
         }
 
+        if (strtotime('+30 seconds') >= strtotime($request->datetime_start) && isset($request->active)) {
+            return redirect()->route('product-sell-price.tambah')->with('gagal', 'Datetime Start is Expired.')->withInput();
+        }
+
         $checkData = ProductSellPrice::where('product_id', $request->product_id)
             ->where('active', 'Y')
             ->get();
@@ -95,9 +99,6 @@ class ProductSellPriceController extends Controller
         if(!empty($checkData))
         {
             foreach ($checkData as $list) {
-                if (strtotime($list->datetime_start) >= strtotime($request->datetime_start) && isset($request->active)) {
-                    return redirect()->route('product-sell-price.tambah')->with('gagal', 'Datetime Start is Expired.')->withInput();
-                }
                 if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                     $update_id = $list->product_sell_price_id;
                     $update    = 1;
@@ -185,6 +186,10 @@ class ProductSellPriceController extends Controller
             return redirect()->route('product-sell-price.index')->with('gagal', 'Data not exist.');
         }
 
+        if (strtotime('+30 seconds') >= strtotime($request->datetime_start) && isset($request->active)) {
+            return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Datetime Start is Expired.')->withInput();
+        }
+
         $checkData = ProductSellPrice::where('product_id', $request->product_id)
             ->where('active', 'Y')
             ->where('product_sell_price_id', '<>', $request->product_sell_price_id)
@@ -195,9 +200,6 @@ class ProductSellPriceController extends Controller
         if(!empty($checkData))
         {
             foreach ($checkData as $list) {
-                if (strtotime($list->datetime_start) >= strtotime($request->datetime_start) && isset($request->active)) {
-                    return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Datetime Start is Expired.')->withInput();
-                }
                 if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                     $update_id = $list->product_sell_price_id;
                     $update    = 1;
@@ -249,6 +251,10 @@ class ProductSellPriceController extends Controller
             return redirect()->route('product-sell-price.index')->with('gagal', 'Data not exist.');
         }
 
+        if (strtotime('+30 seconds') >= strtotime($index->datetime_start) && $index->active != 'Y') {
+            return redirect()->route('product-sell-price.index')->with('gagal', 'Datetime Start is Expired.')->withInput();
+        }
+
         $checkData = ProductSellPrice::where('product_id', $index->product_id)
             ->where('active', 'Y')
             ->get();
@@ -258,9 +264,6 @@ class ProductSellPriceController extends Controller
         if(!empty($checkData))
         {
             foreach ($checkData as $list) {
-                if (strtotime($list->datetime_start) >= strtotime($index->datetime_start) && $index->active != 'Y') {
-                    return redirect()->route('product-sell-price.index')->with('gagal', 'Datetime Start is Expired.')->withInput();
-                }
                 if (strtotime($list->datetime_start) <= strtotime($index->datetime_start) && strtotime($index->datetime_start) <= strtotime($list->datetime_end) && $index->active != 'Y') {
                     $update_id = $list->product_sell_price_id;
                     $update    = 1;
@@ -568,6 +571,8 @@ class ProductSellPriceController extends Controller
         $datetime_end     = $request->datetime_end;
         $active           = $request->active;
 
+        $time_commit = strtotime('+30 seconds');
+
         // DB::transaction(function () use ($product_code, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end, $active) {
 
         foreach ($product_code as $key => $n) {
@@ -644,15 +649,17 @@ class ProductSellPriceController extends Controller
             //     }
             // }
 
+            if ($time_commit >= strtotime($datetime_start[$key]) && strtoupper($active[$key]) == 'Y') {
+                if (!$skip) {
+                    $message = '<h4><span class="label label-danger">Datetime Start is Expired</span></h4>';
+                }
+                $skip = 1;
+            }
+
             if(!empty($checkData))
             {
                 foreach ($checkData as $list) {
-                    if (strtotime($list->datetime_start) >= strtotime($datetime_start[$key]) && strtoupper($active[$key]) == 'Y') {
-                        if (!$skip) {
-                            $message = '<h4><span class="label label-danger">Datetime Start is Expired</span></h4>';
-                        }
-                        $skip = 1;
-                    }
+                    
                     if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
                         $update_id = $list->product_sell_price_id;
                         $update    = 1;
