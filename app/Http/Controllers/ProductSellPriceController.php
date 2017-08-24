@@ -38,7 +38,7 @@ class ProductSellPriceController extends Controller
         $validator = Validator::make($request->all(), [
             'f_provider' => 'integer|nullable',
             'f_active'   => 'nullable|in:Y,N',
-            'f_date'   => 'nullable|date',
+            'f_date'     => 'nullable|date',
         ], $message);
 
         if ($validator->fails()) {
@@ -85,19 +85,17 @@ class ProductSellPriceController extends Controller
             return redirect()->route('product-sell-price.tambah')->withErrors($validator)->withInput();
         }
 
-        if (strtotime('+30 seconds') >= strtotime($request->datetime_start) && isset($request->active)) {
+        if (strtotime('-1 day') >= strtotime($request->datetime_start) && isset($request->active)) {
             return redirect()->route('product-sell-price.tambah')->with('gagal', 'Datetime Start is Expired.')->withInput();
         }
 
         $checkData = ProductSellPrice::where('product_id', $request->product_id)
-                                        ->where('active', 'Y')
-                                        ->get();
-
+            ->where('active', 'Y')
+            ->get();
 
         $update_id = 0;
         $update    = 0;
-        if(!empty($checkData))
-        {
+        if (!empty($checkData)) {
             foreach ($checkData as $list) {
                 if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                     $update_id = $list->product_sell_price_id;
@@ -107,17 +105,16 @@ class ProductSellPriceController extends Controller
             }
         }
 
-        if($update)
-        {
-            $index2 = ProductSellPrice::find($update_id);
-            $index2->datetime_end = date('YmdHis', strtotime($request->datetime_start.' -1 second'));
+        if ($update) {
+            $index2               = ProductSellPrice::find($update_id);
+            $index2->datetime_end = date('YmdHis', strtotime($request->datetime_start . ' -1 second'));
             $index2->save();
         }
 
         $index = new ProductSellPrice;
 
         $index->product_id       = $request->product_id;
-        $index->gross_sell_price = str_replace('.', '',$request->gross_sell_price);
+        $index->gross_sell_price = str_replace('.', '', $request->gross_sell_price);
         $index->flg_tax          = isset($request->flg_tax) ? 'Y' : 'N';
         $index->tax_percentage   = isset($request->flg_tax) ? $request->tax_percentage : 0;
         $index->datetime_start   = date('YmdHis', strtotime($request->datetime_start));
@@ -186,7 +183,7 @@ class ProductSellPriceController extends Controller
             return redirect()->route('product-sell-price.index')->with('gagal', 'Data not exist.');
         }
 
-        if (strtotime('+30 seconds') >= strtotime($request->datetime_start) && isset($request->active)) {
+        if (strtotime('-1 day') >= strtotime($request->datetime_start) && isset($request->active)) {
             return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Datetime Start is Expired.')->withInput();
         }
 
@@ -197,8 +194,7 @@ class ProductSellPriceController extends Controller
 
         $update_id = 0;
         $update    = 0;
-        if(!empty($checkData))
-        {
+        if (!empty($checkData)) {
             foreach ($checkData as $list) {
                 if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                     $update_id = $list->product_sell_price_id;
@@ -212,15 +208,14 @@ class ProductSellPriceController extends Controller
             return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
         }
 
-        if($update)
-        {
-            $index2 = ProductSellPrice::find($update_id);
-            $index2->datetime_end = date('YmdHis', strtotime($request->datetime_start.' -1 second'));
+        if ($update) {
+            $index2               = ProductSellPrice::find($update_id);
+            $index2->datetime_end = date('YmdHis', strtotime($request->datetime_start . ' -1 second'));
             $index2->save();
         }
 
         $index->product_id       = $request->product_id;
-        $index->gross_sell_price = str_replace('.', '',$request->gross_sell_price);
+        $index->gross_sell_price = str_replace('.', '', $request->gross_sell_price);
         $index->flg_tax          = isset($request->flg_tax) ? 'Y' : 'N';
         $index->tax_percentage   = isset($request->flg_tax) ? $request->tax_percentage : 0;
         $index->datetime_start   = date('YmdHis', strtotime($request->datetime_start));
@@ -251,7 +246,7 @@ class ProductSellPriceController extends Controller
             return redirect()->route('product-sell-price.index')->with('gagal', 'Data not exist.');
         }
 
-        if (strtotime('+30 seconds') >= strtotime($index->datetime_start) && $index->active != 'Y') {
+        if (strtotime('-1 day') >= strtotime($index->datetime_start) && $index->active != 'Y') {
             return redirect()->route('product-sell-price.index')->with('gagal', 'Datetime Start is Expired.')->withInput();
         }
 
@@ -261,8 +256,7 @@ class ProductSellPriceController extends Controller
 
         $update_id = 0;
         $update    = 0;
-        if(!empty($checkData))
-        {
+        if (!empty($checkData)) {
             foreach ($checkData as $list) {
                 if (strtotime($list->datetime_start) <= strtotime($index->datetime_start) && strtotime($index->datetime_start) <= strtotime($list->datetime_end) && $index->active != 'Y') {
                     $update_id = $list->product_sell_price_id;
@@ -280,10 +274,9 @@ class ProductSellPriceController extends Controller
             return redirect()->route('product-sell-price.index')->with('gagal', 'Data is outdate, can\'t to active again.');
         }
 
-        if($update)
-        {
-            $index2 = ProductSellPrice::find($update_id);
-            $index2->datetime_end = date('YmdHis', strtotime($index->datetime_start.' -1 second'));
+        if ($update) {
+            $index2               = ProductSellPrice::find($update_id);
+            $index2->datetime_end = date('YmdHis', strtotime($index->datetime_start . ' -1 second'));
             $index2->save();
         }
 
@@ -358,7 +351,7 @@ class ProductSellPriceController extends Controller
             $getDatas->where('sw_product_sell_price.active', $f_active);
         }
         if ($request->f_date != null) {
-            $f_date     = date('YmdHis', strtotime($request->f_date.' 23:59:59'));
+            $f_date = date('YmdHis', strtotime($request->f_date . ' 23:59:59'));
             $getDatas->where('datetime_start', '<=', $f_date)
                 ->where('datetime_end', '>=', $f_date);
         }
@@ -402,11 +395,11 @@ class ProductSellPriceController extends Controller
                         <a href='" . route('product-sell-price.ubah', $getData->product_sell_price_id) . "'' class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Update'><i class='fa fa-pencil'></i></a>";
                 }
                 if (Auth::user()->can('activate-product-sell-price')) {
-                  if ($getData->active == 'Y') {
-                    $actionHtml = $actionHtml."<a href='' class='unpublish' data-value='" . $getData->product_sell_price_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-nonactive'><span class='btn btn-dark btn-xs' data-toggle='tooltip' data-placement='top' title='Non Active'><i class='fa fa-times'></i></span></a>";
-                  }else{
-                    $actionHtml = $actionHtml."<a href='' class='publish' data-value='" . $getData->product_sell_price_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-active'><span class='btn btn-success btn-xs' data-toggle='tooltip' data-placement='top' title='Active'><i class='fa fa-check'></i></span></a>";
-                  }
+                    if ($getData->active == 'Y') {
+                        $actionHtml = $actionHtml . "<a href='' class='unpublish' data-value='" . $getData->product_sell_price_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-nonactive'><span class='btn btn-dark btn-xs' data-toggle='tooltip' data-placement='top' title='Non Active'><i class='fa fa-times'></i></span></a>";
+                    } else {
+                        $actionHtml = $actionHtml . "<a href='' class='publish' data-value='" . $getData->product_sell_price_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-active'><span class='btn btn-success btn-xs' data-toggle='tooltip' data-placement='top' title='Active'><i class='fa fa-check'></i></span></a>";
+                    }
 
                 }
                 if (Auth::user()->can('delete-product-sell-price')) {
@@ -560,7 +553,7 @@ class ProductSellPriceController extends Controller
         $datetime_end     = $request->datetime_end;
         $active           = $request->active;
 
-        $time_commit = strtotime('+30 seconds');
+        $time_commit = strtotime('-1 day');
 
         // DB::transaction(function () use ($product_code, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end, $active) {
 
@@ -645,10 +638,9 @@ class ProductSellPriceController extends Controller
                 $skip = 1;
             }
 
-            if(!empty($checkData))
-            {
+            if (!empty($checkData)) {
                 foreach ($checkData as $list) {
-                    
+
                     if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
                         $update_id = $list->product_sell_price_id;
                         $update    = 1;
@@ -657,11 +649,9 @@ class ProductSellPriceController extends Controller
                 }
             }
 
-
-            if($update && !$skip)
-            {
-                $index = ProductSellPrice::find($update_id);
-                $index->datetime_end = date('YmdHis', strtotime($datetime_start[$key].' -1 second'));
+            if ($update && !$skip) {
+                $index               = ProductSellPrice::find($update_id);
+                $index->datetime_end = date('YmdHis', strtotime($datetime_start[$key] . ' -1 second'));
                 $index->save();
             }
 
