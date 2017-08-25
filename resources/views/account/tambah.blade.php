@@ -48,6 +48,9 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Name <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input id="name" class="form-control col-md-7 col-xs-12" name="name" type="text" placeholder="E.g: John Doe" value="{{ old('name') }}">
+              @if($errors->has('name'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('name')}}</span></code>
+              @endif
             </div>
           </div>
           <div class="item form-group {{ $errors->has('email') ? 'has-error' : ''}}">
@@ -75,7 +78,7 @@
               <select id="role" name="role[]" class="form-control" required="required" multiple>
                 <option value="">Pilih</option>
                 @foreach ($getRole as $key)
-                <option value="{{ $key->id }}">{{ $key->name }}</option>
+                <option value="{{ $key->id }}" {{ (collect(old('role'))->contains($key->id)) ? 'selected' : '' }}>{{ $key->name }}</option>
                 @endforeach
               </select>
               @if($errors->has('role'))

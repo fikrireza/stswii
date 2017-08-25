@@ -1,4 +1,4 @@
 <div class="pull-right">
-  <a href="#">Amadeo</a> - <a href="#">FRA</a>
+  <a href="#">PALOMA - STS - AMADEO</a>
 </div>
 <div class="clearfix"></div>

@@ -139,7 +139,7 @@
               <td>{{ $key->email }}</td>
               <td>{{ $key->avatar }}</td>
               <td>@foreach($key->roles as $role)
-                  {{ $role->name }}
+                  {{ $role->name }} ||
                   @endforeach
               </td>
               @can('activate-user')
@@ -153,6 +153,13 @@
               <td>
                 @can('update-user')
                 <a href="{{ route('account.ubah', $key->id) }}" class="btn btn-xs btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Ubah"><i class="fa fa-pencil"></i></a>
+                @endcan
+                @can('activate-user')
+                  @if ($key->confirmed == 1)
+                  <a href="" class="inactive" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-inactive"><span class="btn btn-dark btn-xs" data-toggle="tooltip" data-placement="top" title="Non Active"><i class="fa fa-times"></i></span></a>
+                  @else
+                  <a href="" class="active" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-active"><span class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Active"><i class="fa fa-check"></i></span></a>
+                  @endif
                 @endcan
                 @can('reset-user')
                 <a href="" class="reset" data-value="{{ $key->id }}" data-toggle="modal" data-target=".modal-reset"><span class="btn btn-xs btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Reset"><i class="fa fa-recycle"></i></span></a>

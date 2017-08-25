@@ -47,6 +47,7 @@ class AccountController extends Controller
     {
         $message = [
           'name.required' => 'This field is required',
+          'name.unique' => 'The name has already taken',
           'email.required' => 'This field is required',
           'email.email' => 'Format email not supported',
           'email.unique' => 'Email has already taken',
@@ -55,7 +56,7 @@ class AccountController extends Controller
         ];
 
         $validator = Validator::make($request->all(), [
-          'name' => 'required',
+          'name' => 'required|unique:wa_users',
           'email' => 'required|email|unique:wa_users',
           'avatar' => 'image|mimes:jpeg,bmp,png|max:1000'
         ], $message);
@@ -125,6 +126,7 @@ class AccountController extends Controller
     {
       $message = [
         'name.required' => 'This field is required.',
+        'name.unique' => 'The name has already taken',
         'email.required' => 'This field is required.',
         'email.email' => 'Format not supported',
         'email.unique' => 'Email has already taken',
@@ -133,7 +135,7 @@ class AccountController extends Controller
       ];
 
       $validator = Validator::make($request->all(), [
-        'name' => 'required',
+        'name' => 'required|unique:wa_users,name,'.$request->id,
         'email' => 'required|email|unique:wa_users,email,'.$request->id,
         'avatar' => 'image|mimes:jpeg,bmp,png|max:1000'
       ], $message);
@@ -205,6 +207,8 @@ class AccountController extends Controller
       return redirect()->route('account.index')->with('berhasil', 'Password user '.$getUser->name.' Has been reset');
     }
 
+
+    //---------- Controller For Role Users ----------//
     public function role()
     {
         $getRole = Role::get();

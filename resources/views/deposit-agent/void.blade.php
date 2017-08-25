@@ -212,7 +212,7 @@
       var uniqueCode      = $(this).data('uniquecode');
       var uniqueCodeDate  = $(this).data('uniquecodedate');
       $("#confirm_clientId").val(clientId);
-      $("#confirm_refno").val(uniqueCodeDate+uniqueCode);
+      $("#confirm_refno").val(uniqueCode+uniqueCodeDate);
     });
   });
   @endcan
