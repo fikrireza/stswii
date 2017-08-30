@@ -71,6 +71,7 @@
         {{ csrf_field() }}
       <div class="item form-group {{ $errors->has('name') ? 'has-error' : ''}}">
         <input type="hidden" name="slug" value="{{ $getRole->slug }}">
+        <input type="hidden" name="id" value="{{ $getRole->id }}">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Role Name <span class="required">*</span></label>
         <div class="col-md-9 col-sm-9 col-xs-12">
           <input type="text" name="name" class="form-control" value="{{ $getRole->name }}" readonly>

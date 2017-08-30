@@ -34,10 +34,11 @@ class ReportController extends Controller
 
         $getData = Pos::leftjoin('sw_product', 'sw_product.product_id', '=', 'sw_pos.product_id')
                         ->leftjoin('sw_partner_product', 'sw_partner_product.partner_product_id', '=', 'sw_pos.partner_product_id')
-                        ->select('sw_partner_product.partner_product_code', 'sw_product.product_code', DB::raw('COUNT(sw_pos.pos_id) as qty'), DB::raw('SUM(sw_pos.gross_sell_price) as amount'))
+                        ->leftjoin('sw_partner_pulsa', 'sw_partner_pulsa.partner_pulsa_id', '=', 'sw_partner_product.partner_pulsa_id')
+                        ->select('sw_partner_pulsa.partner_pulsa_code','sw_partner_product.partner_product_code', 'sw_product.product_code', DB::raw('COUNT(sw_pos.pos_id) as qty'), DB::raw('SUM(sw_pos.gross_sell_price) as amount'))
                         ->where('sw_pos.purchase_datetime', 'like', '%'.$tahun_bulan.'%')
                         ->where('sw_pos.status', 'S')
-                        ->groupBy(['sw_partner_product.partner_product_code','sw_product.product_code'])
+                        ->groupBy(['sw_partner_pulsa.partner_pulsa_code','sw_partner_product.partner_product_code','sw_product.product_code'])
                         ->get()
                         ->toArray();
 
