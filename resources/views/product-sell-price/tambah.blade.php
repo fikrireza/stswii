@@ -118,10 +118,10 @@
             </div>
           </div>
 
-          <input id="datetime_end" name="datetime_end" class="date-picker form-control col-md-7 col-xs-12" required="required" type="hidden" value="{{ old('datetime_end', '3000-12-12 12:00:00') }}">
           {{-- <div class="item form-group {{ $errors->has('datetime_end') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="datetime_end">Date End <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
+            <input id="datetime_end" name="datetime_end" class="date-picker form-control col-md-7 col-xs-12" required="required" type="hidden" value="{{ old('datetime_end', '2099-12-12 12:00:00') }}">
               @if($errors->has('datetime_end'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('datetime_end')}}</span></code>
               @endif
@@ -185,17 +185,17 @@
     "minDate": new Date(),
   });
 
-  $('#datetime_end').daterangepicker({
-    "calender_style": "picker_2",
-    "singleDatePicker": true,
-    "format": 'YYYY-MM-DD H:m:s',
-    "showDropdowns": true,
-    "timePicker": true,
-    "timePicker24Hour": true,
-    "timePickerSeconds": true,
-    "timePickerIncrement": 1,
-    "minDate": new Date(),
-  });
+  // $('#datetime_end').daterangepicker({
+  //   "calender_style": "picker_2",
+  //   "singleDatePicker": true,
+  //   "format": 'YYYY-MM-DD H:m:s',
+  //   "showDropdowns": true,
+  //   "timePicker": true,
+  //   "timePicker24Hour": true,
+  //   "timePickerSeconds": true,
+  //   "timePickerIncrement": 1,
+  //   "minDate": new Date(),
+  // });
 
   $('#flg_tax').click(function() {
     $("#tax_percentage").toggle(this.checked);

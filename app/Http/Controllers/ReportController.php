@@ -36,7 +36,7 @@ class ReportController extends Controller
                         ->leftjoin('sw_partner_product', 'sw_partner_product.partner_product_id', '=', 'sw_pos.partner_product_id')
                         ->select('sw_partner_product.partner_product_code', 'sw_product.product_code', DB::raw('COUNT(sw_pos.pos_id) as qty'), DB::raw('SUM(sw_pos.gross_sell_price) as amount'))
                         ->where('sw_pos.purchase_datetime', 'like', '%'.$tahun_bulan.'%')
-                        ->where('status', 'S')
+                        ->where('sw_pos.status', 'S')
                         ->groupBy(['sw_partner_product.partner_product_code','sw_product.product_code'])
                         ->get()
                         ->toArray();
@@ -69,6 +69,7 @@ class ReportController extends Controller
                         ->leftjoin('sw_agent', 'sw_agent.agent_id', '=', 'sw_pos.agent_id')
                         ->select('sw_agent.agent_name', 'sw_product.product_code', DB::raw('COUNT(sw_pos.pos_id) as qty'), DB::raw('SUM(sw_pos.gross_sell_price) as amount'))
                         ->where('sw_pos.purchase_datetime', 'like', '%'.$tahun_bulan.'%')
+                        ->where('sw_pos.status', 'S')
                         ->groupBy(['sw_agent.agent_name','sw_product.product_code'])
                         ->get()
                         ->toArray();
@@ -100,6 +101,7 @@ class ReportController extends Controller
       $getData = Pos::leftjoin('sw_product', 'sw_product.product_id', '=', 'sw_pos.product_id')
                       ->select('sw_product.product_code', DB::raw('COUNT(sw_pos.pos_id) as qty'), DB::raw('SUM(sw_pos.gross_sell_price) as amount_buy'), DB::raw('SUM(sw_pos.gross_purch_price) as amount_sell'), DB::raw('SUM(sw_pos.gross_sell_price - sw_pos.gross_purch_price) as profit'))
                       ->where('sw_pos.purchase_datetime', 'like', '%'.$tahun_bulan.'%')
+                      ->where('sw_pos.status', 'S')
                       ->groupBy(['sw_product.product_code'])
                       ->get()
                       ->toArray();
