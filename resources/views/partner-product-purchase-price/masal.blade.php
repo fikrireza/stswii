@@ -165,7 +165,7 @@
             <th>Gross Purchase Price</th>
             <th>Tax Percentage</th>
             <th>Datetime Start</th>
-            <th>Datetime End</th>
+            {{-- <th>Datetime End</th> --}}
             <th>Active</th>
             <th>Delete</th>
           </thead>
@@ -196,10 +196,10 @@
                 {{ $key['datetime_start'] }}
                 <input type="hidden" name="datetime_start[{{$urut}}]" value="{{ $key['datetime_start'] }}"/>
               </td>
-              <td>
+              {{-- <td>
                 {{ $key['datetime_end'] }}
                 <input type="hidden" name="datetime_end[{{$urut}}]" value="{{ $key['datetime_end'] }}"/>
-              </td>
+              </td> --}}
               <td>
                 {{ $key['active'] }}
                 <input type="hidden" name="active[{{$urut}}]" value="{{ $key['active'] }}"/>
@@ -240,7 +240,7 @@
             <th>Gross Purchase Price</th>
             <th>Tax Percentage</th>
             <th>Datetime Start</th>
-            <th>Datetime End</th>
+            {{-- <th>Datetime End</th> --}}
             <th>Active</th>
             <th>Message</th>
           </thead>
@@ -263,9 +263,9 @@
               <td>
                 {{ $key['datetime_start'] }}
               </td>
-              <td>
+              {{-- <td>
                 {{ $key['datetime_end'] }}
-              </td>
+              </td> --}}
               <td>
                 {{ $key['active'] }}
               </td>
@@ -302,7 +302,7 @@
             <th>Gross Purchase Price</th>
             <th>Tax Percentage</th>
             <th>Datetime Start</th>
-            <th>Datetime End</th>
+            {{-- <th>Datetime End</th> --}}
             <th>Active</th>
           </thead>
 
@@ -324,9 +324,9 @@
               <td>
                 {{ $key['datetime_start'] }}
               </td>
-              <td>
+              {{-- <td>
                 {{ $key['datetime_end'] }}
-              </td>
+              </td> --}}
               <td>
                 {{ $key['active'] }}
               </td>

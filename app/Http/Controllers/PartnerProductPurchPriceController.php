@@ -589,7 +589,7 @@ class PartnerProductPurchPriceController extends Controller
         $gross_purch_price    = $request->gross_purch_price;
         $tax_percentage       = $request->tax_percentage;
         $datetime_start       = $request->datetime_start;
-        $datetime_end         = $request->datetime_end;
+        $datetime_end         = '2037-12-31 23:59:59';
         $active               = $request->active;
 
         $time_commit = strtotime('-1 day');
@@ -638,14 +638,14 @@ class PartnerProductPurchPriceController extends Controller
                 $skip = 1;
             }
 
-            if ($datetime_end[$key] == '') {
-                if (!$skip) {
-                    $message = '<h4><span class="label label-danger">Datetime end is empty</span></h4>';
-                }
-                $skip = 1;
-            }
+            // if ($datetime_end[$key] == '') {
+            //     if (!$skip) {
+            //         $message = '<h4><span class="label label-danger">Datetime end is empty</span></h4>';
+            //     }
+            //     $skip = 1;
+            // }
 
-            if (strtotime($datetime_start[$key]) > strtotime($datetime_end[$key])) {
+            if (strtotime($datetime_start[$key]) > strtotime($datetime_end)) {
                 if (!$skip) {
                     $message = '<h4><span class="label label-danger">Datetime start is bigger than Datetime end</span></h4>';
                 }
@@ -708,7 +708,7 @@ class PartnerProductPurchPriceController extends Controller
                     "flg_tax"             => $tax_percentage[$key] > 0 ? 'Y' : 'N',
                     "tax_percentage"      => $tax_percentage[$key],
                     "datetime_start"      => date('YmdHis', strtotime($datetime_start[$key])),
-                    "datetime_end"        => date('YmdHis', strtotime($datetime_end[$key])),
+                    "datetime_end"        => date('YmdHis', strtotime($datetime_end)),
                     "create_user_id"      => Auth::id(),
                     "active"              => strtoupper($active[$key]),
                     "active_datetime"     => strtoupper($active[$key]) == 'Y' ? date('YmdHis') : '00000000000000',
@@ -726,7 +726,7 @@ class PartnerProductPurchPriceController extends Controller
                     'gross_purch_price'    => $gross_purch_price[$key],
                     'tax_percentage'       => $tax_percentage[$key],
                     'datetime_start'       => $datetime_start[$key],
-                    'datetime_end'         => $datetime_end[$key],
+                    'datetime_end'         => $datetime_end,
                     'active'               => $active[$key],
                 ];
             } else {
@@ -736,7 +736,7 @@ class PartnerProductPurchPriceController extends Controller
                     'gross_purch_price'    => $gross_purch_price[$key],
                     'tax_percentage'       => $tax_percentage[$key],
                     'datetime_start'       => $datetime_start[$key],
-                    'datetime_end'         => $datetime_end[$key],
+                    'datetime_end'         => $datetime_end,
                     'active'               => $active[$key],
                     'message'              => $message,
                 ];
