@@ -195,7 +195,7 @@ class PartnerProductPurchPriceController extends Controller
         if(!empty($checkData))
         {
             foreach ($checkData as $list) {
-                
+
                 if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                     $update_id = $list->partner_product_purch_price_id;
                     $update    = 1;
@@ -259,7 +259,7 @@ class PartnerProductPurchPriceController extends Controller
         if(!empty($checkData))
         {
             foreach ($checkData as $list) {
-                
+
                 if (strtotime($list->datetime_start) <= strtotime($index->datetime_start) && strtotime($index->datetime_start) <= strtotime($list->datetime_end) && $index->active != 'Y') {
                     $update_id = $list->partner_product_purch_price_id;
                     $update    = 1;
@@ -503,14 +503,13 @@ class PartnerProductPurchPriceController extends Controller
 
         return Excel::create('Template Partner Product Purch Price Import', function ($excel) use ($partnerProduct) {
           $excel->sheet('Data-Import', function ($sheet) {
-              $sheet->row(1, array('partner_product_code', 'gross_purch_price', 'tax_percentage', 'datetime_start', 'datetime_end', 'active'));
+              $sheet->row(1, array('partner_product_code', 'gross_purch_price', 'tax_percentage', 'datetime_start', 'active'));
               $sheet->setColumnFormat(array(
                   'A' => '',
                   'B' => '0',
                   'C' => '0.00',
                   'D' => 'YYYY-MM-DD HH:mm:ss',
-                  'E' => 'YYYY-MM-DD HH:mm:ss',
-                  'F' => '',
+                  'E' => '',
               ));
           });
 
@@ -518,8 +517,8 @@ class PartnerProductPurchPriceController extends Controller
               $sheet->fromArray($partnerProduct, null, 'A6', true);
               $sheet->row(1, array('Example'));
               $sheet->mergeCells('A1:E1');
-              $sheet->row(2, array('partner_product_code', 'gross_purch_price', 'tax_percentage', 'datetime_start', 'datetime_end', 'active'));
-              $sheet->row(3, array('PP1', '45000', '10', '2017-07-01 12:00:00', '2017-07-31 12:00:00', 'Y'));
+              $sheet->row(2, array('partner_product_code', 'gross_purch_price', 'tax_percentage', 'datetime_start', 'active'));
+              $sheet->row(3, array('PP1', '45000', '10', '2017-07-01 12:00:00', 'Y'));
               $sheet->row(5, array('Data Partner Product'));
               $sheet->mergeCells('A5:C5');
               $sheet->row(6, array('partner_product_code', 'partner_product_name', 'active'));
@@ -682,7 +681,7 @@ class PartnerProductPurchPriceController extends Controller
             if(!empty($checkData))
             {
                 foreach ($checkData as $list) {
-                    
+
                     if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
                         $update_id = $list->partner_product_purch_price_id;
                         $update    = 1;

@@ -117,15 +117,15 @@
               @endif
             </div>
           </div>
-          <div class="item form-group {{ $errors->has('datetime_end') ? 'has-error' : ''}}">
+          <input id="datetime_end" name="datetime_end" class="date-picker form-control col-md-7 col-xs-12" required="required" type="hidden" value="{{ old('datetime_end', date('Y-m-d H:i:s', strtotime($index->datetime_end))) }}">
+          {{-- <div class="item form-group {{ $errors->has('datetime_end') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="datetime_end">Date End <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="datetime_end" name="datetime_end" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="{{ old('datetime_end', date('Y-m-d H:i:s', strtotime($index->datetime_end))) }}">
               @if($errors->has('datetime_end'))
                 <code><span style="color:red; font-size:12px;">{{ $errors->first('datetime_end')}}</span></code>
               @endif
             </div>
-          </div>
+          </div> --}}
           <div class="ln_solid"></div>
           <div class="item form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="active">Active</label>
