@@ -104,7 +104,7 @@
 
         <div class="ln_solid"></div>
 
-        <form class="form-horizontal form-label-left" action="{{ route('partner-product-purch-price.prosesTemplate') }}" method="post" enctype="multipart/form-data">
+        <form class="form-horizontal form-label-left" action="{{ route('partner-product-purch-price.storeTemplate') }}" method="post" enctype="multipart/form-data">
           {{ csrf_field() }}
           <div class="item form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
@@ -146,81 +146,6 @@
     </div>
   </div>
 </div>
-
-@if (isset($collect))
-<div class="row">
-  <div class="col-md-12 col-sm-12 col-xs-12">
-    <div class="x_panel">
-      <div class="x_title">
-        <h2>Check - {{ $getName->partner_pulsa_name }}</h2>
-        <div class="clearfix"></div>
-      </div>
-      <div class="x_content table-responsive">
-        <form class="form-horizontal form-label-left" action="{{ route('partner-product-purch-price.storeTemplate') }}" method="post">
-        
-        <table class="table table-striped table-bordered no-footer tablecheck" width="100%">
-          <thead>
-            <th>No</th>
-            <th>Supplier Product Code</th>
-            <th>Gross Purchase Price</th>
-            <th>Tax Percentage</th>
-            <th>Datetime Start</th>
-            {{-- <th>Datetime End</th> --}}
-            <th>Active</th>
-            <th>Delete</th>
-          </thead>
-          {{ csrf_field() }}
-          <tbody>
-            @php
-              $urut = 0;
-            @endphp
-            @foreach ($collect as $key)
-            <tr>
-              <td>
-                {{ $urut + 1 }}
-                <input type="hidden" name="partner_pulsa_id" value="{{ $getName->partner_pulsa_id }}">
-              </td>
-              <td>
-                {{$key['partner_product_code']}}
-                <input type="hidden" name="partner_product_code[{{$urut}}]" value="{{$key['partner_product_code']}}">
-              </td>
-              <td>
-                Rp. {{ number_format($key['gross_purch_price']) }}
-                <input type="hidden" name="gross_purch_price[{{$urut}}]" value="{{ $key['gross_purch_price'] }}"/>
-              </td>
-              <td>
-                {{ $key['tax_percentage'] }} %
-                <input type="hidden" name="tax_percentage[{{$urut}}]" value="{{ $key['tax_percentage'] }}"/>
-              </td>
-              <td>
-                {{ $key['datetime_start'] }}
-                <input type="hidden" name="datetime_start[{{$urut}}]" value="{{ $key['datetime_start'] }}"/>
-              </td>
-              {{-- <td>
-                {{ $key['datetime_end'] }}
-                <input type="hidden" name="datetime_end[{{$urut}}]" value="{{ $key['datetime_end'] }}"/>
-              </td> --}}
-              <td>
-                {{ $key['active'] }}
-                <input type="hidden" name="active[{{$urut}}]" value="{{ $key['active'] }}"/>
-              </td>
-              <td>
-                <input type="button" name="delete" value="x" class="btn btn-danger btn-sm btn-delete">
-              </td>
-            </tr>
-            @php
-              $urut++
-            @endphp
-            @endforeach
-          </tbody>
-        </table>
-        <button type="submit" name="button" class="btn btn-success btn-bg btn-submit" onclick="return false">Process</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-@endif
 
 @if (isset($error))
 <div class="row">
@@ -376,10 +301,5 @@
           .draw();
   } );
 
-  $('.btn-submit').click( function() {
-        var data = table.$('input, select').serialize();
-        {{-- console.log("{{ route('partner-product-purch-price.storeTemplate') }}?"+data); --}}
-        window.location = "{{ route('partner-product-purch-price.storeTemplate') }}?"+data;
-    } );
 </script>
 @endsection

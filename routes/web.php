@@ -163,7 +163,7 @@ Route::get('/home', 'HomeController@index')
 	Route::post('partner-product-purch-price/prosesTemplate', 'PartnerProductPurchPriceController@prosesTemplate')
 			  ->name('partner-product-purch-price.prosesTemplate')
 				->middleware('can:create-partner-product-purch-price');
-	Route::get('partner-product-purch-price/storeTemplate', 'PartnerProductPurchPriceController@storeTemplate')
+	Route::post('partner-product-purch-price/storeTemplate', 'PartnerProductPurchPriceController@storeTemplate')
 			  ->name('partner-product-purch-price.storeTemplate')
 				->middleware('can:create-partner-product-purch-price');
 // partner product purch price
@@ -243,7 +243,7 @@ Route::get('/home', 'HomeController@index')
 			  ->name('product-sell-price.template');
 	Route::post('product-sell-price/upload/template', 'ProductSellPriceController@prosesTemplate')
 			  ->name('product-sell-price.prosesTemplate');
-	Route::get('product-sell-price/upload/store-template', 'ProductSellPriceController@storeTemplate')
+	Route::post('product-sell-price/upload/store-template', 'ProductSellPriceController@storeTemplate')
 			  ->name('product-sell-price.storeTemplate');
 //----- PRODUCT SELL PRICE -----//
 

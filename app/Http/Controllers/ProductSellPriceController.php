@@ -99,7 +99,12 @@ class ProductSellPriceController extends Controller
         $update    = 0;
         if (!empty($checkData)) {
             foreach ($checkData as $list) {
-                if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
+                if(strtotime($list->datetime_start) >= strtotime($request->datetime_start) && isset($request->active))
+                {
+                    return redirect()->route('product-sell-price.tambah')->with('gagal', 'Data is still active.')->withInput();
+                }
+
+                if (strtotime($list->datetime_start) < strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                     $update_id = $list->product_sell_price_id;
                     $update    = 1;
                     break;
@@ -198,7 +203,12 @@ class ProductSellPriceController extends Controller
         $update    = 0;
         if (!empty($checkData)) {
             foreach ($checkData as $list) {
-                if (strtotime($list->datetime_start) <= strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
+                if(strtotime($list->datetime_start) >= strtotime($request->datetime_start) && isset($request->active))
+                {
+                    return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
+                }
+
+                if (strtotime($list->datetime_start) < strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
                     $update_id = $list->product_sell_price_id;
                     $update    = 1;
                     break;
@@ -260,7 +270,12 @@ class ProductSellPriceController extends Controller
         $update    = 0;
         if (!empty($checkData)) {
             foreach ($checkData as $list) {
-                if (strtotime($list->datetime_start) <= strtotime($index->datetime_start) && strtotime($index->datetime_start) <= strtotime($list->datetime_end) && $index->active != 'Y') {
+                if(strtotime($list->datetime_start) >= strtotime($index->datetime_start) && $index->active != 'Y')
+                {
+                    return redirect()->route('product-sell-price.index')->with('gagal', 'Data is still active.');
+                }
+
+                if (strtotime($list->datetime_start) < strtotime($index->datetime_start) && strtotime($index->datetime_start) <= strtotime($list->datetime_end) && $index->active != 'Y') {
                     $update_id = $list->product_sell_price_id;
                     $update    = 1;
                     break;
@@ -547,23 +562,44 @@ class ProductSellPriceController extends Controller
 
     public function storeTemplate(Request $request)
     {
-        $product_code     = $request->product_code;
-        $gross_sell_price = $request->gross_sell_price;
-        $tax_percentage   = $request->tax_percentage;
-        $datetime_start   = $request->datetime_start;
+        if ($request->hasFile('file')) {
+            $path = Input::file('file')->getRealPath();
+            $data = Excel::selectSheets('Data-Import')->load($path, function ($reader) {
+            })->get();
+
+            if (!empty($data) && $data->count()) {
+                foreach ($data as $key) {
+                    $collect[] = [
+                        'product_code'     => $key->product_code,
+                        'gross_sell_price' => $key->gross_sell_price,
+                        'tax_percentage'   => $key->tax_percentage,
+                        'datetime_start'   => $key->datetime_start,
+                        'datetime_end'     => $key->datetime_end,
+                        'active'           => $key->active,
+                    ];
+                }
+
+                if (!empty($collect)) {
+                    $collect = collect($collect);
+                }
+            } else {
+                return view('product-sell-price.masal')->with('gagal', 'Please Download Template');
+            }
+        } else {
+            return view('product-sell-price.masal')->with('gagal', 'Please Select Template');
+        }
+
         $datetime_end     = '2037-12-31 23:59:59';
-        $active           = $request->active;
 
         $time_commit = strtotime('-1 day');
+        $row = 1;
 
-        // DB::transaction(function () use ($product_code, $gross_sell_price, $tax_percentage, $datetime_start, $datetime_end, $active) {
-
-        foreach ($product_code as $key => $n) {
+        foreach ($collect as $list) {
             /*Load array */
 
             $skip    = 0;
             $update  = 0;
-            $product = Product::where('product_code', strtoupper($product_code[$key]))->first();
+            $product = Product::where('product_code', strtoupper($list['product_code']))->first();
 
             if ($product) {
                 $checkData = ProductSellPrice::where('product_id', $product->product_id)
@@ -576,63 +612,36 @@ class ProductSellPriceController extends Controller
                 $skip = 1;
             }
 
-            if ($gross_sell_price[$key] == '') {
+            if ($list['gross_sell_price'] == '') {
                 if (!$skip) {
                     $message = '<h4><span class="label label-danger">Gross Sell Price is empty</span></h4>';
                 }
                 $skip = 1;
             }
 
-            if ($tax_percentage[$key] == '') {
+            if ($list['tax_percentage'] == '') {
                 if (!$skip) {
                     $message = '<h4><span class="label label-danger">Tax Percentage is empty</span></h4>';
                 }
                 $skip = 1;
             }
 
-            if ($datetime_start[$key] == '') {
+            if ($list['datetime_start'] == '') {
                 if (!$skip) {
                     $message = '<h4><span class="label label-danger">Datetime Start is empty</span></h4>';
                 }
                 $skip = 1;
             }
 
-            // if ($datetime_end[$key] == '') {
-            //     if (!$skip) {
-            //         $message = '<h4><span class="label label-danger">Datetime end is empty</span></h4>';
-            //     }
-            //     $skip = 1;
-            // }
-
-            if (date('YmdHis', strtotime($datetime_start[$key])) > date('YmdHis', strtotime($datetime_end))) {
+            if (date('YmdHis', strtotime($list['datetime_start'])) > date('YmdHis', strtotime($datetime_end))) {
                 if (!$skip) {
                     $message = '<h4><span class="label label-danger">Datetime start is bigger than Datetime end</span></h4>';
                 }
                 $skip = 1;
             }
 
-            // foreach ($checkData as $list) {
-            //     if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
-            //         if (!$skip) {
-            //             $message = '<h4><span class="label label-danger">Data still active</span></h4>';
-            //         }
-            //         $skip = 1;
-            //     }
-            //     if (strtotime($list->datetime_start) <= strtotime($datetime_end[$key]) && strtotime($datetime_end[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
-            //         if (!$skip) {
-            //             $message = '<h4><span class="label label-danger">Data still active</span></h4>';
-            //         }
-            //         $skip = 1;
-            //     }
-            //     if (strtotime($datetime_start[$key]) <= strtotime($list->datetime_start) && strtotime($list->datetime_end) <= strtotime($datetime_end[$key]) && strtoupper($active[$key]) == 'Y') {
-            //         if (!$skip) {
-            //             $message = '<h4><span class="label label-danger">Data still active</span></h4>';
-            //         }
-            //         $skip = 1;
-            //     }
-            // }
 
-            if ($time_commit >= strtotime($datetime_start[$key]) && strtoupper($active[$key]) == 'Y') {
+            if ($time_commit >= strtotime($list['datetime_start']) && strtoupper($list['active']) == 'Y') {
                 if (!$skip) {
                     $message = '<h4><span class="label label-danger">Datetime Start is Expired</span></h4>';
                 }
@@ -640,19 +649,26 @@ class ProductSellPriceController extends Controller
             }
 
             if (!empty($checkData)) {
-                foreach ($checkData as $list) {
+                foreach ($checkData as $list2) {
 
-                    if (strtotime($list->datetime_start) <= strtotime($datetime_start[$key]) && strtotime($datetime_start[$key]) <= strtotime($list->datetime_end) && strtoupper($active[$key]) == 'Y') {
-                        $update_id = $list->product_sell_price_id;
+                    if (strtotime($list2->datetime_start) < strtotime($list['datetime_start']) && strtotime($list['datetime_start']) <= strtotime($list2->datetime_end) && strtoupper($list['active']) == 'Y') {
+                        $update_id = $list2->product_sell_price_id;
                         $update    = 1;
-                        break;
+                    }
+
+                    if(strtotime($list2->datetime_start) >= strtotime($list['datetime_start']) && strtoupper($list['active']) == 'Y')
+                    {
+                        if (!$skip) {
+                            $message = '<h4><span class="label label-danger">Data is still active</span></h4>';
+                        }
+                        $skip = 1;
                     }
                 }
             }
 
             if ($update && !$skip) {
                 $index               = ProductSellPrice::find($update_id);
-                $index->datetime_end = date('YmdHis', strtotime($datetime_start[$key] . ' -1 second'));
+                $index->datetime_end = date('YmdHis', strtotime($list['datetime_start'] . ' -1 second'));
                 $index->save();
             }
 
@@ -660,15 +676,15 @@ class ProductSellPriceController extends Controller
                 ProductSellPrice::insert(
                     [
                         "product_id"          => $product->product_id,
-                        "gross_sell_price"    => $gross_sell_price[$key],
-                        "flg_tax"             => $tax_percentage[$key] > 0 ? 'Y' : 'N',
-                        "tax_percentage"      => $tax_percentage[$key],
-                        "datetime_start"      => date('YmdHis', strtotime($datetime_start[$key])),
+                        "gross_sell_price"    => $list['gross_sell_price'],
+                        "flg_tax"             => $list['tax_percentage'] > 0 ? 'Y' : 'N',
+                        "tax_percentage"      => $list['tax_percentage'],
+                        "datetime_start"      => date('YmdHis', strtotime($list['datetime_start'])),
                         "datetime_end"        => date('YmdHis', strtotime($datetime_end)),
                         "create_user_id"      => Auth::id(),
-                        "active"              => strtoupper($active[$key]),
-                        "active_datetime"     => strtoupper($active[$key]) == 'Y' ? date('YmdHis') : '00000000000000',
-                        "non_active_datetime" => strtoupper($active[$key]) != 'Y' ? date('YmdHis') : '00000000000000',
+                        "active"              => strtoupper($list['active']),
+                        "active_datetime"     => strtoupper($list['active']) == 'Y' ? date('YmdHis') : '00000000000000',
+                        "non_active_datetime" => strtoupper($list['active']) != 'Y' ? date('YmdHis') : '00000000000000',
                         "version"             => 0,
                         "create_datetime"     => date('YmdHis'),
                         "create_user_id"      => Auth::id(),
@@ -677,28 +693,27 @@ class ProductSellPriceController extends Controller
                     ]);
 
                 $pass[] = [
-                    'row'              => $key,
-                    'product_code'     => $product_code[$key],
-                    'gross_sell_price' => $gross_sell_price[$key],
-                    'tax_percentage'   => $tax_percentage[$key],
-                    'datetime_start'   => $datetime_start[$key],
+                    'row'              => $row++,
+                    'product_code'     => $list['product_code'],
+                    'gross_sell_price' => $list['gross_sell_price'],
+                    'tax_percentage'   => $list['tax_percentage'],
+                    'datetime_start'   => $list['datetime_start'],
                     'datetime_end'     => $datetime_end,
-                    'active'           => $active[$key],
+                    'active'           => $list['active'],
                 ];
             } else {
                 $error[] = [
-                    'row'              => $key,
-                    'product_code'     => $product_code[$key],
-                    'gross_sell_price' => $gross_sell_price[$key],
-                    'tax_percentage'   => $tax_percentage[$key],
-                    'datetime_start'   => $datetime_start[$key],
+                    'row'              => $row++,
+                    'product_code'     => $list['product_code'],
+                    'gross_sell_price' => $list['gross_sell_price'],
+                    'tax_percentage'   => $list['tax_percentage'],
+                    'datetime_start'   => $list['datetime_start'],
                     'datetime_end'     => $datetime_end,
-                    'active'           => $active[$key],
+                    'active'           => $list['active'],
                     'message'          => $message,
                 ];
             }
         }
-        // });
 
         if (!empty($error)) {
 
