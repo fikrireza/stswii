@@ -32,6 +32,16 @@
 </div>
 @endif
 
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="alert alert-danger alert-dismissible alert-error" style="display: none;">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+      </button>
+      <p><strong>error, </strong> server mengalami gangguan </p>   
+    </div>
+  </div>
+</div>
+
 @can('update-agent')
 <div class="modal fade modal-form-update" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
@@ -144,6 +154,40 @@
   </div>
 </div>
 @endcan
+
+<div class="modal fade modal-check-saldo" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+
+      <div class="modal-header alert-info">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel2">Saldo</h4>
+      </div>
+      <div class="modal-body">
+        <h4>Rp. <span id="saldo"></span></h4>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="modal fade modal-reset-pin" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+
+      <div class="modal-header alert-info">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel2">Pin</h4>
+      </div>
+      <div class="modal-body">
+        <h4 id="new-pin"></h4>
+      </div>
+      
+    </div>
+  </div>
+</div>
 
 <div class="page-title">
   <div class="title_left">
@@ -266,6 +310,45 @@ $(function() {
     });
     @endcan
 });
+
+$(document).on('click','a.check-saldo', function(){
+  var a = $(this).data('value');
+  $.ajax({
+     url: '/agent/checkSaldo/'+a,
+     type: 'GET',
+     error: function(response) {
+        $('.alert-error').show();       
+     },  
+     success: function(response) {
+        if (response.status == 'success') {
+          $('#saldo').text(response.amount);
+          $('.modal-check-saldo').modal('show');  
+        }else{
+          $('.alert-error').show(); 
+        }    
+     }
+  });
+});
+
+$(document).on('click','a.reset-pin', function(){
+  var a = $(this).data('value');
+  $.ajax({
+     url: '/agent/resetPin/'+a,
+     type: 'GET',
+     error: function(response) {
+        $('.alert-error').show();       
+     },  
+     success: function(response) {
+        if (response.status == 'OK') {
+          $('#new-pin').text(response.pin);
+          $('.modal-reset-pin').modal('show');  
+        }else{
+          $('.alert-error').show(); 
+        }    
+     }
+  });
+});
+
 </script>
 
 @if(Session::has('update-false'))

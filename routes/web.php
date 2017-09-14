@@ -57,6 +57,10 @@ Route::get('/home', 'HomeController@index')
 // agent
 	Route::get('/agent', 'AgentController@index')
 				->name('agent.index')->middleware('can:read-agent');
+	Route::get('/agent/checkSaldo/{client_id}', 'AgentController@checkSaldo')
+				->name('agent.check-saldo')->middleware('can:read-agent');
+	Route::get('/agent/resetPin/{client_id}', 'AgentController@resetPin')
+				->name('agent.reset-pin')->middleware('can:read-agent');
 	Route::get('/agent/getDatas', 'AgentController@getDataTables')
 				->name('agent.getDatas');
 	Route::get('/agent/edit/{id}', 'AgentController@edit')
@@ -205,6 +209,15 @@ Route::get('/home', 'HomeController@index')
 	Route::get('product/delete/{id}', 'ProductController@delete')
 				->name('product.delete')
 				->middleware('can:delete-product');
+
+	Route::get('product/sort-number-up/{id}', 'ProductController@sortNumberUp')
+				->name('product.sort-number-up')
+				->middleware('can:sort-number-product');
+
+	Route::get('product/sort-number-down/{id}', 'ProductController@sortNumberDown')
+				->name('product.sort-number-down')
+				->middleware('can:sort-number-product');
+
 	Route::get('/product/yajra/getDatas/{request?}', 'ProductController@yajraGetData')
 				->name('product.yajra.getDatas');
 //----- PRODUCT -----//

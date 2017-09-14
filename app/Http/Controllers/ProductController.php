@@ -226,16 +226,49 @@ class ProductController extends Controller
 				return redirect()->back()->with('berhasil', 'Successfully Deleted ');
 		}
 
+		public function sortNumberUp($id)
+		{
+				$index = Product::find($id);
+				$index->sort_number +=1;
+				$index->version += 1;
+				$index->update_datetime = date('YmdHis');
+				$index->update_user_id = Auth::id();
+				$index->save();
+				return redirect()->route('product.index')->with('berhasil', 'Successfully Add Sort Number ');
+		}
+
+		public function sortNumberDown($id)
+		{
+				$index = Product::find($id);
+
+				if ( $index->sort_number == 1) {
+					return redirect()->route('product.index')->with('gagal', 'Sort Number can\'t be reduced anymore ');
+				}else{
+					$index->sort_number -=1;
+					$index->version += 1;
+					$index->update_datetime = date('YmdHis');
+					$index->update_user_id = Auth::id();
+					$index->save();
+					return redirect()->route('product.index')->with('berhasil', 'Successfully Reduce Sort Number ');
+				}
+		}
+
 		public function yajraGetData(Request $request)
 		{
 				$f_provider = $request->query('f_provider');
+				$f_type_product = $request->query('f_type_product');
 
 	    	$getProducts = Product::leftJoin('sw_provider', 'sw_provider.provider_id', 'sw_product.provider_id')
-		    	->select(['sw_provider.provider_code as provider_code','sw_product.provider_id as provider_id','product_id','product_code','product_name','nominal','type','active','sw_product.version']);
+		    	->select(['sw_provider.provider_code as provider_code','sw_product.provider_id as provider_id','product_id','product_code','product_name','nominal','type', 'sort_number','active','sw_product.version']);
 
 	    	if($f_provider != null)
 				{
 					$getProducts->where('sw_product.provider_id', $f_provider);
+				}
+
+			if($f_type_product != null)
+				{
+					$getProducts->where('sw_product.type', $f_type_product);
 				}
 
 	    	$getProducts = $getProducts->get();
@@ -266,6 +299,11 @@ class ProductController extends Controller
 							}
 							if (Auth::user()->can('delete-product')) {
 								$actionHtml = $actionHtml." <a href='' class='delete' data-value='".$getProduct->product_id."' data-version='".$getProduct->version."' data-toggle='modal' data-target='.modal-delete'><span class='btn btn-xs btn-danger btn-sm' data-toggle='tooltip' data-placement='top' title='Delete'><i class='fa fa-trash'></i></span></a>";
+							}
+
+							if (Auth::user()->can('sort-number-product')) {
+								$actionHtml = $actionHtml." <a href='".route('product.sort-number-up',$getProduct->product_id)."'' class='btn btn-xs btn-info btn-sm' data-toggle='tooltip' data-placement='top' title='Sort Number Up'><i class='fa fa-arrow-up'></i></a>
+									<a href='".route('product.sort-number-down',$getProduct->product_id)."'' class='btn btn-xs btn-info btn-sm' data-toggle='tooltip' data-placement='top' title='Sort Number Down'><i class='fa fa-arrow-down'></i></a>";
 							}
 
 							return $actionHtml;

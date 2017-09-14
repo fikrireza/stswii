@@ -141,6 +141,12 @@
                 <option value="{{$list->provider_id}}" @if($request->f_provider == $list->provider_id) selected @endif>{{$list->provider_name}}</option>
             @endforeach
           </select>
+
+          <select name="f_type_product" class="form-control select_type_product" onchange="this.form.submit()">
+            <option value="">Filter Type Product</option>
+            <option value="PULSA" @if($request->f_type_product == 'PULSA') selected @endif>PULSA</option>
+            <option value="DATA" @if($request->f_type_product == 'DATA') selected @endif>DATA</option>          
+          </select>
         </form>
         <div class="ln_solid"></div>
 
@@ -153,6 +159,7 @@
               <th>Product Name</th>
               <th>Nominal</th>
               <th>Type Product</th>
+              <th>Sort Number</th>
               @can('activate-product')
               <th>Status</th>
               @endcan
@@ -161,6 +168,7 @@
           </thead>
           <tfoot>
             <td></td>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>
@@ -194,7 +202,7 @@ $(function() {
     $('#producttabel').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('product.yajra.getDatas') }}?f_provider={{ $request->f_provider }}",
+        ajax: "{{ route('product.yajra.getDatas') }}?f_provider={{ $request->f_provider }}&f_type_product={{ $request->f_type_product }}",
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},
             {data: 'provider_code'},
@@ -202,6 +210,7 @@ $(function() {
             {data: 'product_name'},
             {data: 'nominal'},
             {data: 'type'},
+            {data: 'sort_number'},
             @can('activate-product')
               {data: 'active', orderable: false, searchable: false},
             @endcan
@@ -224,6 +233,7 @@ $(function() {
             {data: 'product_name', name: 'Product Name'},
             {data: 'nominal', name: 'Nominal'},
             {data: 'type', name: 'Type Product'},
+            {data: 'sort_number', name: 'Short Number'},
             @can('activate-product')
               {data: 'active', name: 'Status', orderable: false, searchable: false},
             @endcan
@@ -247,6 +257,11 @@ $(function() {
 <script type="text/javascript">
 $(".select_provider").select2({
   placeholder: "Filter Provider",
+  allowClear: true
+});
+
+$(".select_type_product").select2({
+  placeholder: "Filter Type Product",
   allowClear: true
 });
 

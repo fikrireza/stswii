@@ -30,6 +30,32 @@ class AgentController extends Controller
       return view('agent.index');
   	}
 
+    function checkSaldo($clientId){
+      $client = new \GuzzleHttp\Client();
+          $res = $client->request('GET', 'http://localhost:9020/balanceByClient?clientId='.$clientId)
+          ->getbody();
+
+      $response = json_decode($res);
+
+      return response()->json([
+        'status' => $response->status,
+        'amount' => number_format($response->amount, 2)
+      ]);
+    }
+
+    function resetPin($clientId){
+      $client = new \GuzzleHttp\Client();
+          $res = $client->request('GET', 'http://localhost:9020/resetPin?clientId='.$clientId)
+          ->getbody();
+
+      $response = json_decode($res);
+      
+      return response()->json([
+        'status' => 'OK',
+        'pin' => $response->pin
+      ]);
+    }
+
   	function getDataTables(){
   		$index = Agent::select(
           'agent_id',
@@ -37,6 +63,7 @@ class AgentController extends Controller
           'phone_number',
           'address',
           'city',
+          'client_id',
           'active',
           'version'
         )
@@ -47,7 +74,8 @@ class AgentController extends Controller
         ->addColumn('slno', function ($index) use (&$start) {
             return $start++;
         })
-				->addColumn('action', function($index) {
+				->addColumn('action', function($index) {          
+
 					$html = '';
 					if (Auth::user()->can('update-agent')) {
 						$html .=
@@ -64,6 +92,18 @@ class AgentController extends Controller
             >
 							<span class=\"btn btn-xs btn-warning btn-sm\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Update\"><i class=\"fa fa-pencil\"></i></span>
 						</a>
+            <a 
+              class=\"check-saldo\" 
+              data-value='".$index->client_id."'  
+            >
+              <span class=\"btn btn-xs btn-primary btn-sm\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Check Saldo\"><i class=\"fa fa-dollar\"></i></span>
+            </a>
+            <a 
+              class=\"reset-pin\" 
+              data-value='".$index->client_id."'  
+            >
+              <span class=\"btn btn-xs btn-success btn-sm\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Reset Pin\"><i class=\"fa fa-repeat\"></i></span>
+            </a>
 						";
 					}
 					return $html;

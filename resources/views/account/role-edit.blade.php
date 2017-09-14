@@ -134,6 +134,9 @@
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[activate-product]" {{ in_array('activate-product',$can) ? 'checked="checked"' : '' }} value="true" /> Status
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[sort-number-product]" {{ in_array('sort-number-product',$can) ? 'checked="checked"' : '' }} value="true" /> Sort Number
           </label>
         </div>
       </div>

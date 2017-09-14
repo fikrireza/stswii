@@ -49,6 +49,64 @@
 </div>
 @endif
 
+<div class="modal fade modal-detail" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header alert-info">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel2">Detail Transaction</h4>
+      </div>
+      <div class="modal-body">
+        <form class="">
+          <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Agent Name</label>
+          <label class="control-label col-md-6">: <span id="agent-name"></span></label>
+        </div>
+        <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Agent Phone</label>
+          <label class="control-label col-md-6">: <span id="agent-phone"></span></label>
+        </div>
+        <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Transaction Date</label>
+          <label class="control-label col-md-6">: <span id="transaction-date"></span></label>
+        </div>
+        <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Ordered Product Code</label>
+          <label class="control-label col-md-6">: <span id="ordered-product-code"></span></label>
+        </div>
+        <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Product Price</label>
+          <label class="control-label col-md-6">: Rp. <span id="product-price"></span></label>
+        </div> 
+        <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Destination Phone</label>
+          <label class="control-label col-md-6">: <span id="destination-phone"></span></label>
+        </div>
+        <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Partner Product Code</label>
+          <label class="control-label col-md-6">: <span id="partner-product-code"></span></label>
+        </div>
+        <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Partner Code</label>
+          <label class="control-label col-md-6">: <span id="partner-code"></span></label>
+        </div>
+        <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Transaction Status</label>
+          <label class="control-label col-md-6">: <span id="transaction-status"></span></label>
+        </div>
+        <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Remark</label>
+          <label class="control-label col-md-6">: <span id="status-remark"></span></label>
+        </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <div class="page-title">
   <div class="title_left">
     <h3>All Inquiry Pesanan Agent <small></small></h3>
@@ -118,6 +176,7 @@
               <th>Partner Product Code</th>
               <th>Partner Code</th>
               <th>Transaction Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tfoot>
@@ -131,6 +190,7 @@
               <th></th>
               <td></td>
               <th></th>
+              <td></td>
               <td></td>
             </tr>
           </tfoot>
@@ -170,7 +230,8 @@ $(function() {
             {data: 'receiver_phone_number'},
             {data: 'partner_product_code'},
             {data: 'partner_pulsa_code'},
-            {data: 'status'}
+            {data: 'status'},
+            {data: 'action', orderable: false, searchable: false}
         ]
     });
 });
@@ -193,7 +254,8 @@ $(function() {
             {data: 'receiver_phone_number'},
             {data: 'partner_product_code'},
             {data: 'partner_pulsa_code'},
-            {data: 'status'}
+            {data: 'status'},
+            {data: 'action', orderable: false, searchable: false}
         ]
     });
 });
@@ -205,6 +267,34 @@ $(function() {
   $(".select_status").select2({
     placeholder: "Filter Status",
     allowClear: true
+  });
+
+  $(function(){
+    $('#producttabel').on('click','a.remark', function(){
+      /*var agent_name = ;
+      var agent_phone = ;
+      var transaction_date = ;
+      var ordered_product_code = ;
+      var product_price = ;
+      var destination_phone = ;
+      var partner_product_code = ;
+      var partner_code = ;
+      var transaction_status = ;
+      var status_remark = ;    
+      $('#remark-status').text(remark);*/
+      
+      $('#agent-name').text($(this).data('agent-name'));
+      $('#agent-phone').text($(this).data('agent-phone'));
+      $('#transaction-date').text($(this).data('transaction-date'));
+      $('#ordered-product-code').text($(this).data('ordered-product-code'));
+      $('#product-price').text($(this).data('product-price'));
+      $('#destination-phone').text($(this).data('destination-phone'));
+      $('#partner-product-code').text($(this).data('partner-product-code'));
+      $('#partner-code').text($(this).data('partner-code'));
+      $('#transaction-status').text($(this).data('transaction-status'));
+      $('#status-remark').text($(this).data('status-remark'));
+      
+    });
   });
 
   $('#f_start_date').daterangepicker({
