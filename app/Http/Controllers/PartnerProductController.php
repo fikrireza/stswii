@@ -249,9 +249,9 @@ class PartnerProductController extends Controller
 					});
 				}
 
-				return redirect()->route('partner-product.index')
-													->with('alret', $alret)
-													->with('berhasil', $info);
+				return redirect()->back()
+							->with('alret', $alret)
+							->with('berhasil', $info);
 		}
 
 
@@ -272,9 +272,9 @@ class PartnerProductController extends Controller
 					$getPartnerProduct->delete();
 				}
 
-				return redirect()->route('partner-product.index')
-												->with('alret', $alret)
-												->with('berhasil', $info);
+				return redirect()->back()
+							->with('alret', $alret)
+							->with('berhasil', $info);
 		}
 
 

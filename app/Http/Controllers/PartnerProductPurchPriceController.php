@@ -256,11 +256,11 @@ class PartnerProductPurchPriceController extends Controller
         $index = PartnerProductPurchPrice::find($id);
 
         if (!$index) {
-            return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data not exist.');
+            return redirect()->back()->with('gagal', 'Data not exist.');
         }
 
         if (strtotime('-1 day') >= strtotime($index->datetime_start) && $index->active != 'Y') {
-            return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Datetime Start is Expired.')->withInput();
+            return redirect()->back()->with('gagal', 'Datetime Start is Expired.')->withInput();
         }
 
         $checkData = PartnerProductPurchPrice::where('partner_product_id', $index->partner_product_id)
@@ -275,7 +275,7 @@ class PartnerProductPurchPriceController extends Controller
 
                 if(strtotime($list->datetime_start) >= strtotime($index->datetime_start))
                 {
-                    return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data is still active.');
+                    return redirect()->back()->with('gagal', 'Data is still active.');
                 }
 
                 if (strtotime($list->datetime_start) < strtotime($index->datetime_start) && strtotime($index->datetime_start) <= strtotime($list->datetime_end) && $index->active != 'Y') {
@@ -287,11 +287,11 @@ class PartnerProductPurchPriceController extends Controller
         }
 
         if ($index->version != $request->version) {
-            return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+            return redirect()->back()->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
         }
 
         if (date('YmdHis', strtotime($index->datetime_end)) < Carbon::now()->format('YmdHis') && $index->active != 'Y') {
-            return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data is outdate, can\'t to active again.');
+            return redirect()->back()->with('gagal', 'Data is outdate, can\'t to active again.');
         }
 
         if($update)
@@ -312,7 +312,7 @@ class PartnerProductPurchPriceController extends Controller
 
             $index->save();
 
-            return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Successfully Nonactive');
+            return redirect()->back()->with('berhasil', 'Successfully Nonactive');
         } else {
 
             $index->active          = 'Y';
@@ -324,7 +324,7 @@ class PartnerProductPurchPriceController extends Controller
 
             $index->save();
 
-            return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Successfully Activated ');
+            return redirect()->back()->with('berhasil', 'Successfully Activated ');
         }
     }
 
@@ -333,16 +333,16 @@ class PartnerProductPurchPriceController extends Controller
         $index = PartnerProductPurchPrice::find($id);
 
         if (!$index) {
-            return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Data not exist.');
+            return redirect()->back()->with('gagal', 'Data not exist.');
         }
 
         if ($index->version != $request->version) {
-            return redirect()->route('partner-product-purch-price.index')->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+            return redirect()->back()->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
         }
 
         $index->delete();
 
-        return redirect()->route('partner-product-purch-price.index')->with('berhasil', 'Successfully Deleted ');
+        return redirect()->back()->with('berhasil', 'Successfully Deleted ');
     }
 
     public function ajaxGetProductPartner($partner, $provider)
