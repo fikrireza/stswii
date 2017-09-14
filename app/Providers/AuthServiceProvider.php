@@ -278,9 +278,14 @@ class AuthServiceProvider extends ServiceProvider
 
     public function registerReportPolicies()
     {
-        Gate::define('report-supplier', function($user){
-          return $user->hasAccess(['report-supplier']);
+        Gate::define('report-supplier-pkp', function($user){
+          return $user->hasAccess(['report-supplier-pkp']);
         });
+
+        Gate::define('report-supplier-non-pkp', function($user){
+          return $user->hasAccess(['report-supplier-non-pkp']);
+        });
+
         Gate::define('report-agent', function($user){
           return $user->hasAccess(['report-agent']);
         });
@@ -289,6 +294,9 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('report-topup-deposit-partner', function($user){
           return $user->hasAccess(['report-topup-deposit-partner']);
+        });
+        Gate::define('report-inquiry-agent', function($user){
+          return $user->hasAccess(['report-inquiry-agent']);
         });
     }
 

@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-  <title>STS | Report Suppllier</title>
+  <title>STS | Report Suppllier Non PKP</title>
 @endsection
 
 @section('headscript')
@@ -57,9 +57,9 @@
   <div class="col-md-8 col-md-offset-2">
     <div class="x_panel">
       <div class="x_title">
-        <p>Filter Supplier</p>
+        <p>Filter Supplier Non PKP</p>
       </div>
-      <form action="{{ route('report.postBySupplier') }}" method="POST" class="form-horizontal form-label-left">
+      <form action="{{ route('report.postBySupplierNonPkp') }}" method="POST" class="form-horizontal form-label-left">
       {{ csrf_field() }}
       <div class="x_content">
         <div class="item form-group {{ $errors->has('uniqueCode') ? 'has-error' : ''}}">

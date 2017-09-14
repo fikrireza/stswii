@@ -275,7 +275,10 @@
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Report</label>
         <div class="col-md-6 col-sm-6 col-xs-12">
           <label>
-            <input type="checkbox" class="flat" name="permissions[report-supplier]" {{ (collect(old('permissions'))->contains('report-supplier')) ? 'checked="checked"' : '' }} value="true" /> Sales By Supplier
+            <input type="checkbox" class="flat" name="permissions[report-supplier-pkp]" {{ (collect(old('permissions'))->contains('report-supplier-pkp')) ? 'checked="checked"' : '' }} value="true" /> Sales By Supplier PKP
+          </label><br>
+           <label>
+            <input type="checkbox" class="flat" name="permissions[report-supplier-non-pkp]" {{ (collect(old('permissions'))->contains('report-supplier-non-pkp')) ? 'checked="checked"' : '' }} value="true" /> Sales By Supplier Non PKP
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[report-agent]" {{ (collect(old('permissions'))->contains('report-agent')) ? 'checked="checked"' : '' }} value="true" /> Sales By Agent
@@ -285,6 +288,9 @@
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[report-topup-deposit-partner]" {{ (collect(old('permissions'))->contains('report-topup-deposit-partner')) ? 'checked="checked"' : '' }} value="true" /> Topup Deposit Partner
+          </label><br>
+           <label>
+            <input type="checkbox" class="flat" name="permissions[report-inquiry-agent]" {{ (collect(old('permissions'))->contains('report-inquiry-agent')) ? 'checked="checked"' : '' }} value="true" /> Inquiry Pesanan Agent
           </label>
         </div>
       </div>

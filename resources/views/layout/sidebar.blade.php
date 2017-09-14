@@ -145,14 +145,17 @@
       <div class="menu_section">
         <h3>Extra</h3>
         <ul class="nav side-menu">
-          @if (Auth::user()->can('report-supplier') || Auth::user()->can('report-agent') || Auth::user()->can('report-provider') || Auth::user()->can('report-topup-deposit-partner'))
+          @if (Auth::user()->can('report-supplier') || Auth::user()->can('report-agent') || Auth::user()->can('report-provider') || Auth::user()->can('report-topup-deposit-partner') || Auth::user()->can('report-inquiry-agent') )
           <li class="{{ Route::is('report*') ? 'active' : '' }}">
             <a>
               <i class="fa fa-file-text-o"></i> Report <span class="fa fa-chevron-down"></span>
             </a>
             <ul class="nav child_menu" style="{{ Route::is('report*') ? 'display: block;' : '' }}">
-              @can('report-supplier')
-              <li class="{{ Route::is('report.bySupplier') ? 'current-page' : '' }}"><a href="{{ route('report.bySupplier') }}">Sales By Supplier</a></li>
+              @can('report-supplier-pkp')
+              <li class="{{ Route::is('report.bySupplierPkp') ? 'current-page' : '' }}"><a href="{{ route('report.bySupplierPkp') }}">Sales By Supplier PKP</a></li>
+              @endcan
+              @can('report-supplier-non-pkp')
+              <li class="{{ Route::is('report.bySupplierNonPkp') ? 'current-page' : '' }}"><a href="{{ route('report.bySupplierNonPkp') }}">Sales By Supplier Non PKP</a></li>
               @endcan
               @can('report-agent')
               <li class="{{ Route::is('report.byAgent') ? 'current-page' : '' }}"><a href="{{ route('report.byAgent') }}">Sales By Agent</a></li>
@@ -162,6 +165,9 @@
               @endcan
               @can('report-topup-deposit-partner')
               <li class="{{ Route::is('report.byTopUpDepositPartner') ? 'current-page' : '' }}"><a href="{{ route('report.byTopUpDepositPartner') }}">Topup Deposit Partner</a></li>
+              @endcan
+              @can('report-inquiry-agent')
+              <li class="{{ Route::is('inquiry-pesanan-agent') ? 'current-page' : '' }}"><a href="{{ route('report.inquiry-pesanan-agent-index') }}">Inquiry Pesanan Agent</a></li>
               @endcan
             </ul>
           </li>

@@ -296,7 +296,10 @@
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Report</label>
         <div class="col-md-6 col-sm-6 col-xs-12">
           <label>
-            <input type="checkbox" class="flat" name="permissions[report-supplier]" {{ in_array('report-supplier',$can) ? 'checked="checked"' : '' }} value="true" /> Sales By Supplier
+            <input type="checkbox" class="flat" name="permissions[report-supplier-pkp]" {{ in_array('report-supplier-pkp',$can) ? 'checked="checked"' : '' }} value="true" /> Sales By Supplier PKP
+          </label><br>
+           <label>
+            <input type="checkbox" class="flat" name="permissions[report-supplier-non-pkp]" {{ in_array('report-supplier-non-pkp',$can) ? 'checked="checked"' : '' }} value="true" /> Sales By Supplier Non PKP
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[report-agent]" {{ in_array('report-agent',$can) ? 'checked="checked"' : '' }} value="true" /> Sales By Agent
@@ -306,6 +309,9 @@
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[report-topup-deposit-partner]" {{ in_array('report-topup-deposit-partner',$can) ? 'checked="checked"' : '' }} value="true" /> Topup Deposit Partner
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-inquiry-agent]" {{ in_array('report-inquiry-agent',$can) ? 'checked="checked"' : '' }} value="true" /> Inquiry Pesanan Agent
           </label>
         </div>
       </div>
