@@ -42,7 +42,7 @@ class DepositNotification extends Command
      */
     public function handle()
     {
-        $checkBalance = PartnerDepositBalance::where('balance_amount', '<=', 2500000)->get();
+        $checkBalance = PartnerDepositBalance::join('sw_partner_pulsa', 'sw_partner_pulsa.partner_pulsa_id', '=', 'sw_paloma_deposit_balance.partner_id')->select('sw_partner_pulsa.partner_pulsa_code', 'sw_partner_pulsa.partner_pulsa_name', 'sw_paloma_deposit_balance.balance_amount')->where('sw_paloma_deposit_balance.balance_amount', '<=', 2500000)->get();
 
         $data = array([
                         'balanceAmount' => $checkBalance
