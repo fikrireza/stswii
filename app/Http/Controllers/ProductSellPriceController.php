@@ -255,11 +255,11 @@ class ProductSellPriceController extends Controller
         $index = ProductSellPrice::find($id);
 
         if (!$index) {
-            return redirect()->route('product-sell-price.index')->with('gagal', 'Data not exist.');
+            return redirect()->back()->with('gagal', 'Data not exist.');
         }
 
         if (strtotime('-1 day') >= strtotime($index->datetime_start) && $index->active != 'Y') {
-            return redirect()->route('product-sell-price.index')->with('gagal', 'Datetime Start is Expired.')->withInput();
+            return redirect()->back()->with('gagal', 'Datetime Start is Expired.')->withInput();
         }
 
         $checkData = ProductSellPrice::where('product_id', $index->product_id)
@@ -272,7 +272,7 @@ class ProductSellPriceController extends Controller
             foreach ($checkData as $list) {
                 if(strtotime($list->datetime_start) >= strtotime($index->datetime_start) && $index->active != 'Y')
                 {
-                    return redirect()->route('product-sell-price.index')->with('gagal', 'Data is still active.');
+                    return redirect()->back()->with('gagal', 'Data is still active.');
                 }
 
                 if (strtotime($list->datetime_start) < strtotime($index->datetime_start) && strtotime($index->datetime_start) <= strtotime($list->datetime_end) && $index->active != 'Y') {
@@ -284,11 +284,11 @@ class ProductSellPriceController extends Controller
         }
 
         if ($index->version != $request->version) {
-            return redirect()->route('product-sell-price.index')->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+            return redirect()->back()->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
         }
 
         if (date('YmdHis', strtotime($index->datetime_end)) < date('YmdHis') && $index->active != 'Y') {
-            return redirect()->route('product-sell-price.index')->with('gagal', 'Data is outdate, can\'t to active again.');
+            return redirect()->back()->with('gagal', 'Data is outdate, can\'t to active again.');
         }
 
         if ($update) {
@@ -308,7 +308,7 @@ class ProductSellPriceController extends Controller
 
             $index->save();
 
-            return redirect()->route('product-sell-price.index')->with('berhasil', 'Successfully Nonactive');
+            return redirect()->back()->with('berhasil', 'Successfully Nonactive');
         } else {
 
             $index->active          = 'Y';
@@ -320,7 +320,7 @@ class ProductSellPriceController extends Controller
 
             $index->save();
 
-            return redirect()->route('product-sell-price.index')->with('berhasil', 'Successfully Activated ');
+            return redirect()->back()->with('berhasil', 'Successfully Activated ');
         }
     }
 
@@ -329,16 +329,16 @@ class ProductSellPriceController extends Controller
         $index = ProductSellPrice::find($id);
 
         if (!$index) {
-            return redirect()->route('product-sell-price.index')->with('gagal', 'Data not exist.');
+            return redirect()->back()->with('gagal', 'Data not exist.');
         }
 
         if ($index->version != $request->version) {
-            return redirect()->route('product-sell-price.index')->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+            return redirect()->back()->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
         }
 
         $index->delete();
 
-        return redirect()->route('product-sell-price.index')->with('berhasil', 'Successfully Deleted ');
+        return redirect()->back()->with('berhasil', 'Successfully Deleted ');
     }
 
     public function yajraGetData(Request $request)

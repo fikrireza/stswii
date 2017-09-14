@@ -189,7 +189,7 @@ class ProductController extends Controller
 
 				if($index->version != $request->version)
 				{
-					return redirect()->route('product.index')->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+					return redirect()->back()->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
 				}
 
 				if ($index->active == "Y") {
@@ -203,7 +203,7 @@ class ProductController extends Controller
 
 					$index->save();
 
-					return redirect()->route('product.index')->with('berhasil', 'Successfully Nonactive');
+					return redirect()->back()->with('berhasil', 'Successfully Nonactive');
 				}else{
 
 					$index->active = "Y";
@@ -215,7 +215,7 @@ class ProductController extends Controller
 
 					$index->save();
 
-					return redirect()->route('product.index')->with('berhasil', 'Successfully Activated ');
+					return redirect()->back()->with('berhasil', 'Successfully Activated ');
 				}
 		}
 
@@ -223,7 +223,7 @@ class ProductController extends Controller
 		{
 				$index = Product::where('product_id', $id)->delete();
 
-				return redirect()->route('product.index')->with('berhasil', 'Successfully Deleted ');
+				return redirect()->back()->with('berhasil', 'Successfully Deleted ');
 		}
 
 		public function yajraGetData(Request $request)
