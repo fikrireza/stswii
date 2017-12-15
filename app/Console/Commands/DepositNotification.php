@@ -42,21 +42,25 @@ class DepositNotification extends Command
      */
     public function handle()
     {
-        $checkBalance = PartnerDepositBalance::join('sw_partner_pulsa', 'sw_partner_pulsa.partner_pulsa_id', '=', 'sw_paloma_deposit_balance.partner_id')->select('sw_partner_pulsa.partner_pulsa_code', 'sw_partner_pulsa.partner_pulsa_name', 'sw_paloma_deposit_balance.balance_amount')->where('sw_paloma_deposit_balance.balance_amount', '<=', 2500000)->get();
+        $checkBalance = PartnerDepositBalance::join('sw_partner_pulsa', 'sw_partner_pulsa.partner_pulsa_id', '=', 'sw_paloma_deposit_balance.partner_pulsa_id')
+											->select('sw_partner_pulsa.partner_pulsa_code', 'sw_partner_pulsa.partner_pulsa_name', 'sw_paloma_deposit_balance.balance_amount')
+											->where('sw_paloma_deposit_balance.balance_amount', '<=', 5000000)
+											->get();
+
+        if(count($checkBalance) == 0) return;
 
         $data = array([
                         'balanceAmount' => $checkBalance
                       ]);
 
-        Mail::send('email.DepositNotification', ['data' => $data], function($message) use ($data) {
-          $message->from('administrator@amadeo.id', 'Administrator')
-                  ->to('fikrirezaa@gmail.com', 'Fikri Reza')
-                  ->to('fourline66@gmail.com', 'Adam Surya')
+        Mail::send('email.depositNotification', ['data' => $data], function($message) use ($data) {
+            $recipients = ['beny@solusiteknologi.co.id', 'hells_my@yahoo.co.id'];
+          $message->to($recipients)
                   ->subject('Deposit Notification');
         });
 
         $this->info('Agent List Deposit Has Been Sent to Email!');
     }
 
-    // exceute cronjob with ->        * * * * * php /path/to/artisan notification:deposit >> /dev/null 2>&1
+    // exceute cronjob with ->        * * * * * php /path/to/artisan schedule:run >> /dev/null 2>&1
 }

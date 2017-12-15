@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\ProductSellPrice;
+use App\Models\ProductMlm;
+use App\Models\ProductSellPriceMlm;
 use App\Models\Provider;
 use Auth;
 use Excel;
@@ -11,8 +12,9 @@ use Illuminate\Http\Request;
 use Input;
 use Validator;
 use Yajra\Datatables\Facades\Datatables;
+use DB;
 
-class ProductSellPriceController extends Controller
+class ProductSellPriceMlmController extends Controller
 {
 
     /**
@@ -42,17 +44,19 @@ class ProductSellPriceController extends Controller
         ], $message);
 
         if ($validator->fails()) {
-            return redirect()->route('product-sell-price.index');
+            return redirect()->route('product-sell-price-mlm.index');
         }
 
-        return view('product-sell-price.index', compact('request', 'provider'));
+        return view('product-sell-price-mlm.index', compact('request', 'provider'));
     }
 
     public function tambah()
     {
-        $product = Product::get();
+        $product = DB::table('sw_product as a')
+                ->join('sw_product_mlm as b', 'b.product_id', '=', 'a.product_id' )
+                ->get();
 
-        return view('product-sell-price.tambah', compact('product'));
+        return view('product-sell-price-mlm.tambah', compact('product'));
     }
 
     public function bindProduct($id)
@@ -64,21 +68,23 @@ class ProductSellPriceController extends Controller
 
     public function store(Request $request)
     {
+
         $message = [
-            'product_id.required'            => 'This field is required.',
-            'gross_sell_price.required'      => 'This field is required.',
-            'tax_percentage.required_if'     => 'This field is required.',
-            'datetime_start.required'        => 'This field is required.',
-            // 'datetime_start.after_or_equal' => 'Higher Than Datetime End.',
-            // 'datetime_end.required'          => 'This field is required.',
+            'product_id.required'       => 'This field is required.',
+            'catalog_price.required'    => 'This field is required.',
+            'member_price.required'     => 'This field is required.',
+            'fee_ds_amount.required'    => 'This field is required.',
+            'pv'                        => 'This field is required.',
+            'datetime_start.required'   => 'This field is required.'
         ];
 
         $validator = Validator::make($request->all(), [
-            'product_id'       => 'required',
-            'gross_sell_price' => 'required',
-            'tax_percentage'   => 'required_if:flg_tax,Y',
-            'datetime_start'   => 'required',
-            // 'datetime_end'     => 'required',
+            'product_id'        => 'required',
+            'catalog_price'     => 'required',
+            'member_price'      => 'required',
+            'fee_ds_amount'     => 'required',
+            'pv'                => 'required',
+            'datetime_start'    => 'required'
         ], $message);
 
         $datetime_end = date('2037-12-01 08:00:00');
@@ -87,25 +93,25 @@ class ProductSellPriceController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        if (strtotime('-1 day') >= strtotime($request->datetime_start) && isset($request->active)) {
+        if (strtotime('-1 day') >= strtotime($request->datetime_start)) {
             return redirect()->back()->with('gagal', 'Datetime Start is Expired.')->withInput();
         }
 
-        $checkData = ProductSellPrice::where('product_id', $request->product_id)
+        $checkData = ProductSellPriceMlm::where('product_id', $request->product_id)
             ->where('active', 'Y')
-            ->get();
+            ->get();        
 
         $update_id = 0;
         $update    = 0;
         if (!empty($checkData)) {
             foreach ($checkData as $list) {
-                if(strtotime($list->datetime_start) >= strtotime($request->datetime_start) && isset($request->active))
+                if(strtotime($list->datetime_start) >= strtotime($request->datetime_start))
                 {
                     return redirect()->back()->with('gagal', 'Data is still active.')->withInput();
                 }
 
-                if (strtotime($list->datetime_start) < strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
-                    $update_id = $list->product_sell_price_id;
+                if (strtotime($list->datetime_start) < strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end)) {
+                    $update_id = $list->product_sell_price_mlm_id;
                     $update    = 1;
                     break;
                 }
@@ -113,101 +119,102 @@ class ProductSellPriceController extends Controller
         }
 
         if ($update) {
-            $index2               = ProductSellPrice::find($update_id);
+            $index2               = ProductSellPriceMlm::find($update_id);
             $index2->datetime_end = date('YmdHis', strtotime($request->datetime_start . ' -1 second'));
             $index2->update_datetime = date('YmdHis');
             $index2->save();
-        }
+        }        
 
-        $index = new ProductSellPrice;
+        $index = new ProductSellPriceMlm;
 
         $index->product_id       = $request->product_id;
-        $index->gross_sell_price = str_replace('.', '', $request->gross_sell_price);
-        $index->flg_tax          = isset($request->flg_tax) ? 'Y' : 'N';
-        $index->tax_percentage   = isset($request->flg_tax) ? $request->tax_percentage : 0;
+        $index->catalog_price    = str_replace('.', '', $request->catalog_price);
+        $index->member_price     = str_replace('.', '', $request->member_price);
+        $index->fee_ds_amount    = str_replace('.', '', $request->fee_ds_amount);
+        $index->pv               = $request->pv;       
         $index->datetime_start   = date('YmdHis', strtotime($request->datetime_start));
         $index->datetime_end     = date('YmdHis', strtotime($datetime_end));
 
-        $index->active = isset($request->active) ? 'Y' : 'N';
-        if (isset($request->active)) {
+        $index->active = 'Y';
+        $index->active_datetime     = date('YmdHis');
+        $index->non_active_datetime = '';
+        /*if (isset($request->active)) {
             $index->active_datetime     = date('YmdHis');
-            $index->non_active_datetime = '00000000000000';
+            $index->non_active_datetime = '';
         } else {
-            $index->active_datetime     = '00000000000000';
+            $index->active_datetime     = '';
             $index->non_active_datetime = date('YmdHis');
-        }
+        }*/
 
         $index->version         = 0;
         $index->create_datetime = date('YmdHis');
         $index->create_user_id  = Auth::id();
-        $index->update_datetime = '00000000000000';
-        $index->update_user_id  = 0;
+        $index->update_datetime = '';
+        $index->update_user_id  = -99;
 
         $index->save();
 
-        return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully saved.');
+        return redirect()->route('product-sell-price-mlm.index')->with('berhasil', 'Your data has been successfully saved.');
     }
 
-    public function ubah($id)
+    public function ubah($id) 
     {
-        $index = ProductSellPrice::find($id);
+        $index = ProductSellPriceMlm::find($id);
 
         if (!$index) {
-            return redirect()->route('product-sell-price.index')->with('gagal', 'Data not exist.');
+            return redirect()->route('product-sell-price-mlm.index')->with('gagal', 'Data not exist.');
         }
 
         $product = Product::get();
 
-        return view('product-sell-price.ubah', compact('index', 'product'));
+        return view('product-sell-price-mlm.ubah', compact('index', 'product'));
     }
 
     //not used
     public function update(Request $request)
     {
         $message = [
-            'product_id.required'            => 'This field is required.',
-            'gross_sell_price.required'      => 'This field is required.',
-            'tax_percentage.required_if'     => 'This field is required.',
-            'tax_percentage.numeric'         => 'Numeric Only.',
-            'datetime_start.required'        => 'This field is required.',
-            'datetime_start.before_or_equal' => 'Higher Than Datetime End.',
-            'datetime_end.required'          => 'This field is required.',
+            'product_id.required'       => 'This field is required.',
+            'catalog_price.required'    => 'This field is required.',
+            'member_price.required'     => 'This field is required.',
+            'fee_ds_amount.required'    => 'This field is required.',
+            'pv'                        => 'This field is required.'
         ];
 
         $validator = Validator::make($request->all(), [
-            'product_id'       => 'required',
-            'gross_sell_price' => 'required',
-            'tax_percentage'   => 'required_if:flg_tax,Y|numeric',
-            'datetime_start'   => 'required|before_or_equal:datetime_end',
-            'datetime_end'     => 'required',
+            'product_id'        => 'required',
+            'catalog_price'     => 'required',
+            'member_price'      => 'required',
+            'fee_ds_amount'     => 'required',
+            'pv'                => 'required'
         ], $message);
 
         if ($validator->fails()) {
-            return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->withErrors($validator)->withInput();
+            return redirect()->route('product-sell-price-mlm.ubah', ['id' => $request->product_sell_price_mlm_id])->withErrors($validator)->withInput();
         }
 
-        $index = ProductSellPrice::find($request->product_sell_price_id);
+        $index = ProductSellPriceMlm::find($request->product_sell_price_mlm_id);
 
         if (!$index) {
-            return redirect()->route('product-sell-price.index')->with('gagal', 'Data not exist.');
+            return redirect()->route('product-sell-price-mlm.index')->with('gagal', 'Data not exist.');
         }
 
-        if (strtotime('-1 day') >= strtotime($request->datetime_start) && isset($request->active)) {
-            return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Datetime Start is Expired.')->withInput();
-        }
+        /*if (strtotime('-1 day') >= strtotime($request->datetime_start) && isset($request->active)) {
+            return redirect()->route('product-sell-price-mlm.ubah', ['id' => $request->product_sell_price_mlm_id])->with('gagal', 'Datetime Start is Expired.')->withInput();
+        }*/
 
-        $checkData = ProductSellPrice::where('product_id', $request->product_id)
+       /* $checkData = ProductSellPriceMlm::where('product_id', $request->product_id)
             ->where('active', 'Y')
-            ->where('product_sell_price_id', '<>', $request->product_sell_price_id)
-            ->get();
+            ->where('product_sell_price_mlm_id', '<>', $request->product_sell_price_mlm_id)
+            ->get();*/
 
-        $update_id = 0;
+        /*$update_id = 0;
         $update    = 0;
         if (!empty($checkData)) {
             foreach ($checkData as $list) {
                 if(strtotime($list->datetime_start) >= strtotime($request->datetime_start) && isset($request->active))
                 {
-                    return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
+                    return redirect()->route('product-sell-price-mlm.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Data is still active.')->withInput();
                 }
 
                 if (strtotime($list->datetime_start) < strtotime($request->datetime_start) && strtotime($request->datetime_start) <= strtotime($list->datetime_end) && isset($request->active)) {
@@ -216,31 +223,38 @@ class ProductSellPriceController extends Controller
                     break;
                 }
             }
-        }
+        }*/
 
         if ($index->version != $request->version) {
-            return redirect()->route('product-sell-price.ubah', ['id' => $request->product_sell_price_id])->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
+            return redirect()->route('product-sell-price-mlm.ubah', ['id' => $request->product_sell_price_mlm_id])->with('gagal', 'Your data already updated by ' . $index->updatedBy->name . '.');
         }
 
-        if ($update) {
+        /*if (isset($request->active)) {
+            if (strtotime('-1 day') >= strtotime($index->datetime_start) && $index->active != 'Y') {
+                return redirect()->back()->with('gagal', 'Datetime Start is Expired.')->withInput();
+            }
+        }*/
+
+        /*if ($update) {
             $index2               = ProductSellPrice::find($update_id);
             $index2->datetime_end = date('YmdHis', strtotime($request->datetime_start . ' -1 second'));
             $index2->save();
-        }
+        }*/
 
         $index->product_id       = $request->product_id;
-        $index->gross_sell_price = str_replace('.', '', $request->gross_sell_price);
-        $index->flg_tax          = isset($request->flg_tax) ? 'Y' : 'N';
-        $index->tax_percentage   = isset($request->flg_tax) ? $request->tax_percentage : 0;
-        $index->datetime_start   = date('YmdHis', strtotime($request->datetime_start));
-        $index->datetime_end     = date('YmdHis', strtotime($request->datetime_end));
+        $index->catalog_price    = str_replace('.', '', $request->catalog_price);
+        $index->member_price     = str_replace('.', '', $request->member_price);
+        $index->fee_ds_amount    = str_replace('.', '', $request->fee_ds_amount);
+        $index->pv               = $request->pv;       
+        /*$index->datetime_start   = date('YmdHis', strtotime($request->datetime_start));
+        $index->datetime_end     = date('YmdHis', strtotime($request->datetime_end));*/
 
-        $index->active = isset($request->active) ? 'Y' : 'N';
+        /*$index->active = isset($request->active) ? 'Y' : 'N';
         if (isset($request->active)) {
             $index->active_datetime = date('YmdHis');
         } else {
             $index->non_active_datetime = date('YmdHis');
-        }
+        }*/
 
         $index->version += 1;
         $index->update_datetime = date('YmdHis');
@@ -248,13 +262,13 @@ class ProductSellPriceController extends Controller
 
         $index->save();
 
-        return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully updated.');
+        return redirect()->route('product-sell-price-mlm.index')->with('berhasil', 'Your data has been successfully updated.');
 
     }
 
-    public function active($id, Request $request)
+    /*public function active($id, Request $request)
     {
-        $index = ProductSellPrice::find($id);
+        $index = ProductSellPriceMlm::find($id);
 
         if (!$index) {
             return redirect()->back()->with('gagal', 'Data not exist.');
@@ -264,7 +278,7 @@ class ProductSellPriceController extends Controller
             return redirect()->back()->with('gagal', 'Datetime Start is Expired.')->withInput();
         }
 
-        $checkData = ProductSellPrice::where('product_id', $index->product_id)
+        $checkData = ProductSellPriceMlm::where('product_id', $index->product_id)
             ->where('active', 'Y')
             ->get();
 
@@ -278,7 +292,7 @@ class ProductSellPriceController extends Controller
                 }
 
                 if (strtotime($list->datetime_start) < strtotime($index->datetime_start) && strtotime($index->datetime_start) <= strtotime($list->datetime_end) && $index->active != 'Y') {
-                    $update_id = $list->product_sell_price_id;
+                    $update_id = $list->product_sell_price_mlm_id;
                     $update    = 1;
                     break;
                 }
@@ -294,7 +308,7 @@ class ProductSellPriceController extends Controller
         }
 
         if ($update) {
-            $index2               = ProductSellPrice::find($update_id);
+            $index2               = ProductSellPriceMlm::find($update_id);
             $index2->datetime_end = date('YmdHis', strtotime($index->datetime_start . ' -1 second'));
             $index2->save();
         }
@@ -324,11 +338,11 @@ class ProductSellPriceController extends Controller
 
             return redirect()->back()->with('berhasil', 'Successfully Activated ');
         }
-    }
+    }*/
 
     public function delete($id, Request $request)
     {
-        $index = ProductSellPrice::find($id);
+        $index = ProductSellPriceMlm::find($id);
 
         if (!$index) {
             return redirect()->back()->with('gagal', 'Data not exist.');
@@ -349,25 +363,27 @@ class ProductSellPriceController extends Controller
         $f_provider = $request->query('f_provider');
         $f_active   = $request->query('f_active');
 
-        $getDatas = ProductSellPrice::leftJoin('sw_product', 'sw_product.product_id', 'sw_product_sell_price.product_id')
+        $getDatas = ProductSellPriceMlm::leftJoin('sw_product_mlm', 'sw_product_mlm.product_id', 'sw_product_sell_price_mlm.product_id')
+            ->join('sw_product', 'sw_product.product_id', '=', 'sw_product_mlm.product_id')
             ->select([
                 'sw_product.product_name as product_name',
                 'sw_product.nominal as nominal',
-                'product_sell_price_id',
-                'gross_sell_price',
-                'flg_tax',
-                'tax_percentage',
+                'product_sell_price_mlm_id',
+                'catalog_price',
+                'member_price',
+                'fee_ds_amount',
+                'pv',
                 'datetime_start',
                 'datetime_end',
-                'sw_product_sell_price.active',
-                'sw_product_sell_price.version',
+                'sw_product_sell_price_mlm.active',
+                'sw_product_sell_price_mlm.version',
             ]);
 
         if ($f_provider != null) {
             $getDatas->where('sw_product.provider_id', $f_provider);
         }
         if ($f_active != null) {
-            $getDatas->where('sw_product_sell_price.active', $f_active);
+            $getDatas->where('sw_product_sell_price_mlm.active', $f_active);
         }
         if ($request->f_date != null) {
             $f_date = date('YmdHis', strtotime($request->f_date . ' 23:59:59'));
@@ -384,22 +400,14 @@ class ProductSellPriceController extends Controller
             ->editColumn('product_name', function ($getData) {
                 return $getData->product_name . ' - Rp. ' . number_format($getData->nominal, 2);
             })
-            ->editColumn('gross_sell_price', function ($getData) {
-                return 'Rp. ' . number_format($getData->gross_sell_price, 2);
+            ->editColumn('catalog_price', function ($getData) {
+                return 'Rp. ' . number_format($getData->catalog_price, 2);
             })
-            ->editColumn('flg_tax', function ($getData) {
-                if ($getData->flg_tax == 'Y') {
-                    return "Y";
-                } else {
-                    return "N";
-                }
+            ->editColumn('member_price', function ($getData) {
+                return 'Rp. ' . number_format($getData->member_price, 2);
             })
-            ->editColumn('tax_percentage', function ($getData) {
-                if ($getData->flg_tax == 'Y') {
-                    return $getData->tax_percentage . "%";
-                } else {
-                    return "0%";
-                }
+            ->editColumn('fee_ds_amount', function ($getData) {
+                return 'Rp. ' . number_format($getData->fee_ds_amount, 2);
             })
             ->editColumn('datetime_start', function ($getData) {
                 return date('Y-m-d H:i:s', strtotime($getData->datetime_start));
@@ -407,40 +415,59 @@ class ProductSellPriceController extends Controller
             ->editColumn('datetime_end', function ($getData) {
                 return date('Y-m-d H:i:s', strtotime($getData->datetime_end));
             })
+            ->editColumn('active', function ($getData) {
+                if ($getData->active == 'Y') {
+                    return "
+                        <span
+                                class='label label-success'
+                                data-toggle='tooltip'
+                                data-placement='top'
+                                title='Active'
+                            >Active</span>";
+                } else {
+                    return "
+                        <span
+                                class='label label-danger'
+                                data-toggle='tooltip'
+                                data-placement='top'
+                                title='Non Active'
+                            >Non Active</span>";
+                }
+            })
             ->addColumn('action', function ($getData) {
                 $actionHtml = '';
-                /*if (Auth::user()->can('update-product-sell-price')) {
+                /*if (Auth::user()->can('update-product-sell-price-mlm')) {
                     $actionHtml = $actionHtml . "
-                        <a href='" . route('product-sell-price.ubah', $getData->product_sell_price_id) . "'' class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Update'><i class='fa fa-pencil'></i></a>";
+                        <a href='" . route('product-sell-price-mlm.ubah', $getData->product_sell_price_mlm_id) . "'' class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Update'><i class='fa fa-pencil'></i></a>";
                 }*/
-                if (Auth::user()->can('create-product-sell-price')) {
+                if (Auth::user()->can('create-product-sell-price-mlm')) {
                     $actionHtml = $actionHtml . "
-                        <a href='" . route('product-sell-price.addWithData', $getData->product_sell_price_id) . "'' class='btn btn-xs btn-success btn-sm' data-toggle='tooltip' data-placement='top' title='Add ".$getData->product_name."'><i class='fa fa-plus'></i></a>";
+                        <a href='" . route('product-sell-price-mlm.addWithData', $getData->product_sell_price_mlm_id) . "'' class='btn btn-xs btn-success btn-sm' data-toggle='tooltip' data-placement='top' title='Add ".$getData->product_name."'><i class='fa fa-plus'></i></a>";
                 }
-                if (Auth::user()->can('activate-product-sell-price')) {
+                /*if (Auth::user()->can('activate-product-sell-price-mlm')) {
                     if ($getData->active == 'Y') {
-                        $actionHtml = $actionHtml . "<a href='' class='unpublish' data-value='" . $getData->product_sell_price_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-nonactive'><span class='btn btn-dark btn-xs' data-toggle='tooltip' data-placement='top' title='Non Active'><i class='fa fa-times'></i></span></a>";
+                        $actionHtml = $actionHtml . "<a href='' class='unpublish' data-value='" . $getData->product_sell_price_mlm_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-nonactive'><span class='btn btn-dark btn-xs' data-toggle='tooltip' data-placement='top' title='Non Active'><i class='fa fa-times'></i></span></a>";
                     } else {
-                        $actionHtml = $actionHtml . "<a href='' class='publish' data-value='" . $getData->product_sell_price_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-active'><span class='btn btn-success btn-xs' data-toggle='tooltip' data-placement='top' title='Active'><i class='fa fa-check'></i></span></a>";
+                        $actionHtml = $actionHtml . "<a href='' class='publish' data-value='" . $getData->product_sell_price_mlm_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-active'><span class='btn btn-success btn-xs' data-toggle='tooltip' data-placement='top' title='Active'><i class='fa fa-check'></i></span></a>";
                     }
 
-                }
-                if (Auth::user()->can('delete-product-sell-price')) {
-                    $actionHtml = $actionHtml . "<a href='' class='delete' data-value='" . $getData->product_sell_price_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-delete'>
+                }*/
+                if (Auth::user()->can('delete-product-sell-price-mlm')) {
+                    $actionHtml = $actionHtml . "<a href='' class='delete' data-value='" . $getData->product_sell_price_mlm_id . "' data-version='" . $getData->version . "' data-toggle='modal' data-target='.modal-delete'>
                             <span class='btn btn-xs btn-danger btn-sm' data-toggle='tooltip' data-placement='top' title='Delete'><i class='fa fa-trash'></i></span>
                         </a>";
                 }
                 return $actionHtml;
             });
 
-        if (Auth::user()->can('activate-product-sell-price')) {
+        /*if (Auth::user()->can('activate-product-sell-price-mlm')) {
             $Datatables = $Datatables->editColumn('active', function ($getData) {
                 if ($getData->active == 'Y') {
                     return "
                         <a
                             href=''
                             class='unpublish'
-                            data-value='" . $getData->product_sell_price_id . "'
+                            data-value='" . $getData->product_sell_price_mlm_id . "'
                             data-version='" . $getData->version . "'
                             data-toggle='modal'
                             data-target='.modal-nonactive'
@@ -457,7 +484,7 @@ class ProductSellPriceController extends Controller
                         <a
                             href=''
                             class='publish'
-                            data-value='" . $getData->product_sell_price_id . "'
+                            data-value='" . $getData->product_sell_price_mlm_id . "'
                             data-version='" . $getData->version . "'
                             data-toggle='modal'
                             data-target='.modal-active'
@@ -471,7 +498,7 @@ class ProductSellPriceController extends Controller
                         </a><br>";
                 }
             });
-        }
+        }*/
 
         $Datatables = $Datatables
             ->escapeColumns(['*'])
@@ -482,26 +509,28 @@ class ProductSellPriceController extends Controller
 
     public function upload()
     {
-        return view('product-sell-price.masal');
+        return view('product-sell-price-mlm.masal');
     }
 
     public function template()
     {
-        $getProduct = Product::join('sw_provider', 'sw_provider.provider_id', '=', 'sw_product.provider_id')
+        $getProduct = ProductMlm::join('sw_product', 'sw_product.product_id', 'sw_product_mlm.product_id')
+            ->join('sw_provider', 'sw_provider.provider_id', '=', 'sw_product.provider_id')
             ->select('sw_product.product_code', 'sw_product.product_name', 'sw_product.nominal', 'sw_provider.provider_name', 'sw_product.active')
             ->orderBy('sw_provider.provider_name', 'asc')
             ->get()
             ->toArray();
 
-        return Excel::create('Template Product Sell Price Import', function ($excel) use ($getProduct) {
+        return Excel::create('Template Product Sell Price Mlm Import', function ($excel) use ($getProduct) {
             $excel->sheet('Data-Import', function ($sheet) {
-                $sheet->row(1, array('product_code', 'gross_sell_price', 'tax_percentage', 'datetime_start', 'active'));
+                $sheet->row(1, array('product_code', 'catalog_price', 'member_price', 'fee_ds_amount', 'pv', 'datetime_start'));
                 $sheet->setColumnFormat(array(
                     'A' => '',
                     'B' => '0.00',
                     'C' => '0.00',
-                    'D' => 'YYYY-MM-DD HH:mm:ss',
-                    'E' => '',
+                    'D' => '0.00',
+                    'E' => '0',
+                    'F' => 'YYYY-MM-DD HH:mm:ss'                    
                 ));
             });
 
@@ -509,11 +538,11 @@ class ProductSellPriceController extends Controller
                 $sheet->fromArray($getProduct, null, 'A6', true);
                 $sheet->row(1, array('Example'));
                 $sheet->mergeCells('A1:E1');
-                $sheet->row(2, array('product_code', 'gross_sell_price', 'tax_percentage', 'datetime_start', 'active'));
-                $sheet->row(3, array('PRO1', '45000', '10', '2017-07-01 12:00:00', 'Y'));
+                $sheet->row(2, array('product_code', 'catalog_price', 'member_price', 'fee_ds_amount', 'pv', 'datetime_start'));
+                $sheet->row(3, array('PRO1', '45000', '45000', '2000', '50', '2017-07-01 12:00:00'));
                 $sheet->row(5, array('Data Product'));
                 $sheet->mergeCells('A5:C5');
-                $sheet->row(6, array('product_code', 'product_name', 'nominal', 'provider_name', 'active'));
+                $sheet->row(6, array('product_code', 'product_name', 'nominal', 'provider_name'));
                 $sheet->setAllBorders('thin');
                 $sheet->setFreeze('A7');
 
@@ -544,11 +573,13 @@ class ProductSellPriceController extends Controller
                 foreach ($data as $key) {
                     $collect[] = [
                         'product_code'     => $key->product_code,
-                        'gross_sell_price' => $key->gross_sell_price,
-                        'tax_percentage'   => $key->tax_percentage,
+                        'catalog_price'    => $key->catalog_price,
+                        'member_price'     => $key->member_price,
+                        'fee_ds_amount'    => $key->fee_ds_amount,
+                        'pv'               => $key->pv,
                         'datetime_start'   => $key->datetime_start,
-                        'datetime_end'     => $key->datetime_end,
-                        'active'           => $key->active,
+                        //'datetime_end'     => $key->datetime_end,
+                        //'active'           => $key->active,
                     ];
                 }
 
@@ -556,13 +587,13 @@ class ProductSellPriceController extends Controller
 
                     $collect = collect($collect);
 
-                    return view('product-sell-price.masal', compact('collect'));
+                    return view('product-sell-price-mlm.masal', compact('collect'));
                 }
             } else {
-                return view('product-sell-price.masal')->with('gagal', 'Please Download Template');
+                return view('product-sell-price-mlm.masal')->with('gagal', 'Please Download Template');
             }
         } else {
-            return view('product-sell-price.masal')->with('gagal', 'Please Select Template');
+            return view('product-sell-price-mlm.masal')->with('gagal', 'Please Select Template');
         }
     }
 
@@ -577,11 +608,13 @@ class ProductSellPriceController extends Controller
                 foreach ($data as $key) {
                     $collect[] = [
                         'product_code'     => $key->product_code,
-                        'gross_sell_price' => $key->gross_sell_price,
-                        'tax_percentage'   => $key->tax_percentage,
+                        'catalog_price'    => $key->catalog_price,
+                        'member_price'     => $key->member_price,
+                        'fee_ds_amount'    => $key->fee_ds_amount,
+                        'pv'               => $key->pv,
                         'datetime_start'   => $key->datetime_start,
                         'datetime_end'     => $key->datetime_end,
-                        'active'           => $key->active,
+                        //'active'           => $key->active,
                     ];
                 }
 
@@ -589,10 +622,10 @@ class ProductSellPriceController extends Controller
                     $collect = collect($collect);
                 }
             } else {
-                return view('product-sell-price.masal')->with('gagal', 'Please Download Template');
+                return view('product-sell-price-mlm.masal')->with('gagal', 'Please Download Template');
             }
         } else {
-            return view('product-sell-price.masal')->with('gagal', 'Please Select Template');
+            return view('product-sell-price-mlm.masal')->with('gagal', 'Please Select Template');
         }
 
         $datetime_end     = '2037-12-31 23:59:59';
@@ -608,7 +641,7 @@ class ProductSellPriceController extends Controller
             $product = Product::where('product_code', strtoupper($list['product_code']))->first();
 
             if ($product) {
-                $checkData = ProductSellPrice::where('product_id', $product->product_id)
+                $checkData = ProductSellPriceMlm::where('product_id', $product->product_id)
                     ->where('active', 'Y')
                     ->get();
             } else {
@@ -618,16 +651,30 @@ class ProductSellPriceController extends Controller
                 $skip = 1;
             }
 
-            if ($list['gross_sell_price'] == '') {
+            if ($list['catalog_price'] == '') {
                 if (!$skip) {
-                    $message = '<h4><span class="label label-danger">Gross Sell Price is empty</span></h4>';
+                    $message = '<h4><span class="label label-danger">Catalog Price is empty</span></h4>';
                 }
                 $skip = 1;
             }
 
-            if ($list['tax_percentage'] == '') {
+            if ($list['member_price'] == '') {
                 if (!$skip) {
-                    $message = '<h4><span class="label label-danger">Tax Percentage is empty</span></h4>';
+                    $message = '<h4><span class="label label-danger">Member Price is empty</span></h4>';
+                }
+                $skip = 1;
+            }
+
+            if ($list['fee_ds_amount'] == '') {
+                if (!$skip) {
+                    $message = '<h4><span class="label label-danger">Fee DS Amount is empty</span></h4>';
+                }
+                $skip = 1;
+            }
+
+            if ($list['pv'] == '') {
+                if (!$skip) {
+                    $message = '<h4><span class="label label-danger">PV is empty</span></h4>';
                 }
                 $skip = 1;
             }
@@ -647,7 +694,7 @@ class ProductSellPriceController extends Controller
             }
 
 
-            if ($time_commit >= strtotime($list['datetime_start']) && strtoupper($list['active']) == 'Y') {
+            if ($time_commit >= strtotime($list['datetime_start'])) {
                 if (!$skip) {
                     $message = '<h4><span class="label label-danger">Datetime Start is Expired</span></h4>';
                 }
@@ -657,12 +704,12 @@ class ProductSellPriceController extends Controller
             if (!empty($checkData)) {
                 foreach ($checkData as $list2) {
 
-                    if (strtotime($list2->datetime_start) < strtotime($list['datetime_start']) && strtotime($list['datetime_start']) <= strtotime($list2->datetime_end) && strtoupper($list['active']) == 'Y') {
-                        $update_id = $list2->product_sell_price_id;
+                    if (strtotime($list2->datetime_start) < strtotime($list['datetime_start']) && strtotime($list['datetime_start']) <= strtotime($list2->datetime_end)) {
+                        $update_id = $list2->product_sell_price_mlm_id;
                         $update    = 1;
                     }
 
-                    if(strtotime($list2->datetime_start) >= strtotime($list['datetime_start']) && strtoupper($list['active']) == 'Y')
+                    if(strtotime($list2->datetime_start) >= strtotime($list['datetime_start']))
                     {
                         if (!$skip) {
                             $message = '<h4><span class="label label-danger">Data is still active</span></h4>';
@@ -673,49 +720,54 @@ class ProductSellPriceController extends Controller
             }
 
             if ($update && !$skip) {
-                $index               = ProductSellPrice::find($update_id);
+                $index               = ProductSellPriceMlm::find($update_id);
                 $index->datetime_end = date('YmdHis', strtotime($list['datetime_start'] . ' -1 second'));
                 $index->save();
             }
 
             if (!$skip) {
-                ProductSellPrice::insert(
+                ProductSellPriceMlm::insert(
                     [
                         "product_id"          => $product->product_id,
-                        "gross_sell_price"    => $list['gross_sell_price'],
-                        "flg_tax"             => $list['tax_percentage'] > 0 ? 'Y' : 'N',
-                        "tax_percentage"      => $list['tax_percentage'],
+                        "catalog_price"       => $list['catalog_price'],
+                        "member_price"        => $list['member_price'],
+                        "fee_ds_amount"       => $list['fee_ds_amount'],
+                        "pv"                  => $list['pv'],                    
                         "datetime_start"      => date('YmdHis', strtotime($list['datetime_start'])),
                         "datetime_end"        => date('YmdHis', strtotime($datetime_end)),
                         "create_user_id"      => Auth::id(),
-                        "active"              => strtoupper($list['active']),
-                        "active_datetime"     => strtoupper($list['active']) == 'Y' ? date('YmdHis') : '00000000000000',
-                        "non_active_datetime" => strtoupper($list['active']) != 'Y' ? date('YmdHis') : '00000000000000',
+                        "active"              => 'Y',
+                        "active_datetime"     => date('YmdHis'),
+                        //"non_active_datetime" => strtoupper($list['active']) != 'Y' ? date('YmdHis') : '',
                         "version"             => 0,
                         "create_datetime"     => date('YmdHis'),
                         "create_user_id"      => Auth::id(),
-                        "update_datetime"     => '00000000000000',
-                        "update_user_id"      => 0,
+                        "update_datetime"     => '',
+                        "update_user_id"      => -99,
                     ]);
 
                 $pass[] = [
                     'row'              => $row++,
                     'product_code'     => $list['product_code'],
-                    'gross_sell_price' => $list['gross_sell_price'],
-                    'tax_percentage'   => $list['tax_percentage'],
+                    'catalog_price'    => $list['catalog_price'],
+                    'member_price'     => $list['member_price'],
+                    'fee_ds_amount'    => $list['fee_ds_amount'],
+                    'pv'               => $list['pv'],
                     'datetime_start'   => $list['datetime_start'],
                     'datetime_end'     => $datetime_end,
-                    'active'           => $list['active'],
+                    'active'           => 'Y',
                 ];
             } else {
                 $error[] = [
                     'row'              => $row++,
                     'product_code'     => $list['product_code'],
-                    'gross_sell_price' => $list['gross_sell_price'],
-                    'tax_percentage'   => $list['tax_percentage'],
+                    'catalog_price'    => $list['catalog_price'],
+                    'member_price'     => $list['member_price'],
+                    'fee_ds_amount'    => $list['fee_ds_amount'],
+                    'pv'               => $list['pv'],
                     'datetime_start'   => $list['datetime_start'],
                     'datetime_end'     => $datetime_end,
-                    'active'           => $list['active'],
+                    'active'           => 'Y',
                     'message'          => $message,
                 ];
             }
@@ -731,10 +783,10 @@ class ProductSellPriceController extends Controller
                 $pass = '';
             }
 
-            return view('product-sell-price.masal', compact('error', 'pass'));
+            return view('product-sell-price-mlm.masal', compact('error', 'pass'));
         }
 
-        return redirect()->route('product-sell-price.index')->with('berhasil', 'Your data has been successfully uploaded.')->with(compact('error'));
+        return redirect()->route('product-sell-price-mlm.index')->with('berhasil', 'Your data has been successfully uploaded.')->with(compact('error'));
 
     }
 }

@@ -179,7 +179,7 @@
                 <td>{{ date('Y-m-d H:i:s', strtotime($list->uniqueCodeDate)) }}</td>
                 <td>{{ date('Y-m-d H:i:s', strtotime($list->confirmDate)) }}</td>
                 @can('read-deposit-reversal')
-                <td><a class="confirm" data-clientid="{{$list->clientId}}" data-uniquecode="{{$list->uniqueCode}}" data-uniquecodedate="{{$list->uniqueCodeDate}}" data-toggle='modal' data-target='.modal-form-confirm'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Reversal'>Void</span></a></td>
+                <td><a class="confirm" data-clientid="{{$list->clientId}}" data-uniquecode="{{$list->uniqueCode}}" data-uniquecodedate="{{$list->uniqueCodeDate}}" data-refno="{{$list->refNo}}" data-toggle='modal' data-target='.modal-form-confirm'><span class='btn btn-xs btn-warning btn-sm' data-toggle='tooltip' data-placement='top' title='Reversal'>Void</span></a></td>
                 @endcan
               @endforeach
             </tbody>
@@ -211,8 +211,9 @@
       var clientId        = $(this).data('clientid');
       var uniqueCode      = $(this).data('uniquecode');
       var uniqueCodeDate  = $(this).data('uniquecodedate');
+      var refNo  		  = $(this).data('refno');
       $("#confirm_clientId").val(clientId);
-      $("#confirm_refno").val(uniqueCode+uniqueCodeDate);
+      $("#confirm_refno").val(refNo);
     });
   });
   @endcan

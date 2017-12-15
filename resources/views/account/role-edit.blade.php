@@ -116,6 +116,7 @@
           </label>
         </div>
       </div>
+
       <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product</label>
@@ -142,6 +143,21 @@
       </div>
       <div class="ln_solid"></div>
       <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product Mlm</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-product-mlm]" {{ in_array('read-product-mlm',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[create-product-mlm]" {{ in_array('create-product-mlm',$can) ? 'checked="checked"' : '' }} value="true"/> Create
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[delete-product-mlm]" {{ in_array('delete-product-mlm',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label>
+        </div>
+      </div>
+      <div class="ln_solid"></div>
+      <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product Sell Price</label>
         <div class="col-md-6 col-sm-6 col-xs-12">
           <label>
@@ -161,6 +177,26 @@
           </label>
         </div>
       </div>
+
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product Sell Price Mlm</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-product-sell-price-mlm]" {{ in_array('read-product-sell-price-mlm',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[create-product-sell-price-mlm]" {{ in_array('create-product-sell-price-mlm',$can) ? 'checked="checked"' : '' }} value="true"/> Create
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[update-product-sell-price-mlm]" {{ in_array('update-product-sell-price-mlm',$can) ? 'checked="checked"' : '' }} value="true" /> Update
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[delete-product-sell-price-mlm]" {{ in_array('delete-product-sell-price-mlm',$can) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label>
+        </div>
+      </div>
+
       <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Supplier Pulsa</label>
@@ -258,6 +294,48 @@
           </label>
         </div>
       </div>
+
+
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Salesman</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-salesman]" {{ in_array('read-salesman',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[create-salesman]" {{ in_array('create-salesman',$can) ? 'checked="checked"' : '' }} value="true"/> Create
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[update-salesman]" {{ in_array('update-salesman',$can) ? 'checked="checked"' : '' }} value="true"/> Update
+          </label>
+          <br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[activate-salesman]" {{ in_array('activate-salesman',$can) ? 'checked="checked"' : '' }} value="true"/> Status
+          </label>
+        </div>
+      </div>
+
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Sales Deposit Transaction</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-sales-deposit-transaction]" {{ in_array('read-sales-deposit-transaction',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>          
+          <label>
+            <input type="checkbox" class="flat" name="permissions[update-sales-deposit-transaction]" {{ in_array('update-sales-deposit-transaction',$can) ? 'checked="checked"' : '' }} value="true"/> Update
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[set-sudah-setor-sales-deposit-transaction]" {{ in_array('set-sudah-setor-sales-deposit-transaction',$can) ? 'checked="checked"' : '' }} value="true"/> Set Sudah Setor
+          </label><br>
+           <label>
+            <input type="checkbox" class="flat" name="permissions[set-belum-setor-sales-deposit-transaction]" {{ in_array('set-belum-setor-sales-deposit-transaction',$can) ? 'checked="checked"' : '' }} value="true"/> Set Belum Setor
+          </label>
+        </div>
+      </div>
+
+
       <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Deposit Confirm</label>
@@ -294,6 +372,17 @@
           </label>
         </div>
       </div>
+
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Inquiry Mutasi Rekening Mandiri</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-inquiry-mutasi-rekening-mandiri]" {{ in_array('read-inquiry-mutasi-rekening-mandiri',$can) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label>
+        </div>
+      </div>
+
       <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Report</label>
@@ -308,10 +397,16 @@
             <input type="checkbox" class="flat" name="permissions[report-agent]" {{ in_array('report-agent',$can) ? 'checked="checked"' : '' }} value="true" /> Sales By Agent
           </label><br>
           <label>
+            <input type="checkbox" class="flat" name="permissions[report-agent-mlm]" {{ in_array('report-agent-mlm',$can) ? 'checked="checked"' : '' }} value="true" /> Sales By Agent MLM
+          </label><br>
+          <label>
             <input type="checkbox" class="flat" name="permissions[report-provider]" {{ in_array('report-provider',$can) ? 'checked="checked"' : '' }} value="true" /> Sales By Provider
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[report-topup-deposit-partner]" {{ in_array('report-topup-deposit-partner',$can) ? 'checked="checked"' : '' }} value="true" /> Topup Deposit Partner
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-deposit-harian-agent]" {{ in_array('report-deposit-harian-agent',$can) ? 'checked="checked"' : '' }} value="true" /> Deposit Harian Agent
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[report-inquiry-agent]" {{ in_array('report-inquiry-agent',$can) ? 'checked="checked"' : '' }} value="true" /> Inquiry Pesanan Agent
@@ -324,9 +419,38 @@
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[report-saldo-deposit-agent]" {{ in_array('report-saldo-deposit-agent',$can) ? 'checked="checked"' : '' }} value="true" /> Saldo Deposit Agent
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-sales-deposit]" {{ in_array('report-sales-deposit',$can) ? 'checked="checked"' : '' }} value="true" /> Sales Deposit
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-agent-member-paloma]" {{ in_array('report-agent-member-paloma',$can) ? 'checked="checked"' : '' }} value="true" /> Agent Member Paloma
+          </label><br>          
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-data-agent-not-active]" {{ in_array('report-data-agent-not-active',$can) ? 'checked="checked"' : '' }} value="true" /> Data Agent Tidak Aktif  
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-statistik-transaksi-error]" {{ in_array('report-statistik-transaksi-error',$can) ? 'checked="checked"' : '' }} value="true" /> Statistik Transaksi Error
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-perubahan-status-manual]" {{ in_array('report-perubahan-status-manual',$can) ? 'checked="checked"' : '' }} value="true" /> Report Perubahan Status Manual
           </label>
         </div>
       </div>
+
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Inquiry Pesanan Agent</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[set-sukses-inquiry-pesanan-agent]" {{ in_array('set-sukses-inquiry-pesanan-agent',$can) ? 'checked="checked"' : '' }} value="true" /> Set Sukses
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[set-gagal-inquiry-pesanan-agent]" {{ in_array('set-gagal-inquiry-pesanan-agent',$can) ? 'checked="checked"' : '' }} value="true" /> Set Gagal
+          </label>
+        </div>
+      </div>
+
       <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Users</label>
@@ -348,6 +472,7 @@
           </label>
         </div>
       </div>
+
       <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Roles</label>

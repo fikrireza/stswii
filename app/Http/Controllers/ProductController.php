@@ -236,31 +236,40 @@ class ProductController extends Controller
 				return redirect()->back()->with('berhasil', 'Successfully Deleted ');
 		}
 
-		public function sortNumberUp($id)
-		{
-				$index = Product::find($id);
-				$index->sort_number +=1;
-				$index->version += 1;
-				$index->update_datetime = date('YmdHis');
-				$index->update_user_id = Auth::id();
-				$index->save();
-				return redirect()->back()->with('berhasil', 'Successfully Add Sort Number ');
-		}
+		public function editSortNumber(Request $request)
+		{	
+			$message = [
+	  			'sort_number.required' => 'This field required',
+	  			'sort_number.numeric' => 'This field must be number',
+	  			'sort_number.min' => 'Minimum value must be 1'
+	  		];
 
-		public function sortNumberDown($id)
-		{
-				$index = Product::find($id);
+	  		$validator = Validator::make($request->all(), [  			
+	  			'sort_number' => 'required|numeric|min:1'
+	  		], $message);
 
-				if ( $index->sort_number == 1) {
-					return redirect()->back()->with('gagal', 'Sort Number can\'t be reduced anymore ');
-				}else{
-					$index->sort_number -=1;
-					$index->version += 1;
-					$index->update_datetime = date('YmdHis');
-					$index->update_user_id = Auth::id();
-					$index->save();
-					return redirect()->back()->with('berhasil', 'Successfully Reduce Sort Number ');
-				}
+	  		if($validator->fails())
+	  		{
+	  			return redirect()->back()->withErrors($validator)->withInput()->with('update-false', 'Something Errors');
+	  		}
+
+	  		$index = Product::find($request->product_id);
+
+	  		if($index->version != $request->version)
+	  		{
+	  			return redirect()->back()->with('update-false', 'Your data already updated by ' . $index->updatedBy->name . '.');
+	  		}
+
+	  		$index->sort_number      = $request->sort_number;
+	  		$index->version += 1;
+	  		$index->update_datetime = date('YmdHis');
+	  		$index->update_user_id = Auth::id();
+
+	  		$index->save();
+
+	  		return redirect()->back()
+	  			->with('alert', 'alert-success')
+	  			->with('berhasil', 'Sort number been successfully updated.');				
 		}
 
 		public function yajraGetData(Request $request)
@@ -312,8 +321,7 @@ class ProductController extends Controller
 							}
 
 							if (Auth::user()->can('sort-number-product')) {
-								$actionHtml = $actionHtml." <a href='".route('product.sort-number-up',$getProduct->product_id)."'' class='btn btn-xs btn-info btn-sm' data-toggle='tooltip' data-placement='top' title='Sort Number Up'><i class='fa fa-arrow-up'></i></a>
-									<a href='".route('product.sort-number-down',$getProduct->product_id)."'' class='btn btn-xs btn-info btn-sm' data-toggle='tooltip' data-placement='top' title='Sort Number Down'><i class='fa fa-arrow-down'></i></a>";
+								$actionHtml = $actionHtml." <a href='' class='sort-number btn btn-xs btn-info btn-sm' data-value='".$getProduct->product_id."' data-sort_number='".$getProduct->sort_number."' data-version='".$getProduct->version."' data-toggle='modal' data-target='.modal-edit-sort-number' data-toggle='tooltip' data-placement='top' title='Edit Sort Number'><i class='fa fa-sort'></i></a>";
 							}
 
 							return $actionHtml;

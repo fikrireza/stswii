@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Yajra\Datatables\Facades\Datatables;
-
+use Illuminate\Validation\Rule;
 use App\Models\Agent;
 use DB;
 use Auth;
@@ -32,27 +32,27 @@ class AgentController extends Controller
 
     function checkSaldo($clientId){
       $client = new \GuzzleHttp\Client();
-          $res = $client->request('GET', 'http://localhost:9020/balanceByClient?clientId='.$clientId)
+          $res = $client->request('GET', env('WALLET_HOST','http://localhost:9020').'/balanceByClient?clientId='.$clientId)
           ->getbody();
 
       $response = json_decode($res);
 
       return response()->json([
         'status' => $response->status,
-        'amount' => number_format($response->amount, 2)
+        'amount' => number_format($response->payload->amount, 2)
       ]);
     }
 
     function resetPin($clientId){
       $client = new \GuzzleHttp\Client();
-          $res = $client->request('GET', 'http://localhost:9020/resetPin?clientId='.$clientId)
+          $res = $client->request('GET', env('WALLET_HOST','http://localhost:9020').'/resetPin?clientId='.$clientId)
           ->getbody();
 
       $response = json_decode($res);
       
       return response()->json([
         'status' => 'OK',
-        'pin' => $response->pin
+        'pin' => $response->payload->pin
       ]);
     }
 
@@ -60,14 +60,16 @@ class AgentController extends Controller
   		$index = Agent::select(
           'agent_id',
           'agent_name',
+          'paloma_member_code',
           'phone_number',
           'address',
           'city',
+          'paloma_member_code',
           'client_id',
           'active',
           'version'
         )
-      ->get();
+      ->get();      
 
       $start=1;
   		$Datatables = Datatables::of($index)
@@ -101,16 +103,18 @@ class AgentController extends Controller
             >
               <span class=\"btn btn-xs btn-primary btn-sm\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Check Saldo\"><i class=\"fa fa-dollar\"></i></span>
             </a>
-
-            <a 
-              class=\"reset-pin\" 
-              data-value='".$index->client_id."'
-              data-name='".$index->agent_name."' 
-              data-phone='".$index->phone_number."'   
-            >
-              <span class=\"btn btn-xs btn-success btn-sm\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Reset Pin\"><i class=\"fa fa-repeat\"></i></span>
-            </a>
 						";
+
+            if ($index->paloma_member_code == '') {
+              $html .= "<a 
+                class=\"reset-pin\" 
+                data-value='".$index->client_id."'
+                data-name='".$index->agent_name."' 
+                data-phone='".$index->phone_number."'
+              >
+                <span class=\"btn btn-xs btn-success btn-sm\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Reset Pin\"><i class=\"fa fa-repeat\"></i></span>
+              </a>";
+            }
 					}
 					return $html;
         });
@@ -169,15 +173,19 @@ class AgentController extends Controller
 
   	function update(Request $request){
   		$message = [
-  			// 'agent_name.required' => 'This field required',
-  			// 'phone_number.required' => 'This field required',
+  			'agent_name.required' => 'This field required',
+  			'phone_number.required' => 'This field required',
+        'phone_number.unique' => 'This field is unique',
   			'address.required' => 'This field required',
   			'city.required' => 'This field required',
   		];
 
   		$validator = Validator::make($request->all(), [
-  			// 'agent_name' => 'required',
-  			// 'phone_number' => 'required',
+  			'agent_name' => 'required',
+  			'phone_number' => [
+            'required',
+            Rule::unique('sw_agent')->ignore($request->agent_id, 'agent_id'),
+        ],
   			'address' => 'required',
   			'city' => 'required',
   		], $message);
@@ -194,8 +202,8 @@ class AgentController extends Controller
   			return redirect()->route('agent.index')->with('update-false', 'Your data already updated by ' . $index->updatedBy->name . '.');
   		}
 
-  		// $index->agent_name   = $request->agent_name;
-  		// $index->phone_number = $request->phone_number;
+  		$index->agent_name   = $request->agent_name;
+  		$index->phone_number = $request->phone_number;
   		$index->address      = $request->address;
   		$index->city         = $request->city;
 

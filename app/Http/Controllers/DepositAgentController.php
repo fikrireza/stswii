@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Notification;
+use App\Models\Agent;
 use Hash;
+use Auth;
 
 class DepositAgentController extends Controller
 {
@@ -25,12 +28,12 @@ class DepositAgentController extends Controller
         try {
           ini_set('max_execution_time', 300);
           $client = new \GuzzleHttp\Client();
-          $res = $client->request('GET', 'http://localhost:9020/getUnconfirmedUniqueCodes?uniqueCode='.$uniqueCode)
+          $res = $client->request('GET', env('WALLET_HOST','http://localhost:9020').'/getUnconfirmedUniqueCodes?uniqueCode='.$uniqueCode)
           ->getbody();
 
-          $prosesUniqueCode = json_decode($res);
+          $result = json_decode($res);       
 
-          if($prosesUniqueCode->status != 0){
+          if($result->status != 'OK'){
             $response = 'Failed Grab Data';
           }
 
@@ -40,7 +43,7 @@ class DepositAgentController extends Controller
           return redirect()->route('deposit-agent-confirm.index')->with('gagal', $response);
         }
 
-
+        $prosesUniqueCode = $result->payload;
         return view('deposit-agent.getUniqueCode', compact('prosesUniqueCode', 'uniqueCode'));
     }
 
@@ -49,13 +52,13 @@ class DepositAgentController extends Controller
       try {
         ini_set('max_execution_time', 300);
         $client = new \GuzzleHttp\Client([
-                                          'headers' => [
-                                              'Accept' => 'application/json',
-                                              'Content-Type' => 'application/json',
-                                          ],
-                                        ]);
+                        'headers' => [
+                            'Accept' => 'application/json',
+                            'Content-Type' => 'application/json',
+                        ],
+                      ]);
 
-        $res = $client->request('POST','http://localhost:9020/walletTopupWithCode', [
+        $res = $client->request('POST',env('WALLET_HOST','http://localhost:9020').'/walletTopupWithCode', [
                             'json' => [
                               'clientId' => $request->clientId,
                               'uniqueCode'  => $request->uniqueCode,
@@ -64,21 +67,53 @@ class DepositAgentController extends Controller
                             ]
                           ])->getbody();
 
-        $result = json_decode($res);
+        $result = json_decode($res);                
+        
+        if ($result->status == 'OK') {
+          $payload = $result->payload;  
 
-        if($result->status == 0){
-          $response = 'Sukses';
-        }elseif($result->status == 1){
-          $response = 'Client Id Not Found';
-        }elseif($result->status == 2){
-          $response = 'Amount Not Valid';
+          if($payload->status == 0){          
+
+            //nilai sebelum perubahan
+            $currentBalance = $payload->currentBalance;
+            //nilai setelah perubahan
+            $afterCut = $payload->afterCut;
+            //nilai perubahan
+            $numCut = $payload->numCut;
+
+            $message = "Selamat, Deposit yang anda lakukan sudah berhasil.\n".
+                        "Saldo Anda : $currentBalance\n".
+                        "Jumlah Deposit : $numCut\n".
+                        "Saldo Setelah Deposit : $afterCut";
+
+            $agent = Agent::where('client_id', $payload->clientId)->first();
+            $notification = new Notification();
+            $notification->agent_id         = $agent->agent_id;
+            $notification->title            = 'Top up Deposit';
+            $notification->message          = $message;
+            $notification->status           = 'D';
+            $notification->create_datetime  = date('YmdHis');
+            $notification->create_user_id   = Auth::id();
+            $notification->update_datetime  = '';
+            $notification->update_user_id   = -99;
+            $notification->version          = 0;
+            $notification->save();
+
+            $response = 'Sukses';
+          }elseif($payload->status == 1){
+            $response = 'Client Id Not Found';
+          }elseif($payload->status == 2){
+            $response = 'Amount Not Valid';
+          }else{
+            $response = 'Unique Code Not Valid';
+          }
+
         }else{
-          $response = 'Unique Code Not Valid';
-        }
+          $response = 'Gagal '+$errorKey;
+        }  
 
-      } catch (\Exception $e) {
-  			$response = 'Oooppsss..... Status Server '.$e->getResponse()->getStatusCode();
-
+      } catch (\Exception $e) {  			                
+        $response = 'Oooppsss..... Status Server '.$e->getResponse()->getStatusCode();        
   			return redirect()->route('deposit-agent-confirm.index')->with('gagal', $response);
       }
 
@@ -107,12 +142,13 @@ class DepositAgentController extends Controller
         try {
           ini_set('max_execution_time', 300);
           $client = new \GuzzleHttp\Client();
-          $res = $client->request('GET', 'http://localhost:9020/getConfirmedTopUp'.$query)
+          $res = $client->request('GET', env('WALLET_HOST','http://localhost:9020').'/getConfirmedTopUp'.$query)
                         ->getbody();
 
-          $proses = json_decode($res);
-
-          if($proses->status == 0){
+          \Log::debug($res);
+          $result = json_decode($res);
+          
+          if($result->status == 'OK'){
             $response = 'Sukses';
           }else{
             $response = 'Error';
@@ -125,6 +161,7 @@ class DepositAgentController extends Controller
     			return redirect()->route('deposit-agent-reversal.index')->with('gagal', $response);
         }
 
+        $proses = $result->payload;
         return view('deposit-agent.void', compact('proses', 'startDate', 'endDate'));
     }
 
@@ -157,7 +194,7 @@ class DepositAgentController extends Controller
                                             ],
                                           ]);
 
-          $res = $client->request('POST','http://localhost:9020/reversal-trx', [
+          $res = $client->request('POST',env('WALLET_HOST','http://localhost:9020').'/reversal-trx', [
                               'json' => [
                                 'clientId' => (int)$request->clientId,
                                 'refDocNo'  => $request->refNo,
@@ -168,12 +205,17 @@ class DepositAgentController extends Controller
                             ])->getbody();
 
           $result = json_decode($res);
-
-          if($result->status == 0){
-            $response = 'Sukses';
+        
+          if ($result->status == 'OK') {
+            $payload = $result->payload;
+            if($payload->status == 0){
+              $response = 'Sukses';
+            }else{
+              $response = 'Gagal';
+            }
           }else{
-            $response = '';
-          }
+            $response = 'Gagal '.$result->errorKey;
+          }          
 
         } catch (\Exception $e) {
             $response = 'Oooppsss..... Status Server '.$e->getResponse()->getStatusCode();
@@ -192,20 +234,20 @@ class DepositAgentController extends Controller
         try{
           ini_set('max_execution_time', 300);
           $client = new \GuzzleHttp\Client();
-          $res = $client->request('GET', 'http://localhost:9020/getAllUnconfirmedUniqueCodes')
+          $res = $client->request('GET', env('WALLET_HOST','http://localhost:9020').'/getAllUnconfirmedUniqueCodes')
           ->getbody();
 
-          $prosesUniqueCode = json_decode($res);
-
-          if($prosesUniqueCode->status != 0){
-            $response = 'Tidak ada data';
-          }
+          $result = json_decode($res);    
+                                   
+          if($result->status != 'OK'){
+              $response = 'Tidak ada data';
+            }
         }
         catch (\Exception $e)
         {
           abort(503);
         }
-
+        $prosesUniqueCode = $result->payload;
         return view('deposit-agent.indexUnconfirm', compact('prosesUniqueCode'));
     }
 
@@ -220,7 +262,7 @@ class DepositAgentController extends Controller
                                             ],
                                           ]);
 
-          $res = $client->request('POST','http://localhost:9020/walletTopupWithCode', [
+          $res = $client->request('POST',env('WALLET_HOST','http://localhost:9020').'/walletTopupWithCode', [
                               'json' => [
                                 'clientId' => $request->clientId,
                                 'uniqueCode'  => $request->uniqueCode,
@@ -228,19 +270,51 @@ class DepositAgentController extends Controller
                                 'amount'  => str_replace('.','',$request->amount),
                               ]
                             ])->getbody();
+          
+          $result = json_decode($res);          
 
-          $result = json_decode($res);
+          if ($result->status == 'OK') {
+            $payload = $result->payload;
+            
+            if($payload->status == 0){            
 
-          if($result->status == 0){
-            $response = 'Sukses Confirm '.$request->uniqueCode;
-          }elseif($result->status == 1){
-            $response = 'Client Id Tidak ditemukan';
-          }elseif($result->status == 2){
-            $response = 'Amount Tidak Valid';
+              //nilai sebelum perubahan
+              $currentBalance = $payload->currentBalance;
+              //nilai setelah perubahan
+              $afterCut = $payload->afterCut;
+              //nilai perubahan
+              $numCut = $payload->numCut;
+
+              $message = "Selamat, Deposit yang anda lakukan sudah berhasil.\n".
+                        "Saldo Anda : $currentBalance\n".
+                        "Jumlah Deposit : $numCut\n".
+                        "Saldo Setelah Deposit : $afterCut";
+
+              $agent = Agent::where('client_id', $payload->clientId)->first();
+              $notification = new Notification();
+              $notification->agent_id         = $agent->agent_id;
+              $notification->title            = 'Top up Deposit';
+              $notification->message          = $message;
+              $notification->status           = 'D';
+              $notification->create_datetime  = date('YmdHis');
+              $notification->create_user_id   = Auth::id();
+              $notification->update_datetime  = '';
+              $notification->update_user_id   = -99;
+              $notification->version          = 0;
+              $notification->save();
+
+              $response = 'Sukses Confirm '.$request->uniqueCode;
+            }elseif($payload->status == 1){
+              $response = 'Client Id Tidak ditemukan';
+            }elseif($payload->status == 2){
+              $response = 'Amount Tidak Valid';
+            }else{
+              $response = 'Unique Code Tidak Valid';
+            }
           }else{
-            $response = 'Unique Code Tidak Valid';
+            $response = 'Gagal '+$errorKey;
           }
-
+          
         } catch (\Exception $e) {
             $response = 'Status Server '.$e->getResponse()->getStatusCode();
 

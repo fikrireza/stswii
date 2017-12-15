@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-  <title>STS | Product</title>
+  <title>STS | Product MLM</title>
 @endsection
 
 @section('headscript')
@@ -52,47 +52,8 @@
 </div>
 @endif
 
-@can('activate-product')
-<div class="modal fade modal-nonactive" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content alert-danger">
 
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
-        </button>
-        <h4 class="modal-title" id="myModalLabel2">Nonactive Product</h4>
-      </div>
-      <div class="modal-body">
-        <h4>Sure ?</h4>
-      </div>
-      <div class="modal-footer">
-        <a class="btn btn-primary" id="setUnpublish">Ya</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade modal-active" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
-        </button>
-        <h4 class="modal-title" id="myModalLabel2">Activated Product</h4>
-      </div>
-      <div class="modal-body">
-        <h4>Sure ?</h4>
-      </div>
-      <div class="modal-footer">
-        <a class="btn btn-primary" id="setPublish">Ya</a>
-      </div>
-    </div>
-  </div>
-</div>
-@endcan
-
-@can('delete-product')
+@can('delete-product-mlm')
 <div class="modal fade modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content alert-danger">
@@ -114,63 +75,9 @@
 </div>
 @endcan
 
-@can('sort-number-product')
-<div class="modal fade modal-edit-sort-number" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form action="{{ route('product.edit-sort-number') }}" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" novalidate>
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
-          </button>
-          <h4 class="modal-title" id="myModalLabel2">Update Product</h4>
-        </div>
-        <div class="modal-body">
-            {{ csrf_field() }}
-            <input
-              id="product_id"
-              name="product_id"
-              type="hidden"
-              value="{{ old('product_id') }}"
-            >
-            <input
-              id="version"
-              name="version"
-              type="hidden"
-              value="{{ old('version') }}"
-            >
-            <div class="item form-group {{ $errors->has('sort_number') ? 'has-error' : ''}}">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="sort_number">
-                Sort Number <span class="required">*</span>
-              </label>
-              <div class="col-md-6 col-sm-6 col-xs-12">
-                <input type="number" 
-                  id="sort_number"
-                  class="form-control col-md-7 col-xs-12"
-                  name="sort_number"                  
-                  required="required"
-                  min="1"                   
-                  value="{{ old('sort_number') }}">
-                @if($errors->has('sort_number'))
-                  <code><span style="color:red; font-size:12px;">{{ $errors->first('sort_number')}}</span></code>
-                @endif
-              </div>
-            </div>
-    
-            <code><span style="color:red; font-size:12px;">{{ Session::get('update-false') }}</span></code>
-        </div>
-
-        <div class="modal-footer">
-          <button id="send" type="submit" class="btn btn-success">Submit</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-@endcan
-
 <div class="page-title">
   <div class="title_left">
-    <h3>All Product <small></small></h3>
+    <h3>All Product MLM<small></small></h3>
   </div>
 </div>
 
@@ -179,10 +86,10 @@
   <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
       <div class="x_title">
-        <h2>Product </h2>
+        <h2>Product MLM</h2>
         <ul class="nav panel_toolbox">
           @can('create-product')
-          <a href="{{ route('product.tambah') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add</a>
+          <a href="{{ route('product-mlm.tambah') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add</a>
           @endcan
         </ul>
         <div class="clearfix"></div>
@@ -213,10 +120,8 @@
               <th>Product Name</th>
               <th>Nominal</th>
               <th>Type Product</th>
-              <th>Sort Number</th>
-              @can('activate-product')
-              <th>Status</th>
-              @endcan
+              <th>Sort Number</th>              
+              <th>Status</th>              
               <th>Action</th>
             </tr>
           </thead>
@@ -227,10 +132,8 @@
             <th></th>
             <th></th>
             <th></th>
-            <th></th>
-            @can('activate-product')
-            <th></th>
-            @endcan
+            <th></th>            
+            <th></th>            
             <td></td>
           </tfoot>
         </table>
@@ -257,7 +160,7 @@ $(function() {
         processing: true,
         serverSide: true,
         "pageLength": 100,
-        ajax: "{{ route('product.yajra.getDatas') }}?f_provider={{ $request->f_provider }}&f_type_product={{ $request->f_type_product }}",
+        ajax: "{{ route('product-mlm.yajra.getDatas') }}?f_provider={{ $request->f_provider }}&f_type_product={{ $request->f_type_product }}",
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},
             {data: 'provider_code'},
@@ -265,10 +168,8 @@ $(function() {
             {data: 'product_name'},
             {data: 'nominal'},
             {data: 'type'},
-            {data: 'sort_number'},
-            @can('activate-product')
-              {data: 'active', orderable: false, searchable: false},
-            @endcan
+            {data: 'sort_number'},            
+            {data: 'active', orderable: false, searchable: false},            
             {data: 'action', name: 'Action', orderable: false, searchable: false}
         ]
     });
@@ -281,7 +182,7 @@ $(function() {
         processing: true,
         serverSide: true,
         "pageLength": 100,
-        ajax: "{{ route('product.yajra.getDatas') }}",
+        ajax: "{{ route('product-mlm.yajra.getDatas') }}",
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},
             {data: 'provider_code', name: 'Provider Code'},
@@ -289,10 +190,8 @@ $(function() {
             {data: 'product_name', name: 'Product Name'},
             {data: 'nominal', name: 'Nominal'},
             {data: 'type', name: 'Type Product'},
-            {data: 'sort_number', name: 'Short Number'},
-            @can('activate-product')
-              {data: 'active', name: 'Status', orderable: false, searchable: false},
-            @endcan
+            {data: 'sort_number', name: 'Short Number'},            
+            {data: 'active', name: 'Status', orderable: false, searchable: false},          
             {data: 'action', name: 'Action', orderable: false, searchable: false}
         ],
         initComplete: function () {
@@ -322,43 +221,12 @@ $(".select_type_product").select2({
 });
 
 $(function(){
-  $('#producttabel').on('click','a.unpublish', function(){
-    var a = $(this).data('value');
-    var b = $(this).data('version');
-    $('#setUnpublish').attr('href', "{{ url('/') }}/product/active/"+a+"?version="+b);
-  });
-});
-$(function(){
-  $('#producttabel').on('click', 'a.publish', function(){
-    var a = $(this).data('value');
-    var b = $(this).data('version');
-    $('#setPublish').attr('href', "{{ url('/') }}/product/active/"+a+"?version="+b);
-  });
-});
-$(function(){
   $('#producttabel').on('click', 'a.delete', function(){
     var a = $(this).data('value');
-    $('#setDelete').attr('href', "{{ url('/') }}/product/delete/"+a);
+    $('#setDelete').attr('href', "{{ url('/') }}/product-mlm/delete/"+a);
   });
 });
 
-  @can('update-salesman')
-    $(function(){
-      $('#producttabel').on('click', '.sort-number', function(e) {      
-        var product_id    = $(this).data('value');
-        var sort_number   = $(this).data('sort_number');
-        var version       = $(this).data('version');
+</script>
 
-        $("#product_id").val(product_id);
-        $("#sort_number").val(sort_number);      
-        $("#version").val(version);
-      });
-    });    
-    @endcan
-</script>
-@if(Session::has('update-false'))
-<script>
-  $('.modal-edit-sort-number').modal('show');
-</script>
-@endif
 @endsection

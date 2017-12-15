@@ -6,6 +6,8 @@
 
 @section('headscript')
 <script src="{{ asset('amadeo/vendors/Chart.js/dist/Chart.min.js')}}"></script>
+<script src="{{ asset('amadeo/js/highchart/code/highcharts.js')}}"></script>
+<script src="{{ asset('amadeo/js/highchart/code/modules/exporting.js')}}"></script>
 @endsection
 
 @section('content')
@@ -13,31 +15,206 @@
   <div class="row tile_count">
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
       <span class="count_top"><i class="fa fa-phone"></i> Total Provider</span>
-      <div class="count blue">{{ count($provider) }}</div>
+      <div class="count blue">{{ $provider }}</div>
     </div>
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
       <span class="count_top"><i class="fa fa-phone"></i> Total Prefix</span>
-      <div class="count red">{{ count($providerPrefix) }}</div>
+      <div class="count red">{{ $providerPrefix }}</div>
     </div>
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
       <span class="count_top"><i class="fa fa-beer"></i> Total Product</span>
-      <div class="count green">{{ count($product) }}</div>
+      <div class="count green">{{ $product }}</div>
     </div>
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
       <span class="count_top"><i class="fa fa-anchor"></i> Total Partner Pulsa</span>
-      <div class="count yellow">{{ count($partnerPulsa) }}</div>
+      <div class="count yellow">{{ $partnerPulsa }}</div>
     </div>
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
       <span class="count_top"><i class="fa fa-anchor"></i> Total Partner Product</span>
-      <div class="count purple">{{ count($partnerProduct) }}</div>
-    </div>
-    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-      <span class="count_top"><i class="fa fa-suitcase"></i> Total Agent</span>
-      <div class="count green">{{ count($agent) }}</div>
+      <div class="count purple">{{ $partnerProduct }}</div>
     </div>
   </div>
-
-
+  <div class="row tile_count">
+  	<div class="col-md-3 col-md-offset-3 col-sm-4 col-xs-6 tile_stats_count">
+      <span class="count_top"><i class="fa fa-suitcase"></i> Total Agent Tradisional</span>
+      <div class="count green">{{ $agent }}</div>
+    </div>
+    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+      <span class="count_top"><i class="fa fa-suitcase"></i> Total Agent MLM</span>
+      <div class="count green">{{ $agentMlm }}</div>
+    </div>
+  </div>
+  
+  <div class="row">
+  	<form class="form-inline text-center">
+	  	<div class="col-md-12">
+			<div class="x_content">
+				<select name="f_month" class="form-control select_provider" onchange="this.form.submit()">
+					<option value="01" @if($request->f_month == '01') selected @endif>Januari</option>
+					<option value="02" @if($request->f_month == '02') selected @endif>Februari</option>
+					<option value="03" @if($request->f_month == '03') selected @endif>Maret</option>
+					<option value="04" @if($request->f_month == '04') selected @endif>April</option>
+					<option value="05" @if($request->f_month == '05') selected @endif>Mei</option>
+					<option value="06" @if($request->f_month == '06') selected @endif>Juni</option>
+					<option value="07" @if($request->f_month == '07') selected @endif>July</option>
+					<option value="08" @if($request->f_month == '08') selected @endif>Agustus</option>
+					<option value="09" @if($request->f_month == '09') selected @endif>September</option>
+					<option value="10" @if($request->f_month == '10') selected @endif>Oktober</option>
+					<option value="11" @if($request->f_month == '11') selected @endif>November</option>
+					<option value="12" @if($request->f_month == '12') selected @endif>Desember</option>
+				</select>
+				<input type="number" value="{{$request->f_year}}" onkeydown="return false" min="2017" step="1" name="f_year" class="form-control" onchange="this.form.submit()">
+			</div>
+		</div>
+	</form>
+  </div>
+  <div class="row">
+  	<div class="col-md-12">
+		<div id="container_sales_monthly"></div>
+	</div>
+  </div>
+  <div class="row">
+  	<div class="col-md-12">
+		<div id="container_deposit"></div>
+	</div>
+  </div>
+  
+  <script type="text/javascript">
+		Highcharts.chart('container_sales_monthly', {
+		    chart: {
+		        zoomType: 'xy'
+		    },
+		    title: {
+		        text: 'Sales Monthly'
+		    },
+		    subtitle: {
+		        text: '{{ $thisMonthYearName }}'
+		    },
+		    xAxis: {
+		        max:31,
+		        allowDecimals: false
+		    },
+		    yAxis: {
+				min:0,
+				labels: {
+			        enabled: true,
+		            formatter: function(){
+		            	return this.value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1" + ".");
+		            },
+		            style: {
+		                color: Highcharts.getOptions().colors[1]
+		            }
+		        },
+		        title: {
+		            text: 'Sales',
+		            style: {
+		                color: Highcharts.getOptions().colors[1]
+		            }
+		        },
+		        stackLabels: {
+		            enabled: true,
+		            formatter: function(){
+		            	return this.total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1" + ".");
+		            },
+		            style: {
+		                fontWeight: 'bold',
+		                color: 'gray'
+		            }
+		        }
+			},
+		    tooltip: {
+		    	headerFormat: '<b>{point.x}</b><br/>',
+		        pointFormatter:function(){
+			        return this.series.name+" : "+this.y.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1" + ".");
+		        }
+		    },
+		    plotOptions: {
+		        column: {
+		            stacking: 'normal'
+		        },
+		        spline:{
+		        	color:'rgb(0, 0, 0)',
+		        	marker:{
+						radius:3
+					}
+				}
+		    },
+		    legend: {
+		        layout: 'horizontal',
+		        align: 'center',
+		        verticalAlign: 'top',
+		        y: 40,
+		        floating: true,
+		        shadow:true,
+		        backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+		    },
+		    series: <?= $dataChartSalesMonthly ?>
+		});
+		
+		Highcharts.chart('container_deposit', {
+		    chart: {
+		        zoomType: 'xy'
+		    },
+		    title: {
+		        text: 'Deposit Balance'
+		    },
+		    xAxis: {
+		    	categories: ['Agent', 'Partner'],
+		    	crosshair: true
+		    },
+		    yAxis: {
+				min:0,
+				labels: {
+			        enabled: true,
+		            
+		            style: {
+		                color: Highcharts.getOptions().colors[1]
+		            }
+		        },
+		        title: {
+		            text: 'Rp',
+		            style: {
+		                color: Highcharts.getOptions().colors[1]
+		            }
+		        },
+		        stackLabels: {
+		            enabled: true,
+		            formatter: function(){
+		            	return this.total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1" + ".");
+		            },
+		            style: {
+		                fontWeight: 'bold',
+		                color: 'gray'
+		            }
+		        }
+			},
+		    tooltip: {
+		    	headerFormat: '<b>{point.x}</b><br/>',
+		    	pointFormatter:function(){
+		    		var textHtml = this.series.name+" : "+this.y.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1" + ".");
+					if(this.jumlah)textHtml = textHtml+'<br/>Jumlah : '+this.jumlah.toString();
+			        return textHtml;
+		        }
+		    },
+		    plotOptions: {
+		        column: {
+		            stacking: 'normal'
+		        }
+		    },
+		    legend: {
+		        layout: 'horizontal',
+		        align: 'center',
+		        verticalAlign: 'top',
+		        y: 40,
+		        floating: true,
+		        shadow:true,
+		        backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+		    },
+		    series: <?= $dataChartDeposit ?>
+		});
+		
+	</script>
+  
 @endsection
 
 @section('script')

@@ -116,6 +116,24 @@
           </label>
         </div>
       </div>
+
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product Mlm</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-product-mlm]" {{ (collect(old('permissions'))->contains('read-product-mlm')) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[create-product-mlm]" {{ (collect(old('permissions'))->contains('create-product-mlm')) ? 'checked="checked"' : '' }} value="true"/> Create
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[delete-product-mlm]" {{ (collect(old('permissions'))->contains('delete-product-mlm')) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label>
+        </div>
+      </div>
+
+
       <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product Sell Price</label>
@@ -137,6 +155,26 @@
           </label>
         </div>
       </div>
+
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Product Sell Price Mlm</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-product-sell-price-mlm]" {{ (collect(old('permissions'))->contains('read-product-sell-price-mlm')) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[create-product-sell-price-mlm]" {{ (collect(old('permissions'))->contains('create-product-sell-price-mlm')) ? 'checked="checked"' : '' }} value="true"/> Create
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[update-product-sell-price-mlm]" {{ (collect(old('permissions'))->contains('update-product-sell-price-mlm')) ? 'checked="checked"' : '' }} value="true" /> Update
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[delete-product-sell-price-mlm]" {{ (collect(old('permissions'))->contains('delete-product-sell-price-mlm')) ? 'checked="checked"' : '' }} value="true" /> Delete
+          </label>
+        </div>
+      </div>
+
       <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Partner Pulsa</label>
@@ -234,6 +272,46 @@
           </label>
         </div>
       </div>
+
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Salesman</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-salesman]" {{ (collect(old('permissions'))->contains('read-salesman')) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[create-salesman]" {{ (collect(old('permissions'))->contains('create-salesman')) ? 'checked="checked"' : '' }} value="true"/> Create
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[update-salesman]" {{ (collect(old('permissions'))->contains('update-salesman')) ? 'checked="checked"' : '' }} value="true"/> Update
+          </label>
+          <br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[activate-salesman]" {{ (collect(old('permissions'))->contains('activate-salesman')) ? 'checked="checked"' : '' }} value="true"/> Status
+          </label>
+        </div>
+      </div>
+
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Sales Deposit Transaction</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-sales-deposit-transaction]" {{ (collect(old('permissions'))->contains('read-sales-deposit-transaction')) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label><br>    
+          <label>
+            <input type="checkbox" class="flat" name="permissions[update-sales-deposit-transaction]" {{ (collect(old('permissions'))->contains('update-sales-deposit-transaction')) ? 'checked="checked"' : '' }} value="true"/> Update
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[set-sudah-setor-sales-deposit-transaction]" {{ (collect(old('permissions'))->contains('set-sudah-setor-sales-deposit-transaction')) ? 'checked="checked"' : '' }} value="true"/> Set Sudah Setor
+          </label><br>  
+          <label>
+            <input type="checkbox" class="flat" name="permissions[set-belum-setor-sales-deposit-transaction]" {{ (collect(old('permissions'))->contains('set-belum-setor-sales-deposit-transaction')) ? 'checked="checked"' : '' }} value="true"/> Set Belum Setor
+          </label><br> 
+        </div>
+      </div>
+
       <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Deposit Confirm</label>
@@ -270,6 +348,17 @@
           </label>
         </div>
       </div>
+
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Inquiry Mutasi Rekening Mandiri</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[read-inquiry-mutasi-rekening-mandiri]" {{ (collect(old('permissions'))->contains('read-inquiry-mutasi-rekening-mandiri')) ? 'checked="checked"' : '' }} value="true"/> Read
+          </label>
+        </div>
+      </div>
+
       <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Report</label>
@@ -284,10 +373,16 @@
             <input type="checkbox" class="flat" name="permissions[report-agent]" {{ (collect(old('permissions'))->contains('report-agent')) ? 'checked="checked"' : '' }} value="true" /> Sales By Agent
           </label><br>
           <label>
+            <input type="checkbox" class="flat" name="permissions[report-agent-mlm]" {{ (collect(old('permissions'))->contains('report-agent-mlm')) ? 'checked="checked"' : '' }} value="true" /> Sales By Agent MLM
+          </label><br>
+          <label>
             <input type="checkbox" class="flat" name="permissions[report-provider]" {{ (collect(old('permissions'))->contains('report-provider')) ? 'checked="checked"' : '' }} value="true" /> Sales By Provider
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[report-topup-deposit-partner]" {{ (collect(old('permissions'))->contains('report-topup-deposit-partner')) ? 'checked="checked"' : '' }} value="true" /> Topup Deposit Partner
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-deposit-harian-agent]" {{ (collect(old('permissions'))->contains('report-deposit-harian-agent')) ? 'checked="checked"' : '' }} value="true" /> Deposit harian Agent
           </label><br>
            <label>
             <input type="checkbox" class="flat" name="permissions[report-inquiry-agent]" {{ (collect(old('permissions'))->contains('report-inquiry-agent')) ? 'checked="checked"' : '' }} value="true" /> Inquiry Pesanan Agent
@@ -300,9 +395,38 @@
           </label><br>
           <label>
             <input type="checkbox" class="flat" name="permissions[report-saldo-deposit-agent]" {{ (collect(old('permissions'))->contains('report-saldo-deposit-agent')) ? 'checked="checked"' : '' }} value="true" /> Saldo Deposit Agent
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-sales-deposit]" {{ (collect(old('permissions'))->contains('report-sales-deposit')) ? 'checked="checked"' : '' }} value="true" /> Sales Deposit
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-agent-member-paloma]" {{ (collect(old('permissions'))->contains('report-agent-member-paloma')) ? 'checked="checked"' : '' }} value="true" /> Agent Member Paloma
+          </label><br>          
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-data-agent-not-active]" {{ (collect(old('permissions'))->contains('report-data-agent-not-active')) ? 'checked="checked"' : '' }} value="true" /> Data Agent Tidak Aktif  
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-statistik-transaksi-error]" {{ (collect(old('permissions'))->contains('report-statistik-transaksi-error')) ? 'checked="checked"' : '' }} value="true" /> Statistik Transaksi Error
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-perubahan-status-manual]" {{ (collect(old('permissions'))->contains('report-perubahan-status-manual')) ? 'checked="checked"' : '' }} value="true" /> Report Perubahan Status Manual
           </label>
         </div>
       </div>
+
+      <div class="ln_solid"></div>
+      <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Inquiry Pesanan Agent</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <label>
+            <input type="checkbox" class="flat" name="permissions[set-sukses-inquiry-pesanan-agent]" {{ (collect(old('permissions'))->contains('set-sukses-inquiry-pesanan-agent')) ? 'checked="checked"' : '' }} value="true" /> Set Sukses
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[set-gagal-inquiry-pesanan-agent]" {{ (collect(old('permissions'))->contains('set-gagal-inquiry-pesanan-agent')) ? 'checked="checked"' : '' }} value="true" /> Set Gagal
+          </label><br>
+        </div>
+      </div>
+
       <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Users</label>
@@ -324,6 +448,7 @@
           </label>
         </div>
       </div>
+
       <div class="ln_solid"></div>
       <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Roles</label>

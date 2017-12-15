@@ -53,8 +53,14 @@
               @can('read-product')
               <li class="{{ Route::is('product.*') ? 'current-page' : '' }}"><a href="{{ route('product.index') }}">Product</a></li>
               @endcan
+               @can('read-product-mlm')
+              <li class="{{ Route::is('product-mlm.*') ? 'current-page' : '' }}"><a href="{{ route('product-mlm.index') }}">Product Mlm</a></li>
+              @endcan
               @can('read-product-sell-price')
-              <li class="{{ Route::is('product-*') ? 'current-page' : '' }}"><a href="{{ route('product-sell-price.index') }}">Product Sell Price</a></li>
+              <li class="{{ Route::is('product-sell-price.*')  ? 'current-page' : '' }}"><a href="{{ route('product-sell-price.index') }}">Product Sell Price</a></li>
+              @endcan
+              @can('read-product-sell-price-mlm')
+              <li class="{{ Route::is('product-sell-price-mlm.*') ? 'current-page' : '' }}"><a href="{{ route('product-sell-price-mlm.index') }}">Product Sell Price Mlm</a></li>
               @endcan
             </ul>
           </li>
@@ -123,6 +129,11 @@
                 <a href="{{ route('deposit-agent-unconfirm.index') }}">Unconfirmed Unique Code</a>
               </li>
               @endcan
+              @can('read-inquiry-mutasi-rekening-mandiri')
+              <li class="{{ Route::is('inquiry-mutasi-rekening-mandiri') ? 'current-page' : '' }}">
+                <a href="{{ route('inquiry-mutasi-rekening-mandiri.index') }}">Mutasi Rek Mandiri</a>
+              </li>
+              @endcan
             </ul>
           </li>
           @endif
@@ -140,6 +151,26 @@
             </ul>
           </li>
           @endif
+          @if (Auth::user()->can('read-sales-deposit-transaction') || Auth::user()->can('read-salesman'))
+          <li class="{{ Route::is('salesDeposit*') || Route::is('salesman*') ? 'active' : '' }}">
+            <a>
+              <i class="fa fa-money"></i>Sales Deposit <span class="fa fa-chevron-down"></span>
+            </a>
+            <ul class="nav child_menu" style="{{ Route::is('salesDeposit*') ? 'display: block;' : '' }}">
+                @if(Auth::user()->can('read-salesman'))
+                <li class="{{ Route::is('salesman*') ? 'current-page' : '' }}">
+                  <a href="{{ route('salesman.index') }}">Salesman</a>
+                </li>
+                @endif
+                @if(Auth::user()->can('read-sales-deposit-transaction'))
+                <li class="{{ Route::is('salesDepositTransaction*') ? 'current-page' : '' }}">
+                  <a href="{{ route('salesDepositTransaction.index') }}">Deposit Transaction</a>
+                </li>
+                @endif
+            </ul>
+          </li>
+          @endif
+
         </ul>
       </div>
       <div class="menu_section">
@@ -160,11 +191,17 @@
               @can('report-agent')
               <li class="{{ Route::is('report.byAgent') ? 'current-page' : '' }}"><a href="{{ route('report.byAgent') }}">Sales By Agent</a></li>
               @endcan
+              @can('report-agent-mlm')
+              <li class="{{ Route::is('report.byAgentMlm') ? 'current-page' : '' }}"><a href="{{ route('report.byAgentMlm') }}">Sales By Agent MLM</a></li>
+              @endcan
               @can('report-provider')
               <li class="{{ Route::is('report.byProvider') ? 'current-page' : '' }}"><a href="{{ route('report.byProvider') }}">Sales By Provider</a></li>
               @endcan
               @can('report-topup-deposit-partner')
               <li class="{{ Route::is('report.byTopUpDepositPartner') ? 'current-page' : '' }}"><a href="{{ route('report.byTopUpDepositPartner') }}">Topup Deposit Partner</a></li>
+              @endcan
+              @can('report-deposit-harian-agent')
+              <li class="{{ Route::is('report.byDepositharianAgent') ? 'current-page' : '' }}"><a href="{{ route('report.byDepositHarianAgent') }}">Deposit Harian Agent</a></li>
               @endcan
               @can('report-inquiry-agent')
               <li class="{{ Route::is('inquiry-pesanan-agent') ? 'current-page' : '' }}"><a href="{{ route('report.inquiry-pesanan-agent-index') }}">Inquiry Pesanan Agent</a></li>
@@ -177,6 +214,21 @@
               @endcan
               @can('report-saldo-deposit-agent')
               <li class="{{ Route::is('report.bySaldoDepositAgent') ? 'current-page' : '' }}"><a href="{{ route('report.bySaldoDepositAgent') }}">Saldo Deposit Agent</a></li>
+              @endcan
+              @can('report-sales-deposit')
+              <li class="{{ Route::is('report.bySalesDeposit') ? 'current-page' : '' }}"><a href="{{ route('report.bySalesDeposit') }}">Sales Deposit</a></li>
+              @endcan              
+              @can('report-data-agent-not-active')
+              <li class="{{ Route::is('report.byDataAgentNotActive') ? 'current-page' : '' }}"><a href="{{ route('report.byDataAgentNotActive') }}">Data Agent Tidak Active</a></li>
+              @endcan
+              @can('report-agent-member-paloma')
+              <li class="{{ Route::is('report.byAgentMemberPaloma') ? 'current-page' : '' }}"><a href="{{ route('report.byAgentMemberPaloma') }}">Agent Member Paloma</a></li>
+              @endcan
+              @can('report-statistik-transaksi-error')
+              <li class="{{ Route::is('report.byStatistikTransaksiError') ? 'current-page' : '' }}"><a href="{{ route('report.byStatistikTransaksiError') }}">Statistik Transaksi Error</a></li>
+              @endcan
+              @can('report-perubahan-status-manual')
+              <li class="{{ Route::is('report.byPerubahanStatusManual') ? 'current-page' : '' }}"><a href="{{ route('report.byPerubahanStatusManual') }}">Perubahan Status Manual</a></li>
               @endcan
             </ul>
           </li>

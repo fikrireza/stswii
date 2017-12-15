@@ -209,18 +209,29 @@ Route::get('/home', 'HomeController@index')
 	Route::get('product/delete/{id}', 'ProductController@delete')
 				->name('product.delete')
 				->middleware('can:delete-product');
-
-	Route::get('product/sort-number-up/{id}', 'ProductController@sortNumberUp')
-				->name('product.sort-number-up')
+	Route::post('product/edit-sort-number/', 'ProductController@editSortNumber')
+				->name('product.edit-sort-number')
 				->middleware('can:sort-number-product');
-
-	Route::get('product/sort-number-down/{id}', 'ProductController@sortNumberDown')
-				->name('product.sort-number-down')
-				->middleware('can:sort-number-product');
-
 	Route::get('/product/yajra/getDatas/{request?}', 'ProductController@yajraGetData')
 				->name('product.yajra.getDatas');
 //----- PRODUCT -----//
+
+//----- START PRODUCT MLM-----//
+	Route::get('product-mlm', 'ProductMlmController@index')
+				->name('product-mlm.index')
+				->middleware('can:read-product-mlm');
+	Route::get('product-mlm/add', 'ProductMlmController@tambah')
+				->name('product-mlm.tambah')
+				->middleware('can:create-product-mlm');
+	Route::post('product-mlm', 'ProductMlmController@store')
+				->name('product-mlm.store')
+				->middleware('can:create-product-mlm');
+	Route::get('product-mlm/delete/{id}', 'ProductMlmController@delete')
+				->name('product-mlm.delete')
+				->middleware('can:delete-product-mlm');
+	Route::get('/product-mlm/yajra/getDatas/{request?}', 'ProductMlmController@yajraGetData')
+				->name('product-mlm.yajra.getDatas');
+//----- PRODUCT MLM-----//				
 
 //----- PRODUCT SELL PRICE -----//
 	Route::get('product-sell-price', 'ProductSellPriceController@index')
@@ -237,6 +248,10 @@ Route::get('/home', 'HomeController@index')
 	Route::get('product-sell-price/edit/{id}', 'ProductSellPriceController@ubah')
 			  ->name('product-sell-price.ubah')
 				->middleware('can:update-product-sell-price');
+	Route::get('product-sell-price/add/{id}', 'ProductSellPriceController@ubah')
+			  ->name('product-sell-price.addWithData')
+				->middleware('can:create-product-sell-price');
+
 	Route::post('product-sell-price/edit', 'ProductSellPriceController@update')
 			  ->name('product-sell-price.edit')
 				->middleware('can:update-product-sell-price');
@@ -259,6 +274,50 @@ Route::get('/home', 'HomeController@index')
 	Route::post('product-sell-price/upload/store-template', 'ProductSellPriceController@storeTemplate')
 			  ->name('product-sell-price.storeTemplate');
 //----- PRODUCT SELL PRICE -----//
+
+//----- PRODUCT SELL PRICE MLM-----//
+	Route::get('product-sell-price-mlm', 'ProductSellPriceMlmController@index')
+			  ->name('product-sell-price-mlm.index')
+				->middleware('can:read-product-sell-price-mlm');
+	Route::get('product-sell-price-mlm/add', 'ProductSellPriceMlmController@tambah')
+			  ->name('product-sell-price-mlm.tambah')
+				->middleware('can:create-product-sell-price-mlm');
+	Route::get('product-sell-price-mlm/product/{id}', 'ProductSellPriceMlmController@bindProduct')
+			  ->name('product-sell-price-mlm.bindProduct');
+	Route::post('product-sell-price-mlm', 'ProductSellPriceMlmController@store')
+			  ->name('product-sell-price-mlm.store')
+				->middleware('can:create-product-sell-price-mlm');
+
+	/*Route::get('product-sell-price-mlm/edit/{id}', 'ProductSellPriceMlmController@ubah')
+			  ->name('product-sell-price-mlm.ubah')
+				->middleware('can:update-product-sell-price-mlm');*/
+	Route::get('product-sell-price-mlm/add/{id}', 'ProductSellPriceMlmController@ubah')
+			  ->name('product-sell-price-mlm.addWithData')
+				->middleware('can:create-product-sell-price-mlm');
+	
+	Route::post('product-sell-price-mlm/edit', 'ProductSellPriceMlmController@update')
+			  ->name('product-sell-price-mlm.edit')
+				->middleware('can:update-product-sell-price-mlm');
+	/*Route::get('product-sell-price-mlm/active/{id}', 'ProductSellPriceMlmController@active')
+			  ->name('product-sell-price-mlm.active')
+				->middleware('can:activate-product-sell-price-mlm');*/
+	Route::get('product-sell-price-mlm/delete/{id}', 'ProductSellPriceMlmController@delete')
+			  ->name('product-sell-price-mlm.delete')
+				->middleware('can:delete-product-sell-price-mlm');
+	Route::get('/product-sell-price-mlm/yajra/getDatas/{request?}', 'ProductSellPriceMlmController@yajraGetData')
+				->name('product-sell-price-mlm.yajra.getDatas');
+
+		  //----- Upload Excel
+	Route::get('product-sell-price-mlm/upload', 'ProductSellPriceMlmController@upload')
+			  ->name('product-sell-price-mlm.upload');
+	Route::get('product-sell-price-mlm/upload/template', 'ProductSellPriceMlmController@template')
+			  ->name('product-sell-price-mlm.template');
+	Route::post('product-sell-price-mlm/upload/template', 'ProductSellPriceMlmController@prosesTemplate')
+			  ->name('product-sell-price-mlm.prosesTemplate');
+	Route::post('product-sell-price-mlm/upload/store-template', 'ProductSellPriceMlmController@storeTemplate')
+			  ->name('product-sell-price-mlm.storeTemplate');			  
+//----- PRODUCT SELL PRICE MLM-----//
+
 
 //----- Management Account -----//
 	Route::get('account', 'AccountController@index')->name('account.index')->middleware('can:read-user');
@@ -307,8 +366,60 @@ Route::get('/home', 'HomeController@index')
 				->name('deposit-agent-unconfirm.index');
 	Route::post('deposit-agent-proses-unconfirm', 'DepositAgentController@postUnconfirm')
 				->name('deposit-agent-unconfirm.postUnconfirm');
+
+	Route::get('inquiry-mutasi-rekening-mandiri', 'InquiryMutasiRekeningMandiriController@index')
+				->name('inquiry-mutasi-rekening-mandiri.index')
+				->middleware('can:read-inquiry-mutasi-rekening-mandiri');
+	Route::get('inquiry-mutasi-rekening-mandiri/getDatas', 'InquiryMutasiRekeningMandiriController@getMutasiRekeningMandiriList')
+				->name('inquiry-mutasi-rekening-mandiri.getDatas')
+				->middleware('can:read-inquiry-mutasi-rekening-mandiri');
 //------- Deposit Agent -------//
 
+//-------- Sales Deposit------------//
+	//salesman
+	Route::get('salesman', 'SalesmanController@index')
+			->name('salesman.index')
+			->middleware('can:read-salesman');
+	Route::get('salesman/getDatas', 'SalesmanController@getSalesmanList')
+			->name('salesman.getDatas')
+			->middleware('can:read-salesman');
+	Route::get('salesman/add', 'SalesmanController@add')
+			->name('salesman.add')
+			->middleware('can:create-salesman');
+	Route::post('salesman/store', 'SalesmanController@store')
+			->name('salesman.store')
+			->middleware('can:create-salesman');
+	Route::get('salesman/edit/{id}', 'SalesmanController@edit')
+			->name('salesman.edit')
+			->middleware('can:update-salesman');
+	Route::post('salesman/update', 'SalesmanController@update')
+			->name('salesman.update')
+			->middleware('can:update-salesman');
+	Route::get('salesman/actived/{id}/{version}/{status}', 'SalesmanController@active')
+			->name('salesman.active')
+			->middleware('can:activate-salesman');
+
+
+	//sales deposit transaction
+	Route::get('sales-deposit-transaction', 'SalesDepositController@index')
+			->name('salesDepositTransaction.index')
+			->middleware('can:read-sales-deposit-transaction');
+	Route::get('sales-deposit-transaction/getDatas', 'SalesDepositController@getSalesDepositTransactionList')
+			->name('salesDepositTransaction.getDatas')
+			->middleware('can:read-sales-deposit-transaction');
+	Route::get('sales-deposit-transaction/set-sudah-setor/{id}/{version}', 'SalesDepositController@setSudahSetor')
+			->name('salesDepositTransaction.setSudahSetor')
+			->middleware('can:set-sudah-setor-sales-deposit-transaction');
+	Route::get('sales-deposit-transaction/set-belum-setor/{id}/{version}', 'SalesDepositController@setBelumSetor')
+			->name('salesDepositTransaction.setBelumSetor')
+			->middleware('can:set-belum-setor-sales-deposit-transaction');
+	Route::get('sales-deposit-transaction/detail/{id}', 'SalesDepositController@detail')
+			->name('salesDepositTransaction.detail')
+			->middleware('can:read-sales-deposit-transaction');
+	/*Route::get('sales-deposit-transaction/detailList/{id}', 'SalesDepositController@getSalesDepositTransactionDetailList')
+			->name('salesDepositTransaction.getDetailList')
+			->middleware('can:read-sales-deposit-transaction');*/
+//-------- Sales Deposit------------//		
 
 //------- Report -------//
 	Route::get('report-supplier-pkp', 'ReportController@bySupplierPkp')->name('report.bySupplierPkp')->middleware('can:report-supplier-pkp');
@@ -320,16 +431,33 @@ Route::get('/home', 'HomeController@index')
 	Route::get('report-agent', 'ReportController@byAgent')->name('report.byAgent')->middleware('can:report-agent');
 	Route::post('report-agent', 'ReportController@postByAgent')->name('report.postByAgent');
 	
+	Route::get('report-agent-mlm', 'ReportController@byAgentMlm')->name('report.byAgentMlm')->middleware('can:report-agent-mlm');
+	Route::post('report-agent-mlm', 'ReportController@postByAgentMlm')->name('report.postByAgentMlm');
+
 	Route::get('report-provider', 'ReportController@byProvider')->name('report.byProvider')->middleware('can:report-provider');
 	Route::post('report-provider', 'ReportController@postByProvider')->name('report.postByProvider');
 	
 	Route::get('report-topup-deposit-partner', 'ReportController@byTopUpDepositPartner')->name('report.byTopUpDepositPartner')->middleware('can:report-topup-deposit-partner');
 	Route::get('report-topup-deposit-partner/generate', 'ReportController@postByTopUpDepositPartner')->name('report.postByTopUpDepositPartner');
+
+	Route::get('report-deposit-harian-agent', 'ReportController@byDepositHarianAgent')->name('report.byDepositHarianAgent')->middleware('can:report-deposit-harian-agent');
+	Route::post('report-deposit-harian-agent/generate', 'ReportController@postByDepositHarianAgent')->name('report.postByDepositHarianAgent');
 	
 	Route::get('inquiry-pesanan-agent', 'InquiryPesananAgentController@index')
 				->name('report.inquiry-pesanan-agent-index')->middleware('can:report-inquiry-agent');
 	Route::get('inquiry-pesanan-agent/getDatas', 'InquiryPesananAgentController@getMemberOrderProductList')
 				->name('report.inquiry-pesanan-agent-get-datas')->middleware('can:report-inquiry-agent');
+	Route::get('inquiry-pesanan-agent/log', 'InquiryPesananAgentController@getLogTransactionList')
+				->name('report.inquiry-pesanan-agent-log')->middleware('can:report-inquiry-agent');
+	Route::post('inquiry-pesanan-agent/set-sukses', 'InquiryPesananAgentController@setSukses')
+				->name('report.inquiry-pesanan-agent-set-sukses')
+				->middleware('can:set-sukses-inquiry-pesanan-agent');
+	Route::post('inquiry-pesanan-agent/set-gagal', 'InquiryPesananAgentController@setGagal')
+				->name('report.inquiry-pesanan-agent-set-gagal')
+				->middleware('can:set-gagal-inquiry-pesanan-agent');
+	Route::get('inquiry-pesanan-agent/detil-change-status-transaction', 'InquiryPesananAgentController@getDetailChangeStatusTransaction')
+				->name('report.inquiry-pesanan-agent-detail-change-status-transaction')
+				->middleware('can:report-inquiry-agent');
 
 	Route::get('rekap-sales-harian-agent', 'ReportController@byRekapSalesHarianAgent')->name('report.byRekapSalesHarianAgent')->middleware('can:report-rekap-sales-harian-agent');
 	Route::post('rekap-sales-harian-agent/generate', 'ReportController@postByRekapSalesHarianAgent')->name('report.postByRekapSalesHarianAgent');
@@ -339,6 +467,27 @@ Route::get('/home', 'HomeController@index')
 
 	Route::get('saldo-deposit-agent', 'ReportController@bySaldoDepositAgent')->name('report.bySaldoDepositAgent')->middleware('can:report-saldo-deposit-agent');
 	Route::post('saldo-deposit-agent/generate', 'ReportController@postBySaldoDepositAgent')->name('report.postBySaldoDepositAgent');
+
+	Route::get('sales-deposit', 'ReportController@bySalesDeposit')->name('report.bySalesDeposit')->middleware('can:report-sales-deposit');
+	Route::post('sales-deposit/generate', 'ReportController@postBySalesDeposit')->name('report.postBySalesDeposit');	
+
+	Route::get('report-data-agent-not-active', 'ReportController@byDataAgentNotActive')->name('report.byDataAgentNotActive')->middleware('can:report-data-agent-not-active');
+	Route::post('report-data-agent-not-active/generate', 'ReportController@postByDataAgentNotActive')->name('report.postByDataAgentNotActive');
+
+	Route::get('agent-member-paloma', 'ReportController@byAgentMemberPaloma')->name('report.byAgentMemberPaloma')->middleware('can:report-agent-member-paloma');
+	Route::post('agent-member-paloma/generate', 'ReportController@postByAgentMemberPaloma')->name('report.postByAgentMemberPaloma');
+
+	Route::get('report-statistik-transaksi-error', 'ReportController@byStatistikTransaksiError')
+			->name('report.byStatistikTransaksiError')
+			->middleware('can:report-statistik-transaksi-error');
+	Route::post('report-statistik-transaksi-error', 'ReportController@postByStatistikTransaksiError')
+			->name('report.postByStatistikTransaksiError');
+
+	Route::get('report-perubahan-status-manual', 'ReportController@byPerubahanStatusManual')
+			->name('report.byPerubahanStatusManual')
+			->middleware('can:report-perubahan-status-manual');
+	Route::post('report-perubahan-status-manual', 'ReportController@postByPerubahanStatusManual')
+			->name('report.postByPerubahanStatusManual');
 //------- Report -------//
 
 
