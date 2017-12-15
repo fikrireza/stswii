@@ -18,7 +18,7 @@
         @foreach ($data[0]['balanceAmount'] as $key)
           <tr style="border: 1px solid black;border-collapse: collapse;font-size: 15px;">
             <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;">{{ $key->partner_pulsa_code }}</td>
-            <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;">{{ $key->partner_pulsa_name }}</td>
+			<td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;">{{ $key->partner_pulsa_name }}</td>
             <td style="border: 1px solid black;border-collapse: collapse;font-size: 15px;">{{ number_format($key->balance_amount,'0',',','.') }}</td>
           </tr>
         @endforeach

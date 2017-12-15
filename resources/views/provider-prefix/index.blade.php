@@ -208,6 +208,7 @@ $(function() {
     $('#dataTables').DataTable({
         processing: true,
         serverSide: true,
+        "pageLength": 100,
         ajax: "{{ route('provider-prefix.yajra.getDatas') }}",
         columns: [
             {data: 'slno', orderable: false, searchable: false},

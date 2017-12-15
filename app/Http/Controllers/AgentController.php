@@ -92,15 +92,21 @@ class AgentController extends Controller
             >
 							<span class=\"btn btn-xs btn-warning btn-sm\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Update\"><i class=\"fa fa-pencil\"></i></span>
 						</a>
+
             <a 
               class=\"check-saldo\" 
-              data-value='".$index->client_id."'  
+              data-value='".$index->client_id."'
+              data-name='".$index->agent_name."' 
+              data-phone='".$index->phone_number."'   
             >
               <span class=\"btn btn-xs btn-primary btn-sm\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Check Saldo\"><i class=\"fa fa-dollar\"></i></span>
             </a>
+
             <a 
               class=\"reset-pin\" 
-              data-value='".$index->client_id."'  
+              data-value='".$index->client_id."'
+              data-name='".$index->agent_name."' 
+              data-phone='".$index->phone_number."'   
             >
               <span class=\"btn btn-xs btn-success btn-sm\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Reset Pin\"><i class=\"fa fa-repeat\"></i></span>
             </a>

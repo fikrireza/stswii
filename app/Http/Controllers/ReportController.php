@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Pos;
-
+use Session;
 use DB;
 use Excel;
 
@@ -194,5 +194,121 @@ class ReportController extends Controller
         })->download('csv');
 
         return redirect()->route('report.byTopUpDepositPartner');
+    }
+
+    public function byRekapSalesHarianAgent()
+    {
+        return view('report.rekapSalesHarianAgent');
+    }
+
+    public function postByRekapSalesHarianAgent(Request $request)
+    {
+      $tahun_bulan = date('Ym', strtotime($request->tahun_bulan));
+
+      $getData = Pos::join('sw_agent', 'sw_agent.agent_id', '=', 'sw_pos.agent_id')
+                      ->select('sw_agent.agent_name', 'sw_agent.phone_number', DB::raw('to_date(sw_pos.purchase_datetime, \'YYYYMMDDHH24MISS\') as tanggal'), DB::raw('SUM(sw_pos.gross_sell_price) as jumlah_amount'), DB::raw('COUNT(*) as jumlah_trx'))
+                      ->where('sw_pos.purchase_datetime', 'like', '%'.$tahun_bulan.'%')
+                      ->where('sw_pos.status', 'S')
+                      ->groupBy(['sw_agent.agent_name', 'sw_agent.phone_number', 'tanggal'])
+                      ->orderBy('sw_agent.agent_name')
+                      ->orderBy('tanggal')
+                      ->get()
+                      ->toArray();
+
+      if(!$getData){
+        return redirect()->route('report.byRekapSalesHarianAgent')->with('gagal', 'Data Not Found')->withInput();
+      }
+
+      return Excel::create('Report Rekap Sales Harian Agent - '.$request->tahun_bulan, function($excel) use($getData){
+        $excel->sheet('Rekap Sales Harian Agent', function($sheet) use ($getData)
+        {
+          $sheet->fromArray($getData, null, 'A1', true);
+        });
+      })->download('csv');
+
+      return redirect()->route('report.byRekapSalesHarianAgent');
+    }
+
+    public function byWeeklySalesSummary()
+    {
+        return view('report.weeklySalesSummary');
+    }
+
+    public function postByWeeklySalesSummary(Request $request)
+    {
+      $tahun_bulan = date('Ym', strtotime($request->tahun_bulan));
+
+      $session_id = Session::getId();
+
+        $pdo = \DB::connection()->getPdo();
+        $pdo->beginTransaction();
+            
+        $stmt = $pdo->prepare("SELECT * FROM r_weekly_sales_summary('$session_id', '$tahun_bulan')");
+                      
+        $stmt->execute();
+        $cursors = $stmt->fetchAll(\PDO::FETCH_OBJ);
+        $stmt->closeCursor();
+            
+        // get each result set
+        $results = [];
+        $getData = [];
+        foreach($cursors as $k=>$v){
+            $stmt = $pdo->query('FETCH ALL IN "'. $v->r_weekly_sales_summary.'";');
+            $results[$v->r_weekly_sales_summary] =  $stmt->fetchAll(\PDO::FETCH_OBJ);
+            $stmt->closeCursor();
+        }
+        $pdo->commit();
+        unset($stmt);
+
+
+      foreach ($results['refDetail'] as $value) {
+        $getData[] = get_object_vars($value);
+      }
+
+      if($getData == null){
+        return redirect()->route('report.byWeeklySalesSummary')->with('gagal', 'Data Not Found')->withInput();
+      }
+
+      return Excel::create('Report Weekly Sales Summary- '.$request->tahun_bulan, function($excel) use($getData){
+        $excel->sheet('Weekly Sales Summary', function($sheet) use ($getData)
+        {
+          $sheet->fromArray($getData, null, 'A1', true);
+        });
+      })->download('csv');
+
+      return redirect()->route('report.byWeeklySalesSummary');
+    }
+
+    public function bySaldoDepositAgent()
+    {
+        return view('report.saldoDepositAgent');
+    }
+
+    public function postBySaldoDepositAgent(Request $request)
+    {      
+
+      $client = new \GuzzleHttp\Client();
+      $res = $client->request('GET', 'http://localhost:9020/report/agentBalance')
+          ->getbody();
+
+          $result = json_decode($res);
+          $getData = [];
+
+          foreach ($result as $value) {
+            $getData[] = get_object_vars($value);
+          }
+  
+      if($getData == null){
+        return redirect()->route('report.bySaldoDepositAgent')->with('gagal', 'Data Not Found')->withInput();
+      }
+
+      return Excel::create('Report Saldo Deposit Agent', function($excel) use($getData){
+        $excel->sheet('Saldo Deposit Agent', function($sheet) use ($getData)
+        {
+          $sheet->fromArray($getData, null, 'A1', true);
+        });
+      })->download('csv');
+
+      return redirect()->route('report.bySaldoDepositAgent');
     }
 }

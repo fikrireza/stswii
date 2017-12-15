@@ -34,8 +34,8 @@
 
 <div class="row">
   <div class="col-md-12 col-sm-12 col-xs-12">
-    <div class="alert alert-danger alert-dismissible alert-error" style="display: none;">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+    <div id="alert-error" class="alert alert-danger alert-dismissible hidden" >
+      <button type="button" class="close" id="close-alert-error"><span>×</span>
       </button>
       <p><strong>error, </strong> server mengalami gangguan </p>   
     </div>
@@ -165,7 +165,19 @@
         <h4 class="modal-title" id="myModalLabel2">Saldo</h4>
       </div>
       <div class="modal-body">
-        <h4>Rp. <span id="saldo"></span></h4>
+        <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Name</label>
+          <label class="control-label col-md-8">: <span id="saldo-agent-name"></span></label>
+        </div>
+         <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Phone</label>
+          <label class="control-label col-md-8">: <span id="saldo-agent-phone"></span></label>
+        </div>
+         <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Saldo</label>
+          <label class="control-label col-md-8">: Rp. <span id="saldo"></span></label>
+        </div>
+        
       </div>
       
     </div>
@@ -182,7 +194,18 @@
         <h4 class="modal-title" id="myModalLabel2">Pin</h4>
       </div>
       <div class="modal-body">
-        <h4 id="new-pin"></h4>
+        <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Name</label>
+          <label class="control-label col-md-8">: <span id="pin-agent-name"></span></label>
+        </div>
+         <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Phone</label>
+          <label class="control-label col-md-8">: <span id="pin-agent-phone"></span></label>
+        </div>
+         <div class="form-group row">
+          <label class="control-label col-md-4 text-right">Pin</label>
+          <label class="control-label col-md-8">: <span id="new-pin"></span></label>
+        </div>
       </div>
       
     </div>
@@ -203,6 +226,7 @@
         <h2>Agent </h2>
         <div class="clearfix"></div>
       </div>
+
       <div class="x_content table-responsive">
         <table id="agenttable" class="table table-striped table-bordered no-footer" width="100%">
           <thead>
@@ -248,6 +272,7 @@ $(function() {
     $('#agenttable').DataTable({
         processing: true,
         serverSide: true,
+        "pageLength": 100,
         ajax: '{{route('agent.getDatas')}}',
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},
@@ -311,20 +336,28 @@ $(function() {
     @endcan
 });
 
+$('#close-alert-error').click(function () {
+    $(this).parent().addClass('hidden');
+  });
+
 $(document).on('click','a.check-saldo', function(){
   var a = $(this).data('value');
+  var b = $(this).data('name');
+  var c = $(this).data('phone');
   $.ajax({
      url: '/agent/checkSaldo/'+a,
      type: 'GET',
      error: function(response) {
-        $('.alert-error').show();       
+        $('#alert-error').removeClass('hidden');       
      },  
      success: function(response) {
         if (response.status == 'success') {
+          $('#saldo-agent-name').text(b);
+          $('#saldo-agent-phone').text(c);
           $('#saldo').text(response.amount);
           $('.modal-check-saldo').modal('show');  
         }else{
-          $('.alert-error').show(); 
+          $('#alert-error').removeClass('hidden'); 
         }    
      }
   });
@@ -332,18 +365,22 @@ $(document).on('click','a.check-saldo', function(){
 
 $(document).on('click','a.reset-pin', function(){
   var a = $(this).data('value');
+  var b = $(this).data('name');
+  var c = $(this).data('phone');
   $.ajax({
      url: '/agent/resetPin/'+a,
      type: 'GET',
      error: function(response) {
-        $('.alert-error').show();       
+        $('#alert-error').removeClass('hidden');       
      },  
      success: function(response) {
         if (response.status == 'OK') {
+          $('#pin-agent-name').text(b);
+          $('#pin-agent-phone').text(c);
           $('#new-pin').text(response.pin);
           $('.modal-reset-pin').modal('show');  
         }else{
-          $('.alert-error').show(); 
+          $('#alert-error').removeClass('hidden'); 
         }    
      }
   });

@@ -120,6 +120,16 @@
             </div>
           </div>
 
+          <div class="item form-group {{ $errors->has('sort_number') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="sort_number">Sort Number <span class="required">*</span></label>
+            <div class="col-md-2 col-sm-6 col-xs-12">
+              <input id="sort_number" class="form-control" name="sort_number" required="required" type="number" value="1" min="1">
+              @if($errors->has('sort_number'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('sort_number')}}</span></code>
+              @endif
+            </div>
+          </div>
+
           <div class="ln_solid"></div>
 
           <div class="item form-group">

@@ -169,6 +169,15 @@
               @can('report-inquiry-agent')
               <li class="{{ Route::is('inquiry-pesanan-agent') ? 'current-page' : '' }}"><a href="{{ route('report.inquiry-pesanan-agent-index') }}">Inquiry Pesanan Agent</a></li>
               @endcan
+              @can('report-rekap-sales-harian-agent')
+              <li class="{{ Route::is('report.rekap-sales-harian-agent') ? 'current-page' : '' }}"><a href="{{ route('report.byRekapSalesHarianAgent') }}">Rekap Sales Harian Agent</a></li>
+              @endcan
+              @can('report-weekly-sales-summary')
+              <li class="{{ Route::is('report.byWeeklySalesSummary') ? 'current-page' : '' }}"><a href="{{ route('report.byWeeklySalesSummary') }}">Weekly Sales Summary</a></li>
+              @endcan
+              @can('report-saldo-deposit-agent')
+              <li class="{{ Route::is('report.bySaldoDepositAgent') ? 'current-page' : '' }}"><a href="{{ route('report.bySaldoDepositAgent') }}">Saldo Deposit Agent</a></li>
+              @endcan
             </ul>
           </li>
           @endif

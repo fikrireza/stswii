@@ -202,6 +202,7 @@ $(function() {
     $('#producttabel').DataTable({
         processing: true,
         serverSide: true,
+        "pageLength": 100,
         ajax: "{{ route('product.yajra.getDatas') }}?f_provider={{ $request->f_provider }}&f_type_product={{ $request->f_type_product }}",
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},
@@ -225,6 +226,7 @@ $(function() {
     $('#producttabel').DataTable({
         processing: true,
         serverSide: true,
+        "pageLength": 100,
         ajax: "{{ route('product.yajra.getDatas') }}",
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},

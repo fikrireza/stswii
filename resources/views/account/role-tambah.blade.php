@@ -291,6 +291,15 @@
           </label><br>
            <label>
             <input type="checkbox" class="flat" name="permissions[report-inquiry-agent]" {{ (collect(old('permissions'))->contains('report-inquiry-agent')) ? 'checked="checked"' : '' }} value="true" /> Inquiry Pesanan Agent
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-rekap-sales-harian-agent]" {{ (collect(old('permissions'))->contains('report-rekap-sales-harian-agent')) ? 'checked="checked"' : '' }} value="true" /> Rekap Sales Harian Agent
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-weekly-sales-summary]" {{ (collect(old('permissions'))->contains('report-weekly-sales-summary')) ? 'checked="checked"' : '' }} value="true" /> Weekly Sales Summary
+          </label><br>
+          <label>
+            <input type="checkbox" class="flat" name="permissions[report-saldo-deposit-agent]" {{ (collect(old('permissions'))->contains('report-saldo-deposit-agent')) ? 'checked="checked"' : '' }} value="true" /> Saldo Deposit Agent
           </label>
         </div>
       </div>

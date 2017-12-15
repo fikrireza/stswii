@@ -31,7 +31,7 @@ class PartnerPulsaController extends Controller
     public function index()
     {
         $getPartner = PartnerPulsa::select('partner_pulsa_id','partner_pulsa_code','partner_pulsa_name',
-                                          'description','type_top','payment_termin','active','version')->get();
+          'description', 'flg_pkp', 'type_top','payment_termin','active','version')->get();
 
       	return view('partner-pulsa.index', compact('getPartner'));
     }
@@ -254,7 +254,7 @@ class PartnerPulsaController extends Controller
     {
 
         $getDatas = PartnerPulsa::select(['partner_pulsa_id','partner_pulsa_code','partner_pulsa_name',
-                                        'description','type_top','payment_termin','active','version'])->get();
+          'description', 'flg_pkp', 'type_top','payment_termin','active','version'])->get();
 
         $start=1;
         $Datatables = Datatables::of($getDatas)

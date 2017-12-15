@@ -72,7 +72,7 @@ class InquiryPesananAgentController extends Controller
 			$index->whereBetween('sw_pos.purchase_datetime', [$f_start_date, $f_end_date]);
 		}
 
-		$index->orderBy('sw_pos.purchase_datetime', 'ASC')->get();
+		$index->orderBy('sw_pos.purchase_datetime', 'DESC')->get();
 		
 		$start      = 1;
         $Datatables = Datatables::of($index)

@@ -138,7 +138,9 @@
 <script src="{{ asset('amadeo/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
 
 <script type="text/javascript">
-  $('#deposit_trx').DataTable();
+  $('#deposit_trx').DataTable({
+    "pageLength": 100
+  });
 
   $(function(){
     $('#deposit_trx').on('click', 'a.draft', function(){

@@ -192,7 +192,9 @@
 <script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
 
 <script type="text/javascript">
-  $('#usertable').DataTable();
+  $('#usertable').DataTable({
+    "pageLength": 100
+  });
 
   $('#usertable tfoot th').each( function () {
     var title = $(this).text();

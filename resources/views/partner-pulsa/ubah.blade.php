@@ -154,6 +154,27 @@
             </div>
           </div>
 
+          <div class="item form-group {{ $errors->has('status_pkp') ? 'has-error' : ''}}">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="status_pkp">
+              Status PKP <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <select
+                class="form-control select2_single"
+                name="status_pkp"
+                required="required"
+                id="status_pkp"
+              >
+                <option value="">Pilih</option>
+                <option value="Y" {{ old('flg_pkp', $getPartnerPulsa->flg_pkp) == 'Y' ? 'selected' : ''}} >PKP</option>
+                <option value="N" {{ old('flg_pkp', $getPartnerPulsa->flg_pkp) == 'N' ? 'selected' : ''}} >Non PKP</option>
+              </select>
+              @if($errors->has('status_pkp'))
+                <code><span style="color:red; font-size:12px;">{{ $errors->first('status_pkp')}}</span></code>
+              @endif
+            </div>
+          </div>
+
           <div class="ln_solid"></div>
 
           <div class="item form-group">

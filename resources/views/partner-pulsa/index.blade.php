@@ -115,6 +115,7 @@
               <th>Supplier Code</th>
               <th>Supplier Name</th>
               <th>Description</th>
+              <th>Status PKP</th>
               <th>Type TOP</th>
               <th>Payment Termin</th>
               @can('activate-partner-pulsa')
@@ -126,6 +127,7 @@
           <tfoot>
             <tr>
               <td></td>
+              <th></th>
               <th></th>
               <th></th>
               <th></th>
@@ -154,12 +156,14 @@ $(function() {
     $('#dataTables').DataTable({
         processing: true,
         serverSide: true,
+        "pageLength": 100,
         ajax: "{{ route('partner-pulsa.yajra.getDatas') }}",
         columns: [
             {data: 'slno', name: 'No'},
             {data: 'partner_pulsa_code'},
             {data: 'partner_pulsa_name'},
             {data: 'description'},
+            {data: 'flg_pkp'},
             {data: 'type_top'},
             {data: 'payment_termin'},
             @can('activate-partner-pulsa')

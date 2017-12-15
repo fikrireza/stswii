@@ -330,6 +330,15 @@ Route::get('/home', 'HomeController@index')
 				->name('report.inquiry-pesanan-agent-index')->middleware('can:report-inquiry-agent');
 	Route::get('inquiry-pesanan-agent/getDatas', 'InquiryPesananAgentController@getMemberOrderProductList')
 				->name('report.inquiry-pesanan-agent-get-datas')->middleware('can:report-inquiry-agent');
+
+	Route::get('rekap-sales-harian-agent', 'ReportController@byRekapSalesHarianAgent')->name('report.byRekapSalesHarianAgent')->middleware('can:report-rekap-sales-harian-agent');
+	Route::post('rekap-sales-harian-agent/generate', 'ReportController@postByRekapSalesHarianAgent')->name('report.postByRekapSalesHarianAgent');
+
+	Route::get('weekly-sales-summary', 'ReportController@byWeeklySalesSummary')->name('report.byWeeklySalesSummary')->middleware('can:report-weekly-sales-summary');
+	Route::post('weekly-sales-summary/generate', 'ReportController@postByWeeklySalesSummary')->name('report.postByWeeklySalesSummary');
+
+	Route::get('saldo-deposit-agent', 'ReportController@bySaldoDepositAgent')->name('report.bySaldoDepositAgent')->middleware('can:report-saldo-deposit-agent');
+	Route::post('saldo-deposit-agent/generate', 'ReportController@postBySaldoDepositAgent')->name('report.postBySaldoDepositAgent');
 //------- Report -------//
 
 

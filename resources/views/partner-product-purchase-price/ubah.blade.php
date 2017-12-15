@@ -92,25 +92,6 @@
             </div>
           </div>
 
-          <div class="item form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="flg_tax">Tax</label>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <label>
-                <input type="checkbox" name="flg_tax" id="flg_tax" value="Y" {{ old('flg_tax', $index->flg_tax) == 'Y' ? 'checked' : '' }}/>
-              </label>
-            </div>
-          </div>
-
-          <div class="item form-group {{ $errors->has('tax_percentage') ? 'has-error' : ''}}" id="tax_percentage" {{ old('flg_tax', $index->flg_tax) == 'Y' ? '' : 'style=display:none'}}>
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tax_percentage">Tax Percentage <span class="required">*</span></label>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <input id="tax_percentage" class="form-control" name="tax_percentage" placeholder="E.g: 10" required="required" type="text" value="{{ old('tax_percentage', $index->tax_percentage) }}" onkeypress="return isNumber(event)" maxlength="9">
-              @if($errors->has('tax_percentage'))
-                <code><span style="color:red; font-size:12px;">{{ $errors->first('tax_percentage')}}</span></code>
-              @endif
-            </div>
-          </div>
-
           <div class="item form-group {{ $errors->has('datetime_start') ? 'has-error' : ''}}">
             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="datetime_start">Date Start <span class="required">*</span></label>
             <div class="col-md-6 col-sm-6 col-xs-12">

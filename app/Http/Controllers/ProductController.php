@@ -70,6 +70,9 @@ class ProductController extends Controller
 				'provider_id.required' => 'This field required',
 				'nominal.required' => 'This field required',
 				'type.required' => 'This field required',
+				'sort_number.required' => 'This field required',
+				'sort_number.numeric' => 'This field must be number',
+				'sort_number.min' => 'This field minimum 1',
 			];
 
 			$validator = Validator::make($request->all(), [
@@ -78,6 +81,7 @@ class ProductController extends Controller
 				'provider_id' => 'required',
 				'nominal' => 'required',
 				'type' => 'required',
+				'sort_number' => 'required|numeric|min:1'
 			], $message);
 
 			if($validator->fails())
@@ -91,7 +95,8 @@ class ProductController extends Controller
 			$index->product_name = $request->product_name;
 			$index->provider_id  = $request->provider_id;
 			$index->nominal      = str_replace('.','',$request->nominal);
-			$index->type = $request->type;
+			$index->type 		 = $request->type;
+			$index->sort_number  = $request->sort_number;
 
 			$index->active = isset($request->active) ? "Y" : "N";
 
@@ -135,6 +140,9 @@ class ProductController extends Controller
 				'product_name.required' => 'This field required',
 				'nominal.required' => 'This field required',
 				'type.required' => 'This field required',
+				'sort_number.required' => 'This field required',
+				'sort_number.numeric' => 'This field must be number',
+				'sort_number.min' => 'This field minimum 1',
 			];
 
 			$validator = Validator::make($request->all(), [
@@ -143,6 +151,7 @@ class ProductController extends Controller
 				'provider_id' => 'required',
 				'nominal' => 'required',
 				'type' => 'required',
+				'sort_number' => 'required|numeric|min:1'
 			], $message);
 
 			if($validator->fails())
@@ -161,7 +170,8 @@ class ProductController extends Controller
 			$index->product_name = $request->product_name;
 			$index->provider_id  = $request->provider_id;
 			$index->nominal      = str_replace('.', '',$request->nominal);
-			$index->type = $request->type;
+			$index->type 		 = $request->type;
+			$index->sort_number  = $request->sort_number;
 
 			$index->active = isset($request->active) ? "Y" : "N";
 
@@ -234,7 +244,7 @@ class ProductController extends Controller
 				$index->update_datetime = date('YmdHis');
 				$index->update_user_id = Auth::id();
 				$index->save();
-				return redirect()->route('product.index')->with('berhasil', 'Successfully Add Sort Number ');
+				return redirect()->back()->with('berhasil', 'Successfully Add Sort Number ');
 		}
 
 		public function sortNumberDown($id)
@@ -242,14 +252,14 @@ class ProductController extends Controller
 				$index = Product::find($id);
 
 				if ( $index->sort_number == 1) {
-					return redirect()->route('product.index')->with('gagal', 'Sort Number can\'t be reduced anymore ');
+					return redirect()->back()->with('gagal', 'Sort Number can\'t be reduced anymore ');
 				}else{
 					$index->sort_number -=1;
 					$index->version += 1;
 					$index->update_datetime = date('YmdHis');
 					$index->update_user_id = Auth::id();
 					$index->save();
-					return redirect()->route('product.index')->with('berhasil', 'Successfully Reduce Sort Number ');
+					return redirect()->back()->with('berhasil', 'Successfully Reduce Sort Number ');
 				}
 		}
 

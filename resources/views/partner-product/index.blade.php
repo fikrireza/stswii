@@ -190,6 +190,7 @@ $(function() {
     $('#dataTables').DataTable({
         processing: true,
         serverSide: true,
+        "pageLength": 100,
         ajax: "{{ route('partner-product.yajra.getDatas') }}?f_provider={{ $request->f_provider }}&f_partner={{ $request->f_partner }}&f_active={{ $request->f_active }}",
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},
@@ -212,6 +213,7 @@ $(function() {
     $('#dataTables').DataTable({
         processing: true,
         serverSide: true,
+        "pageLength": 100,
         ajax: "{{ route('partner-product.yajra.getDatas') }}",
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},

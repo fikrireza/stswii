@@ -215,10 +215,11 @@
 @if(isset($request))
 <script type="text/javascript">
 $(function() {
-    $('#producttabel').DataTable({
+      $('#producttabel').DataTable({
         processing: true,
         serverSide: true,
         "searching": false,
+        "pageLength": 100,
         ajax: "{{ route('report.inquiry-pesanan-agent-get-datas') }}?f_agent_name={{ $request->f_agent_name }}&f_agent_phone={{ $request->f_agent_phone }}&f_transaction_status={{ $request->f_transaction_status }}&f_start_date={{ isset($request->f_start_date) ? $request->f_start_date : date('Y-m-d',strtotime("-1 days")) }}&f_end_date={{ isset($request->f_end_date) ? $request->f_end_date : date('Y-m-d', time()) }}",
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},
@@ -233,16 +234,20 @@ $(function() {
             {data: 'status'},
             {data: 'action', orderable: false, searchable: false}
         ]
-    });
+      });  
 });
+
+
 </script>
 @else
 <script type="text/javascript">
 $(function() {
-    $('#producttabel').DataTable({
+
+      $('#producttabel').DataTable({
         processing: true,
         serverSide: true,
         "searching": false,
+        "pageLength": 100,
         ajax: "{{ route('report.inquiry-pesanan-agent-get-datas') }}",
         columns: [
             {data: 'slno', name: 'No', orderable: false, searchable: false},
@@ -257,7 +262,7 @@ $(function() {
             {data: 'status'},
             {data: 'action', orderable: false, searchable: false}
         ]
-    });
+      });
 });
 </script>
 @endif

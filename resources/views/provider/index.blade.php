@@ -283,6 +283,7 @@ $(function() {
     $('#dataTables').DataTable({
         processing: true,
         serverSide: true,
+        "pageLength": 100,
         ajax: "{{ route('provider.yajra.getDatas') }}",
         columns: [
             {data: 'slno', name: 'No'},

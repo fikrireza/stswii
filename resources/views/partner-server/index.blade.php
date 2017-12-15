@@ -243,7 +243,9 @@
 <script src="{{ asset('amadeo/vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('amadeo/vendors/datatables.net-scroller/js/datatables.scroller.min.js') }}"></script>
 <script type="text/javascript">
-$('#dataTables').DataTable();
+$('#dataTables').DataTable({
+  "pageLength": 100
+});
 
 $(function(){
     $(document).on('click', '.update', function(){
